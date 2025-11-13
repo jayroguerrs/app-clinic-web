@@ -1,0 +1,17 @@
+:host{
+  table{
+    *{
+      font-family: 'Poppins', serif !important;
+    }
+    td{
+      padding: 6.5px;
+      border: none;
+    }
+  }
+  .card-body{
+    border-left: 5px solid #6674c1;
+  }
+  .collapsible {
+    overflow: hidden;
+  }
+}

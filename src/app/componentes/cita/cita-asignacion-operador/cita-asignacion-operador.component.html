@@ -1,0 +1,118 @@
+<form [formGroup]="frmOperadores">
+  <div class="modal-content">
+
+    <div class="modal-header card-header">
+      <h5 class="modal-title">{{ titulo }}</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="cerrarModal()"><span aria-hidden="true">&times;</span></button>
+    </div>
+
+    <div class="modal-body card-body">
+
+      <!-- SPINNER -->
+      <ngx-spinner
+      [template]="rutaImageSpinner">
+      <p style="color: white" > Cargando... </p>
+      </ngx-spinner>
+
+      <!-- FILTROS -->
+      <div class="col-sm-12">
+        <input type="hidden" id="hdIds">
+        <app-card cardTitle="" [hidHeader]="true">
+          <div class="form-row">
+
+
+            <div class="form-group col-md-12 col-lg-3">
+              <div class="input-group input-group-sm">
+                <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-user"></i></span></div>
+                <select class="custom-select"  id="tipoCliente" formControlName="tipoCliente" (change)="obtenerCitas()">
+                  <option [value]="2">Todos</option>
+                  <option [value]="1">Cliente Nuevo</option>
+                  <option [value]="0">Cliente Antiguo</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group col-md-12 col-lg-3">
+              <div class="input-group input-group-sm">
+                <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-random"></i></span></div>
+                <select class="custom-select"  id="cboModo" formControlName="idModo" (change)="cambiarFechaModo()">
+                  <option *ngFor= "let modo of modoAsignacion"  [value]="modo.id">{{ modo.descripcion}}</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group col-md-12 col-lg-3">
+              <div class="input-group input-group-sm">
+                <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-random"></i></span></div>
+                <select class="custom-select"  id="idSede" formControlName="idSede" (change)="obtenerCitas()">
+                  <option [value]="0" >...Todas las sedes ...</option>
+                  <option *ngFor="let s of maestroSede" [value]="s.idSede">{{ s.nombre }}</option>
+                </select>
+              </div>
+            </div>
+
+
+            <div class="form-group col-md-12 col-lg-3" id="div_fechaConfirmacion">
+              <div class="input-group input-group-sm">
+                  <div class="input-group-prepend"><span class="input-group-text">Confirmar el</span></div>
+                  <input type="date" class="form-control" id="dtpFechaConfirmar" formControlName="fechaConfirmacion" >
+              </div>
+            </div>
+
+            <div class="form-group col-md-12 col-lg-3" id="div_fechaCita">
+              <div class="input-group input-group-sm">
+                  <div class="input-group-prepend"><span class="input-group-text">Fecha confirmación </span></div>
+                  <input type="date" class="form-control" id="dtpFechaCita" formControlName="fechaCita" (change)="obtenerCitas()">
+              </div>
+            </div>
+
+            <div *ngIf="idUsuarioReasignacion == 0" class="form-group col-md-12 col-lg-3">
+              <div class="checkbox d-inline">
+                <input type="checkbox" name="chkSinAsignar" id="chkSinAsignar" checked (change)="obtenerCitas()">
+                <label for="chkSinAsignar" class="cr">Sin Asignar</label>
+              </div>
+            </div>
+
+          </div>
+        </app-card>
+      </div>
+
+      <!-- GRILLAS -->
+      <div class="col-12">
+        <div class="form-row">
+
+          <!-- GRILLA CITA-->
+          <div class="form-group col-sm-12 col-md-12 col-lg-6">
+            <app-card cardTitle="" [hidHeader]="true">
+              <div class="table table-sm-responsive">
+                <table *ngIf="dtResponsiveOptionsCita" datatable [dtOptions]="dtResponsiveOptionsCita"  class="table table-sm table-hover table-cita display compact"></table>
+              </div>
+            </app-card>
+          </div>
+
+          <!-- GRILLA USUARIOS-->
+          <div class="form-group col-sm-12 col-md-12 col-lg-6">
+            <app-card cardTitle="" [hidHeader]="true">
+              <div class="table table-sm-responsive">
+                <table datatable [dtOptions]="dtResponsiveOptionsUsuario"  class="table table-sm table-hover table-usuario display compact">
+                </table>
+              </div>
+            </app-card>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <div class="modal-footer card-footer">
+
+      <button type="button" class="btn btn-outline-primary" [placement]="'top'" ngbTooltip="Citas seleccionadas" aria-readonly="true"><i class="fa fa-bolt" ></i>{{_citasSeleccionadas.length}}</button>
+      <button type="button" class="btn btn-outline-primary" [placement]="'top'" ngbTooltip="Operadas seleccionadas" aria-readonly="true"><i class="fa fa-users"></i>{{_usuariosSeleccionados.length}}</button>
+
+      <button type="button" class="btn btn-outline-primary" (click)="distribuirCitas()"><i class="fa fa-cog"></i>Distribuir</button>
+      <button type="button" class="btn btn-outline-danger" (click)="grabarDistribuirCitas()"><i class="fa fa-save"></i>Guardar</button>
+
+    </div>
+  </div>
+</form>

@@ -1,0 +1,18 @@
+<ng-template #modalActualizarDatosUser let-modal let-close="close">
+  <app-mdl-actualizar-datos-user
+  [modal]="mdlActualizarDatosUser"
+  [actualizarDatos]="true">
+  </app-mdl-actualizar-datos-user>
+</ng-template>
+
+
+<!-- unauthorized.component.html -->
+<div class="unauthorized-container">
+    <img src="assets/images/unauthorized_.jpg" alt="Acceso Denegado" class="unauthorized-image">
+    <h1>Acceso Denegado</h1>
+    <p>Lo sentimos, Debes actualizar tus datos.</p>   
+    
+    <div *ngIf="!usuarioActual.datosActualizados" style="border: 2px solid #994442 ;box-shadow: 0 4px 8px rgba(153, 68, 66, 0.5); z-index: 999; margin: 0; font-size: 18px; border-radius: 12px;" class="palpitar alert alert-danger">
+        <i style="font-size: 28px;" class="mdi mdi-alert"></i> Actualiza tus datos! <button style="margin-left: 1rem; margin-bottom: 0; padding: 6px 20px;" (click)="actualizarDatosUser(modalActualizarDatosUser)" type="button" class="btn btn-primary">Aquí</button>
+    </div>
+</div>

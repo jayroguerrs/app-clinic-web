@@ -1,0 +1,50 @@
+::ng-deep .select2-container{
+  z-index: 9999;
+}
+::ng-deep .img-select{
+  cursor: pointer;
+  display: flex;
+  height: 180px;
+  text-align: center;
+  font-weight: 400;
+  font-size: 16px;
+  img{
+    height: 100%;
+    width: auto;
+  }
+}
+::ng-deep .input-file{
+  width: 0;
+  height: 0;
+  visibility: hidden;
+}
+::ng-deep .zonasRelacionadas{
+  .select2-container{
+    &.select2-container--focus{
+      .select2-selection{
+        border-color: #80bdff;
+        outline: 0;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+      }
+    }
+  }
+  .select2-selection{
+    border: 1px solid #ced4da;
+    padding-top: 16px;
+  }
+}
+::ng-deep .form-floating{
+  &.label-active{
+    label{
+      left: 0;
+      position: absolute;
+      bottom: auto;
+      margin-bottom: 0;
+      line-height: 1.4;
+      top: 4px;
+      font-size: 90%;
+      opacity: 0.65;
+      z-index: 9999;
+    }
+  }
+}

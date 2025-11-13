@@ -1,0 +1,15 @@
+:host iframe{
+  .toolbar{
+    display: none !important;
+  }
+}
+:host{
+  ::ng-deep iframe > .toolbar{
+    display: none !important;
+  }
+}
+
+.iframe-oculto {
+  visibility: hidden !important;
+  position: fixed !important;
+}

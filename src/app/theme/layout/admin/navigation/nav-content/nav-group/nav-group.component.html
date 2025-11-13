@@ -1,0 +1,45 @@
+<ng-container *ngIf="item.visible">
+  <div class="header-logo">
+    <!-- <img [src]="usuarioActual.foto" [attr.alt]="usuarioActual.nombre" class="rounded-circle2"> -->
+    <div class="row">
+      <div class="col-sm-12" style="font-size:small">
+
+        <div class="" style="text-align: left;">
+          <span>{{usuarioActual.nombre | slice: 0:14}}</span>
+        </div>
+        <div class="" style="text-align: left; font-size: 9px;">
+          <span>{{usuarioActual.perfil | slice: 0:10}} - {{usuarioActual.sede }}</span>
+        </div>
+        <div class="pcoded-menu-caption" style="text-align: left;">
+          <span><a [routerLink]="['/CambiarClave']">CAMBIAR CLAVE</a></span>
+        </div>
+
+
+      </div>
+    </div>
+    <app-nav-right></app-nav-right>
+  
+    <!-- <span class="position-absolute end-0 top-0 bottom-0 d-flex pe-16px">
+      <span class="d-block my-auto p-2 rounded-circle bg-dark-30 cursor-pointer" [attr.title]="(hayNotificacion || pendientesPreferentes) ? 'Tienes preferentes por asignar' : 'No tienes preferentes por asignar'" (click)="irPreferente()">
+        <i class="position-relative fs-20px feather icon-bell d-block" [class.anim-ring]="hayNotificacion || pendientesPreferentes" ></i>
+        <span class="popins rounded-circle bg-black text-white position-absolute w-20px h-20px fs-10px align-items-center d-flex"><span class="m-auto">{{ pendientesPreferentes }}</span></span>
+      </span>
+    </span> -->
+ 
+  </div>
+
+  <br>
+  <br>
+  <br>
+  <hr>
+  <ng-container *ngFor="let item of item.children">
+    <app-nav-group *ngIf="item.type=='group'" [item]="item"></app-nav-group>
+    <app-nav-collapse *ngIf="item.type=='collapse'" [item]="item"></app-nav-collapse>
+    <app-nav-item *ngIf="item.type=='item'" [item]="item"></app-nav-item>
+  </ng-container>
+
+  <ng-container>
+    <app-nav-item [item]="itemSalir" (click)="Lock()"></app-nav-item>
+  </ng-container>
+
+</ng-container>

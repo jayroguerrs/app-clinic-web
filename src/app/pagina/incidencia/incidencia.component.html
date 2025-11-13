@@ -1,0 +1,102 @@
+<!-- SPINNER -->
+<ngx-spinner
+  [template]="rutaImageSpinner">
+  <p style="color: white" > Cargando... </p>
+</ngx-spinner>
+
+
+<!-- FILTRO GRILLA -->
+<div class="row">
+  <div class="col-sm-12">
+    <app-card [options]="false" cardTitle="INCIDENCIAS" [customHeader]="false">
+      <form  [formGroup]="formGroup">
+
+        <div class="form-row">
+
+          <div class="col-lg-3 mb-3">
+            <div class="form-floating form-start-icon">
+              <select class="custom-select" id="idSede" formControlName="idSede" >
+                <option [value]="0">Todos</option>
+                <option *ngFor="let sede of sedes" [value]="sede.idSede">{{ sede.nombre }}</option>
+              </select>
+              <label for="idSede">Sede</label>
+              <span class="icon"><span class="dicon sede m-auto"></span></span>
+            </div>
+          </div>
+
+          <div class="col-lg-3 mb-3">
+            <div class="form-floating form-start-icon">
+              <input id="filterDesde" type="date" placeholder=" " class="form-control" formControlName="fechaDesde" >
+              <label for="filterDesde">Fecha desde</label>
+              <span class="icon"><span class="dicon calendar m-auto"></span></span>
+            </div>
+          </div>
+
+          <div class="col-lg-3 mb-3">
+            <div class="form-floating form-start-icon">
+              <input id="filterHasta" type="date" placeholder=" " class="form-control" formControlName="fechaHasta" >
+              <label for="filterHasta">Fecha hasta</label>
+              <span class="icon"><span class="dicon calendar m-auto"></span></span>
+            </div>
+          </div>
+
+        </div>
+      </form>
+    </app-card>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-12">
+    <app-card [options]="false" [hidHeader]="true">
+      <app-incidencia-tabla #tabla [fechaDesde]="f.fechaDesde.value" [fechaHasta]="f.fechaHasta.value" [idSede]="f.idSede.value" [Sede]="sede"></app-incidencia-tabla>
+    </app-card>
+  </div>
+</div>
+
+<!-- BOTONERA ESCRITORIO -->
+<ul class="botonera-escritorio">
+  <li>
+    <button [disabled]="formGroup.invalid" type="button" class="btn btn-primary btn-icon" [placement]="'bottom'" ngbTooltip="Buscar" (click)= "buscar()"><i class="mdi mdi-magnify"></i></button>
+    <button *ngIf="this.accTot || this.accCrud || this.accCreate" type="button" class="btn btn-primary btn-icon" [placement]="'bottom'" ngbTooltip="Nuevo" (click)= "nuevo()"><i class="mdi mdi-plus-circle-outline"></i></button>
+    <!--<button *ngIf="selected" type="button" class="btn btn-warning btn-icon" [placement]="'bottom'" ngbTooltip="Editar" (click)= "editar()"><i class="mdi mdi-square-edit-outline"></i></button>-->
+    <button *ngIf="this.accTot || this.accExc" [disabled]="!collection.length" type="button" class="btn btn-secondary btn-icon" [placement]="'bottom'" ngbTooltip="Excel" (click)="exportar()"><i class="mdi mdi-file-excel-outline"></i></button>
+  </li>
+</ul>
+
+
+
+<!-- Menu Movil -->
+<div class="float-menu">
+  <button mat-fab color="primary" class="bg-primary" (click)="verOpciones()">
+    <mat-icon>settings</mat-icon>
+  </button>
+</div>
+<ng-template let-bottomSheetRef="bottomSheetRef" #menuMovil>
+  <div class="_content" >
+    <div class="_header">
+      <div class="px-4 pt-4 text-center">
+        <span class="d-inline-block topline"></span>
+        <p class="text-center text-white _title lead">Opciones</p>
+      </div>
+      <mat-divider class=""></mat-divider>
+    </div>
+
+    <mat-nav-list class="pt-0">
+      <a mat-list-item (click)= "buscar();cerrarOpciones();">
+        <i class="mat-list-icon mdi mdi-sync"></i>
+        <span class=" opt-title">Buscar</span>
+      </a>
+      <mat-divider></mat-divider>
+      <a mat-list-item (click)="nuevo();cerrarOpciones();">
+        <i class="mat-list-icon mdi mdi-plus-circle-outline"></i>
+        <span class=" opt-title">Nuevo</span>
+      </a>
+      <mat-divider></mat-divider>
+      <a mat-list-item (click)="exportar();cerrarOpciones();">
+        <i class="mat-list-icon mdi mdi-square-edit-outline"></i>
+        <span class=" opt-title">Exportar Excel</span>
+      </a>
+    </mat-nav-list>
+  </div>
+</ng-template>

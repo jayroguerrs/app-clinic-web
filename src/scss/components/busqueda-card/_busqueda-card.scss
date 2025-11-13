@@ -1,0 +1,39 @@
+
+.contenedor-filtros{
+  display: flex; 
+  justify-content: space-between; 
+  padding: 8px 24px;
+}
+
+.contenedor-filtros-izquierda{
+  display: flex; 
+  align-items: center; 
+  gap: 10px;
+}
+
+
+@media (max-width: 1614px) {
+    .contenedor-busqueda-nombre-cliente{
+        flex-direction: row !important;
+    }
+}
+
+@media (max-width: 421px) {
+    .contenedor-busqueda-nombre-cliente{
+        width: 50% !important;
+    }
+}
+
+@media (max-width: 1614px) {
+    .contenedor-busqueda-nombre-cliente{
+        flex-direction: row !important;
+    }
+}
+
+@media (max-width: 421px) {
+    .mdl-servicios-mbl{
+        max-height: 586px; 
+        overflow-y: auto;
+    }
+
+}

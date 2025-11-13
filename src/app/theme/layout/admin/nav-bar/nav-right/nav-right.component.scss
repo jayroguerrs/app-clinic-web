@@ -1,0 +1,65 @@
+.displayChatbox {
+    background: #00000047;
+    width: 49px;
+    height: 49px;
+    display: grid !important;
+    place-content: center;
+    border-radius: 25px !important;
+}
+
+.displayChatboxNotificacion{
+    background: #00caff;
+    width: 49px;
+    height: 49px;
+    display: grid !important;
+    place-content: center;
+    border-radius: 25px !important;
+
+    &:after{
+        position: absolute;
+        top: -2px;
+        left: 28px;
+        right: 0;
+        margin: auto;
+        width: 20px;
+        height: 20px;
+        border-radius: 100%;
+        background-color: red !important;
+    }
+}
+
+.total-notificaciones{
+    position: absolute;
+    top: -2px;
+    left: 28px;
+    right: 0;
+    margin: auto;
+    width: 24px;
+    height: 24px;
+    border-radius: 100%;
+    background-color: #0087ab !important;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    color: white;
+}
+
+.campana-activa{
+    //color: #3F4D67 !important;
+    color: #225F9C !important;
+}
+
+.anim-ring-activa{
+    &:after{
+        content: '';
+        position: absolute;
+        top: -2px;
+        left: 0;
+        right: 0;
+        margin: auto;
+        width: 6px;
+        height: 6px;
+        border-radius: 100%;
+        background-color: #225F9C !important;
+    }
+}

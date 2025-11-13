@@ -1,0 +1,32 @@
+::ng-deep.swal2-container {
+    z-index: 100000;
+}
+
+textarea:disabled {
+    background: #E0F5FE;
+  }
+.form-control[readonly]{
+  background-color: #fff;
+}
+
+.contenedor-img{
+  background: #EEEEEE; 
+  padding: 10px; 
+  border-radius: 10px; 
+  height: fit-content;
+}
+
+.p-cont{
+  padding-top: 0.6rem !important; 
+  padding-bottom: 0.6rem !important;
+}
+
+.ms-con{
+  margin-left: 0.5rem;
+}
+
+.ms-con p {
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+}

@@ -1,0 +1,30 @@
+<app-card class="h-100" [options]="false" [customHeader]="false" [options]="true" [collapse]="true" [excel]="true" (excelCallback)="exportarExcel()" cardTitle="Top 10 Zonas más atendidas">
+  <mat-progress-bar mode="indeterminate" id="progress" *ngIf="loading"></mat-progress-bar>
+
+  <div class="">
+    <div class="form-floating mb-2">
+      <select class="custom-select" id="numSesionZonaAtendida" [formControl]="numeroSesion" (change)="reloadTable()">
+        <option [value]="0" selected>Todos</option>
+        <option [value]="1">1</option>
+        <option [value]="2">2</option>
+        <option [value]="3">3</option>
+        <option [value]="4">4</option>
+        <option [value]="5">5</option>
+        <option [value]="6">6</option>
+        <option [value]="7">7</option>
+        <option [value]="8">8</option>
+        <option [value]="9">9</option>
+        <option [value]="10">10</option>
+      </select>
+      <label for="numSesionZonaAtendida">Número de sesión</label>
+    </div>
+    <!--<p class="text-center">{{ TitleChart }}</p>-->
+    <div class="table-container">
+      <div class="border rounded p-2">
+        <table id="table10TopZonas" datatable [dtOptions]="dtResponsiveOptions" class="table table-sm table-hover display compact"></table>
+      </div>
+    </div>
+
+    <div id="chartGeneral" class="border rounded mt-2"></div>
+  </div>
+</app-card>

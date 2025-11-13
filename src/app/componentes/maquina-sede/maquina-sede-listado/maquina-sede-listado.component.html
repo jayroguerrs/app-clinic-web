@@ -1,0 +1,134 @@
+﻿<!-- SPINNER -->
+<ngx-spinner
+    [template]="rutaImageSpinner">
+    <p style="color: white" > Cargando... </p>
+</ngx-spinner>
+
+
+<ng-template #modalMaquinaSedeDatos let-modal let-close="close">
+  <app-maquina-datos (eventMaquinaListar)="maquinaSedeListar()"
+    [listaSedes] = "listaSedes"
+    [listaMaquinas]="listaMaquinas"
+    [modal]="modalMaquinaSedeDatosRef"
+    [idMaquinaSede]="idMaquinaSede">
+  </app-maquina-datos>
+</ng-template>
+
+
+<div class="row">
+  <!-- FILTRO -->
+  <div class="col-sm-12">
+    <app-card cardTitle="MAQUINAS POR SEDE" [options]="false" [hidBlock]="true">
+
+      <!-- <form [formGroup]="frmFiltroGrilla">
+        <div class="form-row">
+          <div class="form-group col-md-auto">
+            <div class="input-group input-group-sm">
+              <div class="input-group-prepend">
+                <span class="input-group-text">Maquina </span>
+              </div>
+              <input type="text" class="form-control" formControlName="filterMaquina" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+            </div>
+          </div>
+          <div class="form-group col-md-auto">
+            <div class="input-group input-group-sm">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-default">Sede </span>
+                </div>
+                <select class = "custom-select" formControlName="filterSede">
+                    <option value=''>Todos</option>
+                    <option *ngFor="let sede of listaSedes" [value]="sede.idSede">{{ sede.nombre }}</option>
+                </select>
+            </div>
+          </div>
+        </div>
+      </form> -->
+
+    </app-card>
+  </div>
+
+  <!-- GRILLA -->
+  <div class="col-sm-12">
+    <app-card [options]="false" [customHeader]="true" [hidHeader]="true">
+
+      <div class="table table-sm-responsive">
+        <table datatable [dtOptions]="dtResponsiveOptions" class="table table-sm table-sm table-hover table-maquina display compact">
+        </table>
+      </div>
+
+    </app-card>
+  </div>
+</div>
+
+
+<!-- BOTONERA ESCRITORIO -->
+<ul class="botonera-escritorio">
+  <li>
+    <button matRipple type="button" class="btn btn-primary btn-icon" [placement]="'bottom'" ngbTooltip="Actualizar" (click)= "maquinaSedeListar()"><i class="mdi mdi-sync"></i></button>
+    <button matRipple  *ngIf="selected && (this.accTot || this.accCrud || this.accCreate)" type="button" class="btn btn-primary btn-icon" [placement]="'bottom'" ngbTooltip="Nuevo" (click)= "maquinaSedeNuevo(modalMaquinaSedeDatos)"><i class="mdi mdi-plus-circle-outline"></i></button>
+    <button matRipple *ngIf="selected && (this.accTot || this.accCrud || this.accUpdate)" type="button" class="btn btn-warning btn-icon" [placement]="'bottom'" ngbTooltip="Editar" (click)= "maquinaSedeEditar(modalMaquinaSedeDatos)"><i class="mdi mdi-square-edit-outline"></i></button>
+    <button matRipple *ngIf="selected" type="button" class="btn btn-warning btn-icon" [placement]="'bottom'" ngbTooltip="Asignar Tecnologías" (click)= "maquinaSedeTecnologia()"><i class="fa fa-cogs"></i></button>
+    <button matRipple *ngIf="selected" type="button" class="btn btn-secondary btn-icon" [placement]="'bottom'" ngbTooltip="Asignar Perfiles" (click)= "maquinaSedeAsignarPerfiles()"><i  class="mdi mdi-account-group-outline"></i></button>
+    <button *ngIf="this.accTot || this.accExc" matRipple type="button" class="btn btn-secondary btn-icon" [placement]="'bottom'" ngbTooltip="Excel" (click)="exportarTabla()"><i class="mdi mdi-file-excel-outline"></i></button>
+  </li>
+</ul>
+
+
+
+<!-- Menu Movil -->
+<div class="float-menu">
+  <button mat-fab color="primary" class="bg-primary" (click)="verOpciones()">
+    <mat-icon>settings</mat-icon>
+  </button>
+</div>
+<ng-template let-bottomSheetRef="bottomSheetRef" #menuMovil  >
+  <div class="_content" >
+    <div class="_header">
+      <div class="px-4 pt-4 text-center">
+        <span class="d-inline-block topline"></span>
+        <p class="text-center text-white _title lead">Opciones</p>
+      </div>
+      <mat-divider class=""></mat-divider>
+    </div>
+
+    <mat-nav-list class="pt-0">
+
+      <div>
+        <a mat-list-item (click)= "maquinaSedeListar();cerrarOpciones();">
+          <i class="mat-list-icon mdi mdi-sync"></i>
+          <span class=" opt-title">Actualizar lista</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+
+      <div>
+        <a mat-list-item (click)="maquinaSedeNuevo(modalMaquinaSedeDatos);cerrarOpciones();">
+          <i class="mat-list-icon mdi mdi-plus-circle-outline"></i>
+          <span class=" opt-title">Nuevo</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+
+      <div *ngIf="selected">
+        <a mat-list-item (click)="maquinaSedeEditar(modalMaquinaSedeDatos);cerrarOpciones();">
+          <i class="mat-list-icon mdi mdi-square-edit-outline"></i>
+          <span class=" opt-title">Editar</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+
+      <div>
+        <a mat-list-item (click)="exportarTabla();cerrarOpciones();">
+          <i class="mat-list-icon mdi mdi-file-excel-outline"></i>
+          <span class=" opt-title">Exportar excel</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+
+    </mat-nav-list>
+  </div>
+</ng-template>
+
+
+
+

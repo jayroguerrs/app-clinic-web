@@ -1,0 +1,251 @@
+.my-profile--card{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    figure {
+        width: 30px;
+        height: 30px;
+        overflow: hidden;
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+    span {
+        font-weight: bold;
+        font-size: 12px !important;
+        width: 12em;
+        text-align: center;
+    }
+}
+.cita-item1 {
+    background-color: #d6ff00 !important;
+}
+.cita-item2 {
+    background-color: #ff9100 !important;
+}
+
+.card--zonas {
+    font-weight: bold;
+    color: black;
+}
+.titulo{
+    background-image: linear-gradient(#04a9f5, #04a9f5);
+    color: white;
+    border-radius: 5px;
+    word-wrap: break-word;
+    padding: 4px;
+    font-size: 10px;
+    margin-top: 3px;
+    margin-bottom: 0;
+    text-align: center;
+
+    &.endpay {
+        color: #000000;
+        font-weight: bold;
+        background: #ff00f5;
+    }
+}
+
+.tituloEstado{
+    color: white;
+    border-radius: 5px;
+    word-wrap: break-word;
+    padding: 4px;
+    font-size: 10px;
+    margin-top: 3px;
+    margin-bottom: 0;
+    text-align: center;
+
+    &.Pagado {
+        color: #000000;
+        border: 1px solid #000000;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+}
+
+.div-contenedor:hover{
+    background-color: #7cf0939e !important;
+
+    border-right: 15px solid rgb(228, 31, 31);
+    border-top: 15px solid rgb(31, 240, 83);
+}
+
+.div-contenedor{
+    border: 1px solid #04a9f5;
+    border-right: 15px solid rgb(228, 31, 31);
+    border-top: 15px solid rgb(31, 240, 83);
+
+    border-radius: 7px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 3px;
+    margin-bottom: 10px;
+}
+
+.div-col {
+    height: 100%;
+    padding-left: 9px;
+    text-align: left;
+    vertical-align: middle;
+    white-space: normal;
+}
+
+.texto1 {
+    font-size: 10px;
+    color: black;
+}
+.textoRegistradorPor {
+    font-size: 8px;
+    color: black;
+}
+.fecha {
+    font-size: 8px;
+    color: blue;
+}
+
+
+
+//ESTILO DE BOTONES (MAQUINA)
+.selected,
+.selected:hover{
+    font-weight: bold;
+    background: rgb(238,174,202);
+    background: linear-gradient(90deg, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%);
+}
+
+//ESTILO DE FOTO
+.rounded-circle2 {
+    width:50px;
+    height:50px;
+    object-fit:cover;
+    border-radius: 50%;
+}
+
+
+.mytag {
+    clip-path: polygon(75% 0%, 100% 50%, 75% 100%, 0% 100%, 13% 50%, 0% 0%);
+    background-color: #ffcf00;
+    width: 100px;
+    height: 47px;
+    position: absolute;
+    right: -55px;
+    z-index: 1;
+    top: -31px;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    h6 {
+        font-size: 10px;
+        margin: 0;
+        font-weight: 600;
+        white-space: pre-wrap;
+    }
+    
+    &.disabled {
+        background-color: #d3d3d3;
+        color: #000000;
+        cursor: not-allowed;
+    }
+    
+    &:hover {
+        box-shadow: inset 0 0 10px #0000005c;
+    }
+    &.second {
+        background-color: aqua;
+    }
+    &.pagado {
+        background-color: #ff49d8;
+    }
+}
+
+// TITULO PAGADO
+.tituloPagado {
+    width:100%;
+    text-align: center;
+    font-size: 10px;
+    color: white;
+    margin-top:-13px;
+    margin-left:5px;
+    background: transparent;
+}
+
+
+.vertical-text{
+    font-size: 10px;
+    font-weight: bold;
+    height: auto;
+    background: transparent;
+    padding: 0px 10px 0px 0px;
+    margin: 0;
+    text-align: center;
+    top: 0;
+    position: absolute;
+    width: 1px;
+    white-space: inherit;
+    word-wrap: break-word;
+    right: -13px;
+    padding-top: 90px;
+}
+.div-contenedor{
+  padding-left: 15px;
+  position: relative;
+}
+.encuesta{
+  width: 15px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  background-color: #fff;
+  border-radius: 0 0 0 6px;
+  overflow: hidden;
+  border-right: 1px solid #04a9f5;
+  display: flex;
+  flex-direction: column;
+  span{
+    width: 100%;
+    height: 50%;
+    align-items: center;
+    display: inline-flex;
+    justify-content: center;
+    color: #04a9f5;
+    &:first-child{
+      border-bottom: 1px solid #04a9f5;
+    }
+    &.active{
+      background-color: #0386c3;
+      color: #fff;
+    }
+  }
+}
+
+.content-dialog {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+}
+.custom-text {
+    font-size: 9px;
+    font-weight: 700;
+    text-align: center;
+}
+
+.mySubtitle {
+    display: grid;
+    place-content: center;
+    margin: auto;
+
+    * {
+        margin: 0;
+        text-align: center;
+    }
+    h3 {
+        color: #9100ff;
+        font-weight: 700;
+    }
+}

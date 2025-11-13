@@ -1,0 +1,53 @@
+<mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+<div class="p-3">
+  <table datatable [dtOptions]="dtResponsiveOptions" class="table table-sm table-sm table-hover table-cliente display compact"></table>
+</div>
+
+
+
+<ng-template #opciones let-modal let-close="close" let-d="dismiss" class="fadeIn">
+  <div class="modal-header card-header bg-gradient border-bottom-0 py-3">
+    <h2 class="h5 fw-semibold d-flex flex-column">
+      <span class="text-white">Cronograma: #{{selected.id.toString().padStart(5,'0')}}</span>
+    </h2>
+    <button class="btn sbtn btn-sm btn-icon btn-active-color-primary h-auto w-auto p-0" (click)="modal.close()">
+    <span class="svg-icon svg-icon-1 text-white">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor"></rect>
+        <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor"></rect>
+      </svg>
+    </span>
+    </button>
+  </div>
+  <!--
+    <div class="modal-header bg-white">
+      <h2 class="h5 f-w-500 d-flex flex-column">
+        <span>Cita: {{modalCita}}</span>
+        <span class="fs-14px text-indigo">{{modalFecha}}</span>
+      </h2>
+      <button type="button" class="btn sbtn btn-sm btn-icon btn-active-color-primary h-auto w-auto p-0" (click)="modal.dismiss()">
+        <span class="svg-icon svg-icon-1">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor"></rect>
+            <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor"></rect>
+          </svg>
+        </span>
+      </button>
+    </div>-->
+  <div class="modal-body p-0 py-3 overflow-hidden">
+    <div class="list-group rounded-0">
+      <!--<button class="list-group-item list-group-item-action border-0 d-flex align-items-center px-4" (click)="modal.dismiss()">
+        <fontawesome-svg icon="eye" [width]="20" [height]="24" type="light" class="mr-3"></fontawesome-svg>
+        <span class="fs-16px">Ver</span>
+      </button>-->
+      <button class="list-group-item list-group-item-action border-0 d-flex align-items-center px-4" (click)="editarDatos();modal.dismiss()">
+        <fontawesome-svg icon="pen" [width]="20" [height]="24" type="light" class="mr-3"></fontawesome-svg>
+        <span class="fs-16px">Editar</span>
+      </button>
+      <button class="list-group-item list-group-item-action border-0 d-flex align-items-center px-4" (click)="asignarCitas();modal.dismiss()">
+        <fontawesome-svg icon="hand-pointer" [width]="20" [height]="24" type="light" class="mr-3"></fontawesome-svg>
+        <span class="fs-16px">Asignar Citas</span>
+      </button>
+    </div>
+  </div>
+</ng-template>

@@ -1,0 +1,63 @@
+<table class="table">
+  <thead>
+  <tr class="bg-light fw-semibold">
+    <th>Zona</th>
+    <th>Tecnología</th>
+    <th>Promoción</th>
+    <th class="w-110px">Sesión</th>
+    <th class="w-110px">Min</th>
+    <th>Agendado</th>
+    <th class="w-69px"></th>
+  </tr>
+  </thead>
+  <tbody>
+
+    <tr *ngFor="let d of collection; let i = index;">
+      <td class="f-w-500">{{ d.zona }}</td>
+      <td>
+        <select disabled class="form-select form-select-sm form-select-solid" (change)="changeTecnologia(i, $event)" [class.bg-color-light-danger]="submitted && !d.idTecnologia">
+          <option [value]="0" [selected]="0 === d.idTecnologia">--Seleccionar--</option>
+          <option *ngFor="let t of tecnologias" [value]="t.id" [selected]="t.id === d.idTecnologia">{{t.nombre}}</option>
+        </select>
+      </td>
+      <td>
+        <ng-container [ngSwitch]="d.loadingPromocionZona">
+          <div class="position-relative" *ngSwitchCase="false">
+            <span class="position-absolute no-pointer-events h-100 d-flex align-items-center ps-10px text-muted"><fontawesome-svg [width]="24" [height]="24" [icon]="'person'" [type]="'duotone'"  ></fontawesome-svg></span>
+            <select class="form-select form-select-sm form-select-solid ps-42px" (change)="changePromocion(i, $event)" [class.bg-color-light-danger]="submitted && !d.idPromocionPrecio">
+              <option value="">--Seleccionar--</option>
+              <option *ngFor="let pz of d.promocionZona" [value]="pz.idPromocionPrecio">{{pz.promocion}}</option>
+            </select>
+          </div>
+          <div *ngSwitchCase="true" class="sk block rounded h-41px"></div>
+          <div *ngIf="submitted && !d.idPromocionPrecio" class="invalid-feedback d-block">* Seleccionar una promoción</div>
+        </ng-container>
+      </td>
+      <td>
+        <input #sesion type="number" class="form-control form-control-sm form-control-solid max-w-80px" [class.bg-color-light-danger]="submitted && !d.sesion" step="1" min="1" max="20" [value]="d.sesion" (change)="changeSesion(i, $event)">
+      </td>
+      <td>
+        <input readonly type="number" class="form-control form-control-sm form-control-solid max-w-80px" step="5" min="5" [value]="d.minutos" (change)="changeMinutos(i, $event)">
+      </td>
+      <td class="w-400px">
+        <div *ngIf="d.sesion === 1" class="position-relative" >
+          <span class="position-absolute no-pointer-events h-100 d-flex align-items-center ps-10px text-muted"><fontawesome-svg [width]="24" [height]="24" [icon]="'user'" [type]="'duotone'" ></fontawesome-svg></span>
+          <input #idUsuarioAgendado type="hidden" class="form-control form-control-solid ps-42px" [value]="d.idUsuarioAgendado">
+          <input type="text" class="form-control form-control-sm form-control-solid ps-42px cursor-pointer" placeholder="--Seleccionar--" [class.bg-color-light-danger]="submitted && !d.idUsuarioAgendado" readonly [value]="d.usuarioAgendado" (click)="selectUser(d)">
+        </div>
+        <div *ngIf="submitted && !d.idUsuarioAgendado && d.sesion === 1" class="invalid-feedback d-block">* Seleccionar el usuario que agendo</div>
+      </td>
+      <td>
+        <button class="btn btn-sm sbtn btn-light-danger">
+          <fontawesome-svg type="regular" icon="trash-can" [width]="24" [height]="24"></fontawesome-svg>
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+
+
+

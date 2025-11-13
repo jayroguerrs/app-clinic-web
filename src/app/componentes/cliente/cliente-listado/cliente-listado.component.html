@@ -1,0 +1,163 @@
+﻿<!-- CLIENTE DATOS -->
+<ng-template #modalClienteDatos let-modal let-close="close">
+  <app-cliente-datos
+      (eventClienteListar)="clienteListar()"
+      [maestroDepartamento]="maestroDepartamento"
+      [maestroGenero]="maestroGenero"
+      [maestroTipoDocumento]="maestroDocumentoIdentidadTipo"
+      [maestroMedioContacto]="maestroMedioContacto"
+      [modal]="modalClienteDatosRef"
+      [idCliente]="idCliente"
+      [celularNuevoCliente]="clienteNuevoNumero">
+  </app-cliente-datos>
+</ng-template>
+
+<!-- CLIENTE FIRMA -->
+<ng-template #modalClienteFirma let-modal let-close="close">
+  <app-cliente-firma
+    (eventClienteListar)="clienteListar()"
+    [idCliente]="idCliente"
+    [modal]="modalClienteFirmaRef" >
+  </app-cliente-firma>
+</ng-template>
+
+<!-- SPINNER -->
+<ngx-spinner
+    [template]="rutaImageSpinner">
+    <p style="color: white" > Cargando... </p>
+</ngx-spinner>
+
+<!-- FILTRO -->
+<div class="row">
+  <div class="col-sm-12">
+    <app-card cardTitle="LISTADO DE CLIENTES" [options]="false" [hidBlock]="false">
+
+      <form [formGroup] = "frmFiltroGrilla">
+        <div class="form-row">
+          <div class="form-group col-md-auto">
+            <div class="form-floating">
+              <input type="text" class="form-control search" id="filterCliente" placeholder=" " formControlName="filterCliente" (keypress)="clienteListar($event)">
+              <label for="filterCliente">Cliente o Celular</label>
+            </div>
+            <span *ngIf="buscado">Se encontrarón {{ numClientes }} cliente(s)</span>
+          </div>
+        </div>
+      </form>
+
+    </app-card>
+  </div>
+</div>
+
+<div class="row">
+  <!-- GRILLA -->
+  <div class="col-sm-12">
+    <app-card [options]="false" [hidHeader]="true">
+      <div class="table table-sm-responsive">
+        <table datatable [dtOptions]="dtResponsiveOptions" class="table table-sm table-sm table-hover table-cliente display compact">
+        </table>
+      </div>
+    </app-card>
+  </div>
+</div>
+
+
+
+<!-- BOTONERA ESCRITORIO -->
+<ul class="botonera-escritorio">
+  <li>
+    <button type="button" class="btn btn-primary btn-icon"   [placement]="'bottom'" ngbTooltip="Buscar" (click)= "clienteListarBoton()"><i class="mdi mdi-magnify"></i></button>
+    <button *ngIf="this.accTot || this.accCrud || this.accCreate" type="button" class="btn btn-primary btn-icon"   [placement]="'bottom'" ngbTooltip="Nuevo" (click)= "clienteNuevo(modalClienteDatos)"><i class="mdi mdi-plus-circle-outline"></i></button>
+    <button *ngIf="selected && (this.accTot || this.accCrud || this.accUpdate)" type="button" class="btn btn-warning btn-icon" [placement]="'bottom'" ngbTooltip="Editar" (click)= "clienteEditar(modalClienteDatos)"><i class="mdi mdi-square-edit-outline"></i></button>
+    <button *ngIf="selected" type="button" class="btn btn-secondary btn-icon" [placement]="'bottom'" ngbTooltip="Generar cita" (click)= "citaNueva()"><i class="mdi mdi-calendar-cursor"></i></button>
+      <button *ngIf="selected" type="button" class="btn btn-secondary btn-icon" [placement]="'bottom'" ngbTooltip="Perfil cliente" (click)= "clientePerfil()" ><i class="mdi mdi-account-details-outline"></i></button>
+    <!-- <button type="button" class="btn btn-danger  btn-icon"   [placement]="'bottom'" ngbTooltip="Celular duplicado"id="btnCelDuplicado1"  (click)= "clienteNuevo(modalClienteDatos)">   <i class="fa fa-exclamation-triangle"></i>   </button> -->
+  </li>
+</ul>
+
+
+
+<!-- FIRMA CLIENTE -->
+<app-ui-modal #exampleFirma dialogClass="modal-dialog-centered">
+  <div class="app-modal-header"><h5 class="modal-title">Firma del Cliente</h5></div>
+  <div class="app-modal-body">
+    <canvas ngDefaultControl  #sPad
+      [(ngModel)]="serieFirma"
+      style="touch-action: none; background-color:rgb(212, 212, 212); border-radius: 15px; border: 2px; border-color: green;">
+    </canvas>
+  </div>
+  <div class="app-modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="exampleFirma.hide()">Cerrar</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="limpiarCanvas()">Limpiar</button>
+        <button type="button" class="btn btn-primary" (click)="actualizarImagen()" >Guardar</button>
+  </div>
+</app-ui-modal>
+
+<!-- MOSTRAR FIRMA -->
+<app-ui-modal #exampleverFirma dialogClass="modal-dialog-centered">
+      <div class="app-modal-header"><h5 class="modal-title">Visualización de Firma del Cliente</h5></div>
+      <div class="app-modal-body"><img [src]="serieFirma"><br></div>
+      <div class="app-modal-footer"><button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="exampleverFirma.hide()">Cerrar</button></div>
+</app-ui-modal>
+
+
+
+<!-- Menu Movil -->
+<div class="float-menu">
+  <button mat-fab color="primary" class="bg-primary" (click)="verOpciones()">
+    <mat-icon>settings</mat-icon>
+  </button>
+</div>
+<ng-template let-bottomSheetRef="bottomSheetRef" #menuMovil  >
+  <div class="_content" >
+    <div class="_header">
+      <div class="px-4 pt-4 text-center">
+        <span class="d-inline-block topline"></span>
+        <p class="text-center text-white _title lead">Opciones</p>
+      </div>
+      <mat-divider class=""></mat-divider>
+    </div>
+
+    <mat-nav-list class="pt-0">
+
+      <div>
+        <a mat-list-item (click)= "clienteListarBoton();cerrarOpciones();">
+          <i class="mat-list-icon mdi mdi-magnify"></i>
+          <span class=" opt-title">Buscar cliente</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+
+      <div>
+        <a mat-list-item (click)="clienteNuevo(modalClienteDatos);cerrarOpciones();">
+          <i class="mat-list-icon mdi mdi-plus-circle-outline"></i>
+          <span class=" opt-title">Agregar nuevo cliente</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+
+      <div *ngIf="selected">
+        <a mat-list-item (click)="clienteEditar(modalClienteDatos);cerrarOpciones();">
+          <i class="mat-list-icon mdi mdi-square-edit-outline"></i>
+          <span class=" opt-title">Editar cliente</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+
+      <div *ngIf="selected">
+        <a mat-list-item (click)="citaNueva();cerrarOpciones();">
+          <i class="mat-list-icon mdi mdi-calendar-cursor"></i>
+          <span class=" opt-title">Generar cita</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+
+      <div *ngIf="selected">
+        <a mat-list-item (click)="clientePerfil();cerrarOpciones();">
+          <i class="mat-list-icon mdi mdi-account-details-outline"></i>
+          <span class=" opt-title">Perfil cliente</span>
+        </a>
+      </div>
+
+    </mat-nav-list>
+  </div>
+</ng-template>

@@ -1,0 +1,304 @@
+<app-preferente-telefonos (mostrarCadenaTelefonos)="setTelefono($event)" [listaNumerosDetalle]="listaNumerosDetalle"></app-preferente-telefonos>
+<app-preferente-zona-corporal (strZonasCorporales)="concatenarZonasCorporales($event)" [listaZonaCorporalDetalle]="listaZonaCorporalDetalle" ></app-preferente-zona-corporal>
+
+<!-- UBIGEO -->
+<ng-template #modalUbigeo let-modal let-close="close">
+    <app-preferente-ubigeo
+        [listaMaestraDepartamentos] = "listaMaestra.departamentos"
+        [direccionDetalle] = "direccionDetalle"
+        [modal] = "modalUbigeoRef"
+        (direccion)="setDireccion($event)">
+    </app-preferente-ubigeo>
+</ng-template>
+
+<app-preferente-observacion (mostrarObservacion)="setObservacion($event)" [listaObservacionesDetalle]="listaObservacionesDetalle"></app-preferente-observacion>
+
+<!-- MODAL PREFERENTE CLIENTE -->
+<!--<ng-template #modalPreferenteCliente let-modal let-close="close">
+    <app-preferente-cliente [idPreferente]="id" [modal]="modalPreferenteClienteRef" (eventCerrarModal)="cerrarModal()"></app-preferente-cliente>
+</ng-template>-->
+
+<ngx-spinner
+    [template]="rutaImageSpinner" >
+    <p style="color: white" > Cargando... </p>
+</ngx-spinner>
+
+<!-- COMPONENTE -->
+<form [formGroup]="frmPreferenteDatos">
+
+    <div class="modal-header card-header">
+        <h5 class="modal-title">{{ id ? 'Editar' : 'Nuevo' }} preferente</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+            (click)="cerrarModal(false)"><span aria-hidden="true">&times;</span></button>
+    </div>
+
+    <div class="modal-body card-body">
+        <div class="border rounded legend p-3 mb-3">
+          <label class="text-uppercase font-weight-bold">Cliente</label>
+          <div class="form-row">
+
+            <div class="col-md-6 mb-3 mb-lg-0">
+              <div class="form-floating " >
+                <input type="text" class="form-control" id="preNombres" formControlName="preNombres" placeholder=" " >
+                <label for="preNombres">Nombres <span class="text-danger">*</span></label>
+              </div>
+              <div *ngIf="submitted && f.preNombres.errors" class="invalid-feedback d-block">
+                <div *ngIf="f.preNombres.errors.required">* Campo requerido</div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-floating " >
+                <input type="text" class="form-control" id="preApellidos" formControlName="preApellidos" placeholder=" " >
+                <label for="preApellidos">Apellidos <span class="text-danger">*</span></label>
+              </div>
+              <div *ngIf="submitted && f.preApellidos.errors" class="invalid-feedback d-block">
+                <div *ngIf="f.preApellidos.errors.required">* Campo requerido</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="border rounded legend p-3 mb-3">
+          <label class="text-uppercase font-weight-bold">Datos de contacto</label>
+          <div class="form-row">
+            <div class="col-md-6 mb-3">
+              <div class="form-floating " >
+                <input type="text" class="form-control" id="preEmail" formControlName="preEmail" placeholder=" " >
+                <label for="preEmail">Correo electrónico</label>
+              </div>
+            </div>
+            <div class="form-group col-md-6 mb-3">
+              <div class="form-floating form-button">
+                <input  type="text" id="preNumeros" class="form-control" formControlName="preNumeros" placeholder=" " (click)="abrirModalTelefono()"/>
+                <label for="preNumeros">Teléfonos de contacto</label>
+                <button type="button" ngbTooltip="Agregar teléfonos" (click)="abrirModalTelefono()"><i class="mdi mdi-phone-log"></i></button>
+              </div>
+            </div>
+
+            <div class="col-md-12">
+              <div class="form-floating form-button">
+                <input  type="text" id="preDireccion" class="form-control text-uppercase" formControlName="preDireccion" placeholder=" " (click)="abrirModalUbigeo(modalUbigeo)"/>
+                <label for="preDireccion">Dirección</label>
+                <button type="button" ngbTooltip="Seleccionar ubicación" (click)="abrirModalUbigeo(modalUbigeo)"><i class="mdi mdi-map-marker-outline"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="border rounded legend p-3 mb-3">
+        <label class="text-uppercase font-weight-bold">Redes Sociales</label>
+        <div class="form-row">
+          <div class="col-md-6 mb-3">
+            <div class="form-floating " >
+              <input type="text" class="form-control pe-45px" id="preRedFacebook" formControlName="preRedFacebook" placeholder=" " #usuarioFacebook (keydown.enter)="$event.preventDefault();evtConsultarPreferenteByUsuFacebook()">
+              <label for="preEmail">Usuario Facebook</label>
+              <button type="button" [disabled]="!usuarioFacebook.value" class="position-absolute end-0 top-0 bottom-0 bg-transparent border-0 px-3" (click)="evtConsultarPreferenteByUsuFacebook()"><i class="fa-regular fa-magnifying-glass text-muted fs-16px"></i></button>
+            </div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <div class="form-floating " >
+              <input type="text" class="form-control" id="preRedInstagram" formControlName="preRedInstagram" placeholder=" " #usuarioInstagram (keydown.enter)="$event.preventDefault();evtConsultarPreferenteByUsuInstagram()">
+              <label for="preEmail">Usuario Instagram</label>
+              <button type="button" [disabled]="!usuarioInstagram.value" class="position-absolute end-0 top-0 bottom-0 bg-transparent border-0 px-3" (click)="evtConsultarPreferenteByUsuInstagram()"><i class="fa-regular fa-magnifying-glass text-muted fs-16px"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+        <div class="border rounded legend p-3 mb-3">
+          <label class="text-uppercase font-weight-bold">Datos adicionales</label>
+
+          <div class="form-row">
+
+            <div class="col-md-6 mb-3">
+              <div class="form-floating">
+                <select class="form-select" id="preIdMedioContacto" formControlName="preIdMedioContacto" >
+                  <option select value=''>...Seleccionar...</option>
+                  <option *ngFor="let medioContacto of listaMaestra.mediosContactos" [value]="medioContacto.id">{{ medioContacto.nombre }}</option>
+                </select>
+                <label for="preIdMedioContacto">Medio de Contacto <span class="text-danger">*</span></label>
+              </div>
+            </div>
+
+
+            <div class="mb-3 col-md-6">
+              <div class="form-floating " >
+                <input type="text" class="form-control" id="prePromocion" formControlName="prePromocion" placeholder=" " >
+                <label for="prePromocion">Promoción</label>
+              </div>
+            </div>
+
+            
+            <div class="col-md-6 mb-3">
+              <div class="form-floating">
+                <select class="form-select" id="preIdMedioContactoCierre" formControlName="preIdMedioContactoCierre" >
+                  <option select value=''>...Seleccionar...</option>
+                  <option *ngFor="let medioContacto of listaMaestra.mediosContactos" [value]="medioContacto.id">{{ medioContacto.nombre }}</option>
+                </select>
+                <label for="preIdMedioContactoCierre">Medio de Contacto de Cierre<span class="text-danger">*</span></label>
+              </div>
+            </div>
+
+            <div class="mb-3 col-12">
+              <div class="form-floating form-button">
+                <input  type="text" id="preZonasCorporal" class="form-control text-uppercase" formControlName="preZonasCorporal" placeholder=" " (click)="abrirModalZonaCorporal()"/>
+                <label for="preZonasCorporal">Zonas corporales</label>
+                <button type="button" ngbTooltip="Seleccionar zonas" (click)="abrirModalZonaCorporal()"><i class="mdi mdi-human"></i></button>
+              </div>
+            </div>
+
+            <div class="mb-3 col-12 depilform">
+
+              <label class="label p-0 mb-1" for="idPerfiles">Asignado a:</label>
+              <ng-select #selectPreferente id="idPerfiles" class="w-100"  [items]="listaMaestra.teleoperadores" bindLabel="nombre" bindValue="idUsuario" formControlName="preIdTeleoperadorAsignado" [multiple]="false" [searchable]="true" placeholder="--Seleccionar--">
+              </ng-select>
+            </div>
+
+            <div class="mb-3 col-6">
+              <div class="form-floating">
+                <select class="form-select" id="preIdEstado" formControlName="preIdEstado" >
+                  <option *ngFor="let estado of  listaMaestra.estado" [value]="estado.id">{{ estado.descripcion }}</option>
+                </select>
+                <label for="preIdEstado">Estado</label>
+              </div>
+            </div>
+
+            <div class="mb-3 col-6">
+              <div class="form-floating">
+                <select #esCliente class="form-select" id="esCliente" formControlName="esCliente" >
+                  <option  [value]="0">NO</option>
+                  <option  [value]="1">SI</option>
+                </select>
+                <label for="esCliente">Es Cliente</label>
+              </div>
+            </div>
+
+            <div *ngIf="esCliente.value == 1" class="mb-3 col-12">
+              <div class="form-floating form-button">
+                <input type="hidden" formControlName="idCliente">
+                <input  type="text" class="form-control text-uppercase" formControlName="cliente" placeholder=" " (click)="abrirPreferenteCliente()"/>
+                <label for="preZonasCorporal">Seleccionar cliente <span class="text-danger">*</span></label>
+                <button type="button" ngbTooltip="Seleccionar cliente" (click)="abrirPreferenteCliente()"><i class="mdi mdi-human"></i></button>
+              </div>
+              <div *ngIf="submitted && f.cliente.errors" class="invalid-feedback d-block">
+                <div *ngIf="f.cliente.errors.required">* Campo requerido</div>
+              </div>
+            </div>
+
+
+            <div class="col-12 pb-2">
+              <div class="form-floating">
+                <div class="textarea" (click)="abrirModalComentario()">
+                  <textarea  id="preObservacion" formControlName="preObservacion" placeholder=" " class="form-control no-pointer-events" ></textarea>
+                  <label for="preObservacion">Observación</label>
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-lg-4">
+              <div class="utm-field-container">
+                <!-- Ocultar el input original -->
+                <div class="form-floating form-button d-none">
+                  <input type="text" id="utmSource" class="form-control text-uppercase" formControlName="utmSource" placeholder=" "/>
+                  <label for="utmSource">UTM Source</label>                
+                </div>
+                <!-- Nuevo control de select -->
+                <div class="select-container">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>UTM Source</mat-label>
+                    <mat-select 
+                               [(ngModel)]="selectedSourceOption" 
+                               [ngModelOptions]="{standalone: true}"
+                               [disabled]="isLoading"
+                               (selectionChange)="onUtmSourceChanged($event)">
+                      <mat-option *ngIf="isLoading">
+                        <span class="loading-indicator">
+                          <i class="fa fa-spinner fa-spin"></i> Cargando...
+                        </span>
+                      </mat-option>
+                      <mat-option>
+                        None
+                      </mat-option>
+                      <mat-option *ngFor="let option of utmSourceOptions" [value]="option">
+                        {{ option.name }}
+                      </mat-option>
+                    </mat-select>
+                    <div *ngIf="isLoading && !utmSourceOptions.length" class="loading-indicator position-absolute" style="right: 10px; top: 10px;">
+                      <i class="fa fa-spinner fa-spin"></i>
+                    </div>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-4 pb-2">
+              <div class="utm-field-container">
+                <!-- Ocultar el input original -->
+                <div class="form-floating form-button d-none">
+                  <input type="text" id="utmCampaign" class="form-control text-uppercase" formControlName="utmCampaign" placeholder=" "/>
+                  <label for="utmCampaign">UTM Campaign</label>                
+                </div>
+                <!-- Nuevo control de select -->
+                <div class="select-container">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>UTM Campaign</mat-label>
+                    <mat-select 
+                               [(ngModel)]="selectedCampaignOption" 
+                               [ngModelOptions]="{standalone: true}"
+                               [disabled]="!selectedSourceOption"
+                               [class.utm-campaign-disabled]="!selectedSourceOption"
+                               (selectionChange)="onUtmCampaignChanged($event)">
+                      <mat-option *ngIf="isLoading && selectedSourceOption">
+                        <span class="loading-indicator">
+                          <i class="fa fa-spinner fa-spin"></i> Cargando campañas...
+                        </span>
+                      </mat-option>
+                      <mat-option>
+                        None
+                      </mat-option>
+                      <mat-option *ngFor="let option of selectedCampaigns" [value]="option">
+                        {{ option.name }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>   
+            <div class="col-lg-4">
+              <div class="form-floating form-button">
+                <input type="text" id="utmMedium" class="form-control text-uppercase" formControlName="utmMedium" placeholder=" "/>
+                <label for="utmMedium">UTM Medium</label>                
+              </div>
+            </div>         
+            <div class="col-lg-4">
+              <div class="form-floating form-button">
+                <input  type="text" id="utmId" class="form-control text-uppercase" formControlName="utmId" placeholder=" "/>
+                <label for="utmId">UTM Id</label>                
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-floating form-button">
+                <input  type="text" id="utmTerm" class="form-control text-uppercase" formControlName="utmTerm" placeholder=" "/>
+                <label for="utmTerm">UTM Term</label>                
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-floating form-button">
+                <input  type="text" id="codAtencion" class="form-control text-uppercase" formControlName="codAtencion" placeholder=" "/>
+                <label for="codAtencion">UTM Cont</label>                
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+    </div>
+
+    <div class="modal-footer card-footer">
+<!--        <button type="button" class="btn btn-outline-primary mr-auto" (click)="abrirPreferenteCliente()"><i class="feather icon-user"></i>Buscar Cliente</button>-->
+        <button *ngIf="this.accTot || this.accUpdate" type="button" class="btn btn-outline-primary" (click)="preferenteGrabar()"><i class="feather icon-save"></i>Guardar</button>
+        <button type="button" class="btn btn-outline-danger"  (click)="cerrarModal(false)"><i class="feather icon-slash"></i>Cancelar</button>
+    </div>
+</form>

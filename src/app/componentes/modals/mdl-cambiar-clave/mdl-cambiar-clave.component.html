@@ -1,0 +1,53 @@
+<div class="modal-header card-header bg-gradient border-bottom-0">
+  <h2 class="d-flex align-middle">
+    <div class="my-auto mr-3">
+      <fontawesome-svg icon="shield-exclamation" [width]="22" [height]="22" type="duotone" class="text-white"></fontawesome-svg>
+    </div>
+    <div class="my-auto">
+      <h2 class="mb-0 fs-18px f-w-500 text-white" >Cambiar contraseña</h2>
+    </div>
+  </h2>
+  <button [disabled]="ldSubmit" class="btn sbtn btn-sm btn-icon btn-active-color-primary h-auto w-auto p-0" (click)="modal.close(false)">
+    <span class="svg-icon svg-icon-1 text-white">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor"></rect>
+        <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor"></rect>
+      </svg>
+    </span>
+  </button>
+</div>
+
+<div class="modal-body card-body p-0">
+  <mat-progress-bar *ngIf="ldSubmit" mode="indeterminate"></mat-progress-bar>
+  <div class="h-100 p-4">
+    <div class="h-100 overflow-auto">
+      <form [formGroup]="frmGroup" >
+
+      <div class="form-group popins">
+        <label class="fw-semibold text-gray-800 required" for="clave">Ingresar nueva contraseña</label>
+        <input type="password" maxlength="20" class="form-control form-control-solid" id="clave" formControlName="clave" [ngClass]="{ 'bg-color-light-danger': submitted && f.clave.errors }" >
+        <div *ngIf="submitted && f.clave.errors" class="invalid-feedback d-block">
+          <div *ngIf="f.clave.errors.required">Ingresar la nueva contraseña</div>
+        </div>
+      </div>
+
+
+      <div class="form-group popins">
+        <label class="fw-semibold text-gray-800 required" for="repetirClave">Repetir nueva contraseña</label>
+        <input type="password" maxlength="20" class="form-control form-control-solid" id="repetirClave" formControlName="repetirClave" [ngClass]="{ 'bg-color-light-danger': submitted && f.repetirClave.errors }" >
+        <div *ngIf="submitted && f.repetirClave.errors" class="invalid-feedback d-block">
+          <div *ngIf="submitted && f.repetirClave.errors.required">Confirmar la nueva contraseña</div>
+          <div *ngIf="submitted && f.repetirClave.errors.confirmedValidator">Debe ser igual a la nueva contraseña</div>
+        </div>
+      </div>
+
+
+      </form>
+
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <button [disabled]="ldSubmit" type="reset" class="btn sbtn btn-light mr-2" (click)="cerrarModal()">Cancelar</button>
+  <button [disabled]="ldSubmit" type="submit" class="btn sbtn btn-primary shadow btn-shadow-primary" (click)="onSubmit()">Aceptar</button>
+</div>

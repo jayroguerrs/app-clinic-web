@@ -1,0 +1,21 @@
+textarea { text-transform: uppercase; }
+.select-radio{
+  position: relative;
+  background-color: #f8f5ff;
+  &.select{
+    background-color: #3F51B1;
+    &:before{
+      margin: auto;
+      position:absolute;
+      content: "";
+      width: 50%;
+      height: 50%;
+      background-color: white;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      border-radius: 100%;
+    }
+  }
+}

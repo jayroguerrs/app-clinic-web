@@ -1,0 +1,1685 @@
+<!-- MODAL CUPON APLICA -->
+<ng-template #modCitaCuponAplica let-modal let-close="close">
+  <app-cita-cupon-zona
+    [modal]="modalCitaCuponAplicaRef"
+    [datosCita]="cita">
+  </app-cita-cupon-zona>
+</ng-template>
+
+<!-- MODAL HORARIO -->
+<ng-template #modCitaHorario let-modal let-close="close">
+    <app-cita-horarios
+        (eventoOrdenarCitasDetalles)="ordenarCitasDetalles()"
+        (eventoCalcularTotalHijo)="calcularTotalesEvento()"
+        (desahibilitarZonaPorCruceDeHorario)="desahibilitarZonaPorCruceDeHorario($event)"
+        [modal]="modalCitaHorarioRef"
+        [maestroSedes]="maestroSedes"
+        [maestroMaquinaSedes]="maestroMaquinaSedes"
+        [maestroZonasCorporales]="maestroZonasCorporales"
+        [datosCita]="cita">
+    </app-cita-horarios>
+</ng-template>
+
+<!-- MODAL SELECCION USUARIO -->
+<ng-template #modUsuarioSeleccion let-modal let-close="close">
+    <app-usuario-seleccion
+        (eventUsuarioSeleccionado)="eventUsuarioSeleccionado($event)"
+        [modal]="modalUsuarioSeleccionRef"
+        [idPerfil]="idPerfilBuscarUsuario"
+        [idSede]="cita.idSede">
+    </app-usuario-seleccion>
+</ng-template>
+
+<!-- MODAL CITA HISTORIAL -->
+<ng-template #modCitaHist let-modal let-close="close">
+    <app-cita-historial
+        [idCita]="cita.idCita"
+        [modal]="modalCitaHistorialRef">
+    </app-cita-historial>
+</ng-template>
+
+
+<!-- MODAL EVOLUCION TRATAMIENTO -->
+<ng-template #modEvolucionTratamiento let-modal let-close="close">
+  <app-evolucion-tratamiento-datos-modal
+    [idCita]="cita.idCita"
+    [modal]="modalHistoriaClinicaRef"
+    [cita]="cita"
+    [evolucionTratamiento]="evolucionTratamiento"
+    [collectionCitaDetalle]="collectionCitaDetalle"
+    [edit]="editarEvolucion">
+  </app-evolucion-tratamiento-datos-modal>
+</ng-template>
+
+<!-- SPINNER -->
+<ngx-spinner
+    [template]="rutaImageSpinner" >
+    <p style="color: white" > Cargando... </p>
+</ngx-spinner>
+
+<!-- CONDICION ESTADO CITA -->
+<ng-template #modCitaEstado let-modal let-close="close">
+    <app-cita-condicion-estado
+        [modal] = "modalCitaEstadoRef"
+        (eventoCondicionCambiada)="eventoCondicionCambiada($event)"
+        [datosCita] = "datosCitaCondicion">
+    </app-cita-condicion-estado>
+</ng-template>
+
+<!-- MEDICION ALTERNATIVA CITA -->
+<ng-template #modCitaMedicion let-modal let-close="close">
+  <app-cita-medicion-estado
+    [modal] = "modalCitaMedicionRef"
+    [idCita] = "cita.idCita"
+    [tipoMedicion]="tipoMedicion"
+    [citaMedicion]="citaMedicion">
+  </app-cita-medicion-estado>
+</ng-template>
+
+<!-- MODAL DE OPCIONES DE CITA -->
+<app-ui-modal #mdlCitaBox dialogClass="modal-dialog-centered" hideFooter="true">
+  <div class="app-modal-header">
+    <h5 class="modal-title">Opciones de Box</h5>
+    <button type="button" class="close basic-close" data-dismiss="modal" aria-label="Close" (click)="mdlCitaBox.hide()"><span aria-hidden="true">&times;</span></button>
+  </div>
+  <div class="app-modal-body">
+      <!-- ATENDIDO POR -->
+      <div class="form-row" *ngIf="isSmallScreen === true">
+        <div class="form-group col-md-3">
+          <div class="form-floating form-start-icon"  >
+            <input type="text"
+                   class="form-control"
+                   id="atendidoPor"
+                   name="atendidoPor"
+                   placeholder=" "
+                   [attr.atendidoPor-idUsuario]="cita.idUsuarioAtendidoPor"
+                   [disabled]="cita.accionCita == 1"
+                   [value]="cita.usuarioAtendidoPor"
+                   (click)="abrirSelecionarUsuario(modUsuarioSeleccion)">
+            <label for="atendidoPor">Atendido por</label>
+            <span class="icon">
+                <span class="dicon user m-auto"></span>
+              </span>
+          </div>
+        </div>
+
+        <div class="form-group col-md-2">
+          <div class="form-floating form-start-icon" >
+            <select [disabled]="cita.accionCita == 1" class="custom-select" id="numeroBox" [(ngModel)]="cita.numeroBox"  name="numeroBox">
+              <option [value]="0" selected>--Seleccionar--</option>
+              <option *ngFor="let e of utilsService.counter(25); let i = index" [value]="i+1">{{ (i+1) }}</option>
+            </select>
+            <label for="idServicio">N° Box Disponibles</label>
+            <span class="icon"><span class="dicon machine m-auto"></span></span>
+          </div>
+        </div>
+
+        <div class="form-group col-md-2">
+          <div class="form-floating form-start-icon">
+            <select [disabled]="cita.accionCita == 1" class="custom-select" id="idMaquinaMarca" [(ngModel)]="cita.idMaquinaMarca"  name="idMaquinaMarca" >
+              <option [value]="0" selected>--Seleccionar--</option>
+              <option *ngFor="let m of maquinaMarcas" [value]="m.id" >{{ m.nombre }}</option>
+            </select>
+            <label for="idServicio">Nombre Maquina</label>
+            <span class="icon"><span class="dicon machine m-auto"></span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-center">
+        <button *ngIf="cita.idEstado !== 7" [disabled]="validarIniciarAtencion()" type="button" class="btn btn-primary mb-2 mt-2"  [placement]="'top'" (click)="inicioAtencion(); mdlCitaBox.hide()" ngbTooltip="Atender Cita">Iniciar</button>
+      </div>
+
+  </div>
+</app-ui-modal>
+
+<div class="row">
+
+  <!-- DATOS CLIENTE Y CITA -->
+  <div class="col-sm-12">
+    <app-card [options]="false" [cardTitle]= "titulo" [cardTitle2]= "titulo2" [headerColor]="cita.colorEstado" [headerFontColor]="colorFuente">
+
+      <div class="form-row">
+
+        <div class="form-group col-md-6">
+
+          <div class="group-floating form-start-icon disabled">
+            <div class="after">
+              <a class="text-primary" [href]="'ClientePerfil/' + this.cita?.cliente?.id" target="_blank">
+                <span *ngIf="cita.cliente.seudonimo != ''">{{cita.cliente.id}} - {{ cita.cliente.nombresCompletos}} - [{{cita.cliente.seudonimo}}] - HC ({{ cita.cliente.idHistoriaClinica }})</span>
+                <span *ngIf="cita.cliente.seudonimo == ''">{{cita.cliente.id}} - {{ cita.cliente.nombresCompletos}} - HC ({{ cita.cliente.idHistoriaClinica }})</span>
+              </a>
+            </div>
+            <label>Nombre del paciente</label>
+            <span class="icon"><span class="dicon user m-auto"></span></span>
+          </div>
+
+        </div>
+        <div *ngIf="debeMostrarDocumentoEspecialista()" class="form-group col-md-3">
+
+          <div class="group-floating form-start-icon disabled">
+            <div class="after text-dark">{{ cita?.cliente?.documento }}</div>
+            <label>Número de documento</label>
+            <span class="icon"><span class="dicon person-document m-auto"></span></span>
+          </div>
+
+        </div>
+        <div *ngIf="debeMostrarDocumentoEspecialista()" class="form-group col-md-3">
+
+          <div class="group-floating form-start-icon disabled">
+            <div class="after text-dark">{{ cita?.cliente?.numerosCelulares }}</div>
+            <label>Números celulares</label>
+            <span class="icon"><span class="dicon phone m-auto"></span></span>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div *ngIf="debeMostrarDocumentoEspecialista()" class="form-row">
+        <div  class="form-group col-md-2">
+
+          <div class="group-floating form-start-icon disabled">
+            <div class="after text-dark">{{ cita?.sede }}</div>
+            <label>Sede de cita</label>
+            <span class="icon"><span class="dicon sede m-auto"></span></span>
+          </div>
+
+        </div>
+        <div class="form-group col-md-3">
+
+          <div class="group-floating form-start-icon disabled upd-mydate--input" >
+            <div class="after text-dark">{{ cita?.fecha | date: formatoFecha }}</div>
+            <label>Fecha de cita</label>
+            <span class="icon"><span class="dicon calendar m-auto"></span></span>
+            <i *ngIf="AccionesCita.EDITAR || AccionesCita.NUEVA" (click)="irHorario(modCitaHorario);" class="mdi mdi-pencil m-0"></i>
+          </div>
+
+        </div>
+        <div class="form-group col-md-3">
+
+          <div class="group-floating form-start-icon disabled">
+            <div class="after text-dark">{{ cita?.horaInicio | date: formatoHora }}</div>
+            <label>Hora</label>
+            <span class="icon"><span class="dicon o-clock m-auto"></span></span>
+          </div>
+
+        </div>
+
+        <div class="form-group col-md-4 hide-mobile">
+
+          <div class="group-floating form-start-icon disabled" >
+            <div class="after text-dark">{{ cita?.cliente?.razonSocial }}</div>
+            <label>{{ cita?.cliente?.ruc || "Ruc" }} </label>
+            <span class="icon"><span class="dicon bussines m-auto"></span></span>
+          </div>
+
+        </div>
+
+      </div>
+
+      <ngb-accordion #acc="ngbAccordion">
+      <ngb-panel [id]="'datos-cliente'">
+        <ng-template style="padding-top: 0 !important; display: none;" ngbPanelTitle>
+        </ng-template>  
+
+
+        <ng-template ngbPanelContent>
+          <div class="form-group">
+
+            <div class="group-floating form-start-icon disabled">
+              <div class="after text-dark">{{ cita?.cliente?.documento }}</div>
+              <label>Número de documento</label>
+              <span class="icon"><span class="dicon person-document m-auto"></span></span>
+            </div>
+
+          </div>
+          <div class="form-group">
+
+            <div class="group-floating form-start-icon disabled">
+              <div class="after text-dark">{{ cita?.cliente?.numerosCelulares }}</div>
+              <label>Números celulares</label>
+              <span class="icon"><span class="dicon phone m-auto"></span></span>
+            </div>
+
+          </div>
+          <div class="form-row">
+            <div  class="form-group col-md-2">
+
+              <div class="group-floating form-start-icon disabled">
+                <div class="after text-dark">{{ cita?.sede }}</div>
+                <label>Sede de cita</label>
+                <span class="icon"><span class="dicon sede m-auto"></span></span>
+              </div>
+
+            </div>
+            <div class="form-group col-md-3">
+
+              <div class="group-floating form-start-icon disabled upd-mydate--input" >
+                <div class="after text-dark">{{ cita?.fecha | date: formatoFecha }}</div>
+                <label>Fecha de cita</label>
+                <span class="icon"><span class="dicon calendar m-auto"></span></span>
+                <i *ngIf="AccionesCita.EDITAR || AccionesCita.NUEVA" (click)="irHorario(modCitaHorario);" class="mdi mdi-pencil m-0"></i>
+              </div>
+
+            </div>
+            <div class="form-group col-md-3">
+
+              <div class="group-floating form-start-icon disabled">
+                <div class="after text-dark">{{ cita?.horaInicio | date: formatoHora }}</div>
+                <label>Hora</label>
+                <span class="icon"><span class="dicon o-clock m-auto"></span></span>
+              </div>
+
+            </div>
+
+            <div class="form-group col-md-3">
+              <div class="form-floating form-start-icon">
+                <select class="custom-select" id="idServicio" [(ngModel)]="cita.idServicio"  name="idServicio" [disabled]="AccionesCita.ATENDER || AccionesCita.VER || AccionesCita.CONFIRMAR" disabled >
+                  <option [value]="0" selected>---Seleccionar---</option>
+                  <option [value]="serv.id" *ngFor="let serv of servicios">{{serv.nombre}}</option>
+                </select>
+                <label for="idServicio">Tipo de servicio</label>
+                <span class="icon"><span class="dicon machine m-auto"></span></span>
+              </div>
+            </div>
+
+          </div>
+        </ng-template>
+      </ngb-panel>
+      </ngb-accordion>
+
+
+      <div class="form-row">
+
+        <div class="form-group col-md-3" [ngClass]="{'hide-mobile': !AccionesCita.NUEVA}">
+          <div class="form-floating form-start-icon">
+            <select class="custom-select" id="tipocliente" [(ngModel)]="cita.idTipoCliente" name="tipocliente" [disabled]="AccionesCita.ATENDER || AccionesCita.VER || AccionesCita.CONFIRMAR">
+              <option [value]="0" selected>...SELECCIONAR TIPO CLIENTE...</option>
+              <option [value]="tipoCliente.idTipoCliente" *ngFor="let tipoCliente of maestroTipoCliente">{{tipoCliente.tipoCliente}}</option>
+            </select>
+            <label for="tipocliente">Tipo de cliente</label>
+            <span class="icon"><span class="dicon type-person m-auto"></span></span>
+          </div>
+        </div>
+
+        <div class="form-group col-md-3" [ngClass]="{'hide-mobile': !AccionesCita.NUEVA}">
+          <div class="form-floating form-start-icon">
+            <select class="custom-select" id="tipocita" [(ngModel)]="cita.idTipoCita"  name="tipocita" [disabled]="AccionesCita.ATENDER || AccionesCita.VER || AccionesCita.CONFIRMAR">
+              <option [value]="0" selected>---Seleccionar---</option>
+              <option [value]="tipoCita.idTipoCita" *ngFor="let tipoCita of maestroTipoCita">{{tipoCita.nombre}}</option>
+            </select>
+            <label for="tipocita">Tipo de cita</label>
+            <span class="icon"><span class="dicon calendar-question m-auto"></span></span>
+          </div>
+        </div>
+
+        <div class="form-group col-md-3 hide-mobile">
+
+          <div class="group-floating form-start-icon disabled">
+            <div class="after text-dark">{{ cita.maquina?.descripcion }}</div>
+            <label>Maquina</label>
+            <span class="icon"><span class="dicon machine m-auto"></span></span>
+          </div>
+
+        </div>
+
+        <div class="form-group col-md-3 hide-mobile">
+          <div class="form-floating form-start-icon">
+            <select class="custom-select" id="idServicio" [(ngModel)]="cita.idServicio"  name="idServicio" [disabled]="AccionesCita.ATENDER || AccionesCita.VER || AccionesCita.CONFIRMAR" disabled >
+              <option [value]="0" selected>---Seleccionar---</option>
+              <option [value]="serv.id" *ngFor="let serv of servicios">{{serv.nombre}}</option>
+            </select>
+            <label for="idServicio">Tipo de servicio</label>
+            <span class="icon"><span class="dicon machine m-auto"></span></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ATENDIDO POR -->
+      <div class="form-row" *ngIf="mostrarCtrlAtendidoPor && !isSmallScreen">
+        <div class="form-group col-md-3">
+          <div class="form-floating form-start-icon">
+            <input type="text"
+                   class="form-control"
+                   id="atendidoPor"
+                   name="atendidoPor"
+                   placeholder=" "
+                   [attr.atendidoPor-idUsuario]="cita.idUsuarioAtendidoPor"
+                   [disabled]="cita.accionCita == 1"
+                   [value]="cita.usuarioAtendidoPor"
+                   (click)="abrirSelecionarUsuario(modUsuarioSeleccion)">
+            <label for="atendidoPor">Atendido por</label>
+            <span class="icon">
+                <span class="dicon user m-auto"></span>
+              </span>
+          </div>
+        </div>
+
+        <div *ngIf="mostrarCtrlAtendidoPor" class="form-group col-md-2">
+          <div class="form-floating form-start-icon">
+            <select class="custom-select" id="numeroBox" [(ngModel)]="cita.numeroBox"  name="numeroBox" [disabled]="cita.accionCita == 1">
+              <option [value]="0" selected>--Seleccionar--</option>
+              <option *ngFor="let e of utilsService.counter(25); let i = index" [value]="i+1">{{ (i+1) }}</option>
+            </select>
+            <label for="idServicio">N° Box</label>
+            <span class="icon"><span class="dicon machine m-auto"></span></span>
+          </div>
+        </div>
+
+        <div *ngIf="mostrarCtrlAtendidoPor" class="form-group col-md-2">
+          <div class="form-floating form-start-icon">
+            <select class="custom-select" id="idMaquinaMarca" [(ngModel)]="cita.idMaquinaMarca"  name="idMaquinaMarca" [disabled]="cita.accionCita == 1">
+              <option [value]="0" selected>--Seleccionar--</option>
+              <option *ngFor="let m of maquinaMarcas" [value]="m.id" >{{ m.nombre }}</option>
+            </select>
+            <label for="idServicio">Nombre Maquina</label>
+            <span class="icon"><span class="dicon machine m-auto"></span></span>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="mostrarEspecialistaMobile() && this.AccionesCita.ATENDER && !atencionEmpezada && cita.idEstado !== 7" class="position-relative d-flex mb-2">
+        <button (click)="showMdlBox()" matRipple class="d-inline-flex text-white border rounded-pill px-3 py-1 mx-auto z-index-2 cursor-pointer shadow-sm position-relative bg-black"> <span class="">Iniciar Atención</span></button>
+        <span class="bg-light-m h-2px w-100 position-absolute top-0 bottom-0 m-auto left-0"></span>
+      </div>
+
+      <!-- ? BOTON PARA EL LISTADO DE BOX -->
+      <div *ngIf="mostrarEspecialistaMobile() && atencionEmpezada" class="position-relative d-flex mb-2">
+        <button matRipple class="d-inline-flex text-white border rounded-pill px-3 py-1 mx-auto z-index-2 cursor-pointer shadow-sm position-relative btn-primary"> 
+          <span class="">Atendiendo <i style="margin-left: 0.1rem;" class="fa fa-calendar"></i> </span>
+          <span style="top: -4px; right: 2px;"  class="pulse-ring pulse-white"></span>
+        </button>
+        <span class="bg-light-m h-2px w-100 position-absolute top-0 bottom-0 m-auto left-0"></span>
+      </div>
+
+      <div *ngIf="mostrarEspecialistaMobile() && (AccionesCita.ATENDER || AccionesCita.VER || AccionesCita.EDITAR) && !atencionEmpezada && cita.idEstado === 7" class="position-relative d-flex mb-2">
+        <button (click)="showMdlBox()" style="background-color: rgb(40, 167, 69) !important;" matRipple class="d-inline-flex text-white border rounded-pill px-3 py-1 mx-auto z-index-2 cursor-pointer shadow-sm position-relative bg-black"> <span class="">Atendido</span></button>
+        <span class="bg-light-m h-2px w-100 position-absolute top-0 bottom-0 m-auto left-0"></span>
+      </div>
+
+      <div class="col-md-3" *ngIf="mostrarEspecialistaMobile() && (AccionesCita.ATENDER || AccionesCita.VER || AccionesCita.CONFIRMAR)" >
+        <div  (click)="acc.toggle('datos-cliente')" class="info-p-2-container-c" style="padding: 0 5px !important; margin-bottom: 0 !important; justify-content: center;">
+          <i style="margin-right: 4px !important; font-size: 18px;" class="mdi mdi-chevron-down"></i>
+        </div>
+      </div>
+
+      <app-cronometro *ngIf="atencionEmpezada" #cronometro ></app-cronometro>
+
+      <div *ngIf="atencionEmpezada" class="blinking-circle"></div>
+
+    </app-card>
+  </div>
+
+  <!-- CONTENIDO NOTAS AVISOS DETALLES -->
+  <section class="cont-chats w-100" style="grid-template-columns: repeat(4, 1fr) !important" *ngIf="!isSmallScreen" >
+    <div class="w-100">
+      <app-card class="h-100" [class.palpitar]="tipoPagoInvalido" cardClass="msg-card" [collapsedCardCustom]="'h-100'" [blockClass]="'h-100'" [options]="false" [customHeader]="false" [hidHeader]="false" cardTitle="Tipo de Pago: ">
+        <span class="d-block">Tipo de Pago: {{ cita.tipoDePago | pip_tipodepago }}</span>
+        <span class="d-block">Monto: S/. {{cita.precioDePagoFinal == null ? 0 : cita.precioDePagoFinal}}</span>
+        <div class="d-flex flex-column justify-content-end h-80" *ngIf="AccionesCita.EDITAR || AccionesCita.SIGUIENTE || AccionesCita.NUEVA || AccionesCita.ATENDER || AccionesCita.VER">
+          <button type="button" class="btn-confirmar-pago btn btn-dark-primary btn-icon justify-content-center" (click)="abrirMdlTipoDePago()">Confirmar Tipo de Pago</button>
+        </div>
+      </app-card>
+    </div> 
+    <form [formGroup]="frmNotas" class="my-chat--comments">
+      <app-card [hidHeader]="false" cardTitle="Historia notas" [options]="false" cardClass="msg-card mb-0" blockClass="card-body msg-block">
+        <div class="h-list-body">
+          <perfect-scrollbar #scrollNota ngClass="datta-scroll" [usePSClass]="'datta'" [disabled]="null" [autoPropagation] ="true">
+            <div class="msg-user-chat scroll-div">
+              <div class="main-friend-chat">
+                <div *ngIf="cita != null">
+                  <div *ngFor="let nota of cita.citaMensajeNotas.slice().reverse()" class="media chat-messages">
+
+                    <div class="d-flex flex-row">
+                      <div style="padding-right: 8px; padding-top: 3px;">
+                        <h5 [placement]="'right'" [ngbTooltip]="nota.usuarioRegistra" class="globo d-flex theme-bg2">{{ nota.inicialesUsuario  }}</h5>
+                      </div>
+
+                      <div class="media-body d-flex flex-row chat-menu-content">
+                        <div [class.destacado]="nota.destacado">
+                          <p class="chat-cont" [class.bg-gradient]="nota.destacado">{{ nota.nota }}</p>
+                          <p class="chat-time">{{ nota.fechaRegistra | date: formatoFechaHora }} &nbsp;
+                            <i *ngIf="nota.id == 0" (click)="delNotaCita(nota.fechaRegistra, nota.nota)" class="feather icon-trash-2" title="Eliminar nota"></i>
+                          </p>
+                        </div>
+                        <div *ngIf="nota.destacado" class="rounded-circle bg-gradient w-20px h-20px ms-5px d-flex text-white"><fontawesome-svg class="m-auto" icon="star" type="sharp-solid" [width]="10" [height]="10"></fontawesome-svg></div>
+                      </div>
+                    </div>
+
+
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+          </perfect-scrollbar>
+        </div>
+
+        <div></div>
+        <div *ngIf="AccionesCita.EDITAR || AccionesCita.VER || AccionesCita.NUEVA || AccionesCita.SIGUIENTE || AccionesCita.CONFIRMAR" class="msg-form">
+          <div class="input-group mb-0">
+            <div class="input-group input-group-sm">
+              <input
+                type="text" class="form-control msg-send-chat" formControlName="nota" (keyup.enter)="addNotasCita()" placeholder="Ingresar nota . . .">
+              <label ngbTooltip="Destacado" for="notaDestacado" class="input-group-append px-2 border-top border-bottom cursor-pointer mb-0">
+                <input type="checkbox" class="form-control me-5px no-pointer-events" id="notaDestacado" formControlName="destacado" >
+                <fontawesome-svg class="m-auto text-indigo" icon="star" type="sharp-solid" [width]="25" [height]="25"></fontawesome-svg>
+              </label>
+            </div>
+          </div>
+        </div>
+
+      </app-card>
+    </form>
+    <form [formGroup]="frmAvisos">
+      <app-card [hidHeader]="false" cardTitle="Historia avisos" [options]="false" cardClass="msg-card mb-0" blockClass="card-body msg-block">
+
+        <div class="h-list-body">
+          <perfect-scrollbar #scrollAviso ngClass="datta-scroll" [usePSClass]="'datta'" [disabled]="null" [autoPropagation] ="true">
+            <div class="msg-user-chat scroll-div">
+              <div class="main-friend-chat">
+
+                <div *ngIf="cita != null">
+                  <div *ngFor="let aviso of cita.citaMensajeAvisos.slice().reverse()" class="media chat-messages">
+
+                    <div class="d-flex flex-row">
+                      <div style="padding-right: 8px; padding-top: 3px;">
+                        <h5 [placement]="'right'" [ngbTooltip]="aviso.usuarioRegistra" class="globo d-flex theme-bg2">{{ aviso.inicialesUsuario  }}</h5>
+                      </div>
+
+                      <div class="media-body d-flex flex-row chat-menu-content">
+                        <div [class.destacado]="aviso.destacado">
+                          <p class="chat-cont" [class.bg-gradient]="aviso.destacado">{{ aviso.aviso }}</p>
+                          <p class="chat-time">{{ aviso.fechaRegistra | date: formatoFechaHora }} &nbsp;
+                            <i *ngIf="aviso.id == 0" (click)="delAvisoCita(aviso.fechaRegistra, aviso.aviso)" class="feather icon-trash-2" title="Eliminar aviso"></i>
+                          </p>
+                        </div>
+                        <div *ngIf="aviso.destacado" class="rounded-circle bg-gradient w-20px h-20px ms-5px d-flex text-white"><fontawesome-svg class="m-auto" icon="star" type="sharp-solid" [width]="10" [height]="10"></fontawesome-svg></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </perfect-scrollbar>
+        </div>
+
+        <div class="msg-form">
+          <div class="input-group mb-0">
+            <div class="input-group input-group-sm">
+              <input
+                type="text"
+                class="form-control msg-send-chat"
+                formControlName="aviso"
+                (keyup.enter)="addAvisosCita()"
+                placeholder="Ingresar aviso . . .">
+              <label ngbTooltip="Destacado" for="avisoDestacado" class="input-group-append px-2 border-top border-bottom border-right cursor-pointer mb-0">
+                <input type="checkbox" class="form-control me-5px no-pointer-events" id="avisoDestacado" formControlName="destacado" >
+                <fontawesome-svg class="m-auto text-indigo" icon="star" type="sharp-solid" [width]="25" [height]="25"></fontawesome-svg>
+              </label>
+            </div>
+          </div>
+        </div>
+      </app-card>
+    </form>
+    <form class="my-chat--comments" [formGroup]="frmDetalles">
+      <app-card [hidHeader]="false" cardTitle="Historia detalles" [options]="false" cardClass="msg-card mb-0" blockClass="card-body msg-block">
+
+        <div class="h-list-body">
+          <perfect-scrollbar #scrollDetalle ngClass="datta-scroll" [usePSClass]="'datta'" [disabled]="null" [autoPropagation] ="true">
+            <div class="msg-user-chat scroll-div">
+              <div class="main-friend-chat">
+
+                <div *ngIf="cita != null">
+                  <div *ngFor="let detalle of cita.citaMensajeDetalles.slice().reverse()" class="media chat-messages">
+
+                    <div class="d-flex flex-row">
+                      <div style="padding-right: 8px; padding-top: 3px;">
+                        <h5 [placement]="'right'" [ngbTooltip]="detalle.usuarioRegistra" class="globo d-flex theme-bg2">{{ detalle.inicialesUsuario  }}</h5>
+                      </div>
+
+                      <div class="media-body d-flex flex-row chat-menu-content">
+                        <div [class.destacado]="detalle.destacado">
+                          <p class="chat-cont" [class.bg-gradient]="detalle.destacado">{{ detalle.detalle }}</p>
+                          <p class="chat-time">{{ detalle.fechaRegistra | date: formatoFechaHora }} &nbsp;
+                            <i *ngIf="detalle.id == 0" (click)="delDetalleCita(detalle.fechaRegistra, detalle.detalle)" class="feather icon-trash-2" title="Eliminar detalle"></i>
+                          </p>
+                        </div>
+                        <div *ngIf="detalle.destacado" class="rounded-circle bg-gradient w-20px h-20px ms-5px d-flex text-white"><fontawesome-svg class="m-auto" icon="star" type="sharp-solid" [width]="10" [height]="10"></fontawesome-svg></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </perfect-scrollbar>
+        </div>
+
+        <div class="msg-form">
+          <div class="input-group mb-0">
+
+            <div class="input-group input-group-sm">
+              <input
+                type="text" class="form-control msg-send-chat" formControlName="detalle" (keyup.enter)="addDetallesCita()" placeholder="Ingresar detalles . . .">
+              <label ngbTooltip="Destacado" for="detalleDestacado" class="input-group-append px-2 border-top border-bottom border-right cursor-pointer mb-0">
+                <input type="checkbox" class="form-control me-5px no-pointer-events" id="detalleDestacado" formControlName="destacado" >
+                <fontawesome-svg class="m-auto text-indigo" icon="star" type="sharp-solid" [width]="25" [height]="25"></fontawesome-svg>
+              </label>
+            </div>
+          </div>
+        </div>
+      </app-card>
+    </form>
+  </section>
+
+  <div class="w-100" style="margin: 0 15px 20px;" *ngIf="isSmallScreen === true">
+    <app-card class="h-100" [class.palpitar]="tipoPagoInvalido" cardClass="msg-card" [collapsedCardCustom]="'h-100'" [blockClass]="'h-100'" [options]="false" [customHeader]="false" [hidHeader]="false" cardTitle="Tipo de Pago: ">
+      <span class="d-block">Tipo de Pago: {{ cita.tipoDePago | pip_tipodepago }}</span>
+      <span class="d-block">Monto: S/. {{cita.precioDePagoFinal == null ? 0 : cita.precioDePagoFinal}}</span>
+      <div class="d-flex flex-column justify-content-end h-60" *ngIf="AccionesCita.EDITAR || AccionesCita.SIGUIENTE || AccionesCita.NUEVA || AccionesCita.ATENDER || AccionesCita.VER">
+        <button type="button" class="btn-confirmar-pago btn btn-dark-primary btn-icon justify-content-center" (click)="abrirMdlTipoDePago()">Confirmar Tipo de Pago</button>
+      </div>
+    </app-card>
+  </div> 
+  <!-- ZONAS ELEGIDAS -->
+  <div class="col-sm-12">
+    <app-card cardClass="zonas-elegidas-m" [options]="false" [customHeader]="false" [hidHeader]="false" cardTitle="Zonas elegidas">
+      <button *ngIf="(cita.accionCita == 2 || cita.accionCita == 4)" (click)="deshacerCambios()" style="position: absolute; right: 0; top: -38px;" type="button" class="btn btn-primary"><i class="feather icon-rotate-ccw"></i>  Deshacer Cambios</button>
+      <button (click)="verMdlZonas()" type="button"  style="position: absolute; right: 0; top: -38px;"  matRipple *ngIf="mostrarEspecialistaMobile() && atencionEmpezada"  class="btn btn-dark btn-icon" [placement]="'bottom'" ngbTooltip="Agregar Zona"><i class="mdi mdi-plus"></i></button>
+
+      <ng-container *ngFor="let zonaCorporal of cita.zonasCorporales; let i = index">
+        <ng-container *ngIf="zonaCorporal.estado === true">
+          <div style="position: relative; border: 2px solid; border-radius: 6px;" class="es-desktop-none mt-4" [attr.fila-id]="zonaCorporal.idZona" *ngIf="!zonaCorporal.duplicado || !zonaCorporal.duplicado && !zonaCorporal.verDuplicado || zonaCorporal.verDuplicado" [ngClass]="[!zonaCorporal.estado ? 'tachado-fondo' : '']">
+
+                <div *ngIf="cita.accionCita === 4 || cita.accionCita === 2 || cita.accionCita === 3" ngbDropdown style="z-index: 2;position: absolute; left: 8px; top: 10px;" placement="right" class="d-inline-block menu " container="body" display="dynamic" >
+                  <button style=" padding: 0 !important;" class="sbtn btn-sm btn-icon text-primary h-auto w-auto px-2 my-auto no-after position-relative align-items-center justify-content-center" matRipple  ngbDropdownToggle placement="end-bottom">
+                    <fontawesome-svg style="color: #515151 !important;" [width]="20" [height]="20" [icon]="'ellipsis-vertical'" [type]="'duotone'"></fontawesome-svg>
+                  </button>
+                  <div ngbDropdownMenu class="">
+                    <button (click)="actualizarAgendado(zonaCorporal)" *ngIf="((cita.accionCita == 2) && zonaCorporal.estado &&  !zonaCorporal.duplicado && (usuarioActual.idperfil === 9 || usuarioActual.idperfil === 5 || usuarioActual.idperfil === 7)) && zonaCorporal.idZona !== 1576 && zonaCorporal.idZona !== 1578 && zonaCorporal.idZona !== 1580 && zonaCorporal.idZona !== 1582" type="button"  matRipple ngbDropdownItem [class]="'f-w-500 rounded-0 list-group-item list-group-item-action border-0 d-flex align-items-center text-primary btn-hover-primary trs'" >
+                      <i class="mdi mdi-refresh m-0 mr-2"></i>
+                      <span class="fs-16px">Marcar agendado</span>
+                    </button>
+                    <button *ngIf="(cita.accionCita == 2 && zonaCorporal.estado || cita.accionCita == 4 && zonaCorporal.estado || cita.accionCita === 3 && zonaCorporal.estado)" (click)="eliminarZona(zonaCorporal.idZona, i, !zonaCorporal.creadoEnAtencion ? false : true)"  type="button"  matRipple ngbDropdownItem [class]="'f-w-500 rounded-0 list-group-item list-group-item-action border-0 d-flex align-items-center text-primary btn-hover-primary trs'" >
+                      <i class="mdi mdi-close m-0 mr-2"></i>
+                      <span class="fs-16px">Deshabilitar</span>
+                    </button>
+
+                    <button (click)="habilitarZona(zonaCorporal.idZona, i, modCitaHorario, zonaCorporal.duplicado ? false : true, zonaCorporal.idUsuarioAgendado)"  *ngIf="(cita.accionCita == 2 && !zonaCorporal.estado || cita.accionCita == 4 && !zonaCorporal.estado) " type="button"  matRipple ngbDropdownItem [class]="'f-w-500 rounded-0 list-group-item list-group-item-action border-0 d-flex align-items-center text-primary btn-hover-primary trs'" >
+                      <i class="mdi mdi-check m-0 mr-2"></i>
+                      <span class="fs-16px">Habilitar</span>
+                    </button>
+
+                    <button *ngIf="(cita.accionCita == 2 || cita.accionCita == 4 || cita.accionCita === 3) && zonaCorporal.estado === true && !zonaCorporal.duplicado && zonaCorporal.idZona !== 1576 && zonaCorporal.idZona !== 1578 && zonaCorporal.idZona !== 1580 && zonaCorporal.idZona !== 1582 && !zonaCorporal.creadoEnAtencion" (click)="abrirModalDeEdicion(modCitaHorario, zonaCorporal.idZona, zonaCorporal.id, zonaCorporal.idUsuarioAgendado)" type="button"  matRipple ngbDropdownItem [class]="'f-w-500 rounded-0 list-group-item list-group-item-action border-0 d-flex align-items-center text-primary btn-hover-primary trs'" >
+                      <i class="mdi mdi-pencil m-0 mr-2"></i>
+                      <span class="fs-16px">Editar Zona</span>
+                    </button>
+
+                    <button (click)="duplicarZona(zonaCorporal)" *ngIf="((cita.accionCita == 2 || cita.accionCita === 3) && zonaCorporal.estado && !zonaCorporal.duplicado && (usuarioActual.idperfil === 9 || usuarioActual.idperfil === 5 || usuarioActual.idperfil === 7)) && zonaCorporal.idZona !== 1576 && zonaCorporal.idZona !== 1578 && zonaCorporal.idZona !== 1580 && zonaCorporal.idZona !== 1582 && !zonaCorporal.creadoEnAtencion" type="button"  matRipple ngbDropdownItem [class]="'f-w-500 rounded-0 list-group-item list-group-item-action border-0 d-flex align-items-center text-primary btn-hover-primary trs'" >
+                      <i class="mdi mdi-content-copy m-0 mr-2"></i>
+                      <span class="fs-16px">Duplicar</span>
+                    </button>
+
+                  </div>
+                </div>
+
+                
+                <div *ngIf="!zonaCorporal.duplicado" style="position: absolute; top: 6px; right: 8px;">
+                  <input [(ngModel)]="zonaCorporal.tratamientoRealizado" (change)="onCheckboxChangeTratamientoRealizado($event, zonaCorporal.id, zonaCorporal)" type="checkbox" class="form-control me-5px check-tratamiento" id="zonaRealizada" >
+                </div>
+
+                <span *ngIf="zonaCorporal.duplicado" class="duplicado-card" >
+                    Duplicado
+                </span>
+
+                <ng-container *ngIf="!zonaCorporal.duplicado">
+
+                    <div>
+                      <h3 style="padding: 0.7rem 2.5rem 0.7rem 1.5rem !important;" class="zona-title-m" [attr.zona-id]="zonaCorporal.idZona" >{{zonaCorporal.descripcion}}</h3>            
+                    </div>
+                    
+                  
+                  <div class="info-p-2-container-c mb-2" style="border-top: 1px solid #afafaf;  padding: 0 5px !important;">
+              
+                          <div class="info-2-container-c" style="justify-content: center;">
+                            <div class="header-user-mobile" style="padding: 0 5px !important; margin-top: 0.4rem;">
+                              <i (click)="abrirMdlParametrosHistorial(zonaCorporal.idZona, zonaCorporal.id, zonaCorporal.sesion)" class="fa fa-heartbeat d-flex wattsicon-c-mobile"></i>
+                              <span class="w-100">SS - </span><input style="text-align: left !important; padding: 0 !important; width: 60%;" [attr.sesion-idZona]="zonaCorporal.idZona"  [(ngModel)]="zonaCorporal.sesion" [value]= "zonaCorporal.sesion" (ngModelChange)="evtOnChangeSesion(zonaCorporal)" class="form-control txtBox" required type="text">
+                              <span style="margin-right: 0.2rem;">/</span><input style="text-align: left !important; padding: 0 !important;" [attr.sesion-idZona]="zonaCorporal.idZona"  [(ngModel)]="zonaCorporal.sesionFinal" [value]= "zonaCorporal.sesionFinal" class="form-control txtBox" required type="text">
+
+                            </div> 
+                          </div>
+                          <div  class="info-2-container-c" style="margin-top: 0.45rem; width: 60%; flex-direction: row;">
+                              <div>
+
+                                
+                                <div class="d-flex">
+                                  <span class="text-12px">Parámetros :</span>
+                                </div>
+      
+                                
+                                <input style="padding: 0px 3px !important;"
+                                type="text" class="form-control"
+                                      [value]="zonaCorporal.parametros"
+                                      name="parametros"
+                                      [(ngModel)]="zonaCorporal.parametros" 
+                                      [disabled]="cita.accionCita != 4 && cita.accionCita != 2 && cita.accionCita != 3"
+                                      >
+                              </div>
+
+                              <div *ngIf="zonaCorporal.id !== 0" (click)="abrirMdlFotosParametro(zonaCorporal.idZona, zonaCorporal.parametros, zonaCorporal.id, i, zonaCorporal.sesion)" style="padding: 12px 10px 0;">
+                                <i style="font-size: 28px;" class="feather icon-camera"></i>
+                              </div>
+                          </div>
+      
+                  </div>
+
+
+                  <ngb-accordion #acc="ngbAccordion">
+                  <ngb-panel [id]="'toggle-p' + i">
+                    <ng-template style="padding-top: 0 !important; display: none;" ngbPanelTitle>
+                    </ng-template>  
+
+
+                    <ng-template ngbPanelContent>
+                      <div class="">
+                        <div class="info-p-2-container-c" style="border-top: 1px solid #afafaf ;padding-top: 1px !important; border-bottom: 1px solid #afafaf;">
+
+                          <div class="info-2-container-c" style="padding-left: 10px;">
+                            <h3 class="h3-c-mobile">Precio:</h3>
+                            <input style="padding: 0 !important;"  [attr.precio-idZona]="zonaCorporal.idZona && zonaCorporal.estado === true" [(ngModel)]="zonaCorporal.precio" (ngModelChange)="actualizaPrecio($event, zonaCorporal.idZona)" class="tx-l form-control txtBox p-0"  currencyMask [options]="options" required  name="preciopromocion" type="text" [value]="getPrecio(zonaCorporal.precio)">
+                          </div>
+                          <div class="info-2-container-c">
+                            <h3 class="h3-c-mobile">Duración:</h3>
+                            <input [attr.duracion-idZona]="zonaCorporal.idZona" [id]="'duracionIdZona'+zonaCorporal.idZona" [value]= "zonaCorporal.duracion" class="form-control txtBox tx-l p-0" required  type="text" readonly>
+                            <i (click)="acc.toggle('toggle-p' + i)"  style="margin-right: 4px !important; position: absolute; top: 36px; right: 0; font-size: 30px;" class="mdi mdi-chevron-down"></i>
+                          </div>
+      
+                        </div>
+                      </div>
+                      <div class="select2Float" style="margin-bottom: 8px;">
+                        
+                      <app-autocomplete-select
+                        [promocionSeleccionadaId]="zonaCorporal?.idPromocionPrecio"
+                        [promociones]="zonaCorporal.promociones"
+                        (selectionChange)="onPromocionSelected($event, zonaCorporal.idZona, zonaCorporal.duplicado)"
+                        (cleared)="onPromocionCleared(zonaCorporal.idZona, zonaCorporal.duplicado)"
+                        [config]="{
+                          disabled: (cita.accionCita !== 4 && cita.accionCita !== 2) && zonaCorporal.idZona !== 0,
+                          placeholder: 'SELECCIONE PROMOCIÓN...',
+                          searchable: !((cita.accionCita !== 4 && cita.accionCita !== 2) && zonaCorporal.idZona !== 0),
+                          clearable: true,
+                          label: 'Seleccionar Promoción'
+                        }">
+                      </app-autocomplete-select>   
+                    </div>
+      
+                      <div class="info-p-2-container-c" style="border-top: 1px solid #afafaf;  padding: 0 5px !important; margin-bottom: 0 !important;">
+              
+                          <div class="info-2-container-c" style="width: 100% !important;">
+                            <div class="header-user-mobile" style="padding: 0 5px !important;">
+      
+                              <i class="mdi mdi-account usericon-c-mobile"></i>
+      
+                              <div>
+                                <div class="d-flex">
+                                  <span class="text-12px">Agendado Por:</span>
+                                </div>
+      
+                                
+                                <!-- <h3 class="h3-c-mobile">{{!zonaCorporal.usuarioAgendado ? 'Sistemas' : zonaCorporal.usuarioAgendado}}</h3> -->
+                                <input readonly style="padding: 0px 3px !important;"
+                                type="text" class="form-control"
+                                      [value]="zonaCorporal.usuarioAgendado"
+                                      [attr.usuarioAgendado-idZona]="zonaCorporal.idZona"
+                                      [attr.usuarioAgendado-idUsuario]="zonaCorporal.idUsuarioAgendado"
+                                      name="nombreusuario"
+                                      
+                                      [attr.usuarioAgendado-idZonaEnviar]="zonaCorporal.idZona + zonaCorporal.idUsuarioAgendadoStr"
+                                      disabled>
+                              </div>
+                            </div> 
+                          </div>
+                          <div *ngIf="zonaCorporal.sesion == 1 && !zonaCorporal.duplicado" class="info-2-container-c" style="margin-top: 0.45rem; width: 100%;">
+                            <span class="text-12px">Origen:</span>
+                            <select style="padding: 0 5px; height: 1.5rem !important;" #origen class="custom-select form-control-sm" [disabled]="cita.accionCita == 1 && cita.accionCita == 3" (change)="ponerOrigen(origen.value, zonaCorporal.idZona)">
+                              <option [value]="0">--Seleccionar--</option>
+                              <option *ngFor="let m of maestroMedioContacto" [value]="m.id" [attr.selected]="zonaCorporal.idMedioContactoOrigen == m.id ? true : null">{{ m.nombre }}</option>
+                            </select>
+                            <!-- <h3 class="h3-c-mobile">Tiktok</h3> -->
+                          </div>
+      
+                      </div>
+                    </ng-template>
+    
+                    
+                    <div style="display: none;" class="input-group input-group-sm">
+                          <input [attr.duracion-idZona]="zonaCorporal.idZona" [id]="'duracionIdZona'+zonaCorporal.idZona" [value]= "zonaCorporal.duracion" class="form-control txtBox" required  type="text" readonly>
+                    </div>
+                  </ngb-panel>
+                  </ngb-accordion>
+
+
+                  <div (click)="acc.toggle('toggle-p' + i)"  class="info-p-2-container-c" style="border-top: 1px solid #afafaf;  padding: 0 5px !important; margin-bottom: 0 !important; justify-content: center;">
+                    <i  style="margin-right: 4px !important; font-size: 18px;" class="mdi mdi-chevron-down"></i>
+                  </div>
+                </ng-container>
+
+
+            <ng-container *ngIf="zonaCorporal.duplicado" >
+
+                 <div style="border-bottom:1px solid #afafaf;display: flex; justify-content: center;">
+                  <h3 style="margin-bottom: 0 !important;font-size: 18px; text-align: center;" [attr.zona-id]="zonaCorporal.idZona" >{{zonaCorporal.descripcion}}</h3>            
+                  <button (click)="acc.toggle('toggle-' + i)" type="button" class="btn btn-primary" style="border-radius: 6px;margin-left: 0.2rem;width: auto;align-items: center;justify-content: center;display: flex;padding: 0 !important; color: white;"> <i style="margin-right: 4px !important;" class="mdi mdi-chevron-down"></i></button>
+                </div>     
+                    
+                <ngb-accordion  #acc="ngbAccordion">
+                <ngb-panel [id]="'toggle-' + i">
+                  
+                <ng-template style="padding-top: 0 !important;" ngbPanelTitle>  
+                </ng-template>
+  
+                  <ng-template ngbPanelContent>
+                    <div class="">
+                      <div class="info-p-2-container-c" style="padding-top: 1px !important; border-bottom: 1px solid #afafaf;">
+            
+                        <div class="info-2-container-c">
+                          <h3 class="h3-c-mobile">Sesion:</h3>
+                          <input style="text-align: left !important; padding: 0 !important;" [attr.sesion-idZona]="zonaCorporal.idZona"  [(ngModel)]="zonaCorporal.sesion" [value]= "zonaCorporal.sesion" (ngModelChange)="evtOnChangeSesion(zonaCorporal)" class="form-control txtBox" required type="text">
+    
+                        </div>
+                        <div class="info-2-container-c">
+                          <h3 class="h3-c-mobile">Precio:</h3>
+                          <input style="padding: 0 !important;"  [attr.precio-idZona]="zonaCorporal.idZona && zonaCorporal.estado === true" [(ngModel)]="zonaCorporal.precio" (ngModelChange)="actualizaPrecio($event, zonaCorporal.idZona)" class="tx-l form-control txtBox p-0"  currencyMask [options]="options" required  name="preciopromocion" type="text" [value]="getPrecio(zonaCorporal.precio)">
+                        </div>
+                        <div class="info-2-container-c">
+                          <h3 class="h3-c-mobile">Duración:</h3>
+                          <input [attr.duracion-idZona]="zonaCorporal.idZona" [id]="'duracionIdZona'+zonaCorporal.idZona" [value]= "zonaCorporal.duracion" class="form-control txtBox tx-l p-0" required  type="text" readonly>
+    
+                        </div>
+    
+                      </div>
+                    </div>
+                    
+                    <div class="select2Float" style="margin-bottom: 8px;">
+                      <span class="icon"><i class="mdi mdi-tag-text-outline"></i></span>
+                      <label>Promoción: </label>
+    
+                      <app-autocomplete-select
+                        [promocionSeleccionadaId]="zonaCorporal?.idPromocionPrecio"
+                        [promociones]="zonaCorporal.promociones"
+                        (selectionChange)="onPromocionSelected($event, zonaCorporal.idZona, zonaCorporal.duplicado)"
+                        (cleared)="onPromocionCleared(zonaCorporal.idZona, zonaCorporal.duplicado)"
+                        [config]="{
+                          disabled: (cita.accionCita !== 4 && cita.accionCita !== 2) && zonaCorporal.idZona !== 0,
+                          placeholder: 'SELECCIONE PROMOCIÓN...',
+                          searchable: !((cita.accionCita !== 4 && cita.accionCita !== 2) && zonaCorporal.idZona !== 0),
+                          clearable: true,
+                          label: 'Seleccionar Promoción'
+                        }">
+                      </app-autocomplete-select>                   
+                  </div>
+    
+                    <div class="info-p-2-container-c" style="border-top: 1px solid #afafaf;  padding: 0 5px !important; margin-bottom: 0 !important;">
+            
+                        <div class="info-2-container-c" style="width: 100% !important;">
+                          <div class="header-user-mobile" style="padding: 0 5px !important;">
+    
+                            <i class="mdi mdi-account usericon-c-mobile"></i>
+    
+                            <div>
+                              <div class="d-flex">
+                                <span class="text-12px">Agendado Por:</span>
+                              </div>
+    
+                              
+                              <!-- <h3 class="h3-c-mobile">{{!zonaCorporal.usuarioAgendado ? 'Sistemas' : zonaCorporal.usuarioAgendado}}</h3> -->
+                              <input readonly style="padding: 0px 3px !important;"
+                              type="text" class="form-control"
+                                    [value]="zonaCorporal.usuarioAgendado"
+                                    [attr.usuarioAgendado-idZona]="zonaCorporal.idZona"
+                                    [attr.usuarioAgendado-idUsuario]="zonaCorporal.idUsuarioAgendado"
+                                    name="nombreusuario"
+                                    
+                                    [attr.usuarioAgendado-idZonaEnviar]="zonaCorporal.idZona + zonaCorporal.idUsuarioAgendadoStr"
+                                    disabled>
+                            </div>
+                          </div> 
+                        </div>
+                        <div *ngIf="zonaCorporal.sesion == 1 && !zonaCorporal.duplicado" class="info-2-container-c" style="margin-top: 0.45rem; width: 100%;">
+                          <span class="text-12px">Origen:</span>
+                          <select style="padding: 0 5px; height: 1.5rem !important;" #origen class="custom-select form-control-sm" [disabled]="cita.accionCita == 1 && cita.accionCita == 3" (change)="ponerOrigen(origen.value, zonaCorporal.idZona)">
+                            <option [value]="0">--Seleccionar--</option>
+                            <option *ngFor="let m of maestroMedioContacto" [value]="m.id" [attr.selected]="zonaCorporal.idMedioContactoOrigen == m.id ? true : null">{{ m.nombre }}</option>
+                          </select>
+                        </div>
+    
+                    </div>
+    
+                    <div style="display: none;" class="input-group input-group-sm">
+                          <input [attr.duracion-idZona]="zonaCorporal.idZona" [id]="'duracionIdZona'+zonaCorporal.idZona" [value]= "zonaCorporal.duracion" class="form-control txtBox" required  type="text" readonly>
+                    </div>
+  
+                  </ng-template>
+                </ngb-panel>
+              </ngb-accordion>
+
+            </ng-container>
+          </div>
+        </ng-container>
+      </ng-container>
+
+        <!-- ? DESKTOP TABLE -->
+      <div class="table table-sm-responsive overflow-auto es-mobile-none">
+        <table id="responsive-table-model" class="display table dt-responsive nowrap" style="width:100%">
+          <thead>
+            <tr>
+              <th>ZONAS</th>
+              <th></th>
+              <th>ELEGIR PROMOCIÓN</th>
+              <th>SESIÓN</th>
+              <th>FIN DE SESIÓN</th>
+              <th>PRECIO</th>
+              <th>MIN.</th>
+              <th>AGENDADO</th>
+              <th>ORIGEN</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+          <ng-container *ngFor="let zonaCorporal of cita.zonasCorporales; let i = index">
+            <ng-container *ngIf="zonaCorporal.estado === true">
+              <tr [attr.fila-id]="zonaCorporal.idZona" *ngIf="!zonaCorporal.duplicado || !zonaCorporal.duplicado && !zonaCorporal.verDuplicado || zonaCorporal.verDuplicado" [ngClass]="[!zonaCorporal.estado ? 'tachado-fondo' : '']">
+  
+                <td [ngClass]="[!zonaCorporal.estado ? 'tachado-fondo' : '']" style="padding-left: 0 !important;">
+  
+                  <div style="display: flex; align-items: center;" [ngStyle]="{'margin-left': zonaCorporal.duplicado ? '1rem' : '0px'}" >
+                    <button style="margin-left: 0.5rem !important;" *ngIf="((cita.accionCita == 2) && zonaCorporal.estado &&  !zonaCorporal.duplicado && (usuarioActual.idperfil === 9 || usuarioActual.idperfil === 5 || usuarioActual.idperfil === 7)) && zonaCorporal.idZona !== 1576 && zonaCorporal.idZona !== 1578 && zonaCorporal.idZona !== 1580 && zonaCorporal.idZona !== 1582" type="button" class="btn btn-outline-primary d-inline-flex btn-sm m-0 p-1" ngbTooltip="Marcar agendado" (click)="actualizarAgendado(zonaCorporal)" ><i class="mdi mdi-refresh m-0"></i></button>
+
+                    <i class="mdi mdi-arrow-right-bold"*ngIf="zonaCorporal.duplicado"></i>
+  
+                    <a  class="ver-zonas-duplicadas-boton"></a>
+                  
+                    <span class="position-relative"><span *ngIf="aplicaDescuentoAdicional(zonaCorporal.idZona, zonaCorporal.estado) && descuentoAdicional" class="porcentaje">-{{ descuentoAdicional }}%</span>{{ zonaCorporal.descripcion }}</span>
+                  
+                    <div class="input-group input-group-sm">
+                      <input [attr.zona-id]="zonaCorporal.idZona" [value]= "zonaCorporal.descripcion" class="form-control txtBox" required  type="hidden">
+                    </div>
+    
+                    <button *ngIf="(cita.accionCita == 2 || cita.accionCita == 4) && zonaCorporal.estado === true && !zonaCorporal.duplicado && zonaCorporal.idZona !== 1576 && zonaCorporal.idZona !== 1578 && zonaCorporal.idZona !== 1580 && zonaCorporal.idZona !== 1582" type="button" class="btn btn-outline-primary d-inline-flex btn-sm m-0 p-1" ngbTooltip="Editar Zona" (click)="abrirModalDeEdicion(modCitaHorario, zonaCorporal.idZona, zonaCorporal.id, zonaCorporal.idUsuarioAgendado)" ><i class="mdi mdi-pencil m-0"></i></button>
+  
+  
+                  </div>
+  
+                </td>
+                
+                <!-- CHECK DE ATENDIDO -->
+                <td [ngClass]="[!zonaCorporal.estado ? 'tachado-fondo' : '']">
+                  <input [(ngModel)]="zonaCorporal.tratamientoRealizado" (change)="onCheckboxChangeTratamientoRealizado($event, zonaCorporal.id, zonaCorporal)" type="checkbox" class="form-control me-5px check-tratamiento" id="zonaRealizada" >
+                </td>
+                
+                <td [ngClass]="[!zonaCorporal.estado ? 'tachado-fondo' : '']">
+                  <!-- MOSTRAR SELECT SEGUN SI LA CITA YA EXISTE O ES NUEVA -->
+                  <div *ngIf="cita.accionCita != 4 && cita.accionCita != 2; else nuevaCita">
+  
+                    <!-- ACTUALIZACION -->
+                    <!--? ESTE ES PARA EL VER -->
+                    <div class="input-group input-group-sm">
+                      <!-- <div class="input-group-prepend">
+                        <label class="input-group-text" [placement]="'top'" ngbTooltip="Promoción"><i class="fas fa-percentage"></i></label>
+                      </div> -->
+                      <select #promocion [attr.promocion-idZona]="zonaCorporal.idZona"
+                              class="custom-select"
+                              name="promocion"
+                              [disabled]="cboPromocionDeshabilitado"
+                              (change)="ponerPrecio(promocion.value, zonaCorporal.idZona)">
+                        <option [value]="0">...SELECCIONE PROMOCIÓN...</option>
+                        <option [selected]="zonaCorporal.idPromocionPrecio == promocion.idPromocionPrecio"
+                              *ngFor="let promocion of zonaCorporal.promociones" [title]="promocion.descripcion" [value]="promocion.idPromocionPrecio">
+                              
+                          {{'[' + promocion.precioPromocion + '] ' + promocion.descripcion}}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+  
+                  <ng-template #nuevaCita>
+                    <!-- NUEVO -->
+                    <div class="input-group input-group-sm" style="background: white !important;">
+                      <app-autocomplete-select style="width: 100%;"
+                        [promocionSeleccionadaId]="zonaCorporal?.idPromocionPrecio"
+                        [promociones]="zonaCorporal.promociones"
+                        (selectionChange)="onPromocionSelected($event, zonaCorporal.idZona, zonaCorporal.duplicado)"
+                        (cleared)="onPromocionCleared(zonaCorporal.idZona, zonaCorporal.duplicado)"
+                        [config]="{
+                          placeholder: 'SELECCIONE PROMOCIÓN...',
+                          searchable: true,
+                          clearable: true,
+                          label: 'Seleccionar Promoción'
+                        }">
+                      </app-autocomplete-select>  
+                    
+                    </div>
+  
+                  </ng-template>
+                </td>
+                <!-- SESION -->
+                <td [ngClass]="[!zonaCorporal.estado ? 'tachado-fondo' : '']">
+                  <input style="text-align: center !important;" [attr.sesion-idZona]="zonaCorporal.idZona"  [(ngModel)]="zonaCorporal.sesion" [value]= "zonaCorporal.sesion" (ngModelChange)="evtOnChangeSesion(zonaCorporal)" class="form-control txtBox" required type="text">
+                </td>
+                <!-- FIN DE SESION -->
+                <td [ngClass]="[!zonaCorporal.estado ? 'tachado-fondo' : '']">
+                  <input style="text-align: center !important;" [attr.sesion-idZona]="zonaCorporal.idZona"  [(ngModel)]="zonaCorporal.sesionFinal" [value]= "zonaCorporal.sesionFinal" class="form-control txtBox" required type="text">
+                </td>
+                <!-- PRECIO -->
+                <td [ngClass]="[!zonaCorporal.estado ? 'tachado-fondo tachado' : '']">
+                  <div class="d-flex">
+                    <!--? %%%%%%%%%%%%%%%%%%%%%%%%%%%% POR REVISAR %%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
+                    <input style="text-align: center !important;"  [attr.precio-idZona]="zonaCorporal.idZona && zonaCorporal.estado === true" [(ngModel)]="zonaCorporal.precio" (ngModelChange)="actualizaPrecio($event, zonaCorporal.idZona)" class="form-control txtBox p-0"  currencyMask [options]="options" required  name="preciopromocion" type="text"
+                            [value]="getPrecio(zonaCorporal.precio)">
+                    <!--<span *ngIf="aplicaDescuentoAdicional(zonaCorporal.idZona) && descuentoAdicional" class="ml-2 font-weight-bold">{{getPrecioDescuento(zonaCorporal.precio)}}</span>-->
+                    <span *ngIf="zonaCorporal.precioDescuento" class="ml-2 font-weight-bold">{{zonaCorporal.precioDescuento | currency:'S/ '}}</span>
+                  </div>
+  
+                </td>
+                <!-- DURACION  -->
+                <td [ngClass]="[!zonaCorporal.estado ? 'tachado-fondo tachado' : '']">
+                  <div class="input-group input-group-sm">
+                    <input [attr.duracion-idZona]="zonaCorporal.idZona" [id]="'duracionIdZona'+zonaCorporal.idZona" [value]= "zonaCorporal.duracion" class="form-control txtBox" required  type="text" readonly>
+                  </div>
+                </td>
+                <!-- USUARIO QUE AGENDA -->
+                <td [ngClass]="[!zonaCorporal.estado ? 'tachado-fondo' : '']">
+                  <div  class="input-group input-group-sm" >
+                    <div class="input-group-prepend"><span class="input-group-text" [placement]="'top'" ngbTooltip="Usuario que agenda"><i class="fas fa-user"></i></span></div>
+                      <input readonly
+                           type="text" class="form-control"
+                                  [value]="zonaCorporal.usuarioAgendado"
+                                  [attr.usuarioAgendado-idZona]="zonaCorporal.idZona"
+                                  [attr.usuarioAgendado-idUsuario]="zonaCorporal.idUsuarioAgendado"
+                                  name="nombreusuario"
+                                  
+                                  [attr.usuarioAgendado-idZonaEnviar]="zonaCorporal.idZona + zonaCorporal.idUsuarioAgendadoStr"
+                                  disabled>
+                  </div>
+                </td>
+                <td [ngClass]="[!zonaCorporal.estado ? 'tachado-fondo' : '']" >
+                  <select *ngIf="zonaCorporal.sesion == 1 && !zonaCorporal.duplicado" #origen class="custom-select form-control-sm" [disabled]="cita.accionCita == 1 && cita.accionCita == 3" (change)="ponerOrigen(origen.value, zonaCorporal.idZona)">
+                    <option [value]="0">--Seleccionar--</option>
+                    <option *ngFor="let m of maestroMedioContacto" [value]="m.id" [attr.selected]="zonaCorporal.idMedioContactoOrigen == m.id ? true : null">{{ m.nombre }}</option>
+                  </select>
+                </td>
+                <!-- OPCION ELIMINAR -->
+                <td >
+                  <button *ngIf="(cita.accionCita == 2 && zonaCorporal.estado || cita.accionCita == 4 && zonaCorporal.estado || cita.accionCita == 3 && zonaCorporal.estado)" type="button" class="btn btn-outline-danger d-inline-flex btn-sm m-0 p-1" ngbTooltip="Deshabilitar" (click)="eliminarZona(zonaCorporal.idZona, i)" ><i class="mdi mdi-close m-0"></i></button>
+                  <button style="pointer-events: auto; opacity: 1 !important;" *ngIf="(cita.accionCita == 2 && !zonaCorporal.estado || cita.accionCita == 4 && !zonaCorporal.estado)" type="button" class="btn btn-outline-primary d-inline-flex btn-sm m-0 p-1" (click)="habilitarZona(zonaCorporal.idZona, i, modCitaHorario, zonaCorporal.duplicado ? false : true, zonaCorporal.idUsuarioAgendado)" ngbTooltip="Habilitar" ><i class="mdi mdi-check m-0"></i></button>
+                  
+                  <button style="margin-left: 0.5rem !important;" *ngIf="((cita.accionCita == 2) && zonaCorporal.estado && !zonaCorporal.duplicado && (usuarioActual.idperfil === 9 || usuarioActual.idperfil === 5 || usuarioActual.idperfil === 7)) && zonaCorporal.idZona !== 1576 && zonaCorporal.idZona !== 1578 && zonaCorporal.idZona !== 1580 && zonaCorporal.idZona !== 1582" type="button" class="btn btn-outline-primary d-inline-flex btn-sm m-0 p-1" ngbTooltip="Duplicar zona" (click)="duplicarZona(zonaCorporal)" ><i class="mdi mdi-content-copy m-0"></i></button>
+                </td>
+              </tr>
+            </ng-container>
+
+
+
+            <ng-container *ngIf="zonaCorporal.tratamientos">
+              <tr *ngIf="zonaCorporal.tratamientos.length > 0">
+                <td colspan="9" class="border-top-0">
+                  <div class="mt-1 d-inline-block popins w-100px">
+                    <span *ngFor="let t of zonaCorporal.tratamientos" class="mr-1 py-1 px-2 rounded small bg-light-indigo text-indigo fs-10px">{{ t.nombre }}</span>
+                  </div>
+                </td>
+              </tr>
+            </ng-container>
+
+
+          </ng-container>
+
+
+
+          <!-- TOTALIZADO -->
+          <tr>
+            <td>
+              <div class="input-group input-group-sm">
+                <input value= "TOTAL" class="form-control txtBox b" type="text" readonly>
+              </div>
+            </td>
+            <td colspan="3">
+              <div class="input-group input-group-sm d-inline-flex w-auto">
+                <div class="input-group-prepend">
+                  <label class="input-group-text" for="inputGroupSelect01">DSCTO EXTRA %</label>
+                </div>
+                <select #descuento class="custom-select" id="inputGroupSelect01" [formControl]="idDescuento" (change)="actualizarDescuento($event)" >
+                  <option [value]="0" selected>-- Seleccionar --</option>
+                  <option *ngFor="let cupon of collectionCupones" [value]="cupon.id">{{ cupon.porcentaje }}</option>
+                </select>
+                <div class="input-group-append">
+                  <button class="btn btn-primary" type="button" (click)="mostrarModalCuponAplica(modCitaCuponAplica)"  [disabled]="!activarCampos()"><i class="mdi mdi-playlist-check m-0" ></i></button>
+                </div>
+              </div>
+
+              <div class="input-group input-group-sm d-inline-flex w-auto ml-3">
+                <div class="input-group-prepend">
+                  <label class="input-group-text">CUPON</label>
+                </div>
+                <input type="text" class="form-control text-uppercase" [formControl]="cuponDescuento" [disabled]="!activarCampos()">
+              </div>
+            </td>
+            <td>
+
+            </td>
+            <td class="text-right">
+              <div *ngIf="totalPrecio != precioNeto" ><span class="text-dark oldPrice">{{ totalPrecio | currency: 'S/ ' }}</span></div>
+              <div class="font-weight-bold"><span>{{ precioNeto | currency: 'S/ ' }}</span></div>
+              <input [value]= "precioNeto | currency: 'S/ '" class="form-control txtBox b" type="hidden" readonly>
+            </td>
+            <td>
+              <div class="input-group input-group-sm">
+                <input [value]= "totalDuracion" class="form-control txtBox b" type="text" readonly>
+              </div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </app-card>
+  </div>
+
+
+
+  <!-- ZONAS DESHABILITADAS -->
+
+  <div class="col-sm-12" *ngIf="existeZonaCorporalDeshabilitada()">
+    <app-card [options]="false" [headerClass]="'fondoNegro'"  [titleClass]="'colorTituloBlanco'" [customHeader]="false" [hidHeader]="false" cardTitle="Zonas alteradas">
+
+      <div class="table table-sm-responsive overflow-auto">
+        <table id="responsive-table-model" class="display table dt-responsive nowrap" style="width:100%">
+          <thead>
+            <tr>
+              <th>ZONAS</th>
+              <th>ELEGIR PROMOCIÓN</th>
+              <th>SESIÓN</th>
+              <th>PRECIO</th>
+              <th>MIN.</th>
+              <th>AGENDADO</th>
+              <th>ORIGEN</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+          <ng-container *ngFor="let zonaCorporal of cita.zonasCorporales; let i = index">
+            <ng-container *ngIf="zonaCorporal.estado === false">
+              <tr [attr.fila-id]="zonaCorporal.idZona" *ngIf="!zonaCorporal.duplicado || !zonaCorporal.duplicado && !zonaCorporal.verDuplicado || zonaCorporal.verDuplicado" [ngClass]="[!zonaCorporal.estado ? 'tachado-fondo' : '']">
+                <td [ngClass]="[!zonaCorporal.estado ? 'tachado-fondo' : '']" style="padding-left: 0 !important;">
+  
+                  <div style="display: flex; align-items: center;" [ngStyle]="{'margin-left': zonaCorporal.duplicado ? '1rem' : '0px'}" >
+                    <i class="mdi mdi-arrow-right-bold"*ngIf="zonaCorporal.duplicado"></i>
+  
+                    <a  class="ver-zonas-duplicadas-boton" *ngIf="tieneUnDuplicado(zonaCorporal.idZona) === false"></a>
+                    <a (click)="verZonasDuplicadas(zonaCorporal.idZona)" *ngIf="tieneUnDuplicado(zonaCorporal.idZona) === true && tieneUnDuplicadoAbierto(zonaCorporal.idZona) === false && !zonaCorporal.duplicado && zonaCorporal.estado === true" class="ver-zonas-duplicadas-boton"  ><i class="mdi mdi-chevron-right"></i></a>
+                    <a (click)="verZonasDuplicadas(zonaCorporal.idZona)" *ngIf="tieneUnDuplicado(zonaCorporal.idZona) === true && tieneUnDuplicadoAbierto(zonaCorporal.idZona) === true && !zonaCorporal.duplicado && zonaCorporal.estado === true" class="ver-zonas-duplicadas-boton" ><i class="mdi mdi-chevron-down"></i></a>
+                    
+                    <span class="position-relative"><span *ngIf="aplicaDescuentoAdicional(zonaCorporal.idZona, zonaCorporal.estado) && descuentoAdicional" class="porcentaje">-{{ descuentoAdicional }}%</span>{{ zonaCorporal.descripcion }}</span>
+                  
+                    <div class="input-group input-group-sm">
+                      <input [attr.zona-id]="zonaCorporal.idZona" [value]= "zonaCorporal.descripcion" class="form-control txtBox" required  type="hidden">
+                    </div>
+    
+                    <button *ngIf="(cita.accionCita == 2 || cita.accionCita == 4) && zonaCorporal.estado === true && !zonaCorporal.duplicado && zonaCorporal.idZona !== 1576 && zonaCorporal.idZona !== 1578 && zonaCorporal.idZona !== 1580 && zonaCorporal.idZona !== 1582" type="button" class="btn btn-outline-primary d-inline-flex btn-sm m-0 p-1" ngbTooltip="Editar Zona" (click)="abrirModalDeEdicion(modCitaHorario, zonaCorporal.idZona, zonaCorporal.id, zonaCorporal.idUsuarioAgendado)" ><i class="mdi mdi-pencil m-0"></i></button>
+  
+  
+                  </div>
+  
+                </td>
+                <td [ngClass]="[!zonaCorporal.estado ? 'tachado-fondo' : '']">
+                  <!-- MOSTRAR SELECT SEGUN SI LA CITA YA EXISTE O ES NUEVA -->
+                  <div *ngIf="cita.accionCita != 4 && cita.accionCita != 2; else nuevaCita">
+  
+                    <!-- ACTUALIZACION -->
+                    <!--? ESTE ES PARA EL VER -->
+                    <div class="input-group input-group-sm">
+                      <!-- <div class="input-group-prepend">
+                        <label class="input-group-text" [placement]="'top'" ngbTooltip="Promoción"><i class="fas fa-percentage"></i></label>
+                      </div> -->
+                      <select #promocion [attr.promocion-idZona]="zonaCorporal.idZona"
+                              class="custom-select"
+                              name="promocion"
+                              [disabled]="cboPromocionDeshabilitado"
+                              (change)="ponerPrecio(promocion.value, zonaCorporal.idZona)">
+                        <option [value]="0">...SELECCIONE PROMOCIÓN...</option>
+                        <option [selected]="zonaCorporal.idPromocionPrecio == promocion.idPromocionPrecio"
+                              *ngFor="let promocion of zonaCorporal.promociones" [title]="promocion.descripcion" [value]="promocion.idPromocionPrecio">
+                              
+                          {{'[' + promocion.precioPromocion + '] ' + promocion.descripcion}}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+  
+                  <ng-template #nuevaCita>
+                    <!-- NUEVO -->
+                    <div class="input-group input-group-sm">
+                      <!-- <div class="input-group-prepend"><label class="input-group-text" [placement]="'top'" ngbTooltip="Promoción"><i class="fas fa-percentage"></i></label></div> -->
+                      <select #promocion2 [attr.promocion-idZona]="zonaCorporal.idZona"
+                              class="custom-select"
+                              name="promocion"
+                              (change)="ponerPrecio(promocion2.value, zonaCorporal.idZona, zonaCorporal.duplicado)"
+                      >
+                        <option [value]="0">...SELECCIONE PROMOCIÓN...</option>
+                        <option [selected]="zonaCorporal?.idPromocionPrecio == promocion?.idPromocionPrecio"
+                                *ngFor="let promocion of zonaCorporal.promociones" [value]="promocion?.idPromocionPrecio">
+                          {{'[' + promocion?.precioPromocion + '] ' + promocion?.descripcion}}
+                        </option>
+                      </select>
+                    </div>
+  
+                  </ng-template>
+                </td>
+                <!-- SESION -->
+                <td [ngClass]="[!zonaCorporal.estado ? 'tachado-fondo' : '']">
+                  <div class="input-group input-group-sm" style="text-align: center !important;">
+                    <input  [attr.sesion-idZona]="zonaCorporal.idZona"  [(ngModel)]="zonaCorporal.sesion" [value]= "zonaCorporal.sesion" (ngModelChange)="evtOnChangeSesion(zonaCorporal)" class="form-control txtBox" required type="text">
+                  </div>
+                </td>
+                <!-- PRECIO -->
+                <td [ngClass]="[!zonaCorporal.estado ? 'tachado-fondo tachado' : '']">
+                  <div class="d-flex">
+                    <!--? %%%%%%%%%%%%%%%%%%%%%%%%%%%% POR REVISAR %%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
+                    <input style="text-align: center !important;" [attr.precio-idZona]="zonaCorporal.idZona && zonaCorporal.estado === true" [(ngModel)]="zonaCorporal.precio" (ngModelChange)="actualizaPrecio($event, zonaCorporal.idZona)" class="form-control txtBox p-0"  currencyMask [options]="options" required  name="preciopromocion" type="text"
+                            [value]="getPrecio(zonaCorporal.precio)">
+                    <!--<span *ngIf="aplicaDescuentoAdicional(zonaCorporal.idZona) && descuentoAdicional" class="ml-2 font-weight-bold">{{getPrecioDescuento(zonaCorporal.precio)}}</span>-->
+                    <span *ngIf="zonaCorporal.precioDescuento" class="ml-2 font-weight-bold">{{zonaCorporal.precioDescuento | currency:'S/ '}}</span>
+                  </div>
+  
+                </td>
+                <!-- DURACION  -->
+                <td [ngClass]="[!zonaCorporal.estado ? 'tachado-fondo tachado' : '']">
+                  <div class="input-group input-group-sm">
+                    <input [attr.duracion-idZona]="zonaCorporal.idZona" [id]="'duracionIdZona'+zonaCorporal.idZona" [value]= "zonaCorporal.duracion" class="form-control txtBox" required  type="text" readonly>
+                  </div>
+                </td>
+                <!-- USUARIO QUE AGENDA -->
+                <td [ngClass]="[!zonaCorporal.estado ? 'tachado-fondo' : '']">
+                  <div  class="input-group input-group-sm" >
+                    <div class="input-group-prepend"><span class="input-group-text" [placement]="'top'" ngbTooltip="Usuario que agenda"><i class="fas fa-user"></i></span></div>
+                      <input readonly
+                           type="text" class="form-control"
+                                  [value]="zonaCorporal.usuarioAgendado"
+                                  [attr.usuarioAgendado-idZona]="zonaCorporal.idZona"
+                                  [attr.usuarioAgendado-idUsuario]="zonaCorporal.idUsuarioAgendado"
+                                  name="nombreusuario"
+                                  
+                                  [attr.usuarioAgendado-idZonaEnviar]="zonaCorporal.idZona + zonaCorporal.idUsuarioAgendadoStr"
+                                  disabled>
+                  </div>
+                </td>
+                <td [ngClass]="[!zonaCorporal.estado ? 'tachado-fondo' : '']" >
+                  <select *ngIf="zonaCorporal.sesion == 1 && !zonaCorporal.duplicado" #origen class="custom-select form-control-sm" [disabled]="cita.accionCita == 1 && cita.accionCita == 3" (change)="ponerOrigen(origen.value, zonaCorporal.idZona)">
+                    <option [value]="0">--Seleccionar--</option>
+                    <option *ngFor="let m of maestroMedioContacto" [value]="m.id" [attr.selected]="zonaCorporal.idMedioContactoOrigen == m.id ? true : null">{{ m.nombre }}</option>
+                  </select>
+                </td>
+                <!-- OPCION ELIMINAR -->
+                <td >
+                  <button *ngIf="(cita.accionCita == 2 && zonaCorporal.estado || cita.accionCita == 4 && zonaCorporal.estado )" type="button" class="btn btn-outline-danger d-inline-flex btn-sm m-0 p-1" ngbTooltip="Deshabilitar" (click)="eliminarZona(zonaCorporal.idZona, i)" ><i class="mdi mdi-close m-0"></i></button>
+                  <button style="pointer-events: auto; opacity: 1 !important;" *ngIf="(cita.accionCita == 2 && !zonaCorporal.estado || cita.accionCita == 4 && !zonaCorporal.estado || cita.accionCita == 3 && !zonaCorporal.estado)" type="button" class="btn btn-outline-primary d-inline-flex btn-sm m-0 p-1" (click)="habilitarZona(zonaCorporal.idZona, i, modCitaHorario, zonaCorporal.duplicado ? false : true, zonaCorporal.idUsuarioAgendado)" ngbTooltip="Habilitar" ><i class="mdi mdi-check m-0"></i></button>
+  
+                  <button style="margin-left: 0.5rem !important;" *ngIf="((cita.accionCita == 2) && zonaCorporal.estado && !zonaCorporal.duplicado && (usuarioActual.idperfil === 9 || usuarioActual.idperfil === 5 || usuarioActual.idperfil === 7)) && zonaCorporal.idZona !== 1576 && zonaCorporal.idZona !== 1578 && zonaCorporal.idZona !== 1580 && zonaCorporal.idZona !== 1582" type="button" class="btn btn-outline-primary d-inline-flex btn-sm m-0 p-1" ngbTooltip="Duplicar zona" (click)="duplicarZona(zonaCorporal)" ><i class="mdi mdi-plus m-0"></i></button>
+                </td>
+              </tr>
+            </ng-container>
+
+          </ng-container>
+
+          </tbody>
+        </table>
+      </div>
+    </app-card>
+  </div>
+
+  <ng-container *ngIf="isSmallScreen === true"  >
+    <div style="display: flex; justify-content: center; width: 100%; margin: 0 15px; border-radius: 6px ;padding: 10px 15px;border-bottom:1px solid #afafaf; background-color: white;position: relative;">
+<!-- 
+      <h3 style="margin-bottom: 0 !important;font-size: 18px; text-align: center;" >Ver Notas</h3>            
+      <button (click)="acc.toggle('historias-')"  type="button" class="btn btn-primary" style="border-radius: 6px;margin-left: 0.2rem;width: auto;align-items: center;justify-content: center;display: flex;padding: 0 !important; color: white;"> <i style="margin-right: 4px !important;" class="mdi mdi-chevron-down"></i></button> -->
+      <button (click)="acc.toggle('historias-')" matRipple class="d-inline-flex text-white border rounded-pill px-3 py-1 mx-auto z-index-2 cursor-pointer shadow-sm position-relative btn-primary"> 
+        <span class="">Ver Notas</span>
+      </button>
+      <span class="bg-light-m h-2px w-100 position-absolute top-0 bottom-0 m-auto left-0"></span>
+
+    </div> 
+
+    <ngb-accordion style="width: 100%; padding: 0 15px; margin-bottom: 20px;" #acc="ngbAccordion">
+       <ngb-panel [id]="'historias-'">
+         
+         <ng-template style="padding-top: 0 !important" ngbPanelTitle>  
+           <div style="border-bottom:1px solid #afafaf;display: flex; justify-content: center;">
+ 
+             <h3 style="margin-bottom: 0 !important;font-size: 18px; text-align: center;" >Ver Notas</h3>            
+             <button  type="button" class="btn btn-primary" style="border-radius: 6px;margin-left: 0.2rem;width: auto;align-items: center;justify-content: center;display: flex;padding: 0 !important; color: white;"> <i style="margin-right: 4px !important;" class="mdi mdi-chevron-down"></i></button>
+           </div>         
+         </ng-template>
+ 
+         <ng-template ngbPanelContent>
+           <!-- CONTENIDO NOTAS AVISOS DETALLES -->
+           <section class="cont-chats"> 
+             <form [formGroup]="frmNotas" class="my-chat--comments">
+               <app-card [hidHeader]="false" cardTitle="Historia notas" [options]="false" cardClass="msg-card mb-0" blockClass="card-body msg-block">
+                 <div class="h-list-body" >
+                   <perfect-scrollbar #scrollNota ngClass="datta-scroll" [usePSClass]="'datta'" [disabled]="null" [autoPropagation] ="true">
+                     <div class="msg-user-chat scroll-div">
+                       <div class="main-friend-chat">
+                         <div *ngIf="cita != null">
+                           <div *ngFor="let nota of cita.citaMensajeNotas.slice().reverse()" class="media chat-messages">
+ 
+                             <div class="d-flex flex-row">
+                               <div style="padding-right: 8px; padding-top: 3px;">
+                                 <h5 [placement]="'right'" [ngbTooltip]="nota.usuarioRegistra" class="globo d-flex theme-bg2">{{ nota.inicialesUsuario  }}</h5>
+                               </div>
+ 
+                               <div class="media-body d-flex flex-row chat-menu-content">
+                                 <div [class.destacado]="nota.destacado">
+                                   <p class="chat-cont" [class.bg-gradient]="nota.destacado">{{ nota.nota }}</p>
+                                   <p class="chat-time">{{ nota.fechaRegistra | date: formatoFechaHora }} &nbsp;
+                                     <i *ngIf="nota.id == 0" (click)="delNotaCita(nota.fechaRegistra, nota.nota)" class="feather icon-trash-2" title="Eliminar nota"></i>
+                                   </p>
+                                 </div>
+                                 <div *ngIf="nota.destacado" class="rounded-circle bg-gradient w-20px h-20px ms-5px d-flex text-white"><fontawesome-svg class="m-auto" icon="star" type="sharp-solid" [width]="10" [height]="10"></fontawesome-svg></div>
+                               </div>
+                             </div>
+ 
+ 
+ 
+                           </div>
+                         </div>
+                       </div>
+                     </div>
+                   </perfect-scrollbar>
+                 </div>
+ 
+                 <div></div>
+                 <div *ngIf="AccionesCita.EDITAR || AccionesCita.VER || AccionesCita.NUEVA || AccionesCita.SIGUIENTE || AccionesCita.CONFIRMAR" class="msg-form">
+                   <div class="input-group mb-0">
+                     <div class="input-group input-group-sm">
+                       <input
+                         type="text" class="form-control msg-send-chat" formControlName="nota" (keyup.enter)="addNotasCita()" placeholder="Ingresar nota . . .">
+                       <label ngbTooltip="Destacado" for="notaDestacado" class="input-group-append px-2 border-top border-bottom cursor-pointer mb-0">
+                         <input type="checkbox" class="form-control me-5px no-pointer-events" id="notaDestacado" formControlName="destacado" >
+                         <fontawesome-svg class="m-auto text-indigo" icon="star" type="sharp-solid" [width]="25" [height]="25"></fontawesome-svg>
+                       </label>
+                     </div>
+                   </div>
+                 </div>
+ 
+               </app-card>
+             </form>
+             <form [formGroup]="frmAvisos">
+               <app-card [hidHeader]="false" cardTitle="Historia avisos" [options]="false" cardClass="msg-card mb-0" blockClass="card-body msg-block">
+ 
+                 <div class="h-list-body">
+                   <perfect-scrollbar #scrollAviso ngClass="datta-scroll" [usePSClass]="'datta'" [disabled]="null" [autoPropagation] ="true">
+                     <div class="msg-user-chat scroll-div">
+                       <div class="main-friend-chat">
+ 
+                         <div *ngIf="cita != null">
+                           <div *ngFor="let aviso of cita.citaMensajeAvisos.slice().reverse()" class="media chat-messages">
+ 
+                             <div class="d-flex flex-row">
+                               <div style="padding-right: 8px; padding-top: 3px;">
+                                 <h5 [placement]="'right'" [ngbTooltip]="aviso.usuarioRegistra" class="globo d-flex theme-bg2">{{ aviso.inicialesUsuario  }}</h5>
+                               </div>
+ 
+                               <div class="media-body d-flex flex-row chat-menu-content">
+                                 <div [class.destacado]="aviso.destacado">
+                                   <p class="chat-cont" [class.bg-gradient]="aviso.destacado">{{ aviso.aviso }}</p>
+                                   <p class="chat-time">{{ aviso.fechaRegistra | date: formatoFechaHora }} &nbsp;
+                                     <i *ngIf="aviso.id == 0" (click)="delAvisoCita(aviso.fechaRegistra, aviso.aviso)" class="feather icon-trash-2" title="Eliminar aviso"></i>
+                                   </p>
+                                 </div>
+                                 <div *ngIf="aviso.destacado" class="rounded-circle bg-gradient w-20px h-20px ms-5px d-flex text-white"><fontawesome-svg class="m-auto" icon="star" type="sharp-solid" [width]="10" [height]="10"></fontawesome-svg></div>
+                               </div>
+                             </div>
+                           </div>
+                         </div>
+ 
+                       </div>
+                     </div>
+                   </perfect-scrollbar>
+                 </div>
+ 
+                 <div class="msg-form">
+                   <div class="input-group mb-0">
+                     <div class="input-group input-group-sm">
+                       <input
+                         type="text"
+                         class="form-control msg-send-chat"
+                         formControlName="aviso"
+                         (keyup.enter)="addAvisosCita()"
+                         placeholder="Ingresar aviso . . .">
+                       <label ngbTooltip="Destacado" for="avisoDestacado" class="input-group-append px-2 border-top border-bottom border-right cursor-pointer mb-0">
+                         <input type="checkbox" class="form-control me-5px no-pointer-events" id="avisoDestacado" formControlName="destacado" >
+                         <fontawesome-svg class="m-auto text-indigo" icon="star" type="sharp-solid" [width]="25" [height]="25"></fontawesome-svg>
+                       </label>
+                     </div>
+                   </div>
+                 </div>
+               </app-card>
+             </form>
+             <form class="my-chat--comments" [formGroup]="frmDetalles">
+               <app-card [hidHeader]="false" cardTitle="Historia detalles" [options]="false" cardClass="msg-card mb-0" blockClass="card-body msg-block">
+ 
+                 <div class="h-list-body">
+                   <perfect-scrollbar #scrollDetalle ngClass="datta-scroll" [usePSClass]="'datta'" [disabled]="null" [autoPropagation] ="true">
+                     <div class="msg-user-chat scroll-div">
+                       <div class="main-friend-chat">
+ 
+                         <div *ngIf="cita != null">
+                           <div *ngFor="let detalle of cita.citaMensajeDetalles.slice().reverse()" class="media chat-messages">
+ 
+                             <div class="d-flex flex-row">
+                               <div style="padding-right: 8px; padding-top: 3px;">
+                                 <h5 [placement]="'right'" [ngbTooltip]="detalle.usuarioRegistra" class="globo d-flex theme-bg2">{{ detalle.inicialesUsuario  }}</h5>
+                               </div>
+ 
+                               <div class="media-body d-flex flex-row chat-menu-content">
+                                 <div [class.destacado]="detalle.destacado">
+                                   <p class="chat-cont" [class.bg-gradient]="detalle.destacado">{{ detalle.detalle }}</p>
+                                   <p class="chat-time">{{ detalle.fechaRegistra | date: formatoFechaHora }} &nbsp;
+                                     <i *ngIf="detalle.id == 0" (click)="delDetalleCita(detalle.fechaRegistra, detalle.detalle)" class="feather icon-trash-2" title="Eliminar detalle"></i>
+                                   </p>
+                                 </div>
+                                 <div *ngIf="detalle.destacado" class="rounded-circle bg-gradient w-20px h-20px ms-5px d-flex text-white"><fontawesome-svg class="m-auto" icon="star" type="sharp-solid" [width]="10" [height]="10"></fontawesome-svg></div>
+                               </div>
+                             </div>
+                           </div>
+                         </div>
+ 
+                       </div>
+                     </div>
+                   </perfect-scrollbar>
+                 </div>
+ 
+                 <div class="msg-form">
+                   <div class="input-group mb-0">
+ 
+                     <div class="input-group input-group-sm">
+                       <input
+                         type="text" class="form-control msg-send-chat" formControlName="detalle" (keyup.enter)="addDetallesCita()" placeholder="Ingresar detalles . . .">
+                       <label ngbTooltip="Destacado" for="detalleDestacado" class="input-group-append px-2 border-top border-bottom border-right cursor-pointer mb-0">
+                         <input type="checkbox" class="form-control me-5px no-pointer-events" id="detalleDestacado" formControlName="destacado" >
+                         <fontawesome-svg class="m-auto text-indigo" icon="star" type="sharp-solid" [width]="25" [height]="25"></fontawesome-svg>
+                       </label>
+                     </div>
+                   </div>
+                 </div>
+               </app-card>
+             </form>
+           </section>
+         </ng-template>
+       </ngb-panel>
+     </ngb-accordion>
+  </ng-container>
+
+
+  
+
+
+
+
+
+
+
+  <!-- EVOLUCIÓN DEL TRATAMIENTO -->
+  <div *ngIf="!AccionesCita.NUEVA" class="col-12" >
+
+    <app-card [options]="true" [reload]="true" (reloadCallback)="obtenerEvolucionTratamiento()"  [customHeader]="false" [hidHeader]="false" cardTitle="Evolución del tratamiento" [cardTitle2]="carSubTitleEvolucion">
+
+      <div *ngIf="ldEvolucionTratamiento">
+        <div class="sk list-item mb-1"></div>
+        <div class="sk list-item mb-1"></div>
+        <div class="sk list-item mb-1"></div>
+        <div class="sk list-item"></div>
+      </div>
+
+      <mat-list *ngIf="!ldEvolucionTratamiento" class="historial-clinico pt-0">
+        <mat-list-item *ngFor="let evolucionTratamientoZona of evolucionTratamiento.zonas; let i = index" class="border rounded mb-1 hover historia" (click)="visualizarOpciones()">
+          <mat-icon mat-list-icon>accessibility</mat-icon>
+          <div mat-line class="font-weight-bold">{{ evolucionTratamientoZona.zona }}</div>
+          <div mat-line><small>(S{{ evolucionTratamientoZona.sesion }}) - ({{ evolucionTratamientoZona.fechaRegistro | date: 'dd-MM-yyyy HH:mm:ss' }})</small></div>
+          <div *ngIf="usuarioActual.idperfil === tipoPerfil.SUPERVISOR || usuarioActual.idperfil === tipoPerfil.ADMINISTRADOR || usuarioActual.idperfil === tipoPerfil.SISTEMAS" class="d-flex flex-column">
+            <div class="d-block text-right">
+              <button mat-mini-fab class="bg-primary" (click)="$event.preventDefault();$event.stopPropagation();verFotos(evolucionTratamientoZona)">
+                <mat-icon>photo_camera</mat-icon>
+              </button>
+            </div>
+          </div>
+        </mat-list-item>
+      </mat-list>
+
+    </app-card>
+  </div>
+
+</div>
+
+
+
+
+<!-- BOTONERA ESCRITORIO -->
+<ul class="botonera-escritorio">
+  <li>
+    <button type="button" matRipple *ngIf="AccionesCita.ATENDER || AccionesCita.VER || AccionesCita.CONFIRMAR" class="btn btn-brown btn-icon"   [placement]="'bottom'" ngbTooltip="No llamar"   (click)="citaEstado(modCitaEstado, CitaEstado.NOLLAMAR)"> <i class="mdi mdi-phone-cancel text-white"></i></button>
+    <button type="button" matRipple *ngIf="AccionesCita.ATENDER || AccionesCita.VER || AccionesCita.CONFIRMAR" class="btn btn-success btn-icon"   [placement]="'bottom'" ngbTooltip="Agendar Siguiente Cita"            (click)= "agendarSiguienteCita()">                     <i class="mdi mdi-calendar-arrow-right"></i></button>
+    <button type="button" matRipple *ngIf="AccionesCita.ATENDER || AccionesCita.VER || AccionesCita.CONFIRMAR" class="btn btn-warning btn-icon"   [placement]="'bottom'" ngbTooltip="Editar"            (click)= "citaEditar()">                     <i class="mdi mdi-calendar-edit"></i></button>
+    <button type="button" matRipple *ngIf="AccionesCita.ATENDER"    class="btn bg-green-dark btn-primary btn-icon"   [placement]="'bottom'" ngbTooltip="Marcar Atendida" (click)="citaAtendida()">         <i class="far fa-hand-point-up"></i>     </button>
+    <button type="button" matRipple *ngIf="AccionesCita.EDITAR || AccionesCita.NUEVA || AccionesCita.SIGUIENTE"     class="btn btn-primary btn-icon"   [placement]="'bottom'" ngbTooltip="Grabar"          (click)="citaGrabar()" >           <i class="mdi mdi-content-save-outline"></i>               </button>
+    <button type="button" matRipple *ngIf="AccionesCita.VER || AccionesCita.CONFIRMAR"  class="btn btn-success btn-icon"   [placement]="'bottom'" ngbTooltip="Confirmar Cita"       (click)="citaEstado(modCitaEstado, 6)">       <i class="mdi mdi-calendar-check"></i>    </button>
+    <button type="button" matRipple *ngIf="AccionesCita.VER || AccionesCita.CONFIRMAR"  class="btn btn-dark btn-icon"   [placement]="'bottom'" ngbTooltip="No Asistio Cita"       (click)="citaEstado(modCitaEstado, 81)">       <i class="mdi mdi-account-cancel"></i>    </button>
+    <button type="button" matRipple *ngIf="AccionesCita.VER || AccionesCita.CONFIRMARASISTENCIA"  class="btn btn-dark-primary btn-icon"   [placement]="'bottom'" ngbTooltip="Confirmar Asistencia"       (click)="citaEstado(modCitaEstado, CitaEstado.ASISTENCIACONFIRMADA)">       <i class="mdi mdi-calendar-check"></i>    </button>
+    <button type="button" matRipple *ngIf="(AccionesCita.VER || AccionesCita.CONFIRMAR) && cita.idEstado != CitaEstado.ATENDIDA"  class="btn btn-dark btn-icon"      [placement]="'bottom'" ngbTooltip="Cancelar"        (click)="citaEstado(modCitaEstado, 8)">        <i class="mdi mdi-cancel"></i>               </button>
+    <button type="button" matRipple *ngIf="AccionesCita.ATENDER || AccionesCita.EDITAR || AccionesCita.VER || AccionesCita.CONFIRMAR"   class="btn btn-secondary btn-icon" [placement]="'bottom'" ngbTooltip="Ver historial"   (click)="historial(modCitaHist)"> <i class="mdi mdi-history"></i>            </button>
+    <button type="button" matRipple *ngIf="AccionesCita.VER || AccionesCita.CONFIRMAR"  class="btn bg-c-purple btn-icon"   [placement]="'bottom'" ngbTooltip="Pendiente"       (click)="citaEstado(modCitaEstado, 30)">       <i class="mdi mdi-calendar-alert text-white"></i>    </button>
+    <button type="button" matRipple *ngIf="AccionesCita.EDITAR || AccionesCita.SIGUIENTE || AccionesCita.NUEVA"  class="btn btn-primary btn-icon"   [placement]="'bottom'" ngbTooltip="Horario"         (click)="irHorario(modCitaHorario);">           <i class="mdi mdi-calendar-month-outline"></i>       </button>
+    <button type="button" matRipple *ngIf="AccionesCita.VER && (cita.idEstado == CitaEstado.CONFIRMADA || cita.idEstado == CitaEstado.ATENDIDA || cita.idEstado == CitaEstado.ASISTENCIACONFIRMADA)" class="btn btn-primary btn-icon"   [placement]="'bottom'" [ngbTooltip]="(evolucionTratamiento.id ? 'Editar ' : 'Registrar ') + 'evolución del tratamiento'"          (click)="evolucionTratamientoGrabar(modEvolucionTratamiento, !!evolucionTratamiento.id )" ><i class="mdi mdi-clipboard-text-clock-outline"></i></button>
+    <button type="button" matRipple *ngIf="AccionesCita.VER" class="btn btn-icon" [ngClass]="citaSatisfaccion?'btn-primary active':'btn-secondary'" [placement]="'bottom'" [ngbTooltip]="(citaSatisfaccion?'Ver':'Grabar') +' satisfacción del cliente'"  (click)="citaMedicionGrabar(modCitaMedicion,1)"><i class="mdi mdi-emoticon-happy-outline"></i></button>
+    <button type="button" matRipple *ngIf="AccionesCita.VER" class="btn btn-icon" [ngClass]="citaEfectividad?'btn-primary active':'btn-secondary'"   [placement]="'bottom'" [ngbTooltip]="(citaEfectividad?'Ver':'Grabar') +' efectividad del tratamiento'"  (click)="citaMedicionGrabar(modCitaMedicion,2)"><i class="far fa-thumbs-up"></i></button>
+    <button type="button" matRipple *ngIf="verBotonCambiarFechaLlamada()" class="btn btn-icon btn-primary"   [placement]="'bottom'" ngbTooltip="Editar Fecha llamar" (click)="cambiarFechaAsignacion()"><i class="mdi mdi-phone-alert"></i></button>
+  </li>
+</ul>
+
+<ul class="botonera-escritorio" style="top: 80px !important;" >
+  <li>
+    <button type="button" matRipple class="btn btn-danger btn-icon" *ngIf="AccionesCita.EDITAR || AccionesCita.SIGUIENTE"    [placement]="'bottom'" ngbTooltip="Filtrar para Anular"          (click)="desactivarZonasParaAnular()">          <i class="mdi mdi-filter-remove"></i>    </button>
+    <button type="button" matRipple *ngIf="(AccionesCita.VER || AccionesCita.CONFIRMAR) && cita.idEstado != CitaEstado.ATENDIDA"    class="btn btn-danger btn-icon"    [placement]="'bottom'" ngbTooltip="Anular"          (click)="citaEstado(modCitaEstado, 9)">          <i class="mdi mdi-calendar-remove"></i>    </button>
+
+  </li>
+</ul>
+
+<ul *ngIf="(AccionesCita.VER && cita.idEstado !== 82 && !cita.esNotificado) || (AccionesCita.VER && isPerfilAutorizado())"  class="botonera-escritorio hide-mobile" style="bottom: 10px !important; top: auto !important;">
+  <li>
+    <button (click)="enviarNotificacion(cita.idSede, cita.idCita)" *ngIf="AccionesCita.VER && cita.idEstado !== 82 && !cita.esNotificado && (usuarioActual.idperfil === 5)" type="button" matRipple class="btn btn-dark-primary btn-icon"   [placement]="'top'" ngbTooltip="Notificar Pago" >      
+      <i class="feather icon icon-bell d-block" style="font-size: 20px !important;"></i>
+    </button>
+  </li>
+</ul>
+
+<!-- Menu Movil -->
+<div class="float-menu">
+  <button (click)="citaNueva()" type="button" mat-fab *ngIf="!AccionesCita.EDITAR && !AccionesCita.NUEVA" class="my-color_gradient" ngbTooltip="Nueva Cita">
+    <i class="mdi mdi-plus text-white plus-icon"></i>
+    <i class="mdi mdi-plus text-white doble-plus-icon"></i>
+  </button>
+  <button *ngIf="!AccionesCita.EDITAR && !AccionesCita.NUEVA" mat-fab class="my-color_gradient" (click)="citaEditar()">
+    <mat-icon>draw</mat-icon>
+  </button>
+  <button *ngIf="AccionesCita.ATENDER && (atencionEmpezada || cita.idEstado === 7)" (click)="citaAtendida()" id="btnImpTicket1" mat-fab type="button" class="my-color_gradient"   [placement]="'bottom'" ngbTooltip="Atender">
+    <mat-icon>check</mat-icon>
+  </button>                  
+  <button type="button" mat-fab *ngIf="AccionesCita.EDITAR || AccionesCita.NUEVA || AccionesCita.SIGUIENTE" class="my-color_gradient" ngbTooltip="Grabar" (click)="citaGrabar()">
+    <i class="mdi mdi-content-save-outline text-white"></i>
+  </button>
+  <button mat-fab class="my-color_gradient" (click)="verOpciones()">
+    <mat-icon>more_vert</mat-icon>
+  </button>
+</div>
+
+<ng-template let-bottomSheetRef="bottomSheetRef" #menuMovil >
+  <div class="_content" >
+    <div class="_header">
+      <div class="px-4 pt-4 text-center">
+        <span class="d-inline-block topline"></span>
+        <p class="text-center _title lead">Opciones</p>
+      </div>
+      <mat-divider class=""></mat-divider>
+    </div>
+    <mat-nav-list class="pt-0">
+      <!-- <div *ngIf="AccionesCita.ATENDER">
+        <a mat-list-item (click)="citaAtendida()">
+          <i class="mat-list-icon far fa-hand-point-up"></i>
+          <span class=" opt-title">Marcar atendida</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div> -->
+      <div *ngIf="AccionesCita.ATENDER || AccionesCita.VER || AccionesCita.CONFIRMAR">
+        <a mat-list-item (click)="citaEditar();cerrarOpciones();">
+          <mat-icon mat-list-icon>edit</mat-icon>
+          <span mat-line class=" opt-title">Editar cita</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+      <div *ngIf="AccionesCita.EDITAR || AccionesCita.NUEVA || AccionesCita.SIGUIENTE">
+        <a mat-list-item (click)="citaGrabar();cerrarOpciones();">
+          <i class="mat-list-icon mdi mdi-content-save-outline"></i>
+          <span class=" opt-title">Grabar cita</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+      <div *ngIf="(AccionesCita.VER || AccionesCita.CONFIRMAR) && cita.idEstado != CitaEstado.ATENDIDA">
+        <a mat-list-item (click)="citaEstado(modCitaEstado, 9);cerrarOpciones();">
+          <i class="mat-list-icon mdi mdi-calendar-remove"></i>
+          <span class=" opt-title">Anular cita</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+      <div *ngIf="AccionesCita.VER || AccionesCita.CONFIRMAR">
+        <a mat-list-item (click)="citaEstado(modCitaEstado, 6);cerrarOpciones();">
+          <i class="mat-list-icon mdi mdi-calendar-check"></i>
+          <span class=" opt-title">Confirmar cita</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+      <div *ngIf="AccionesCita.VER || AccionesCita.CONFIRMARASISTENCIA">
+        <a mat-list-item (click)="citaEstado(modCitaEstado, CitaEstado.ASISTENCIACONFIRMADA);cerrarOpciones();">
+          <i class="mat-list-icon mdi mdi-calendar-check"></i>
+          <span class=" opt-title">Confirmar asistencia</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+      <div *ngIf="(AccionesCita.VER || AccionesCita.CONFIRMAR) && cita.idEstado != CitaEstado.ATENDIDA">
+        <a mat-list-item (click)="citaEstado(modCitaEstado, 8);cerrarOpciones();">
+          <i class="mat-list-icon mdi mdi-cancel"></i>
+          <span class=" opt-title">Cancelar cita</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+
+      <div *ngIf="AccionesCita.VER || AccionesCita.CONFIRMAR">
+        <a mat-list-item (click)="citaEstado(modCitaEstado, 30);cerrarOpciones();">
+          <i class="mat-list-icon mdi mdi-calendar-alert"></i>
+          <span class=" opt-title">Marcar pendiente</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+
+      <div *ngIf="AccionesCita.EDITAR || AccionesCita.SIGUIENTE || AccionesCita.NUEVA">
+        <a mat-list-item (click)="irHorario(modCitaHorario);cerrarOpciones();">
+          <i class="mat-list-icon mdi mdi-calendar-month"></i>
+          <span class=" opt-title">Horario</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+
+      <div>
+        <a mat-list-item (click)="historial(modCitaHist);cerrarOpciones();">
+          <i class="mat-list-icon mdi mdi-history"></i>
+          <span class=" opt-title">Ver historial de registro</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+
+      <div *ngIf="AccionesCita.VER && (cita.idEstado == CitaEstado.CONFIRMADA || cita.idEstado == CitaEstado.ATENDIDA || cita.idEstado == CitaEstado.ASISTENCIACONFIRMADA)">
+        <a mat-list-item (click)="evolucionTratamientoGrabar(modEvolucionTratamiento, !!evolucionTratamiento.id );cerrarOpciones();">
+          <i class="mat-list-icon mdi mdi-clipboard-text-clock-outline"></i>
+          <span class=" opt-title">{{ evolucionTratamiento.id ? 'Editar' : 'Registrar' }} evolución del tratamiento</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+
+      <div *ngIf="AccionesCita.VER ||  windows.innerWidth < 700">
+        <a mat-list-item (click)="citaMedicionGrabar(modCitaMedicion,1);cerrarOpciones();">
+          <i class="mat-list-icon mdi mdi-emoticon-happy-outline"></i>
+          <span class=" opt-title">{{ (citaSatisfaccion?'Ver':'Grabar') +' satisfacción del cliente' }}</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+
+      <div *ngIf="AccionesCita.VER ||  windows.innerWidth < 700">
+        <a mat-list-item (click)="citaMedicionGrabar(modCitaMedicion,2);cerrarOpciones();">
+          <i class="mat-list-icon far fa-thumbs-up"></i>
+          <span class=" opt-title">{{ (citaEfectividad?'Ver':'Grabar') +' efectividad del tratamiento' }}</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+    </mat-nav-list>
+  </div>
+
+
+</ng-template>
+
+
+
+<!-- Opciones evolución del tratamiento -->
+<ng-template #modalOpcionesEvolucion let-modal let-close="close" let-d="dismiss" class="fadeIn">
+  <div class="modal-header">
+    <h5 class="modal-title">Opciones de la evolución del tratamiento</h5>
+    <button type="button" class="close basic-close" data-dismiss="modal" aria-label="Close" (click)="modal.close()"><span aria-hidden="true">&times;</span></button>
+  </div>
+  <div class="modal-body">
+    <div class="form-row">
+      <div class="col-4">
+        <button  type="button" class="btn btn-outline-warning w-100 m-0 d-inline-flex justify-content-center" [placement]="'bottom'" ngbTooltip="Editar" (click)="evolucionTratamientoGrabar(modEvolucionTratamiento,true);modal.close()"><i class="mdi mdi-square-edit-outline"></i>Editar</button>
+      </div>
+      <div class="col-4">
+        <button type="button" class="btn btn-outline-secondary w-100 m-0 d-inline-flex justify-content-center" [placement]="'bottom'" ngbTooltip="Exportar pdf" (click)="exportarHistoriaClinicaPdf();modal.close()"><i class="mdi mdi-file-excel-outline"></i>Exportar</button>
+      </div>
+      <div class="col-4">
+        <button  type="button" class="btn btn-outline-primary w-100 m-0 d-inline-flex justify-content-center" [placement]="'bottom'" ngbTooltip="Ver pdf" (click)="exportarHistoriaClinicaPdf(true);modal.close()"><i class="mdi mdi-eye-outline"></i>Ver</button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+
+<!-- MOSTRAR FOTOS -->
+<ng-template #modalFotosEvolucion let-modal let-close="close" let-d="dismiss" class="fadeIn">
+  <div class="modal-header">
+    <h5 class="modal-title">Imagenes de zona</h5>
+    <button type="button" class="close basic-close" data-dismiss="modal" aria-label="Close" (click)="modal.close()"><span aria-hidden="true">&times;</span></button>
+  </div>
+  <div class="modal-body">
+
+    <ngb-carousel *ngIf="fotos.length">
+      <ng-template ngbSlide *ngFor="let foto of fotos">
+        <div class="picsum-img-wrapper p-5">
+          <img class="image-carousel" [src]="foto" alt="Random first slide">
+        </div>
+        <div class="carousel-caption pb-0">
+          <p class="mb-0">{{ zonaEvolucionTratamiento.zona }}</p>
+        </div>
+      </ng-template>
+    </ngb-carousel>
+
+  </div>
+
+</ng-template>

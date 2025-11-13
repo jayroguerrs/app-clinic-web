@@ -1,0 +1,37 @@
+﻿
+<ng-template #modalGrafico let-modal let-close="close">
+   <form [formGroup]="frmgraficos">
+        <div class="modal-content">
+        <div class="modal-header card-header">
+            <h5 class="modal-title">Impresion del Documento</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="modal.close()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body card-body" type="aria-hidden">
+            
+            <div id="htmlData">
+      
+
+            </div>
+        </div>
+        <div class="modal-footer card-footer">
+            <div class="form-row float-right">
+                <button printSectionId = "htmlData" ngxPrint class="btn btn-primary d-flex align-items-center justify-content-center"> 
+                    <i class="material-icons">  </i><span>Imprimir</span>
+                </button>  
+                <button type="button"  class="btn btn-outline-danger" (click)="cerrarModal()"><i class="feather icon-slash"></i>Cancelar</button>
+            </div>
+        </div>
+        </div> 
+    </form> 
+    <div class="col-xl-4 col-md-6">
+        <app-card cardTitle="Bar Chart" [options]="false">
+          <div #barBasicChart>
+            <chart id="bar_basic_chart" [type]="'bar'" [data]="barBasicChartData" [options]="barBasicChartOption"></chart>
+          </div>
+        </app-card>
+      </div>
+</ng-template>    
+ 
+  

@@ -1,0 +1,494 @@
+<!-- SPINNER -->
+<ngx-spinner
+    [template]="rutaImageSpinner">
+    <p style="color: white" > Cargando... </p>
+</ngx-spinner>
+<!-- TODO: REVIEW BUTTOM ADD -->
+<!-- BOTONERA ESCRITORIO -->
+<ul class="botonera-escritorio client_perfil">
+    <li>
+        <button id="btnActualizar1"  type="button" class="btn btn-primary btn-icon" [placement]="'bottom'" ngbTooltip="Actualizar"  (click)= "actualizarLista()" [disabled]="loadingPerfil">      <i class="mdi mdi-sync"></i>     </button>
+        <button type="button" class="btn btn-primary btn-icon" [placement]="'bottom'" ngbTooltip="Emitir Documento"  (click)= "generarDocumento(modalDocumentoDatos)" [disabled]="loadingPerfil"><i class="mdi mdi-file-document-outline"></i></button>
+        <button type="button" class="btn btn-primary btn-icon" [placement]="'bottom'" ngbTooltip="Emitir Resumen Contrato"  (click)= "generarContrato(modGenerarContrato)" [disabled]="loadingPerfil"><i class="mdi mdi-file-certificate-outline"></i></button>
+        <button type="button" class="btn btn-primary btn-icon my_btn--add" [placement]="'bottom'" ngbTooltip="Generar Cita"  (click)="citaNueva()">
+          <mat-icon>add</mat-icon>
+        </button>
+
+    </li>
+</ul>
+
+
+<ng-template #modalDocumentoDatos let-modal let-close="close">
+  <app-documento-datos
+    (eventoDocumentoListar)="componentChildren?.reload();"
+    [modal]="modalDocumentoDatosRef"
+    [cliente]="cliente">
+  </app-documento-datos>
+</ng-template>
+
+>
+
+<ng-template #modalFormularioEncuesta let-modal let-close="close">
+  <app-cliente-encuesta
+    [modal]="modalFormularioEncuestaRef"
+    [idCliente]="cliente.id">
+  </app-cliente-encuesta>
+</ng-template>
+
+<ng-template #modalFormularioEncuestaLink let-modal let-close="close">
+  <app-cliente-encuesta-link
+    [modal]="modalFormularioEncuestaLinkRef"
+    [formularios]="formulariosLink"
+    [cliente]="cliente">
+  </app-cliente-encuesta-link>
+</ng-template>
+
+
+<ng-template #modEvolucionTratamiento let-modal let-close="close">
+  <app-evolucion-tratamiento-datos-modal
+    [idCita]="evolucionTratamientoSelected?.idCita"
+    [modal]="modalEvolucionTratamientoRef"
+    [cita]="cita"
+    [evolucionTratamiento]="evolucionTratamientoSelected"
+    [collectionCitaDetalle]="collectionCitaDetalle"
+    [edit]="true">
+  </app-evolucion-tratamiento-datos-modal>
+</ng-template>
+
+<ng-template #modGenerarContrato let-modal let-close="close">
+  <app-cliente-contrato
+    [modal]="modalGenerarContratoRef"
+    [cliente]="cliente">
+  </app-cliente-contrato>
+</ng-template>
+
+<ng-template #modGenerarHistoriaClinica let-modal let-close="close">
+  <app-cliente-historia-clinica
+    [modal]="modalGenerarHistoriaClinicaRef"
+    [cliente]="cliente">
+  </app-cliente-historia-clinica>
+</ng-template>
+
+
+        <section class="card-perfil">
+          <div class="col-12 col-lg-6 p-0">
+            <div  class="my-profile">
+              <figure class="my-profile--small__avatar m-0">
+                <img *ngIf="datosCliente.genero === 'HOMBRE'" src="../../../../assets/images/avatar/avatar-m.png" [alt]="cliente.id.toString()">
+                <img *ngIf="datosCliente.genero === 'DAMA'" src="../../../../assets/images/avatar/avatar-f.png" [alt]="cliente.id.toString()">
+                <img *ngIf="datosCliente.genero !== 'HOMBRE' && datosCliente.genero !== 'DAMA'" src="../../../../assets/images/avatar/avatar-t.png" [alt]="cliente.id.toString()">
+
+                <p class="text-center mb-0">{{ datosCliente.genero | titlecase }}</p>
+                <p class="text-center">{{ datosCliente.edad + " Años" }}</p>
+              </figure>
+              <article class="my-profile--small__info">
+                <div ngbDropdown style="cursor: pointer;">
+                  <h5 class="text-center font-weight-bold dropdown-toggle" 
+                  matRipple ngbDropdownToggle data-toggle="dropdown"
+                  style="font-size: 16px; white-space: pre-wrap;"
+                  >{{ datosCliente.nombres + ' ' + datosCliente.apellidos }}</h5>
+                  <div ngbDropdownMenu  class="dropdown-menu" x-placement="bottom-start">
+                  <a ngbDropdownItem class="dropdown-item" (click)="elegirServicio(0)">Ver Datos</a>
+                  <a ngbDropdownItem class="dropdown-item" (click)="myRedirectEvn('Ajustes')">Editar Perfil</a>
+                  </div>
+                </div>
+                <p class="text-center">{{ datosCliente.correo }}</p>
+                <section class="d-flex">
+                  <div class="my-icon-text mr-3">
+                    <i class="mdi mdi-phone"></i>
+                    <h6 class="m-0 text-dark font-weight-bold">{{ datosCliente.celular1 }} {{ datosCliente.celular2 !== '' ? (' - ' +
+                      datosCliente.celular2) :
+                      '' }}</h6>
+                  </div>
+                  
+                  <div class="my-icon-text">
+                    <i class="mdi mdi-card-account-details"></i>
+                    <h6 class="m-0 text-dark font-weight-bold">{{ cliente.documentoIdentidad?.documento }}</h6>
+                  </div>
+                </section>
+                <div ngbDropdown >
+                  <a matRipple class="my-target--a dropdown-toggle" data-toggle="dropdown" ngbDropdownToggle>
+                    <i class="mdi mdi-whatsapp"></i>
+                    <span>Whatsapp</span>
+                  </a>
+                  <div ngbDropdownMenu  class="dropdown-menu" x-placement="bottom-start">
+                    <a ngbDropdownItem class="dropdown-item" (click)="openWhatsapp()">Abrir Chat</a>
+                    <a ngbDropdownItem class="dropdown-item" (click)="mostrarModalFormularioLink(modalFormularioEncuestaLink)">Enviar Encuesta</a>
+                  </div>
+                </div>
+              </article>
+            </div>
+
+            <div class="my-4">
+              <button
+                (click)="verHistorialCompras(cliente)"
+                class="btn btn-outline-primary popins fs-15px m-0 w-100">
+                Historial de Compras
+              </button>
+            </div>
+
+            <div class="my-skills">
+              <article class="border rounded p-2 mb-2 bg-primary-light">
+                  <span class="text-muted">Zonas: {{ datosCliente.numZonas }}</span>
+              </article>
+              <article class="border rounded p-2 mb-2 bg-success-light">
+                  <span class="text-muted">Citas: {{ datosCliente.numCitas }}</span>
+              </article>
+              <article ngbDropdown class="border rounded p-2 mb-2 bg-light-warning">
+                <div matRipple ngbDropdownToggle>
+                  <span class="text-muted">Incidente: {{ datosCliente.incidencias }}</span>
+                </div>
+                <div ngbDropdownMenu class="dropdown-menu dropdown-menu-right" x-placement="bottom-end">
+                  <a ngbDropdownItem class="dropdown-item" (click)="verIncidencias()">Ver registro</a>
+                  <a ngbDropdownItem class="dropdown-item" (click)="incidenciaNueva()">Nuevo Registro</a>
+                </div>
+              </article>
+            </div>
+          </div>
+            <div class="perfil-secciones">
+            <!-- <button 
+              class="btn btn-outline-primary popins fs-15px m-0" 
+              [class.active]="router.url.includes('Laser')" 
+              (click)="myRedirectEvn('Laser')">
+              Depilación Laser {{ '  (' + datosCliente.numCitasDepilacion + ')' }}
+            </button> -->
+
+            <!-- <button 
+              class="btn btn-outline-primary popins fs-15px m-0" 
+              [class.active]="router.url.includes('Blanqueamiento')" 
+              (click)="myRedirectEvn('Blanqueamiento')">
+              Blanqueamiento {{ '  (' + datosCliente.numCitasBlanqueamiento + ')' }}
+            </button>
+            <button 
+              class="btn btn-outline-primary popins fs-15px m-0" 
+              [class.active]="router.url.includes('Corporal360')" 
+              (click)="myRedirectEvn('Corporal360')">
+              Corporal 360 / Hollywood Peel {{ '  (' + datosCliente.numCitasCorporalHollywood + ')' }}
+            </button>
+            <button 
+              class="btn btn-outline-primary popins fs-15px m-0" 
+              [class.active]="router.url.includes('tratamiento-facial')" 
+              (click)="myRedirectEvn('tratamiento-facial')">
+              Tratamiento Facial {{ '  (' + datosCliente.numCitasTratamientoFacial + ')' }}
+            </button>
+            <button 
+              class="btn btn-outline-primary popins fs-15px m-0" 
+              [class.active]="router.url.includes('Exfoliacion')" 
+              (click)="myRedirectEvn('Exfoliacion')">
+              Exfoliación {{ '  (' + datosCliente.numCitasExfoliacion + ')' }}
+            </button>
+            <button 
+              class="btn btn-outline-primary popins fs-15px m-0" 
+              [class.active]="router.url.includes('Dermatologia')" 
+              (click)="myRedirectEvn('Dermatologia')">
+              Dermatologia {{ '  (' + datosCliente.numCitasDermatologia + ')' }}
+            </button> -->
+            <h5 class="font-weight-bold">Servicios</h5>
+            <button 
+              class="btn btn-outline-primary popins fs-15px m-0" 
+              [class.active]="idServicioElegido == 1" 
+              (click)="elegirServicio(1)"
+              *ngIf="datosCliente.numCitasDepilacion > 0">
+              Depilación Laser {{ '  (' + datosCliente.numCitasDepilacion + ')' }}
+            </button>
+
+            <button 
+              class="btn btn-outline-primary popins fs-15px m-0" 
+              [class.active]="idServicioElegido == 2" 
+              (click)="elegirServicio(2)"
+              *ngIf="datosCliente.numCitasBlanqueamiento > 0">
+              Blanqueamiento {{ '  (' + datosCliente.numCitasBlanqueamiento + ')' }}
+            </button>
+            <button 
+              class="btn btn-outline-primary popins fs-15px m-0" 
+              [class.active]="idServicioElegido == 3" 
+              (click)="elegirServicio(3)"
+              *ngIf="datosCliente.numCitasCorporal > 0">
+              Corporal 360 {{ '  (' + datosCliente.numCitasCorporal + ')' }}
+            </button>
+            <button 
+                class="btn btn-outline-primary popins fs-15px m-0" 
+                [class.active]="idServicioElegido == 13" 
+                (click)="elegirServicio(13)"
+                *ngIf="datosCliente.numCitasHollywood > 0">
+                Hollywood Peel {{ '  (' + datosCliente.numCitasHollywood + ')' }}
+              </button>
+            <button 
+              class="btn btn-outline-primary popins fs-15px m-0" 
+              [class.active]="idServicioElegido == 4" 
+              (click)="elegirServicio(4)"
+              *ngIf="datosCliente.numCitasTratamientoFacial > 0">
+              Tratamiento Facial {{ '  (' + datosCliente.numCitasTratamientoFacial + ')' }}
+            </button>
+            <button 
+              class="btn btn-outline-primary popins fs-15px m-0" 
+              [class.active]="idServicioElegido == 10" 
+              (click)="elegirServicio(10)"
+              *ngIf="datosCliente.numCitasExfoliacion > 0">
+              Exfoliación {{ '  (' + datosCliente.numCitasExfoliacion + ')' }}
+            </button>
+            <button 
+              class="btn btn-outline-primary popins fs-15px m-0" 
+              [class.active]="idServicioElegido == 11" 
+              (click)="elegirServicio(11)"
+              *ngIf="datosCliente.numCitasDermatologia > 0">
+              Dermatologia {{ '  (' + datosCliente.numCitasDermatologia + ')' }}
+            </button>
+
+            </div>
+            <div class="perfil-secciones">
+              <h5 class="font-weight-bold">Tratamientos Atendidos</h5>
+              <div *ngIf="!loadingZonasAtendidas" style="max-height: 300px; overflow-y: auto;">
+                <span *ngFor="let zona of zonasCorporalesHistorico" class="bg-primary text-white small p-2 d-inline-block mb-1 mr-1 rounded-pill">{{ zona.zonaCorporal }} ({{ zona.numCitasPorZona }})</span>
+
+              </div>
+              <div *ngIf="loadingZonasAtendidas">
+                <div class="sk pill mb-1 mr-1"></div>
+                <div class="sk pill mb-1 mr-1"></div>
+                <div class="sk pill mb-1 mr-1"></div>
+                <div class="sk pill mb-1 mr-1"></div>
+              </div>
+
+            </div>
+        </section>
+
+
+
+<router-outlet (activate)="onChildLoaded($event)"></router-outlet>
+
+
+<!-- MOSTRAR OPCIONES HISTORIA CLINICA-->
+<ng-template #modalHollywoodPeel >
+  <div class="app-modal-header">
+    <h5 class="modal-title">Opciones de historia clínica</h5>
+    <button type="button" class="close basic-close" data-dismiss="modal" aria-label="Close" (click)="modalOpcionesHistoria.hide()"><span aria-hidden="true">&times;</span></button>
+  </div>
+  <div class="app-modal-body">
+    <div class="form-row">
+      <button 
+        class="btn btn-outline-primary popins fs-15px m-0" 
+        [class.active]="idServicioElegido == 4" 
+        (click)="elegirServicio(4)">
+        Tratamiento Facial {{ '  (' + datosCliente.numCitasTratamientoFacial + ')' }}
+      </button>
+      <button 
+        class="btn btn-outline-primary popins fs-15px m-0" 
+        [class.active]="idServicioElegido == 10" 
+        (click)="elegirServicio(10)">
+        Exfoliación {{ '  (' + datosCliente.numCitasExfoliacion + ')' }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<!-- MOSTRAR OPCIONES CITA -->
+<app-ui-modal #modalOpcionesCita2 dialogClass="modal-dialog-centered" hideFooter="true">
+    <div class="app-modal-header">
+      <h5 class="modal-title">Opciones de cita</h5>
+      <button type="button" class="close basic-close" data-dismiss="modal" aria-label="Close" (click)="modalOpcionesCita2.hide()"><span aria-hidden="true">&times;</span></button>
+    </div>
+    <div class="app-modal-body">
+        <div class="form-row">
+          <div [class.col-4]="citaSelected?.estado.nombre !== 'Atendida'"[class.col-12]="citaSelected?.estado.nombre === 'Atendida'">
+            <button id="btnCitaVisualizar" type="button" class="btn btn-outline-primary w-100 m-0" [placement]="'bottom'" ngbTooltip="Ver"           (click)= "citaVisualizar(); modalOpcionesCita2.hide()">    <i class="fa fa-search"></i>Ver</button>
+          </div>
+          <div *ngIf="citaSelected?.estado.nombre !== 'Atendida'" class="col-4">
+            <button id="btnCitaAtender" type="button" class="btn btn-outline-primary w-100 m-0" [placement]="'bottom'" ngbTooltip="Atender"       (click)= "citaAtender(); modalOpcionesCita2.hide()">       <i class="far fa-hand-point-up"></i>Atender</button>
+          </div>
+          <div *ngIf="citaSelected?.estado.nombre !== 'Atendida'" class="col-4">
+            <button id="btnCitaEditar" type="button" class="btn btn-outline-primary w-100 m-0" [placement]="'bottom'" ngbTooltip="Editar"   (click)= "citaEditar(); modalOpcionesCita2.hide()">   <i class="mdi mdi-square-edit-outline"></i>Editar</button>
+          </div>
+        </div>
+    </div>
+</app-ui-modal>
+
+<!-- MOSTRAR OPCIONES EVOLUCION DE TRATAMIENTO-->
+<app-ui-modal #modaOpcionesEvolucion dialogClass="modal-dialog-centered" hideFooter="true">
+  <div class="app-modal-header">
+    <h5 class="modal-title">Opciones de evolución de tratamiento</h5>
+    <button type="button" class="close basic-close" data-dismiss="modal" aria-label="Close" (click)="modaOpcionesEvolucion.hide()"><span aria-hidden="true">&times;</span></button>
+  </div>
+  <div class="app-modal-body">
+    <div class="form-row">
+      <div class="col-4">
+        <button  type="button" class="btn btn-outline-warning w-100 m-0 d-inline-flex justify-content-center" [placement]="'bottom'" ngbTooltip="Editar" (click)="editarEvolucionTratamiento(modEvolucionTratamiento); modaOpcionesEvolucion.hide()"><i class="mdi mdi-square-edit-outline"></i>Editar</button>
+      </div>
+      <div class="col-4">
+        <button type="button" class="btn btn-outline-secondary w-100 m-0 d-inline-flex justify-content-center" [placement]="'bottom'" ngbTooltip="Exportar pdf" (click)="importarEvolucionTratamientoPdf(); modaOpcionesEvolucion.hide()"><i class="mdi mdi-file-excel-outline"></i>Exportar</button>
+      </div>
+      <div class="col-4">
+        <button  type="button" class="btn btn-outline-primary w-100 m-0 d-inline-flex justify-content-center" [placement]="'bottom'" ngbTooltip="Ver pdf" (click)="importarEvolucionTratamientoPdf(true); modaOpcionesEvolucion.hide()"><i class="mdi mdi-eye-outline"></i>Ver</button>
+      </div>
+    </div>
+  </div>
+</app-ui-modal>
+
+
+<!-- MOSTRAR OPCIONES HISTORIA CLINICA-->
+<app-ui-modal #modalOpcionesHistoria dialogClass="modal-dialog-centered" hideFooter="true">
+  <div class="app-modal-header">
+    <h5 class="modal-title">Opciones de historia clínica</h5>
+    <button type="button" class="close basic-close" data-dismiss="modal" aria-label="Close" (click)="modalOpcionesHistoria.hide()"><span aria-hidden="true">&times;</span></button>
+  </div>
+  <div class="app-modal-body">
+    <div class="form-row">
+      <!--<div *ngIf="historiaSelected?.idEstado" class="col-6">
+        <button  type="button" class="btn btn-outline-danger w-100 m-0 d-inline-flex justify-content-center"  (click)="anularHistoria(); modalOpcionesHistoria.hide()"><i class="mdi mdi-cancel"></i>Anular</button>
+      </div>-->
+      <!--<div [class.col-1]="historiaSelected?.idEstado" [class.col-2]="!historiaSelected?.idEstado">-->
+      <div class="col-6">
+        <button type="button" class="btn btn-outline-primary w-100 m-0 d-inline-flex justify-content-center"  (click)="verHistoriaClinica(); modalOpcionesHistoria.hide()"><i class="mdi mdi-eye-outline"></i>Ver</button>
+      </div>
+      <div class="col-6">
+        <button type="button" class="btn btn-outline-warning w-100 m-0 d-inline-flex justify-content-center"  (click)="editarFichaClinica(); modalOpcionesHistoria.hide()"><i class="mdi mdi-pencil"></i>Editar</button>
+      </div>
+      <!--<div *ngIf="historiaSelected?.idEstado === 1" [class]="historiaSelected?.idEstado === 1 ? 'col-4' : 'col-6' " >
+        <button  type="button" class="btn btn-outline-secondary w-100 m-0 d-inline-flex justify-content-center" [placement]="'bottom'" ngbTooltip="Enviar Documento" (click)="enviarDocumentoCorreo(); modal.close()"><i class="mdi mdi-email-send-outline"></i>Enviar</button>
+      </div>-->
+      <!--<div [class.col-4]="contratoSelected?.idEstado" [class.col-6]="!contratoSelected?.idEstado">
+        <button  type="button" class="btn btn-outline-secondary w-100 m-0 d-inline-flex justify-content-center"  (click)="enviarContratoCorreo(); modalOpcionesContratos.hide()"><i class="mdi mdi-email-send-outline"></i>Enviar</button>
+      </div>-->
+    </div>
+  </div>
+</app-ui-modal>
+
+
+
+<!-- MOSTRAR OPCIONES contratos -->
+<app-ui-modal #modalOpcionesContratos dialogClass="modal-dialog-centered" hideFooter="true">
+  <div class="app-modal-header">
+    <h5 class="modal-title">Opciones resumen de contrato</h5>
+    <button type="button" class="close basic-close" data-dismiss="modal" aria-label="Close" (click)="modalOpcionesContratos.hide()"><span aria-hidden="true">&times;</span></button>
+  </div>
+  <div class="app-modal-body">
+    <div class="form-row">
+      <div *ngIf="contratoSelected?.idEstado" class="col-4">
+        <button  type="button" class="btn btn-outline-danger w-100 m-0 d-inline-flex justify-content-center"  (click)="anularContrato(); modalOpcionesContratos.hide()"><i class="mdi mdi-cancel"></i>Anular</button>
+      </div>
+      <div [class.col-4]="contratoSelected?.idEstado" [class.col-6]="!contratoSelected?.idEstado">
+        <button type="button" class="btn btn-outline-primary w-100 m-0 d-inline-flex justify-content-center"  (click)="verContrato(); modalOpcionesContratos.hide()"><i class="mdi mdi-eye-outline"></i>Ver</button>
+      </div>
+      <div [class.col-4]="contratoSelected?.idEstado" [class.col-6]="!contratoSelected?.idEstado">
+        <button  type="button" class="btn btn-outline-secondary w-100 m-0 d-inline-flex justify-content-center"  (click)="enviarContrato(); modalOpcionesContratos.hide()"><i class="mdi mdi-email-send-outline"></i>Enviar</button>
+      </div>
+    </div>
+  </div>
+</app-ui-modal>
+
+
+
+
+<!-- MOSTRAR OPCIONES DOCUMENTO -->
+<ng-template #modalOpcionesDocumento let-modal let-close="close" let-d="dismiss" class="fadeIn">
+  <div class="modal-header">
+    <h5 class="modal-title">Opciones de documento</h5>
+    <button type="button" class="close basic-close" data-dismiss="modal" aria-label="Close" (click)="modal.close()"><span aria-hidden="true">&times;</span></button>
+  </div>
+  <div class="modal-body">
+    <div class="form-row">
+      <div class="col-12 col-lg-4 mb-3 mb-lg-0" >
+        <button type="button" class="btn btn-outline-primary w-100 m-0 d-inline-flex justify-content-center" [placement]="'bottom'" ngbTooltip="Ver Documento" (click)="visualizarDocumento(modalVerDocumento); modal.close()"><i class="mdi mdi-eye-outline"></i>Ver</button>
+      </div>
+      <div *ngIf="documentoSelected?.idEstado === 1" class="col-12 col-lg-4 mb-3 mb-lg-0" >
+        <button  type="button" class="btn btn-outline-danger w-100 m-0 d-inline-flex justify-content-center" [placement]="'bottom'" ngbTooltip="Anular Documento" (click)="anularDocumento(modalDocumentoAnular); modal.close()"><i class="mdi mdi-cancel"></i>Anular</button>
+      </div>
+      <div *ngIf="documentoSelected?.idEstado === 0" class="col-12 col-lg-4 mb-3 mb-lg-0" >
+        <button  type="button" class="btn btn-outline-secondary w-100 m-0 d-inline-flex justify-content-center" [placement]="'bottom'" ngbTooltip="Restaurar Documento" (click)="restaurarDocumento(); modal.close()"><i class="mdi mdi-restore"></i>Restaurar</button>
+      </div>
+      <div class="col-12 col-lg-4" >
+        <button  type="button" class="btn btn-outline-secondary w-100 m-0 d-inline-flex justify-content-center" [placement]="'bottom'" ngbTooltip="Enviar Documento" (click)="enviarDocumentoCorreo(); modal.close()"><i class="mdi mdi-email-send-outline"></i>Enviar</button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!-- VER DOCUMENTO -->
+<app-ui-modal #modalVerDocumento dialogClass="modal-dialog-centered" hideFooter="true">
+  <div class="app-modal-header">
+    <h5 class="modal-title">Documento : {{ 'D' + documentoSelected?.id.toString().padStart(8,'0')  }}</h5>
+    <button type="button" class="close basic-close" data-dismiss="modal" aria-label="Close" (click)="modalVerDocumento.hide()"><span aria-hidden="true">&times;</span></button>
+  </div>
+  <div class="app-modal-body">
+    <iframe #viewPdf class="w-100" style="height: 500px" src="" allowfullscreen> </iframe>
+  </div>
+</app-ui-modal>
+
+<!-- ANULAR DOCUMENTO -->
+<ng-template #modalDocumentoAnular let-modal let-close="close">
+  <app-documento-anulacion
+    (eventoDocumentoListar)="null"
+    [modal]="modalDocumentoAnularRef"
+    [documento]="documentoSelected">
+  </app-documento-anulacion>
+</ng-template>
+
+<!-- Menu Movil -->
+<div class="float-menu">
+  <button mat-fab class="my-color_gradient" (click)="generarDocumento(modalDocumentoDatos)">
+    <mat-icon>description</mat-icon>
+  </button>
+  <button mat-fab class="my-color_gradient" style="color: white; padding: 0 !important;" (click)="generarContrato(modGenerarContrato)">
+    <i style="font-size: 30px;" class="mdi mdi-file-certificate-outline"></i>
+    <!-- <mat-icon>description</mat-icon> -->
+  </button>
+  <button mat-fab class="my-color_gradient" (click)="citaNueva()">
+    <mat-icon>add</mat-icon>
+  </button>
+  <button mat-fab class="my-color_gradient" (click)="verOpciones()">
+    <mat-icon>more_vert</mat-icon>
+  </button>
+</div>
+
+<ng-template let-bottomSheetRef="bottomSheetRef" #menuMovil>
+  <div class="_content" >
+    <div class="_header">
+      <div class="px-4 pt-4 text-center">
+        <span class="d-inline-block topline"></span>
+        <p class="text-center text-white _title lead">Opciones</p>
+      </div>
+      <mat-divider class=""></mat-divider>
+    </div>
+
+    <mat-nav-list class="pt-0">
+      <div>
+        <a mat-list-item (click)="actualizarLista();">
+          <i class="mdi mdi-sync"></i>
+          <span class=" opt-title">Actualizar lista</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+
+      <div>
+        <a mat-list-item (click)="generarDocumento(modalDocumentoDatos);cerrarOpciones();">
+          <i class="mdi mdi-file-document-outline"></i>
+          <span class=" opt-title">Emitir documento</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+
+      <div>
+        <a mat-list-item (click)="generarContrato(modGenerarContrato);cerrarOpciones();">
+          <i class="mdi mdi-file-certificate-outline"></i>
+          <span class=" opt-title">Emitir resumen contrato</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+      <div>
+        <a mat-list-item (click)="mostrarModalFormulario(modalFormularioEncuesta);cerrarOpciones();">
+          <i class="mdi mdi-folder-plus-outline"></i>
+          <span class=" opt-title">Encuesta</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+      <div>
+        <a mat-list-item (click)="myRedirectEvn('Ajustes'); cerrarOpciones();">
+          <i class="mdi mdi-account-edit-outline"></i>
+          <span class="opt-title">Editar Datos del Cliente</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+
+    </mat-nav-list>
+
+  </div>
+</ng-template>

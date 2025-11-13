@@ -1,0 +1,118 @@
+<!-- SPINNER -->
+<ngx-spinner
+  [template]="rutaImageSpinner">
+  <p style="color: white" > Cargando... </p>
+</ngx-spinner>
+
+<!-- GRILLA -->
+<div class="row">
+
+  <div class="col-12 mb-3 sticky-header" stickyClass="header--sticky">
+    <app-card [options]="false" [customHeader]="false" cardTitle="REPORTE DE ENCUESTAS" cardTitle2="Consulta y genera reporte según la sede, formulario de encuesta, rango de fecha">
+
+      <form [formGroup]="formGroup">
+        <div class="form-row">
+
+          <!-- Sede -->
+          <div class="col-12 col-lg-3 mb-3">
+            <div class="form-floating form-start-icon">
+              <select class="custom-select" id="idSede" formControlName="idSede" >
+                <option [value]="0">{{ loadingSede ? 'Cargando...' : 'Todos' }}</option>
+                <option *ngFor="let sede of sedes" [value]="sede.id">{{ sede.nombre }}</option>
+              </select>
+              <label for="idSede">Sede</label>
+              <span class="icon">
+                <span class="dicon sede m-auto"></span>
+              </span>
+            </div>
+          </div>
+          <!-- Formulario -->
+          <div class="col-12 col-lg-3 mb-3">
+            <div class="form-floating form-start-icon">
+              <select class="custom-select" id="idFormulario" formControlName="idFormulario" >
+                <option [value]="0">{{ loadingFormularios ? 'Cargando...' : 'Todos' }}</option>
+                <option *ngFor="let formulario of formularios" [value]="formulario.id">{{ formulario.nombre }}</option>
+              </select>
+              <label for="idFormulario">Formulario</label>
+              <span class="icon">
+                <span class="dicon sede m-auto"></span>
+              </span>
+            </div>
+          </div>
+          <!-- Fecha desde -->
+          <div class="col-12 col-lg-3 mb-3">
+            <div class="form-floating form-start-icon">
+              <input id="fdesde" type="date" placeholder=" " class="form-control" formControlName="fdesde"  [ngClass]="{ 'is-invalid': submitted && f.fdesde.errors }">
+              <label for="fdesde">Fecha desde</label>
+              <span class="icon"><span class="dicon calendar m-auto"></span></span>
+            </div>
+          </div>
+          <!-- Fecha hasta -->
+          <div class="col-12 col-lg-3 mb-3">
+            <div class="form-floating form-start-icon">
+              <input id="fhasta" type="date" placeholder=" " class="form-control" formControlName="fhasta"  [ngClass]="{ 'is-invalid': submitted && f.fhasta.errors }">
+              <label for="fhasta">Fecha hasta</label>
+              <span class="icon"><span class="dicon calendar m-auto"></span></span>
+            </div>
+          </div>
+          <!-- Estado
+          <div class="col-12 col-lg-3 mb-3">
+            <div class="form-floating form-start-icon">
+              <select class="custom-select" id="idVariable" formControlName="idVariable" (change)="obtenerReporte()">
+                <option value="0">{{ loadingTipo ? 'Cargando...' : 'Todos' }}</option>
+                <option *ngFor="let tipo of collectionTipos" [value]="tipo.id">{{ tipo.nombre }}</option>
+              </select>
+              <label for="idVariable">Variable de medición</label>
+              <span class="icon"><span class="dicon alert-circle m-auto"></span></span>
+            </div>
+          </div>-->
+        </div>
+      </form>
+
+    </app-card>
+  </div>
+
+  <div class="col-12">
+    <app-encuesta-clientes #clientes [IdFormulario]="f.idFormulario.value" [IdSede]="f.idSede.value" [FechaInicio]="f.fdesde.value" [FechaFin]="f.fhasta.value" ></app-encuesta-clientes>
+  </div>
+
+  <div class="col-12">
+    <app-card [options]="false" [customHeader]="false" cardTitle="Resultado">
+
+      <div *ngIf="reporte.length">
+        <div *ngFor="let pregunta of reporte; let i = index" class="border rounded p-3 mb-2">
+          <h5 class="text-center font-weight-bold">{{ i + 1 }}. {{ pregunta.texto }}</h5>
+
+          <div *ngIf="pregunta.tipoRespuesta === 'radio' || pregunta.tipoRespuesta === 'checkbox' || pregunta.tipoRespuesta === 'select'">
+            <app-respuesta-grafico [pregunta]="pregunta" [zeroValues]=" !pregunta.opciones > 10 "></app-respuesta-grafico>
+          </div>
+
+          <div *ngIf="pregunta.tipoRespuesta === 'textarea'">
+            <app-respuesta-tabla [pregunta]="pregunta" ></app-respuesta-tabla>
+          </div>
+
+        </div>
+      </div>
+
+    </app-card>
+  </div>
+
+
+</div>
+
+
+
+<!-- BOTONERA ESCRITORIO -->
+<ul class="botonera-escritorio">
+  <li>
+    <button type="button" class="btn btn-primary btn-icon"   [placement]="'bottom'" ngbTooltip="Buscar" (click)= "obtenerReporte()"><i class="mdi mdi-magnify"></i></button>
+    <button *ngIf="this.accTot || this.accExc" type="button" class="btn btn-primary btn-icon"   [placement]="'bottom'" ngbTooltip="Buscar" (click)= "exportarExcel()"><i class="mdi mdi-file-excel-outline"></i></button>
+  </li>
+</ul>
+
+<!-- BOTONERA MOVIL -->
+<app-float-button>
+  <button class="child" mat-fab color="primary"  matTooltip="Buscar" matTooltipPosition="left" (click)="obtenerReporte()">
+    <i class="mdi mdi-search-web"></i>
+  </button>
+</app-float-button>

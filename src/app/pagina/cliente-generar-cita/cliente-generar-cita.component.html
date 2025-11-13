@@ -1,0 +1,62 @@
+<!-- SPINNER -->
+<ngx-spinner
+  [template]="rutaImageSpinner">
+  <p style="color: white" > Cargando... </p>
+</ngx-spinner>
+
+<div class="row">
+  <div class="col-12">
+    <app-card [options]="false" [hidHeader]="true">
+      <div class="border rounded p-2">
+        <span class="text-muted font-weight-bold">Cliente:</span>
+        <p class="h5 mb-0 text-dark font-weight-bold">{{client.nombres}} {{client.apellidos}}</p>
+      </div>
+    </app-card>
+  </div>
+
+  <div class="col-12">
+    <app-card cardTitle="Servicios" [options]="false" [customHeader]="false">
+      <div class="row mx-0">
+        <div class="col-12 col-md-4 mb-3">
+          <div class="border rounded-grant overflow-hidden shadow service">
+            <a class="d-block" matRipple [routerLink]="['/Cita', 0 , AccionCita.NUEVA ,client.id, 0]">
+              <div class="p-3 p-md-5 bg-primary">
+                <img src="assets/images/services/servicio1.png" width="100%" height="auto">
+                <h4 class="text-center text-uppercase text-white rounded-grant bg-primary position-relative py-2 px-3 mb-0 mx-5 mt-n3">Depilación Laser</h4>
+              </div>
+              <div class="p-4 bg-white">
+                <span class="h5 mb-0 ">Agendar Cita</span>
+              </div>
+            </a>
+          </div>
+        </div>
+        <div class="col-12 col-md-4 mb-3">
+          <div class="border rounded-grant overflow-hidden shadow service">
+            <a class="d-block" matRipple [routerLink]="['/Cita', 0 , AccionCita.NUEVA ,client.id, 0]">
+              <div class="p-3 p-md-5 bg-primary">
+                <img src="assets/images/services/servicio1.png" width="100%" height="auto">
+                <h4 class="text-center text-uppercase text-white rounded-grant bg-primary position-relative py-2 px-3 mb-0 mx-5 mt-n3">Aclaramiento</h4>
+              </div>
+              <div class="p-4 bg-white">
+                <span class="h5 mb-0 ">Agendar Cita</span>
+              </div>
+            </a>
+          </div>
+        </div>
+        <div class="col-12 col-md-4 mb-3">
+          <div class="border rounded-grant overflow-hidden shadow service">
+            <a class="d-block" matRipple [routerLink]="['/Corporal360/Cita', 0 , AccionCita.NUEVA, client.id, 0]">
+              <div class="p-3 p-md-5 bg-primary">
+                <img src="assets/images/services/corporal-360.png" width="100%" height="auto">
+                <h4 class="text-center text-uppercase text-white rounded-grant bg-primary position-relative py-2 px-3 mb-0 mx-5 mt-n3">Corporal 360</h4>
+              </div>
+              <div class="p-4 bg-white">
+                <span class="h5 mb-0 ">Agendar Cita</span>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </app-card>
+  </div>
+</div>

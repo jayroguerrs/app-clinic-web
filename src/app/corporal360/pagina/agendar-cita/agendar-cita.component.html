@@ -1,0 +1,33 @@
+
+<div class="row">
+
+  <!-- DATOS CLIENTE Y CITA -->
+  <div class="col-sm-12">
+    <app-card [options]="false" [cardTitle]= "titulo" [cardTitle2]= "titulo2" [headerFontColor]="colorFuente">
+      <div class="row row-cols-4 mx-0">
+        <div>
+          <div class="form-floating mb-7">
+            <input type="email" class="form-control form-control-solid" id="floatingInput1" placeholder="" [value]=""/>
+            <label for="floatingInput1">Email address</label>
+          </div>
+        </div>
+      </div>
+    </app-card>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-12">
+    <app-card [options]="false" [hidHeader]="true">
+      <div class="border rounded p-2">
+        <span class="text-muted font-weight-bold">Cliente:</span>
+      </div>
+    </app-card>
+  </div>
+
+  <div class="col-12">
+    <app-card [options]="false" [hidHeader]="true">
+
+    </app-card>
+  </div>
+</div>

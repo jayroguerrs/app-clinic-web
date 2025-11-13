@@ -1,0 +1,33 @@
+<div class="modal-header card-header bg-gradient border-bottom-0">
+  <h2 class="d-flex align-middle">
+    <div class="my-auto mr-3">
+      <fontawesome-svg icon="shield-exclamation" [width]="22" [height]="22" type="duotone" class="text-white"></fontawesome-svg>
+    </div>
+    <div class="my-auto">
+      <h2 class="mb-0 fs-18px f-w-500 text-white" >Credenciales</h2>
+    </div>
+  </h2>
+  <button [disabled]="ldSubmit" class="btn sbtn btn-sm btn-icon btn-active-color-primary h-auto w-auto p-0" (click)="modal.close(false)">
+    <span class="svg-icon svg-icon-1 text-white">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor"></rect>
+        <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor"></rect>
+      </svg>
+    </span>
+  </button>
+</div>
+
+<div class="modal-body card-body p-0">
+  <mat-progress-bar *ngIf="ldSubmit" mode="indeterminate"></mat-progress-bar>
+  <div class="h-100 p-4">
+    <div class="h-100 overflow-auto">
+
+      <p class="mb-0">La contraseña es:</p>
+      <h3 *ngIf="!ldSubmit">{{ clave }}</h3>
+
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <button [disabled]="ldSubmit" type="reset" class="btn sbtn btn-light mr-2" (click)="cerrarModal()">Cerrar</button>
+</div>

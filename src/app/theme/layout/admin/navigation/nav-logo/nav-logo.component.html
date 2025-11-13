@@ -1,0 +1,42 @@
+<ng-template #modalActualizarDatosUser let-modal let-close="close">
+  <app-mdl-actualizar-datos-user
+  [modal]="mdlActualizarDatosUser">
+  </app-mdl-actualizar-datos-user>
+</ng-template>
+
+<ng-template #solicitudEnviadaModal let-modal let-close="close">
+  <app-mdl-estado-solicitud-supervisor [estadoDeAprobacion]="estadoAprobacionUsuarioActual" [modal]="modal"></app-mdl-estado-solicitud-supervisor>
+</ng-template>
+
+<ng-template #modalConfirmarSupervisor let-modal let-close="close">
+  <app-mdl-confirmar-supervisor
+  [modal]="mdlConfirmarSupervisor"
+  [estadoAprobacionUsuarioActual]="estadoAprobacionUsuarioActual">
+  </app-mdl-confirmar-supervisor>
+</ng-template>
+
+<!-- En nav-logo.component.html -->
+<div class="navbar-brand header-logo" 
+     [style.background-color]="userSettingsService.colorFondoActual">
+  <a [routerLink]="['/Inicio']" 
+     class="b-brand" 
+     style="height: 78px !important;"
+     [style.color]="userSettingsService.colorTextoActual">
+    <div>
+      <img src="assets/landing/logos/Logo-Depilzone-2.png" alt="DEPILZONE" />
+    </div>
+    <p style="position: absolute; margin-bottom: 0; bottom: 0;" 
+       [style.color]="userSettingsService.colorTextoActual">
+       V{{ mode }} {{ versionClinic }}
+    </p>
+  </a>
+
+  <i *ngIf="usuarioActual.datosActualizados" (click)="actualizarDatosUser(modalActualizarDatosUser)" style="cursor: pointer ;position: absolute; right: 10px; top: 25px; height: 70px; width: 37px;" class="fa fa-cog"></i>
+</div>
+<!-- <div class="navbar-brand header-logo">
+  <img _ngcontent-svv-c151="" src="assets/images/user/avatar-1.jpg" alt="activity-user" class="rounded-circle" style="width: 40px;">
+  <div class="b-bg">
+    <span class="b-title">Datta Able</span>
+  </div>
+</div> -->
+

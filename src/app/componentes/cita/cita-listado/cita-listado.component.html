@@ -1,0 +1,307 @@
+<!-- MODAL PARA REGISTRO DE CITA -->
+<ng-template #modalCitaRegistro let-modal let-close="close">
+    <app-cita-registro [modal]="modalCitaRegistroRef"></app-cita-registro>
+</ng-template>
+
+<!-- MODAL EMISION DE TICKET -->
+<ng-template #modalComprobante let-modal let-close="close">
+    <app-tickets-emision
+        [idCita]="idCita"
+        [idServicio]="citaSelected.idServicio"
+        [sede]="sede"
+        [modal]="modalComprobanteRef"
+        [citaSeleccionada]="citaSelected"
+        (eventCitaListarPago)="openModalConfirm($event)"
+        (eventCitaSoloListarPago)="obtenerCitas()"
+        >
+    </app-tickets-emision>
+</ng-template>
+
+<!-- MODAL LISTA HISTORIAL CLINICO -->
+<ng-template #modalHistoriasClinicas let-modal let-close="close">
+  <app-cita-historias
+    [citas]="citas"
+    [modal]="modalListaHistorialClinicoRef"
+    [fecha]="f.filtroFecha.value">
+  </app-cita-historias>
+</ng-template>
+
+<!-- SPINNER -->
+<ngx-spinner
+    [template]="rutaImageSpinner">
+    <p style="color: white"> Cargando... </p>
+</ngx-spinner>
+
+<!-- FILTRO -->
+<div class="row sticky-header" stickyClass="header--sticky">
+  <div class="col-sm-12" >
+    <app-card [options]="false" cardTitle="LISTADO DE CITAS" >
+      <form  [formGroup]="frmFiltroGrilla">
+        <div class="form-row mb-2">
+          <div class="mb-2 col-12 col-lg-4">
+            <div class="form-floating form-start-icon">
+              <input id="filtroPacienteCelular" type="text" placeholder=" " class="form-control" formControlName="filtroPacienteCelular" (keyup.enter)="consultarCitaSede($event)" [ngClass]="{ 'is-invalid': submitted && f.filtroPacienteCelular.errors }">
+              <label for="filtroPacienteCelular">Filtrar por paciente o celular</label>
+              <span class="icon"><span class="dicon user m-auto"></span></span>
+            </div>
+          </div>
+          <div class="mb-2 col-12 col-lg-2">
+            <div class="form-floating form-start-icon">
+              <input 
+                id="filtroFecha" 
+                type="date" 
+                placeholder=" " 
+                class="form-control" 
+                formControlName="filtroFecha" 
+                (change)="obtenerCitas()" 
+                [ngClass]="{ 'is-invalid': submitted && f.filtroFecha.errors }"
+                [max]="maxDate">
+              <label for="filtroFecha">Fecha</label>
+              <span class="icon"><span class="dicon calendar m-auto"></span></span>
+            </div>
+          </div>
+        </div>
+        <div class="form-row mb-2">
+          <div class="mb-2 col-6 col-lg-2">
+            <div class="form-floating form-start-icon">
+              <input id="horaDesde" type="time" placeholder=" " class="form-control" formControlName="horaDesde" (change)="obtenerCitas()" [ngClass]="{ 'is-invalid': submitted && f.horaDesde.errors }">
+              <label for="horaDesde">Hora desde</label>
+              <span class="icon"><span class="dicon o-clock m-auto"></span></span>
+            </div>
+          </div>
+          <div class="mb-2 col-6 col-lg-2">
+            <div class="form-floating form-start-icon">
+              <input id="horaHasta" type="time" placeholder=" " class="form-control" formControlName="horaHasta" (change)="obtenerCitas()"  [ngClass]="{ 'is-invalid': submitted && f.horaHasta.errors }">
+              <label for="horaHasta">Hora hasta</label>
+              <span class="icon"><span class="dicon o-clock m-auto"></span></span>
+            </div>
+          </div>
+          <div class="mb-2 col-12 col-lg-2">
+
+            <div class="form-floating form-start-icon">
+              <select class="custom-select" id="idSede" formControlName="idSede" (change)="consultarCitaSede($event)">
+                <option value="0">{{ loadingSede ? 'Cargando...' : 'TODOS' }}</option>
+                <option *ngFor="let sede of collectionSede" [value]="sede.id">{{ sede.nombre }}</option>
+              </select>
+              <label for="idSede">Sede</label>
+              <span class="icon"><span class="dicon sede m-auto"></span></span>
+            </div>
+
+          </div>
+          <div class="mb-2 col-12 col-lg-2">
+            <div class="form-floating form-start-icon">
+              <select class="custom-select" id="idEstado" formControlName="idEstado" (change)="consultarCitaSede($event)">
+                <option value='0' select>TODOS</option>
+                <option *ngFor="let estado of citaEstados" [value]="estado.id">{{ estado.descripcion }}</option>
+              </select>
+              <label for="idEstado">Estado</label>
+              <span class="icon"><span class="dicon alert-circle m-auto"></span></span>
+            </div>
+
+          </div>
+          <div class="mb-2 col-12 col-lg-2">
+            <div class="form-floating form-start-icon">
+              <select class="custom-select" id="tipocita" formControlName="tipocita"  name="tipocita" >
+                <option [value]="0" selected>TODOS</option>
+                <option [value]="tipoCita.id" *ngFor="let tipoCita of maestroTipoCita">{{tipoCita.nombre}}</option>
+              </select>
+              <label for="tipocita">Tipo de cita</label>
+              <span class="icon"><span class="dicon calendar-question m-auto"></span></span>
+            </div>
+          </div>
+          <div class="mb-2 col-12 col-lg-2 hide-mobile">
+            <div class="form-floating form-start-icon">
+              <select class="custom-select" id="idServicio" formControlName="idServicio"  name="idServicio" >
+                <option [value]="0" selected>TODOS</option>
+                <option [value]="serv.id" *ngFor="let serv of servicios">{{serv.nombre}}</option>
+              </select>
+              <label for="idServicio">Tipo de servicio</label>
+              <span class="icon"><span class="dicon machine m-auto"></span></span>
+            </div>
+          </div>
+          <div class="mb-2 col-12 col-lg-4 hide-mobile">
+            <div class="mb-2 col-12 col-lg-4 hide-mobile">
+              <div class="select2Float">
+                <ng-select
+                  [items]="dataZonas"
+                  bindLabel="text"
+                  bindValue="id"
+                  [clearable]="true"
+                  formControlName="idZona">
+                </ng-select>
+                <label>Contiene Zona</label>
+                <span class="icon"><i class="mdi mdi-account-check-outline"></i></span>
+              </div>
+            </div>
+          </div>
+          <div class="mb-2 col-12 col-lg-2 hide-mobile">
+            <div class="form-floating form-start-icon">
+              <select class="custom-select" id="nacio" formControlName="nacio" name="nacio" >
+                <option [value]="0" selected>TODOS</option>
+                <option [value]="1" selected>Si</option>
+                <option [value]="2" selected>No</option>
+              </select>
+              <label for="nacio">Cumpleaños?</label>
+              <span class="icon"><span class="dicon birthday m-auto"></span></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- RESUMEN DE CITAS -->
+        <div *ngIf="this.accTot || this.accAgeR" class="position-relative d-flex mb-2">
+          <button matRipple class="d-inline-flex text-dark border rounded-pill px-3 py-1 mx-auto z-index-2 cursor-pointer shadow-sm position-relative bg-white" (click)="toggle()"> <span class="mr-2">Ver total</span><fontawesome-svg icon="chevron-down" type="regular" [width]="20" [height]="20" [class.fa-rotate-180]="!collapsed"></fontawesome-svg></button>
+          <span class="bg-light h-2px w-100 position-absolute top-0 bottom-0 m-auto left-0"></span>
+        </div>
+
+        <div *ngIf="this.accTot || this.accAgeR" class="form-row collapsible overflow-hidden" id="resumenes" [@collapse]="collapsed">
+          <div class="mb-2 col-6 col-xs-6 col-sm-6 col-md-4 col-lg-3">
+            <div class="label text-white tag registrado"><span>Registrada</span><span class="ml-auto">{{ contarRegistrada }}</span></div>
+          </div>
+          <div class="mb-2 col-6 col-xs-6 col-sm-6 col-md-4 col-lg-3">
+            <div class="label text-white tag pendiente" ><span>Pendiente</span><span class="ml-auto">{{ contarPendiente }}</span></div>
+          </div>
+          <div class="mb-2 col-6 col-xs-6 col-sm-6 col-md-4 col-lg-3">
+            <div class="label text-white tag confirmada" ><span>Confirmada</span><span class="ml-auto">{{ contarConfirmada }}</span></div>
+          </div>
+          <div class="mb-2 col-6 col-xs-6 col-sm-6 col-md-4 col-lg-3">
+            <div class="label text-white tag asistenciaConfirmada" ><span>Asistencia Confirmada</span><span class="ml-auto">{{ contarAsistenciaConfirmada }}</span></div>
+          </div>
+          <div class="mb-2 col-6 col-xs-6 col-sm-6 col-md-4 col-lg-3">
+            <div class="label text-white tag reprogramada" ><span>Reprogramada</span><span class="ml-auto">{{ contarReprogramada }}</span></div>
+          </div>
+          <div class="mb-2 col-6 col-xs-6 col-sm-6 col-md-4 col-lg-3">
+            <div class="label text-white tag atendida" ><span>Atendida</span><span class="ml-auto">{{ contarAtendida }}</span></div>
+          </div>
+          <div class="mb-2 col-6 col-xs-6 col-sm-6 col-md-4 col-lg-3">
+            <div class="label text-white tag cancelada" ><span>Cancelada</span><span class="ml-auto">{{ contarCancelada }}</span></div>
+          </div>
+          <div class="mb-2 col-6 col-xs-6 col-sm-6 col-md-4 col-lg-3">
+            <div class="label text-white tag anulada" ><span>Anulada</span><span class="ml-auto">{{ contarAnulada }}</span></div>
+          </div>
+          <div class="mb-2 col-6 col-xs-6 col-sm-6 col-md-4 col-lg-3">
+            <div class="label text-white tag generado" ><span>Generado por Sistema</span><span class="ml-auto">{{ contarGenerado }}</span></div>
+          </div>
+          <div class="mb-2 col-6 col-xs-6 col-sm-6 col-md-4 col-lg-3">
+            <div class="label text-white tag nollamar" ><span>No llamar</span><span class="ml-auto">{{ contarNollamar }}</span></div>
+          </div>
+          <div class="mb-2 col-6 col-xs-6 col-sm-6 col-md-4 col-lg-3">
+            <div class="label text-white tag noasistio" ><span>No asistio</span><span class="ml-auto">{{ contarNoasistio }}</span></div>
+          </div>          
+          <div class="mb-2 col-6 col-xs-6 col-sm-6 col-md-4 col-lg-3">
+            <div class="label text-white tag total" ><span>TOTAL</span><span class="ml-auto">{{ contarTotal }}</span></div>
+          </div>
+        </div>
+
+      </form>
+    </app-card>
+  </div>
+</div>
+
+<!-- BOTONERA ESCRITORIO -->
+<ul class="botonera-escritorio">
+    <li>
+        <button id="btnActualizar1"  type="button" class="btn btn-primary btn-icon"   [placement]="'bottom'" ngbTooltip="Actualizar"        (click)= "obtenerCitas()">                      <i class="mdi mdi-sync"></i>     </button>
+        <button *ngIf="citaSelected" id="btnVer1"         type="button" class="btn btn-primary btn-icon"   [placement]="'bottom'" ngbTooltip="Ver datos"         (click)= "citaVisualizar()">                    <i class="mdi mdi-eye-outline"></i>          </button>
+        <button *ngIf="this.accTot || this.accAge" type="button" class="btn btn-secondary btn-icon"   [placement]="'bottom'" ngbTooltip="Exportar"         (click)= "exportar()" [disabled]="!exportarCollection.length">                    <i class="mdi mdi-file-excel"></i>          </button>
+        <button *ngIf="this.accTot || this.accAge" type="button" class="btn btn-indigo btn-icon"   [placement]="'bottom'" ngbTooltip="Exportar Info"         (click)= "exportarInfo()" [disabled]="!exportarCollection.length">                    <i class="mdi mdi-file-excel"></i>          </button>
+        <button *ngIf="citaSelected" id="btnAtender1"     type="button" class="btn btn-primary bg-green-dark btn-icon"   [placement]="'bottom'" ngbTooltip="Atender"           (click)= "citaAtender()">                       <i class="far fa-hand-point-up"></i></button>
+        <button *ngIf="citaSelected && (this.accTot || this.accCrud || this.accUpdate)" id="btnEditar1"      type="button" class="btn btn-warning btn-icon"   [placement]="'bottom'" ngbTooltip="Editar"            (click)= "citaEditar()">                     <i class="mdi mdi-square-edit-outline"></i></button>
+        <button *ngIf="citaSelected && !citaSelected.pagado" id="btnComprobante1" type="button" class="btn btn-secondary btn-icon" [placement]="'bottom'" ngbTooltip="Emitir Comprobante" (click)= "citaComprobante(modalComprobante)">   <i class="fas fa-file-invoice"> </i></button>
+        <button *ngIf="citaSelected && !citaSelected.pagado" id="btnComprobante2" type="button" class="btn btn-secondary bg-gradient btn-icon border-0" [placement]="'bottom'" ngbTooltip="Emitir Comprobante" (click)= "citaComprobante2(modalComprobante)">   <i class="fas fa-file-invoice"> </i></button>
+        <button *ngIf="citaSelected?.pagado" id="btnImpTicket1"   type="button" class="btn btn-primary btn-icon"   [placement]="'bottom'" ngbTooltip="Imprimir ticket"   (click)= "imprimirTicket()">                    <i class="fa fa-print"></i>         </button>
+        <button *ngIf="citaSelected" type="button" class="btn btn-secondary btn-icon"   [placement]="'bottom'" ngbTooltip="Imprimir Resumen"   (click)= "imprimirResumen()">                    <i class="fa fa-print"></i>         </button>
+        <button *ngIf="citas.length" id="btnVer3"         type="button" class="btn btn-primary btn-icon"   [placement]="'bottom'" ngbTooltip="Ver historias clinicas"         (click)= "modalHistorialClinico(modalHistoriasClinicas)" [disabled]="!citas.length"><i class="fas fa-heartbeat"></i></button>
+        <button *ngIf="citaSelected?.idCronograma" type="button" class="btn btn-primary btn-icon"   [placement]="'bottom'" ngbTooltip="Ir Cronograma" (click)= "verCronograma()"><i class="fas fa-calendar-alt"></i></button>
+    </li>
+</ul>
+
+<!-- GRILLA -->
+<div class="row">
+  <div class="col-sm-12">
+    <app-cita-item-listado *ngFor="let cita of citas;let i = index" [@slideFromBottom]="{value: '* <=> *',params : { delay: (i+1) * 50 }}" [cita]="cita" (OnCitaSelected)="seleccionarCita($event)"
+      [idPerfil]="idPerfil" [usuarioActual]="usuarioActual"
+      ></app-cita-item-listado>
+  </div>
+</div>
+
+<!-- PAGINATION -->
+<div class="bg-clinic paginationx">
+  <div class="btn-top d-flex justify-content-center align-items-center">
+    <button (click)="previousPage()" [disabled]="pageIndex === 0">Anterior</button>
+    <span>[ {{pageIndex * pageSize + 1}} - {{(pageIndex + 1) * pageSize}} ]</span>
+    <button (click)="nextPage()" [disabled]="(pageIndex + 1) * pageSize >= totalItems">Siguiente</button>
+  </div>
+  <div class="btn-bottom d-flex justify-content-center align-items-center">
+    <button (click)="goToFirstPage()" [disabled]="pageIndex === 0">Inicio</button>
+    <span>Total: {{this.contarTotal}}</span>
+    <button (click)="goToLastPage()" [disabled]="(pageIndex + 1) * pageSize >= totalItems">Final</button>
+  </div>
+  <div class="btn-end d-flex justify-content-center align-items-center">
+    <button (click)="mostrarTodo()">Mostrar Todo</button>
+    <button (click)="restablecerPagination()">Restablecer</button>
+  </div>
+</div>
+
+<!-- Menu Movil -->
+<div class="float-menu">
+  <button *ngIf="citaSelected" mat-fab class="my-color_gradient" (click)="citaVisualizar()">
+    <mat-icon>visibility</mat-icon>
+  </button>
+  <button *ngIf="citaSelected" mat-fab class="my-color_gradient" (click)="citaEditar()">
+    <mat-icon>draw</mat-icon>
+  </button>
+  <button mat-fab class="my-color_gradient" (click)="obtenerCitas()">
+    <mat-icon>sync</mat-icon>
+  </button>
+  <button mat-fab class="my-color_gradient" (click)="verOpciones()">
+    <mat-icon>more_vert</mat-icon>
+  </button>
+</div>
+<ng-template let-bottomSheetRef="bottomSheetRef" #menuMovil>
+  <div class="_content" >
+    <div class="_header">
+      <div class="px-4 pt-4 text-center">
+        <span class="d-inline-block topline"></span>
+        <p class="text-center text-white _title lead">Opciones</p>
+      </div>
+      <mat-divider class=""></mat-divider>
+    </div>
+
+    <mat-nav-list class="pt-0">
+      <a mat-list-item (click)= "obtenerCitas();cerrarOpciones();">
+        <i class="mat-list-icon mdi mdi-sync"></i>
+        <span class=" opt-title">Actualizar lista</span>
+      </a>
+      <mat-divider></mat-divider>
+      <a mat-list-item (click)="citaAtender();cerrarOpciones();">
+        <i class="mat-list-icon far fa-hand-point-up"></i>
+        <span class=" opt-title">Atender cita</span>
+      </a>
+      <mat-divider></mat-divider>
+      <a mat-list-item (click)="citaEditar();cerrarOpciones();">
+        <i class="mat-list-icon mdi mdi-square-edit-outline"></i>
+        <span class=" opt-title">Editar cita</span>
+      </a>
+      <mat-divider></mat-divider>
+      <a mat-list-item (click)="citaComprobante(modalComprobante);cerrarOpciones();">
+        <i class="mat-list-icon mdi mdi-receipt"></i>
+        <span class=" opt-title">Emitir Comprobante</span>
+      </a>
+      <mat-divider></mat-divider>
+      <a mat-list-item (click)="imprimirTicket();cerrarOpciones();">
+        <i class="mat-list-icon mdi mdi-printer-outline"></i>
+        <span class=" opt-title">Imprimir Ticket</span>
+      </a>
+      <mat-divider></mat-divider>
+      <a mat-list-item (click)="citaVisualizar();cerrarOpciones();">
+        <i class="mat-list-icon mdi mdi-eye-outline"></i>
+        <span class=" opt-title">Ver datos</span>
+      </a>
+      <mat-divider></mat-divider>
+      <a mat-list-item (click)="modalHistorialClinico(modalHistoriasClinicas);cerrarOpciones();">
+        <i class="mat-list-icon mdi mdi-folder-plus-outline"></i>
+        <span class=" opt-title">Ver Historias Clinicas</span>
+      </a>
+    </mat-nav-list>
+  </div>
+</ng-template>

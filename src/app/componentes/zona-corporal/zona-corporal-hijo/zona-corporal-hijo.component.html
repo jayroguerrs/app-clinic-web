@@ -1,0 +1,44 @@
+    <form [formGroup]="frmZonaCorporalHijo">
+      <div class="modal-content">
+
+        <div class="modal-header card-header">
+          <h5 class="modal-title">Zonas hijas de : {{ zonaPadre }}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="modal.dismiss('Cross click')">
+          <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body card-body">
+          <div class="form-row">
+
+              <div class="form-group col-md-12">
+                  <div class="input-group input-group-sm">
+                      <div class="input-group-prepend">
+                          <span class="input-group-text" for="cboZonaCorporalPorGenero">Zona corporal</span>
+                      </div>
+                      <select class="custom-select" id="cboZonaCorporalPorGenero" formControlName="cboZonaCorporalPorGenero">
+                          <option value=''>...Seleccionar...</option>
+                          <option *ngFor="let zonaCorporal of listaMZonasCorporalesPorGenero" [value]="zonaCorporal.id">{{ zonaCorporal.descripcion }}</option>
+                      </select>
+
+                      <div class="input-group-prepend">
+                          <button class="btn btn-dark border border-left-0" type="button" (click)="agregarZonaCorporalHijo()">
+                              <span class="fa fa-fw fa-check"></span></button>
+                      </div>
+                  </div>
+              </div>
+
+          </div>
+          
+          <tag-input [theme]="'bootstrap'" formControlName="chips" (onRemove)="removeTag($event)" [identifyBy]="'idZonaCorporal'"  [displayBy]="'descripcion'"></tag-input>
+
+        </div>
+
+        <div class="modal-footer card-footer">
+          <label type="button" class="btn btn-outline-primary" (click)="modal.close('Save click')">
+              <i class="feather icon-save"></i>
+          </label>
+        </div>
+        
+      </div>
+    </form>

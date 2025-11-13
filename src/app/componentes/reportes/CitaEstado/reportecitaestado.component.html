@@ -1,0 +1,164 @@
+﻿<!-- SPINNER -->
+<ngx-spinner
+  [template]="rutaImageSpinner">
+  <p style="color: white" > Cargando... </p>
+</ngx-spinner>
+
+
+<!-- GRILLA -->
+<div class="row">
+
+  <div class="col-12 mb-3 sticky-header" stickyClass="header--sticky">
+    <app-card [options]="false" [customHeader]="false" cardTitle="REPORTE DE CITAS SEGUN EL ESTADO" cardTitle2="Consulta y genera reporte según la sede, el rango de fecha, el estado de la cita y el motivo del cambio de estado">
+
+      <form [formGroup]="formGroup">
+        <div class="form-row">
+
+          <!-- Sede -->
+          <div class="col-12 col-lg-3 mb-3">
+            <div class="form-floating form-start-icon">
+              <select class="custom-select" id="idSede" formControlName="idSede" (change)="obtenerReporte()">
+                <option value="0">{{ loadingSede ? 'Cargando...' : 'Todos' }}</option>
+                <option *ngFor="let sede of collectionSede" [value]="sede.id">{{ sede.nombre }}</option>
+              </select>
+              <label for="idSede">Sede</label>
+              <span class="icon">
+                <span class="dicon sede m-auto"></span>
+              </span>
+            </div>
+          </div>
+          <!-- Fecha desde -->
+          <div class="col-12 col-lg-3 mb-3">
+            <div class="form-floating form-start-icon">
+              <input id="fdesde" type="date" placeholder=" " class="form-control" formControlName="fdesde" (change)="obtenerReporte()" [ngClass]="{ 'is-invalid': submitted && f.fdesde.errors }">
+              <label for="fdesde">Fecha desde</label>
+              <span class="icon"><span class="dicon calendar m-auto"></span></span>
+            </div>
+          </div>
+          <!-- Fecha hasta -->
+          <div class="col-12 col-lg-3 mb-3">
+            <div class="form-floating form-start-icon">
+              <input id="fhasta" type="date" placeholder=" " class="form-control" formControlName="fhasta" (change)="obtenerReporte()" [ngClass]="{ 'is-invalid': submitted && f.fhasta.errors }">
+              <label for="fhasta">Fecha hasta</label>
+              <span class="icon"><span class="dicon calendar m-auto"></span></span>
+            </div>
+          </div>
+          <!-- Estado -->
+          <div class="col-12 col-lg-3 mb-3">
+            <div class="form-floating form-start-icon">
+              <select class="custom-select" id="idEstado" formControlName="idEstado" (change)="obtenerReporte()">
+                <option [value]="0">Todos</option>
+                <option *ngFor="let estado of collectionEstado" [value]="estado.id">{{ estado.descripcion }}</option>
+              </select>
+              <label for="idEstado">Estado</label>
+              <span class="icon"><span class="dicon alert-circle m-auto"></span></span>
+            </div>
+          </div>
+        </div>
+      </form>
+
+    </app-card>
+  </div>
+
+  <div class="col-12 mb-3">
+    <app-card [options]="false" [customHeader]="false" cardTitle="Resultado general">
+      <div class="row">
+        <div class="col-12">
+          <table datatable [dtOptions]="dtResponsiveOptions" class="table table-sm table-hover table-caja display compact">
+          </table>
+        </div>
+      </div>
+    </app-card>
+  </div>
+
+  <div class="col-12 mb-3">
+    <app-card [options]="false" [customHeader]="false" cardTitle="Gráfico general">
+      <div class="rounded border p-2">
+        <h5 class="text-center mb-0">Reporte general de todas las sedes</h5>
+        <p class="text-center">{{ titleChart }}</p>
+        <div id="chartGeneral"></div>
+      </div>
+    </app-card>
+  </div>
+
+  <div class="col-12">
+    <app-card [options]="false" [customHeader]="false" cardTitle="Gráfico general de citas según el estado por sede">
+      <div class="row mx-0">
+
+        <!-- Mega plaza -->
+        <div class="col-12 mb-3">
+          <div class="border rounded p-2">
+            <h5 class="text-center mb-0">Mega Plaza</h5>
+            <p class="text-center">{{ titleChart }}</p>
+
+            <div class="row">
+              <div class="col-12 col-lg-6">
+                <div id="megaPlazaEstadosChart"></div>
+              </div>
+              <div class="col-12 col-lg-6">
+                <div id="megaPlazaMotivosChart"></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <!-- Pueblo libre -->
+        <div class="col-12 mb-3">
+          <div class="border rounded p-2">
+            <h5 class="text-center mb-0">Pueblo Libre</h5>
+            <p class="text-center">{{ titleChart }}</p>
+
+            <div class="row">
+              <div class="col-12 col-lg-6">
+                <div id="puebloLibreEstadosChart"></div>
+              </div>
+              <div class="col-12 col-lg-6">
+                <div id="puebloLibreMotivosChart"></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <!-- San Borja -->
+        <div class="col-12 mb-3">
+          <div class="border rounded p-2">
+            <h5 class="text-center mb-0">San Borja</h5>
+            <p class="text-center">{{ titleChart }}</p>
+
+            <div class="row">
+              <div class="col-12 col-lg-6">
+                <div id="sanBorjaEstadosChart"></div>
+              </div>
+              <div class="col-12 col-lg-6">
+                <div id="sanBorjaMotivosChart"></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </app-card>
+  </div>
+</div>
+
+
+
+
+<!-- BOTONERA ESCRITORIO -->
+<ul class="botonera-escritorio">
+  <li>
+    <button type="button" class="btn btn-primary btn-icon"   [placement]="'bottom'" ngbTooltip="Buscar" (click)= "obtenerReporte()"><i class="mdi mdi-magnify"></i></button>
+    <button *ngIf="this.accTot || this.accExc" type="button" class="btn btn-secondary btn-icon" [disabled]="!collectionData.length"   [placement]="'bottom'" ngbTooltip="Exportar" (click)= "exportarExcel()"><i class="mdi mdi-file-excel-outline"></i></button>
+  </li>
+</ul>
+
+<!-- BOTONERA MOVIL -->
+<app-float-button>
+  <button class="child" mat-fab color="primary"  matTooltip="Buscar" matTooltipPosition="left" (click)="obtenerReporte()">
+    <mat-icon>search</mat-icon>
+  </button>
+  <button class="child" mat-fab color="primary" [disabled]="!collectionData.length"  matTooltip="Exportar" matTooltipPosition="left" (click)="exportarExcel()">
+    <mat-icon>file_download</mat-icon>
+  </button>
+</app-float-button>

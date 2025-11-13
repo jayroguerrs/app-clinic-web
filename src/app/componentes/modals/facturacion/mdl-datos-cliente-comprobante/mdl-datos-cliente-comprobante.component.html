@@ -1,0 +1,352 @@
+﻿
+<form [formGroup]="formGroup" (ngSubmit)="onSubmit()" class="popins mh-100">
+  <div class="scard bg-transparent popins mh-100">
+        <div class="modal-header card-header bg-gradient">
+            <h5 class="card-title text-white f-w-500 m-0">Registrar datos del cliente para el comprobante electrónico</h5>
+            <button type="button" class="btn sbtn btn-sm btn-icon btn-active-color-primary h-auto w-auto p-0" (click)="cerrarModal(false)">
+              <span class="svg-icon svg-icon-1 text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor"></rect>
+                  <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor"></rect>
+                </svg>
+              </span>
+            </button>
+        </div>
+        <div class="card-body bg-white p-5 overflow-auto depilform position-relative" [ngClass]="{'overflow-auto': !loading, 'overflow-hidden': loading}">
+
+          <loader-circle *ngIf="loading"></loader-circle>
+
+            <div class="form-row">
+<!--              <div class="mb-2 col-md-12 col-lg-6 col-xl-12">-->
+<!--                <label for="nombreCliente" class="form-label mb-0 text-secondary f-w-500">Nombre</label>-->
+<!--                <input id="nombreCliente" type="text" placeholder="Nombre del cliente" class="form-indigo form-control form-indigo form-control-sm bg-light-indigo" formControlName="nombreCliente" readonly>-->
+<!--              </div>-->
+              <div class="col-12 col-lg-6 mb-2">
+                <label for="tipoDocumentoCliente" class="form-label mb-0 text-secondary f-w-500">Tipo Documento</label>
+                <select id="tipoDocumentoCliente" class="form-indigo form-select form-indigo form-select-sm" formControlName="idTipoDocumentoCliente" [ngClass]="{ 'is-invalid bg-color-light-danger': submitted && f.idTipoDocumentoCliente.errors }">
+                  <option value="">--Seleccionar--</option>
+                  <option *ngFor="let td of facturaTipoDocumento" [value]="td.id">[{{ td.valor }}] {{ td.nombre }}</option>
+                </select>
+                <div *ngIf="submitted && f.idTipoDocumentoCliente.errors" class="invalid-feedback d-block">
+                  <div *ngIf="f.idTipoDocumentoCliente.errors.required">* Campo requerido</div>
+                </div>
+              </div>
+              <div class="col-12 col-lg-6 mb-2">
+                <label for="numeroDocumentoCliente" class="form-label mb-0 text-secondary f-w-500">Número (RUC, DNI, Etc)</label>
+
+                <div class="input-group">
+                  <input id="numeroDocumentoCliente" type="text" placeholder="N° del documento" formControlName="numeroDocumentoCliente" class="form-indigo form-control form-indigo form-control-sm w-auto rounded-end-0px" [ngClass]="{ 'is-invalid bg-color-light-danger border-danger': submitted && f.numeroDocumentoCliente.errors }">
+                  <div class="input-group-append" [ngbTooltip]="ldBuscarCliente ? 'Buscando' : 'Buscar'">
+                    <button type="button" matRipple class="btn btn-sm btn-indigo rounded rounded-left-0" (click)="evtBuscarCliente()">
+                      <i *ngIf="!ldBuscarCliente" class="fa-regular fa-magnifying-glass m-0"></i>
+                      <i *ngIf="ldBuscarCliente" class="fa-duotone fa-spinner-third fa-spin m-0"></i>
+                    </button>
+                  </div>
+                </div>
+
+
+                <div *ngIf="submitted && f.numeroDocumentoCliente.errors" class="invalid-feedback d-block">
+                  <div *ngIf="f.numeroDocumentoCliente.errors.required">* Campo requerido</div>
+                  <div *ngIf="f.numeroDocumentoCliente.errors.maxlength">* No corresponde al número de digitos</div>
+                  <div *ngIf="f.numeroDocumentoCliente.errors.minlength">* No corresponde al número de digitos</div>
+                </div>
+              </div>
+              <div class="col-12 mb-2">
+                  <label for="nombreCliente" class="form-label mb-0 text-secondary f-w-500">Razón social o nombre completo</label>
+                  <input id="nombreCliente" type="text" placeholder="Nombre del cliente" class="form-indigo form-control form-indigo form-control-sm" formControlName="nombreCliente" [ngClass]="{ 'is-invalid bg-color-light-danger border-danger': submitted && f.nombreCliente.errors }">
+                  <div *ngIf="submitted && f.nombreCliente.errors" class="invalid-feedback d-block">
+                    <div *ngIf="f.nombreCliente.errors.required">* Campo requerido</div>
+                  </div>
+              </div>
+              <div class="col-12 mb-2">
+                <label for="direccionFiscal" class="form-label mb-0 text-secondary f-w-500">Dirección fiscal</label>
+                <input id="direccionFiscal" type="text" placeholder="" class="form-indigo form-control form-indigo form-control-sm" formControlName="direccionFiscal" [ngClass]="{ 'is-invalid bg-color-light-danger border-danger': submitted && f.direccionFiscal.errors }">
+                <div *ngIf="submitted && f.direccionFiscal.errors" class="invalid-feedback d-block">
+                  <div *ngIf="f.direccionFiscal.errors.required">* Campo requerido</div>
+                </div>
+              </div>
+
+              <div class="col-12 mb-2">
+                <label class="form-label mb-0 text-secondary f-w-500">Predeterminado</label>
+                <div class="form-check form-switch form-check-custom form-check-solid me-10">
+                  <input #predeterminado class="form-check-input w-60px cursor-pointer" type="checkbox" id="predeterminado" formControlName="predeterminado"/>
+                  <label class="form-check-label text-indigo" for="predeterminado">
+                    {{ predeterminado.checked ? 'Si' : 'No' }}
+                  </label>
+                </div>
+              </div>
+
+              <div class="col-12 mb-0">
+                <label for="idEstado" class="form-label mb-0 text-secondary f-w-500">Estado</label>
+                <select id="idEstado" class="form-indigo form-select form-indigo form-select-sm w-100" formControlName="idEstado">
+                  <option *ngFor="let est of estados" [value]="est.id">{{ est.value }}</option>
+                </select>
+              </div>
+
+            </div>
+
+
+
+<!--          <div class="form-row">-->
+
+<!--            <div class="col-12 col-xl-12">-->
+<!--              <div class="border rounded p-4 mb-2">-->
+<!--                <p class="fs-16px fw-semibold text-dark">Datos del Cliente</p>-->
+
+<!--                <div class="form-row">-->
+<!--                  <div class="mb-2 col-md-12 col-lg-6 col-xl-12">-->
+<!--                    <label for="nombreCliente" class="form-label mb-0 text-secondary f-w-500">Nombre</label>-->
+<!--                    <input id="nombreCliente" type="text" placeholder="Nombre del cliente" class="form-indigo form-control form-indigo form-control-sm bg-light-indigo" formControlName="nombreCliente" readonly>-->
+<!--                  </div>-->
+<!--                  <div class="col-md-12 col-lg-6 col-xl-12">-->
+<!--                      <div class="d-flex flex-row">-->
+<!--                        <div class="w-120px me-10px">-->
+<!--                            <label for="tipoDocumentoCliente" class="form-label mb-0 text-secondary f-w-500">T. Documento</label>-->
+<!--                            <select id="tipoDocumentoCliente" class="form-indigo form-select form-indigo form-select-sm">-->
+<!--                              <option>DNI</option>-->
+<!--                              <option>Pasaporte</option>-->
+<!--                              <option>Carnet de Extranjeria</option>-->
+<!--                            </select>-->
+<!--                        </div>-->
+<!--                        <div class="w-100">-->
+<!--                            <label for="numeroDocumentoCliente" class="form-label mb-0 text-secondary f-w-500">N° del Documento</label>-->
+<!--                            <input id="numeroDocumentoCliente" type="text" placeholder="N° del documento" formControlName="documentoCliente" class="form-indigo form-control form-indigo form-control-sm">-->
+<!--                        </div>-->
+<!--                      </div>-->
+<!--                  </div>-->
+<!--                </div>-->
+
+<!--              </div>-->
+
+<!--              <div class="border rounded p-4 mb-2">-->
+<!--                <p class="fs-16px fw-semibold text-dark">Datos de la Cita</p>-->
+
+<!--                <div class="form-row">-->
+<!--                  <div class="mb-2 col-md-2 col-lg-3 col-xl-3">-->
+<!--                    <label for="numeroCita" class="form-label mb-0 text-secondary f-w-500">N° Cita</label>-->
+<!--                    <input id="numeroCita" type="text" placeholder="Número de Cita" class="form-indigo form-control form-indigo form-control-sm bg-light-indigo" formControlName="idCita" readonly>-->
+<!--                  </div>-->
+
+<!--                  <div class="mb-2 col-md-2 col-lg-3 col-xl-3">-->
+<!--                    <label for="fechaCita" class="form-label mb-0 text-secondary f-w-500">Fecha Cita</label>-->
+<!--                    <input id="fechaCita" type="text"  class="form-indigo form-control form-indigo form-control-sm bg-light-indigo" formControlName="fechaCita" readonly>-->
+<!--                  </div>-->
+
+<!--                  <div class="mb-2 col-md-4 col-lg-6 col-xl-6">-->
+<!--                    <label for="atentidoPor" class="form-label mb-0 text-secondary f-w-500">Atendido por:</label>-->
+<!--                    <input type="hidden" formControlName="idAtendidoPor">-->
+<!--                    <div class="position-relative">-->
+<!--                      <input id="atentidoPor" formControlName="atendidoPor" class="form-indigo cursor-pointer form-control form-indigo form-control-sm pe-35px" placeholder="Seleccionar personal" (click)="seleccionarUsuario()" readonly>-->
+<!--                      <fontawesome-svg class="position-absolute top-0 bottom-0 m-auto end-0 me-10px text-muted no-pointer-events" icon="user-vneck" type="light" [width]="20" [height]="20" ></fontawesome-svg>-->
+<!--                    </div>-->
+
+<!--                  </div>-->
+
+
+<!--                  <div class="mb-2 mb-md-0 col-md-2 col-lg-4 col-xl-4">-->
+<!--                    <label for="numeroBox" class="form-label mb-0 text-secondary f-w-500">N° Box</label>-->
+<!--                    <select id="numeroBox" class="form-indigo form-select form-indigo form-select-sm" formControlName="numeroBox">-->
+<!--                      <option value="" selected>&#45;&#45;Seleccionar N° Box&#45;&#45;</option>-->
+<!--                      <option [value]="1" >01</option>-->
+<!--                      <option [value]="2" >02</option>-->
+<!--                      <option [value]="3" >03</option>-->
+<!--                      <option [value]="4" >04</option>-->
+<!--                      <option [value]="5" >05</option>-->
+<!--                      <option [value]="6" >06</option>-->
+<!--                      <option [value]="7" >07</option>-->
+<!--                      <option [value]="8" >08</option>-->
+<!--                      <option [value]="9" >09</option>-->
+<!--                      <option [value]="10" >10</option>-->
+<!--                      <option [value]="11" >11</option>-->
+<!--                      <option [value]="12" >12</option>-->
+<!--                      <option [value]="13" >13</option>-->
+<!--                      <option [value]="14" >14</option>-->
+<!--                      <option [value]="15" >15</option>-->
+<!--                      <option [value]="16" >16</option>-->
+<!--                      <option [value]="17" >17</option>-->
+<!--                      <option [value]="18" >18</option>-->
+<!--                      <option [value]="19" >19</option>-->
+<!--                      <option [value]="20" >20</option>-->
+<!--                      <option [value]="21" >21</option>-->
+<!--                      <option [value]="22" >22</option>-->
+<!--                      <option [value]="23" >23</option>-->
+<!--                      <option [value]="24" >24</option>-->
+<!--                      <option [value]="25" >25</option>-->
+<!--                      <option [value]="26" >26</option>-->
+<!--                      <option [value]="27" >27</option>-->
+<!--                      <option [value]="28" >28</option>-->
+<!--                      <option [value]="29" >29</option>-->
+<!--                      <option [value]="30" >30</option>-->
+<!--                      <option [value]="31" >31</option>-->
+<!--                      <option [value]="32" >32</option>-->
+<!--                    </select>-->
+<!--                  </div>-->
+
+<!--                  <div class="mb-2 mb-md-0 col-md-2 col-lg-4 col-xl-4">-->
+<!--                    <label for="idMaquinaNombre" class="form-label mb-0 text-secondary f-w-500">Maquina</label>-->
+<!--                    <select id="idMaquinaNombre" class="form-indigo form-select form-indigo form-select-sm">-->
+<!--                      <option value="">&#45;&#45;Seleccionar maquina&#45;&#45;</option>-->
+<!--                      <option *ngFor="let mm of marcasMaquina" [value]="mm.id">{{ mm.nombre }}</option>-->
+<!--                    </select>-->
+<!--                  </div>-->
+
+
+<!--                  <div class="mb-2 mb-md-0 col-md-2 col-lg-4 col-xl-4">-->
+<!--                    <label class="form-label mb-0 text-secondary f-w-500">Generar siguiente cita?</label>-->
+<!--                    <div class="form-check form-switch form-check-custom form-check-solid me-10">-->
+<!--                      <input #siguienteCita class="form-check-input w-60px cursor-pointer" type="checkbox" id="siguienteCita"/>-->
+<!--                      <label class="form-check-label text-indigo" for="siguienteCita">-->
+<!--                        {{ siguienteCita.checked ? 'Si' : 'No' }}-->
+<!--                      </label>-->
+<!--                    </div>-->
+<!--                  </div>-->
+
+<!--                </div>-->
+
+<!--              </div>-->
+<!--            </div>-->
+
+
+<!--            <div class="col-12 col-xl-12">-->
+<!--              <div class="border rounded p-4 mb-2">-->
+<!--                <p class="fs-16px fw-semibold text-dark">Datos del comprobante</p>-->
+
+<!--                <div class="form-row">-->
+
+<!--                  <div class="mb-2 col-md-6 col-lg-6">-->
+<!--                    <label for="tipoComprobante" class="form-label mb-0 text-secondary f-w-500">Tipo de Comprobante</label>-->
+<!--                    <select id="tipoComprobante" class="form-indigo form-select form-indigo form-select-sm" (change)="onChangeTipoComprobante($event)">-->
+<!--                      <option value="0" selected>Ticket</option>-->
+<!--                      <option value="1">Factura</option>-->
+<!--                      <option value="2">Boleta</option>-->
+<!--                    </select>-->
+<!--                  </div>-->
+
+<!--                  &lt;!&ndash;- Serie y N° de Factura -&ndash;&gt;-->
+<!--                  <div class="mb-2 mb-md-0 mb-lg-2 col-md-6 col-lg-6 col-xl-6">-->
+<!--                    <div class="d-flex flex-row">-->
+<!--                      <div class="w-100px me-10px">-->
+<!--                          <label for="serieComprobante" class="form-label mb-0 text-secondary f-w-500">Serie</label>-->
+<!--                          <select id="serieComprobante" class="form-indigo form-select form-indigo form-select-sm">-->
+<!--                            <option>F0001</option>-->
+<!--                            <option>F0002</option>-->
+<!--                          </select>-->
+<!--                      </div>-->
+<!--                      <div class="w-100">-->
+<!--                          <label for="numeroComprobante" class="form-label mb-0 text-secondary f-w-500">Número</label>-->
+<!--                          <input id="numeroComprobante" [showMaskTyped]="true" [shownMaskExpression]="'000000'" mask="000000" type="text" placeholder="N° del comprobante" value="0" class="form-indigo form-control form-indigo form-control-sm">-->
+<!--                      </div>-->
+<!--                    </div>-->
+<!--                  </div>-->
+
+<!--                  <div *ngIf="!esTicket" class="mb-2 mb-md-0 mb-lg-0 col-md-6 col-lg-6 col-xl-6">-->
+<!--                    <div class="d-flex flex-row">-->
+<!--                      <div class="w-100px me-10px ">-->
+<!--                          <label for="idPorcentajeIgv" class="form-label mb-0 text-secondary f-w-500">IGV %</label>-->
+<!--                          <select id="idPorcentajeIgv" class="form-indigo form-select form-indigo form-select-sm">-->
+<!--                            <option *ngFor="let pigv of porcentajesIgv" [value]="pigv.id">{{ pigv.nombre }} {{ pigv.descripcion ? ( '- ' + pigv.descripcion ) : '' }}</option>-->
+<!--                          </select>-->
+<!--                      </div>-->
+<!--                      <div class="w-100">-->
+<!--                          <label for="sunatTransaccion" class="form-label mb-0 text-secondary f-w-500">Tipo de Operación</label>-->
+<!--                          <select id="sunatTransaccion" class="form-indigo form-select form-indigo form-select-sm" formControlName="sunatTransaccion">-->
+<!--                            <option *ngFor="let t of tiposTransaccion" [value]="t.id">{{ t.nombre }} [{{ t.valor }}]</option>-->
+<!--                          </select>-->
+<!--                      </div>-->
+<!--                    </div>-->
+<!--                  </div>-->
+
+<!--                  <div *ngIf="!esTicket" class="mb-md-0 mb-lg-0 col-md-6 col-lg-6 col-xl-6">-->
+<!--                    <div class="d-flex flex-row">-->
+<!--                      <div class="w-100px me-10px">-->
+<!--                          <label for="moneda" class="form-label mb-0 text-secondary f-w-500">Moneda</label>-->
+<!--                          <select id="moneda" class="form-indigo form-select form-indigo form-select-sm">-->
+<!--                            <option *ngFor="let tm of tiposMoneda"  [value]="tm.valor">{{ tm.simbolo }} - {{ tm.descripcion }}</option>-->
+<!--                          </select>-->
+<!--                      </div>-->
+<!--                      <div class="w-100">-->
+<!--                        <div class="depilform">-->
+<!--                          <label for="tipoCambio" class="form-label mb-0 text-secondary f-w-500">Tipo de Cambio</label>-->
+<!--                          <input id="tipoCambio" type="text" placeholder="0.000" class="form-indigo form-control form-indigo form-control-sm">-->
+<!--                        </div>-->
+<!--                      </div>-->
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                </div>-->
+
+<!--              </div>-->
+
+<!--              <div *ngIf="!esTicket" class="border rounded p-4 mb-2">-->
+<!--                <p class="fs-16px fw-semibold text-dark">Datos de facturación</p>-->
+
+<!--                <div class="form-row">-->
+<!--                    <button type="button" class="btn btn-sm btn-indigo rounded ml-auto">Agregar</button>-->
+<!--                </div>-->
+<!--              </div>-->
+
+<!--              <div class="border rounded p-4">-->
+<!--                <p class="fs-16px fw-semibold text-dark">Detalle del comprobante</p>-->
+<!--                <div class="d-flex flex-row">-->
+<!--                  <div class="w-100">-->
+<!--                    <label class="form-label mb-0 text-secondary f-w-500">Item</label>-->
+<!--                  </div>-->
+<!--                  <div class="w-60px mx-2">-->
+<!--                    <label class="form-label mb-0 text-secondary f-w-500">Sesión</label>-->
+<!--                  </div>-->
+<!--                  <div class="w-85px mr-2">-->
+<!--                    <label class="form-label mb-0 text-secondary f-w-500">V/U</label>-->
+<!--                  </div>-->
+<!--                  <div class="w-85px mr-2">-->
+<!--                    <label class="form-label mb-0 text-secondary f-w-500">P/U</label>-->
+<!--                  </div>-->
+<!--                  <div class="w-38px"></div>-->
+<!--                </div>-->
+<!--                <div class="form-row ">-->
+<!--                  <div *ngFor="let dc of citaDetalle; let i = index" class="col-12 d-flex flex-row mb-2" [class.quitarItem]="!dc.selectComprobante">-->
+<!--                    <div class="w-100">-->
+<!--&lt;!&ndash;                      <label for="tipoComprobante" class="form-label mb-0 text-secondary f-w-500">Item</label>&ndash;&gt;-->
+<!--                      <input id="zona" type="text" class="form-indigo form-control form-indigo form-control-sm bg-light-indigo" [value]="dc.zona.nombre" [attr.title]="dc.zona.nombre" readonly>-->
+<!--                    </div>-->
+<!--                    <div class="w-60px mx-2">-->
+<!--&lt;!&ndash;                      <label for="tipoComprobante" class="form-label mb-0 text-secondary f-w-500">Sesión</label>&ndash;&gt;-->
+<!--                      <input id="sesion" type="text" class="form-indigo form-control form-indigo form-control-sm text-center bg-light-indigo" [value]="dc.sesion" readonly>-->
+<!--                    </div>-->
+<!--                    <div class="w-85px mr-2">-->
+<!--                      &lt;!&ndash;                      <label for="tipoComprobante" class="form-label mb-0 text-secondary f-w-500">Precio</label>&ndash;&gt;-->
+<!--                      <input id="valorUnitario" type="text" inputmode="decimal" min="0" step="0.01" class="form-indigo form-control form-indigo form-control-sm fw-semibold appearance-textfield text-right bg-light-indigo" [value]="valorUnitario(dc.precio).toFixed(2)" readonly>-->
+<!--                    </div>-->
+<!--                    <div class="w-85px mr-2" lang="en-US">-->
+<!--&lt;!&ndash;                      <label for="tipoComprobante" class="form-label mb-0 text-secondary f-w-500">Precio</label>&ndash;&gt;-->
+<!--                      <input id="precioUnitario" type="number" inputmode="decimal" min="0" step="0.01" class="form-indigo form-control form-indigo form-control-sm fw-semibold appearance-textfield text-right bg-light-indigo" [value]="dc.precio.toFixed(2)" readonly>-->
+<!--                    </div>-->
+<!--                    <div class="w-38px" [ngbTooltip]=" dc.selectComprobante ? 'Eliminar Item' : 'Añadir Item' " lang="en-US">-->
+<!--                      <button type="button" matRipple class="btn rounded btn-sm m-0 px-2" [ngClass]="{'btn-danger' : dc.selectComprobante, 'btn-indigo' : !dc.selectComprobante}"  (click)="quitarItem(i)">-->
+<!--                        <fontawesome-svg *ngIf="dc.selectComprobante" icon="trash-can" type="regular" [width]="20" [height]="20"></fontawesome-svg>-->
+<!--                        <fontawesome-svg *ngIf="!dc.selectComprobante" icon="plus" type="regular" [width]="20" [height]="20"></fontawesome-svg>-->
+<!--                      </button>-->
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                  <div class="col-12 d-flex flex-row mb-2" lang="en-US">-->
+<!--                    <div class="w-100 text-right align-self-center mr-2"><label class="form-label text-dark f-w-500 mb-0 fs-16px">Total S/</label></div>-->
+<!--                    <div class="w-85px mr-2">-->
+<!--                      <input type="number" inputmode="decimal" min="0" step="0.01" class="form-indigo form-control form-indigo form-control-sm fw-semibold appearance-textfield text-right bg-light-indigo" [value]="precioTotal().toFixed(2)" readonly>-->
+<!--                    </div>-->
+<!--                    <div class="w-38px"></div>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </div>-->
+
+<!--          </div>-->
+
+
+        </div>
+        <div class="modal-footer bg-white py-3">
+            <div class="form-row float-right">
+              <button matRipple [disabled]="loading" type="reset" class="btn sbtn btn-light mr-2" (click)="cerrarModal()">Cancelar</button>
+              <button matRipple type="submit" class="btn sbtn btn-primary shadow btn-shadow-primary" >Guardar</button>
+            </div>
+        </div>
+
+    </div>
+</form>

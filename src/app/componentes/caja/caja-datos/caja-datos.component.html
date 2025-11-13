@@ -1,0 +1,73 @@
+﻿<!-- MODAL SELECCION USUARIO -->
+<ng-template #modUsuarioSeleccion let-modal let-close="close">
+    <app-usuario-seleccion
+        (eventUsuarioSeleccionado)="eventUsuarioSeleccionado($event)"
+        [modal]="modalUsuarioSeleccionRef"
+        [idPerfil] = "idPerfilBuscarUsuario"
+        >
+    </app-usuario-seleccion>
+</ng-template>
+
+<!-- SPINNER -->
+<ngx-spinner
+    [template]="rutaImageSpinner">
+    <p style="color: white" > Cargando... </p>
+</ngx-spinner>
+
+<!-- FORMULARIO -->
+<form [formGroup]="frmCajaDatos">
+    <div class="modal-content">
+        <div class="modal-header card-header">
+            <h5 class="modal-title">{{ accion }} Caja</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="cerrarModal()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+        <div class="modal-body card-body">
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    <div class="form-floating " >
+                      <input type="text" class="form-control" id="cajDescripcion" formControlName="cajDescripcion" placeholder=" " [ngClass]="{ 'is-invalid': submitted && f.cajDescripcion.errors }">
+                      <label for="cajDescripcion">Caja <span class="text-danger">*</span></label>
+                    </div>
+                    <div *ngIf="submitted && f.cajDescripcion.errors" class="invalid-feedback d-block" >
+                      <div *ngIf="f.cajDescripcion.errors.required">Ingrese descripción de la Caja</div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    <div class="form-floating">
+                      <select class="custom-select" id="cajIdSede" formControlName="cajIdSede" [ngClass]="{ 'is-invalid': submitted && f.cajIdSede.errors }">
+                        <option selected value=''>...Seleccionar...</option>
+                        <option *ngFor="let sede of maestroSedes" [value]="sede.idSede">{{ sede.nombre }}</option>
+                      </select>
+                      <label for="cajIdSede">Sede <span class="text-danger">*</span></label>
+                    </div>
+                  <div *ngIf="submitted && f.cajIdSede.errors" class="invalid-feedback d-block">
+                    <div *ngIf="f.cajIdSede.errors.required">Seleccionar una sede</div>
+                  </div>
+                </div>
+            </div>
+            <div class="form-group">
+              <div class="form-floating form-button">
+                <input id="cajaIdResponsable" type="text" class="form-control bg-white" [attr.responsable-idUsuario]="0" placeholder=" " formControlName="cajaIdResponsable" name="cajaIdResponsable" [ngClass]="{ 'is-invalid': submitted && f.cajaIdResponsable.errors }"  (click)="abrirSelecionarUsuario(modUsuarioSeleccion)">
+                <label for="cajaIdResponsable">Usuario responsable <span class="text-danger">*</span></label>
+                <button type="button" class="input-icon" [placement]="'left'" ngbTooltip="Usuario responsable" (click)="abrirSelecionarUsuario(modUsuarioSeleccion)"></button>
+              </div>
+              <div *ngIf="submitted && f.cajaIdResponsable.errors" class="invalid-feedback d-block">
+                <div *ngIf="f.cajaIdResponsable.errors.required">No ha seleccionado responsable</div>
+              </div>
+            </div>
+
+        </div>
+
+        <div class="modal-footer card-footer">
+            <div class="form-row float-right">
+                <button type="button" class="btn btn-outline-primary" (click)="cajaGrabar()"><i class="feather icon-save"></i>Guardar</button>
+                <button type="button"  class="btn btn-outline-danger" (click)="cerrarModal()"><i class="feather icon-slash"></i>Cancelar</button>
+            </div>
+        </div>
+    </div>
+</form>

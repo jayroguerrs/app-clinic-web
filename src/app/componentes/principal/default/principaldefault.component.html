@@ -1,0 +1,446 @@
+<ng-container #secondDiv *ngIf="nuevoDashboard" >
+  <section>
+    
+    <!-- FILTRO -->
+    <div class="row" (click)="ocultarTablaGlobal()" >
+      <div class="col-sm-12">
+        <app-card cardTitle="MY HOME" [options]="false" [hidBlock]="false">
+
+        </app-card>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- BOTONERA ESCRITORIO -->
+<ul class="botonera-escritorio">
+  <li>
+      <button *ngIf="citaSelected" id="btnVer1"         type="button" class="btn btn-primary btn-icon"   [placement]="'bottom'" ngbTooltip="Ver datos"         (click)= "citaVisualizar()">                    <i class="mdi mdi-eye-outline"></i>          </button>
+      <!--? BOTON PARA EL LISTADO GLOBAL aqui aumentarle citas.length en el ngif -->
+      <button *ngIf="(this.accTot || this.accAge) && esListadoGlobalExportar" type="button" class="btn btn-secondary btn-icon"   [placement]="'bottom'" ngbTooltip="Exportar"         (click)= "exportar()" [disabled]="!citas.length">                    <i class="mdi mdi-file-excel"></i>          </button>
+      <button *ngIf="(this.accTot || this.accAge) && esListadoGlobalExportar" type="button" class="btn btn-indigo btn-icon"   [placement]="'bottom'" ngbTooltip="Exportar Info"         (click)= "exportarInfo()" [disabled]="!citas.length">                    <i class="mdi mdi-file-excel"></i>          </button>
+
+      <button *ngIf="citaSelected" id="btnAtender1"     type="button" class="btn btn-primary bg-green-dark btn-icon"   [placement]="'bottom'" ngbTooltip="Atender"           (click)= "citaAtender()">                       <i class="far fa-hand-point-up"></i></button>
+      <button *ngIf="citaSelected && (this.accTot || this.accCrud || this.accUpdate)" id="btnEditar1"      type="button" class="btn btn-warning btn-icon"   [placement]="'bottom'" ngbTooltip="Editar"            (click)= "citaEditar()">                     <i class="mdi mdi-square-edit-outline"></i></button>
+      <button [disabled]="botonComprobanteDeshabilitado" *ngIf="citaSelected && !citaSelected.pagado" id="btnComprobante1" type="button" class="btn btn-secondary btn-icon" [placement]="'bottom'" ngbTooltip="Emitir Comprobante" (click)= "citaComprobante(modalComprobante)">   <i class="fas fa-file-invoice"> </i></button>
+      <button *ngIf="citaSelected && !citaSelected.pagado" id="btnComprobante2" type="button" class="btn btn-secondary bg-gradient btn-icon border-0" [placement]="'bottom'" ngbTooltip="Emitir Comprobante" (click)= "citaComprobante2(modalComprobante)">   <i class="fas fa-file-invoice"> </i></button>
+      <button *ngIf="citaSelected?.pagado && citaSelected.idTipoComprobante === 2" id="btnImpTicket1"   type="button" class="btn btn-primary btn-icon"   [placement]="'bottom'" ngbTooltip="Imprimir ticket"   (click)= "imprimirTicket()">                    <i class="fa fa-print"></i>         </button>
+      <button *ngIf="citaSelected && citaSelected.idTipoComprobante !== 2" type="button" class="btn btn-secondary btn-icon"   [placement]="'bottom'" ngbTooltip="Imprimir Resumen"   (click)= "imprimirResumen()">                    <i class="fa fa-print"></i>         </button>
+      
+      <!--? BOTON PARA EL LISTADO GLOBAL -->
+      <button *ngIf="citas.length && esListadoGlobalExportar" id="btnVer3"         type="button" class="btn btn-primary btn-icon"   [placement]="'bottom'" ngbTooltip="Ver historias clinicas"         (click)= "modalHistorialClinico(modalHistoriasClinicas)" [disabled]="!citas.length"><i class="fas fa-heartbeat"></i></button>
+      <!-- FIN DEL BOTON -->
+
+      <button *ngIf="citaSelected?.idCronograma" type="button" class="btn btn-primary btn-icon"   [placement]="'bottom'" ngbTooltip="Ir Cronograma" (click)= "verCronograma()"><i class="fas fa-calendar-alt"></i></button>
+  </li>
+</ul>
+
+  <app-busqueda-numero (citaEncontrada)="mostrarCitaPorIdcita($event)" (quitarCita)="quitarCitaSeleccionada($event)" (quitarTablaGlobal)="ocultarTablaGlobal($event)"></app-busqueda-numero>
+
+  <app-busqueda-cliente *ngIf="usuarioActual.idperfil !== 5" #busquedaCliente (quitarCitaPorId)="quitarCitaSeleccionada($event)" (citaSeleccionada)="verCita($event)" (quitarCita)="quitarCitaSeleccionadaGlobal($event)" (enviarCitasParaHistoria)="citasParaHistoria($event)"  (enviarFechaParaHistoria)="fechaParaHistoria($event)" (esListadoGlobalExportar)="esListadoGlobalExportarF($event)"></app-busqueda-cliente>
+  <app-tbl-busqueda-idcita (limpiarFiltroBusquedaIdCitaO)="quitarCitaSeleccionada($event)" [idCita]="idCitatblBusquedaCita" *ngIf="mostrarCita" (citaSeleccionada)="verCita($event)"></app-tbl-busqueda-idcita>
+  
+
+</ng-container>
+
+
+<ng-template #modalComprobante let-modal let-close="close">
+  <app-tickets-emision
+      [idCita]="citaSelected.idCita"
+      [idServicio]="citaSelected.idServicio"
+      [sede]="sede"
+      [modal]="modalComprobanteRef"
+      [citaSeleccionada]="citaSelected"
+      (eventCitaListarPago)="openModalConfirm($event, true)"
+      (eventCitaSoloListarPago)="cambiarTipoComprobante($event)"
+      >
+  </app-tickets-emision>
+</ng-template>
+
+
+<!-- MODAL LISTA HISTORIAL CLINICO -->
+<ng-template #modalHistoriasClinicas let-modal let-close="close">
+  <app-cita-historias
+    [citas]="citas"
+    [modal]="modalListaHistorialClinicoRef"
+    [fecha]="fechaParaHistoriaStr"
+    [esListadoDeInicio]="true"
+    >
+  </app-cita-historias>
+</ng-template>
+
+<ng-container *ngIf="!nuevoDashboard">
+
+
+<!-- SPINNER -->
+<ngx-spinner
+    [template]="rutaImageSpinner">
+    <p style="color: white" > Cargando... </p>
+</ngx-spinner>
+
+
+
+<!-- BOTONERA ESCRITORIO -->
+<ul class="botonera-escritorio">
+    <li>
+      <button type="button" class="btn btn-primary btn-icon" id="btnListar1" (click)= "mostrarDatos()"> <i class="mdi mdi-sync"></i></button>
+    </li>
+  </ul>
+  <!-- BOTONERA MOVIL -->
+  <a class="botonera-movil"><i class="fa fa-cog"></i></a>
+  <ul class="ul-botonera-movil">
+    <li id="btnListar2"         (click)= "mostrarDatos()"><a><i class="mdi mdi-sync"></i></a></li>
+</ul>
+
+
+
+<div class="row">
+    <div class="col-md-12">
+        <app-card cardTitle="CLINIC 2.0 - Gestión de Citas y Pacientes" [options]="false" [hidBlock]="false" [customHeader]="true" >
+            <div class="app-card-header">
+                <div class="row vista1">
+                    <div class="col-sm"><h5>CLINIC 2.1 - Gestión de Citas y Pacientes</h5></div>
+                    <!-- <span class="col-sm float-right" style="text-align: center; color: black;">Actualizando en {{ contadorMensajeActualizacion }} segundos....</span> -->
+                    <span class="col-sm float-right" style="text-align: right;  color: black;">{{ fechaActual | date: 'dd-MM-yyyy' }} {{ horaActual }}</span>
+                </div>
+                <div class="row vista2">
+                    <div class="col-sm"><h5>CLINIC 2.1 - Gestión de Citas y Pacientes</h5></div>
+                    <div class="col-sm float-right" style="text-align: right;">{{ fechaActual | date: 'dd-MM-yyyy' }} {{ horaActual }}</div>
+                </div>
+            </div>
+
+            <div class="app-card-body">
+                <form [formGroup] = "frmFiltro">
+                    <div class="form-row">
+                        <div class="form-group col-sm-6 col-md-4 col-lg-3">
+                            <div class="form-floating form-icon">
+                              <i class="far fa-building"></i>
+                              <select 
+                                class="form-select" 
+                                id="idSede" 
+                                formControlName="idSede"
+                                (change)="mostrarDatos()">
+                                <option value="0">TODOS</option>
+                                <option value="1">SAN BORJA</option>
+                                <option value="2">MEGAPLAZA</option>
+                                <option value="3">PUEBLO LIBRE</option>
+                              </select>
+                              <label for="idSede">Sede</label>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </app-card>
+    </div>
+</div>
+
+<!-- a partir de aca -->
+<div class="row" id="metricas">
+  <div class="col-md-12 col-xl-3" [attr.id-elemento]="1">
+    <app-card [hidHeader]="true">
+      <h6 class="mb-4">CALIDAD DE ATENCIÓN</h6>
+      <div class="form-row px-4">
+        <div class="col-4 text-center">
+          <span class="fs-40px">{{ nivelAtencion.total }}</span>
+          <p class="mb-0 mt-1">{{ nivelAtencion.numeroCitas }} votos</p>
+        </div>
+        <div class="col-8 d-flex">
+          <div class="stars w-100 my-auto">
+            <svg viewBox="0 0 576 512" width="100" title="star">
+              <path d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z" />
+            </svg>
+            <svg viewBox="0 0 576 512" width="100" title="star">
+              <path d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z" />
+            </svg><svg viewBox="0 0 576 512" width="100" title="star">
+              <path d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z" />
+            </svg><svg viewBox="0 0 576 512" width="100" title="star">
+              <path d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z" />
+            </svg><svg viewBox="0 0 576 512" width="100" title="star">
+              <path d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z" />
+            </svg>
+            <div class="cover" style="width: 10%;"></div>
+          </div>
+
+        </div>
+      </div>
+    </app-card>
+  </div>
+
+  <div class="col-md-12 col-xl-3" [attr.id-elemento]="1">
+    <app-card [hidHeader]="true">
+      <h6 class="mb-4">TOTAL PREFERENTES</h6>
+      <div class="row d-flex align-items-center">
+        <div class="col-9">
+          <h3 class="f-w-300 d-flex align-items-center m-b-0">
+            <i class="feather icon-arrow-up text-c-green f-30 m-r-10"></i>
+            {{ reportePreferente?.totalPreferentes }}
+          </h3>
+        </div>
+      </div>
+      <div class="progress m-t-30" style="height: 7px;">
+        <div class="progress-bar progress-c-theme" role="progressbar" [ngStyle]="{'width': resumenCantidad.porcentajeCitasRealizadas + '%' }"></div>
+      </div>
+    </app-card>
+  </div>
+
+  <div class="col-md-12 col-xl-3" [attr.id-elemento]="1">
+    <app-card [hidHeader]="true">
+      <h6 class="mb-4">TOTAL ASIGNADAS</h6>
+      <div class="row d-flex align-items-center">
+        <div class="col-9">
+          <h3 class="f-w-300 d-flex align-items-center m-b-0">
+            <i class="feather icon-arrow-up text-c-green f-30 m-r-10"></i>{{ reportePreferente?.totalAsignados }}
+          </h3>
+        </div>
+        <div class="col-3 text-right"><p class="m-b-0">{{ porcentajeAsignados.toFixed(0) }}%</p></div>
+      </div>
+      <div class="progress m-t-30" style="height: 7px;">
+        <div class="progress-bar progress-c-theme" role="progressbar" [ngStyle]="{'width': porcentajeAsignados.toFixed(0) + '%' }"></div>
+      </div>
+    </app-card>
+  </div>
+
+  <div class="col-md-12 col-xl-3" [attr.id-elemento]="1">
+    <app-card [hidHeader]="true">
+      <h6 class="mb-4">TOTAL AGENDADAS</h6>
+      <div class="row d-flex align-items-center">
+        <div class="col-9">
+          <h3 class="f-w-300 d-flex align-items-center m-b-0">
+            <i class="feather icon-arrow-up text-c-green f-30 m-r-10"></i>{{ reportePreferente?.totalAgendados }}
+          </h3>
+        </div>
+        <div class="col-3 text-right"><p class="m-b-0">{{ porcentajeAgendados.toFixed(0) }}%</p></div>
+      </div>
+      <div class="progress m-t-30" style="height: 7px;">
+        <div class="progress-bar progress-c-theme" role="progressbar" [ngStyle]="{'width': porcentajeAgendados.toFixed(0) + '%' }"></div>
+      </div>
+    </app-card>
+  </div>
+</div>
+
+
+<div class="row">
+    <!-- EVOLUCION DE CITAS -->
+    <div class="col-md-12 col-xl-3" [attr.id-elemento]="1">
+        <app-card [hidHeader]="true">
+            <h6 class="mb-4">CITAS ATENDIDAS</h6>
+            <div class="row d-flex align-items-center">
+                <div class="col-9">
+                    <h3 class="f-w-300 d-flex align-items-center m-b-0">
+                        <i class="feather icon-arrow-up text-c-green f-30 m-r-10"></i>{{ resumenCantidad.citasAtendidas }}
+                    </h3>
+                </div>
+                <div class="col-3 text-right"><p class="m-b-0">{{ resumenCantidad.porcentajeCitasRealizadas.toFixed(0) }}%</p></div>
+            </div>
+            <div class="progress m-t-30" style="height: 7px;">
+                <div class="progress-bar progress-c-theme" role="progressbar" [ngStyle]="{'width': resumenCantidad.porcentajeCitasRealizadas + '%' }"></div>
+            </div>
+        </app-card>
+    </div>
+
+    <div class="col-md-12 col-xl-3" [attr.id-elemento]="1">
+        <app-card [hidHeader]="true">
+            <h6 class="mb-4">CITAS CANCELADAS</h6>
+            <div class="row d-flex align-items-center">
+                <div class="col-9"><h3 class="f-w-300 d-flex align-items-center  m-b-0"><i class="feather icon-arrow-down text-c-red f-30 m-r-10"></i>{{ resumenCantidad.citasCanceladas }}</h3></div>
+                <div class="col-3 text-right"><p class="m-b-0">{{ resumenCantidad.porcentajeCitasCanceladas.toFixed(0) }}%</p></div>
+            </div>
+            <div class="progress m-t-30" style="height: 7px;">
+                <div class="progress-bar progress-c-theme2" role="progressbar" [ngStyle]="{'width': resumenCantidad.porcentajeCitasCanceladas + '%' }"></div>
+            </div>
+        </app-card>
+    </div>
+
+    <div class="col-md-12 col-xl-3" [attr.id-elemento]="1">
+        <app-card [hidHeader]="true">
+            <h6 class="mb-4">CITAS PENDIENTES</h6>
+            <div class="row d-flex align-items-center">
+                <div class="col-9"><h3 class="f-w-300 d-flex align-items-center m-b-0"><i class="feather icon-arrow-right text-c-yellow f-30 m-r-10"></i>{{ resumenCantidad.citasPendientes }}</h3></div>
+                <div class="col-3 text-right"><p class="m-b-0">{{ resumenCantidad.porcentajeCitasPendientes.toFixed(0) }}%</p></div>
+            </div>
+            <div class="progress m-t-30" style="height: 7px;">
+                <div class="progress-bar progress-c-theme" role="progressbar" [ngStyle]="{'width': resumenCantidad.porcentajeCitasPendientes + '%' }"></div>
+            </div>
+        </app-card>
+    </div>
+
+    <div class="col-md-12 col-xl-3" [attr.id-elemento]="1">
+        <app-card [hidHeader]="true">
+            <h6 class="mb-4">TOTAL DE CITAS</h6>
+            <div class="row d-flex align-items-center">
+                <div class="col-9"><h3 class="f-w-300 d-flex align-items-center  m-b-0"><i class="feather icon-arrow-up text-c-green f-30 m-r-10"></i>{{ resumenCantidad.citasTotales }}</h3></div>
+                <div class="col-3 text-right"><p class="m-b-0">100%</p></div>
+            </div>
+            <div class="progress m-t-30" style="height: 7px;">
+                <div class="progress-bar progress-c-theme" role="progressbar" style="width: 100%;"></div>
+            </div>
+        </app-card>
+    </div>
+
+
+
+    <!-- ULTIMAS ATENDIDAS -->
+    <div class="col-xl-6 col-md-6" [attr.id-elemento]="2">
+        <app-card cardTitle="CITAS RECIENTES" cardTitle2="" cardClass="Recent-Users" blockClass="px-0 py-3">
+                  <div class="table table-sm-responsive">
+                      <table class="table table-sm table-hover">
+                          <tbody *ngIf="ultimasAtendidas != null">
+
+                              <tr class="unread" *ngFor="let ultima of ultimasAtendidas">
+                                  <td><img class="rounded-circle" style="width:40px;" [src]="ultima.foto"></td>
+                                  <td>
+                                      <h6 class="mb-1">{{ ultima.nombres }}</h6>
+                                      <p class="m-0">{{ ultima.apellidos }}</p>
+                                  </td>
+                                  <td>
+                                      <h6 class="text-muted"><i class="fas fa-circle text-c-green f-10 m-r-15"></i>{{ ultima.horaInicio }}</h6>
+                                  </td>
+                                  <td><a class="label theme-bg text-white f-12" (click)="mostrarPerfil(ultima.idCliente)">Perfil</a></td>
+                              </tr>
+
+                          </tbody>
+                      </table>
+                  </div>
+        </app-card>
+    </div>
+
+    <!-- CITAS SEMANAL -->
+    <div class="col-xl-6 col-md-6" [attr.id-elemento]="3">
+        <app-card cardTitle="CITAS ATENDIDAS (SEMANA ACTUAL)" [options]="true" cardClass="bg-c-blue" titleClass="text-white">
+            <div class="earning-text mb-0">
+                <h3 class="mb-2 text-white f-w-300">{{ cantidadCitasSemanal }}<i class="feather icon-arrow-up teal accent-3"></i></h3>
+                <span class="text-uppercase text-white d-block">Efectivas</span>
+            </div>
+            <div id="widget-line-chart" class="WidgetlineChart2 ChartShadow" style="height:180px;"></div>
+        </app-card>
+
+<!--        <div class="card" style="border-radius: 5px;">-->
+<!--            <div class="card-block">-->
+<!--                <div class="row d-flex align-items-center">-->
+<!--                    <div class="col">-->
+<!--                        <div>dsdd</div>-->
+<!--                        <div id="fb-root"></div>-->
+<!--                        <script async defer crossorigin="anonymous" src="https://connect.facebook.net/es_ES/sdk.js#xfbml=1&version=v10.0" nonce="tYxBopP9"></script>-->
+
+<!--                        <div class="fb-page" data-href="https://www.facebook.com/depilacionlaserlima/" data-tabs="biografia" data-width="" data-height="" data-small-header="false" data-adapt-container-width="true" data-hide-cover="true" data-show-facepile="true"><blockquote cite="https://www.facebook.com/depilacionlaserlima/" class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/depilacionlaserlima/">Depilzone</a></blockquote></div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+    </div>
+
+    <!-- GRAFICO DE CITAS ANUAL -->
+    <div class="col-xl-8 col-md-8" [attr.id-elemento]="4">
+        <app-card cardTitle="CITAS CONFIRMADAS VS ATENDIDAS"
+            cardTitle2="Representa las citas que deberían atenderse en el mes VS las atendidas del mes."
+            cardClass="Recent-Users" blockClass="px-0 py-3">
+                <div id="line-area2" class="lineAreaDashboard" style="height:225px;"></div>
+        </app-card>
+    </div>
+
+    <!-- RANKING ZONAS DIARIAS -->
+    <div class="col-xl-4 col-md-4" [attr.id-elemento]="5">
+        <app-card cardTitle="RANKING ZONAS (DIARIO)" cardClass="Recent-Users" blockClass="px-0 py-3">
+            <div class="card-block pl-0 pr-0 pb-2">
+                <div id="bar-chart" class="ChartShadow BarChart" style="height:225px;"></div>
+            </div>
+        </app-card>
+    </div>
+
+
+    <!-- GRAFICO DE CITAS MENSUAL -->
+    <div class="col-xl-12 col-md-6" [attr.id-elemento]="6">
+        <app-card cardTitle="CITAS AGENDADAS" cardTitle2="Representa las citas que se registraron en determinado día.">
+            <div class="reply-price">
+                <h3 id="titulo-mes-anio"></h3>
+                <span id="dia-inicio-termino" class="text-uppercase"></span>
+            </div>
+            <div id="bar-chart1" class="ChartShadow BarChart barChart1" style="height:270px;"></div>
+        </app-card>
+    </div>
+</div>
+</ng-container>
+
+
+<!-- Menu Movil -->
+<div class="float-menu">            
+  <button *ngIf="citaSelected && citaSelected.idTipoComprobante !== 2" type="button" mat-fab class="my-color_gradient"   [placement]="'bottom'" ngbTooltip="Imprimir Resumen"   (click)= "imprimirResumen(true)">
+    <i class="fa fa-print doc-icon"></i>
+  </button>
+
+  <button *ngIf="citaSelected?.pagado && citaSelected.idTipoComprobante === 2" id="btnImpTicket1" mat-fab type="button" class="my-color_gradient"   [placement]="'bottom'" ngbTooltip="Imprimir ticket"   (click)= "imprimirTicket(true)">                    
+    <i class="fa fa-print doc-icon"></i>         
+  </button>
+
+  <button [disabled]="botonComprobanteDeshabilitado" *ngIf="citaSelected && !citaSelected.pagado" id="btnComprobante1" mat-fab type="button" class="my-color_gradient" [placement]="'bottom'" ngbTooltip="Emitir Comprobante" (click)= "citaComprobante(modalComprobante)">   
+    <i class="fas fa-file-invoice doc-icon"> </i>
+  </button>
+
+  <button *ngIf="citaSelected" mat-fab class="my-color_gradient" (click)="citaVisualizar()">
+    <mat-icon>visibility</mat-icon>
+  </button>
+  <button *ngIf="citaSelected" mat-fab class="my-color_gradient" (click)="citaEditar()">
+    <mat-icon>draw</mat-icon>
+  </button>
+
+  <button *ngIf="citaSelected && citaSelected.idEstado !== 7" id="btnImpTicket1" mat-fab type="button" class="my-color_gradient"   [placement]="'bottom'" ngbTooltip="Atender cita"   (click)= "citaAtender();cerrarOpciones();">
+    <mat-icon>check</mat-icon>
+  </button>      
+
+  <button mat-fab class="my-color_gradient" (click)="verOpciones()">
+    <mat-icon>more_vert</mat-icon>
+  </button>
+
+
+
+</div>
+<ng-template let-bottomSheetRef="bottomSheetRef" #menuMovil>
+  <div class="_content" >
+    <div class="_header">
+      <div class="px-4 pt-4 text-center">
+        <span class="d-inline-block topline"></span>
+        <p class="text-center text-white _title lead">Opciones</p>
+      </div>
+      <mat-divider class=""></mat-divider>
+    </div>
+
+    <mat-nav-list class="pt-0">
+      <!-- <a mat-list-item (click)= "obtenerCitas();cerrarOpciones();">
+        <i class="mat-list-icon mdi mdi-sync"></i>
+        <span class=" opt-title">Actualizar lista</span>
+      </a> -->
+      <mat-divider></mat-divider>
+      <a mat-list-item (click)="citaAtender();cerrarOpciones();">
+        <i class="mat-list-icon far fa-hand-point-up"></i>
+        <span class=" opt-title">Atender cita</span>
+      </a>
+      <mat-divider></mat-divider>
+      <a mat-list-item (click)="citaEditar();cerrarOpciones();">
+        <i class="mat-list-icon mdi mdi-square-edit-outline"></i>
+        <span class=" opt-title">Editar cita</span>
+      </a>
+      <mat-divider></mat-divider>
+      <a mat-list-item (click)="citaComprobante(modalComprobante);cerrarOpciones();">
+        <i class="mat-list-icon mdi mdi-receipt"></i>
+        <span class=" opt-title">Emitir Comprobante</span>
+      </a>
+      <mat-divider></mat-divider>
+      <a mat-list-item (click)="imprimirTicket();cerrarOpciones();">
+        <i class="mat-list-icon mdi mdi-printer-outline"></i>
+        <span class=" opt-title">Imprimir Ticket</span>
+      </a>
+      <mat-divider></mat-divider>
+      <a mat-list-item (click)="citaVisualizar();cerrarOpciones();">
+        <i class="mat-list-icon mdi mdi-eye-outline"></i>
+        <span class=" opt-title">Ver datos</span>
+      </a>
+      <mat-divider></mat-divider>
+      <a mat-list-item (click)="modalHistorialClinico(modalHistoriasClinicas);cerrarOpciones();">
+        <i class="mat-list-icon mdi mdi-folder-plus-outline"></i>
+        <span class=" opt-title">Ver Historias Clinicas</span>
+      </a>
+    </mat-nav-list>
+  </div>
+</ng-template>
+

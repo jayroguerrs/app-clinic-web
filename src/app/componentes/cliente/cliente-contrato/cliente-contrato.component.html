@@ -1,0 +1,96 @@
+﻿<form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+  <div class="modal-content">
+    <div class="modal-header card-header">
+      <h5 class="modal-title">Emitir Resumen contrato</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="cerrarModal()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+
+    <div class="modal-body card-body">
+
+      <div class="form-group mb-3">
+        <div class="form-floating">
+          <select class="custom-select" id="idServicio" formControlName="idServicio" [ngClass]="{ 'is-invalid': submitted && f.idServicio.errors }" (change)="searchDocument()">
+<!--            <option value="">...Seleccionar...</option>-->
+            <option *ngFor="let serv of servicios" [value]="serv.id">{{ serv.nombre }}</option>
+          </select>
+          <label for="idServicio">Servicio <span class="text-danger">*</span></label>
+        </div>
+        <div *ngIf="submitted && f.idServicio.errors" class="invalid-feedback d-block">
+          <div *ngIf="f.idServicio.errors.required">Seleccionar un servicio</div>
+        </div>
+      </div>
+
+      <div class="form-floating form-start-icon mb-3">
+        <input id="fecha" type="date" placeholder=" " class="form-control" formControlName="fecha" (change)="searchDocument()" >
+        <label for="fecha">Fecha</label>
+        <span class="icon"><span class="dicon calendar m-auto"></span></span>
+      </div>
+
+      <div class="border rounded legend p-3 mb-3 pt-4" [class.border-danger]="submitted && f.idDocumentos.errors">
+        <label class="text-uppercase font-weight-bold" [class.text-danger]="submitted && f.idDocumentos.errors">Documentos</label>
+        <input type="hidden" formControlName="idDocumentos">
+        <div class="overflow-auto" style="max-height: 200px">
+          <div *ngFor="let document of documentosEncontrados" class="checkbox py-0 checkbox-primary d-block">
+            <input type="checkbox" [id]="'chk-'+document.id" [checked]="isSelect(document)" (change)="selectDocument($event,document)">
+            <label [for]="'chk-'+document.id" class="cr d-inline-flex" ><i class="mdi mdi-file-document-outline"></i>{{ document.nombreDocumento }}</label>
+          </div>
+          <p *ngIf="!documentosEncontrados.length">No se encontraron documentos generados a esa fecha.</p>
+        </div>
+      </div>
+
+      <div class="form-floating mb-3">
+        <div class="textarea">
+          <textarea #observacion id="observacion" class="form-control" maxlength="250" formControlName="observacion" placeholder=" " rows="3"></textarea>
+          <label for="observacion">Observación / Comentario</label>
+        </div>
+        <div class="text-right">{{observacion.value.length}}/250</div>
+      </div>
+
+      <div class="border rounded legend p-3 pt-4">
+        <label class="text-uppercase font-weight-bold">Documentos seleccionados</label>
+        <div class="form-row">
+          <div class="col-12 cold-md-6 col-lg-4 mb-2" *ngFor="let doc of documentosContrato">
+            <div class="border rounded text-center p-2 docPdf h-100 d-flex">
+              <div *ngIf="doc.loading" class="loader m-auto">Loading...</div>
+              <div *ngIf="!doc.loading && !doc.error" class="list-item d-flex flex-row my-auto">
+                <div class="_i d-inline-flex">
+                  <span class="mdi mdi-file-pdf-box h2 text-danger my-auto pr-2"></span>
+                </div>
+                <div class="_t text-left d-inline-flex">
+                  <span class="small my-auto d-block">{{ doc.nombreDocumento }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!--<div class="border rounded legend p-3 mb-3 pt-4">
+        <label class="text-uppercase font-weight-bold">Enviar por correo</label>
+        <div class="form-group d-inline">
+          <div class="radio radio-primary d-inline">
+            <input type="radio" formControlName="enviarCorreo" id="correoSi" value="1" >
+            <label for="correoSi" class="cr">Si</label>
+          </div>
+        </div>
+        <div class="form-group d-inline">
+          <div class="radio radio-primary d-inline">
+            <input type="radio" formControlName="enviarCorreo" id="correoNo" value="0">
+            <label for="correoNo" class="cr">No</label>
+          </div>
+        </div>
+      </div>-->
+
+    </div>
+    <div class="modal-footer card-footer">
+      <div class="form-row float-right">
+        <button [disabled]="!documentosSeleccionados.length" type="button" class="btn btn-outline-secondary" (click)="previsualizarContrato()" ><i class="mdi mdi-eye-outline"></i>Previsualizar</button>
+        <button [disabled]="!documentosSeleccionados.length" type="submit" class="btn btn-outline-primary" ><i class="mdi mdi-content-save-outline"></i>Emitir</button>
+        <button type="reset" class="btn btn-outline-danger" (click)="cerrarModal()"><i class="mdi mdi-cancel"></i>Cancelar</button>
+      </div>
+    </div>
+  </div>
+</form>

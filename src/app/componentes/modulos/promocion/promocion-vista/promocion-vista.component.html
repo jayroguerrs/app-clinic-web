@@ -1,0 +1,170 @@
+<!-- FILTRO GRILLA -->
+<div id="hidden-btn" style="visibility: hidden"></div>
+  <div class="px-0 col-12 sticky-header" stickyClass="header--sticky">
+
+    <app-card cardTitle="PROMOCIÓN" [options]="true" [customHeader]="false" >
+
+      <form>
+        <div class="servicios py-2">
+          <div *ngIf="ldServicios" class="d-flex flex-row">
+            <div class="sk w-250px h-44px mw-100 mx-2 d-block rounded-md"></div>
+            <div class="sk w-250px h-44px mw-100 mx-2 d-block rounded-md"></div>
+            <div class="sk w-250px h-44px mw-100 mx-2 d-block rounded-md"></div>
+            <div class="sk w-250px h-44px mw-100 mx-2 d-block rounded-md"></div>
+          </div>
+
+          <div *ngIf="!ldServicios" class="d-flex flex-row flex-wrap popins">
+            <div *ngFor="let s of servicios" matRipple
+                 class="w-100 max-w-md-100 mx-2 rounded-md _servicio my-ripple-container mb-2"
+                 [ngClass]="{
+                  'max-w-250px': !servicioSelected
+                 }"
+                 [class.mw-100]="servicioIsSelected(s)"
+                 [class.d-none]="!servicioIsSelected(s) && servicioSelected"
+                 [ngbTooltip]="s.nombre"
+                 (click)="evtSeleccionarServicio(s)">
+              <div class="_title">
+                <fontawesome-svg *ngIf="!servicioSelected" icon="folder" [style.color]="s.color" type="regular" [width]="22" [height]="22"></fontawesome-svg>
+                <fontawesome-svg *ngIf="servicioSelected && servicioIsSelected(s)" icon="arrow-left" [style.color]="s.color" type="duotone" [width]="22" [height]="22"></fontawesome-svg>
+                <div class="px-2 text-truncate">{{s.nombre}}</div>
+                <fontawesome-svg icon="ellipsis-vertical" type="duotone" [width]="22" [height]="22"></fontawesome-svg>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+        <div class="p-2">
+          <div *ngIf="servicioSelected" class="position-relative d-flex mb-2">
+            <button matRipple class="d-inline-flex text-dark border border-indigo border-2px text-indigo popins rounded-pill px-4 py-1 mx-auto z-index-2 cursor-pointer shadow-sm position-relative bg-white" (click)="toggle()"> <span class="mr-2">Promociones</span><fontawesome-svg icon="chevron-down" type="regular" [width]="20" [height]="20" [class.fa-rotate-180]="!collapsed"></fontawesome-svg></button>
+            <span class="bg-light h-2px w-100 position-absolute top-0 bottom-0 m-auto left-0"></span>
+          </div>
+
+
+          <div *ngIf="servicioSelected" class="popins overflow-hidden" [@collapse]="collapsed">
+            <div class="py-2">
+              <loader-circle *ngIf="ldPromociones" class="position-relative d-block h-160px"></loader-circle>
+              <div *ngIf="!ldPromociones && promociones.length" class="_promociones d-flex flex-row flex-wrap">
+                <div *ngFor="let p of promociones" matRipple class="mx-2 py-2 px-3 rounded-md cursor-pointer d-inline-flex mb-2"
+                     (click)="obtenerPromocionDetalle(p)"
+                     [class.text-muted]="!p.vigente && !promocionIsSelected(p)"
+                     [class.text-indigo]="p.vigente && !promocionIsSelected(p)"
+                     [class.f-w-500]="p.vigente"
+                     [class.bg-light-indigo]="p.vigente && !promocionIsSelected(p)"
+                     [class.bg-light2]="!p.vigente"
+                     [class.bg-indigo]="promocionIsSelected(p)"
+                     [class.text-white]="promocionIsSelected(p)">
+                  <fontawesome-svg icon="tag"  type="solid" [width]="22" [height]="22" class="mr-2"></fontawesome-svg>
+                  <div>{{ p.descripcion }}</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div *ngIf="promocionSelected" class="bg-light2 rounded-md text-dark text-center py-3 px-3 fs-20px border border-indigo border-2px text-indigo fw-bold">
+            {{ promocionSelected.descripcion }}
+          </div>
+        </div>
+
+
+
+
+      </form>
+    </app-card>
+  </div>
+
+<div class="row">
+  <div class="col-sm-12">
+    <app-card [hidHeader]="true" [options]="false" [customHeader]="false">
+
+      <loader-circle *ngIf="ldDetalles" ></loader-circle>
+
+      <div class="form-row">
+        <div class="form-group col-md-12">
+
+          <table>
+            <thead id="zonaCondicion">
+            <tr>
+              <th>CONDICIONES</th>
+              <th>PERIODO</th>
+              <th>FILTRAR</th>
+            </tr>
+            </thead>
+            <tbody #tbodyCondicion>
+            <tr id="trCondicion">
+              <td>
+                <span *ngIf="loadingCondicionado">Cargando</span>
+                <span *ngIf="!loadingCondicionado">{{ promocionCondicionado?.condicion }}</span>
+              </td>
+              <td style="text-align: center;">
+                <span style="font-weight: bold; color:blue;">{{promocionCondicionado?.periodo }}</span>
+                <br>
+                <span style="font-weight: bold; color:green;">{{promocionCondicionado?.dias }}</span></td>
+              <td style="border: 2px solid #454545;">
+                <input class="text-center" type="text" placeholder="Filrar por zona" [formControl]="filtrarZona"/>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+
+
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-12">
+
+            <div class="column">
+              <h5>PRECIO MUJER</h5>
+              <table>
+                <thead id="zonaMujer">
+                <tr>
+                  <th>ZONA CORPORAL</th>
+                  <!--<th class="precio-base-corto" title="Precio base">PB</th>-->
+                  <th class="precio-base-largo" title="Precio base">Precio Base (S/)</th>
+                  <th *ngFor="let col of columnasPrecioBloque"><span class="rango-sesion">{{ col.columnaBloque }}</span></th>
+                </tr>
+                </thead>
+                <tbody #tbodyMujer>
+                <tr *ngFor="let promoDetalle of _promocionDetallesMujerFilter | async">
+                  <td>{{ promoDetalle.zone }}</td>
+                  <td style="text-align: right;">{{ promoDetalle.price }}</td>
+                  <td *ngFor="let precioBloque of promoDetalle.priceBlocks">
+                    <span style="float:right;">{{precioBloque.price }}</span>
+                    <i class="fas fa-copy" (click)="onClickTemplate($event, promoDetalle.idPromotion)" title="Copiar plantilla"></i>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="column">
+              <h5>PRECIO HOMBRE</h5>
+              <table>
+                <thead id="zonaHombre"><tr>
+                  <th>ZONA CORPORAL</th>
+                  <!--<th class="precio-base-corto" title="Precio base">PB</th>-->
+                  <th class="precio-base-largo" title="Precio base">Precio Base (S/)</th>
+                  <th *ngFor="let col of columnasPrecioBloque"><span class="rango-sesion">{{ col.columnaBloque }}</span></th>
+                </tr></thead>
+                <tbody #tbodyHombre>
+                <tr *ngFor="let promoDetalle of _promocionDetallesHombreFilter | async">
+                  <td>{{ promoDetalle.zone }}</td>
+                  <td style="text-align: right;">{{ promoDetalle.price }}</td>
+                  <td *ngFor="let precioBloque of promoDetalle.priceBlocks">
+                    <span style="float:right;">{{precioBloque.price}}</span>
+                    <i class="fas fa-copy" (click)="clickPlantilla($event, promoDetalle.idPromotion)" title="Copiar plantilla"></i>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+
+        </div>
+      </div>
+    </app-card>
+  </div>
+</div>
+

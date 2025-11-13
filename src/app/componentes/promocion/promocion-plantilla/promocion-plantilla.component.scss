@@ -1,0 +1,46 @@
+ngb-accordion ::ng-deep .card-header {
+  background-color: rgba(49, 177, 49, 0.267);
+  padding: 1px;
+  margin: 1px;
+  border: none;
+}
+ngb-accordion ::ng-deep .card-body {
+  background-color: rgba(49, 177, 49, 0.267);
+  padding: 5px;
+  margin: 1px;
+  border: none;
+}
+
+
+ngb-accordion ::ng-deep .card-header button {
+  width: 100%;
+  text-decoration: none;
+  text-align: left;
+  background-color: rgba(49, 177, 49, 0.267);
+  margin: 0;
+  padding: 0;
+}
+ngb-accordion ::ng-deep .card-header button:focus {
+  box-shadow: none;
+}
+textarea{
+  margin: 0;
+}
+
+
+
+.rTable {
+  display: table;
+  width: 100%;
+  border-radius: 10px;
+}
+.rTableRow {
+  display: table-row;
+}
+.rTableCell, .rTableHead {
+  display: table-cell;
+  padding: 1px 1px;
+  text-align: center;
+  height: 20px;
+  color: black;
+}

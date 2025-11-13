@@ -1,0 +1,5 @@
+<div class="input-group" [ngClass]="class" >
+  <button class="btn btn-icon btn-outline btn-active-color-primary" type="button" (click)="less()"><i class="bi bi-dash fs-1"></i></button>
+  <input type="text" class="form-control" readonly="readonly" [value]="prefix+value+suffix" >
+  <button class="btn btn-icon btn-outline btn-active-color-primary" type="button" (click)="plus()"><i class="bi bi-plus fs-1"></i></button>
+</div>

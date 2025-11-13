@@ -1,0 +1,227 @@
+﻿<!-- SPINNER -->
+<ngx-spinner
+  [template]="rutaImageSpinner">
+  <p style="color: white" > Cargando... </p>
+</ngx-spinner>
+
+<!-- GRILLA -->
+<div class="row">
+
+  <div class="col-12 mb-3 sticky-header" stickyClass="header--sticky">
+    <app-card [options]="false" [customHeader]="false" cardTitle="REPORTE ENCUESTA DE CITAS SEGÚN VARIABLE" cardTitle2="Consulta y genera reporte según la sede, el rango de fecha, la variable de encuesta de las citas">
+
+      <form [formGroup]="formGroup">
+        <div class="form-row">
+
+          <!-- Sede -->
+          <div class="col-12 col-lg-3 mb-3">
+            <div class="form-floating form-start-icon">
+              <select class="custom-select" id="idSede" formControlName="idSede" (change)="obtenerReporte()">
+                <option value="0">{{ loadingSede ? 'Cargando...' : 'Todos' }}</option>
+                <option *ngFor="let sede of collectionSede" [value]="sede.id">{{ sede.nombre }}</option>
+              </select>
+              <label for="idSede">Sede</label>
+              <span class="icon">
+                <span class="dicon sede m-auto"></span>
+              </span>
+            </div>
+          </div>
+          <!-- Fecha desde -->
+          <div class="col-12 col-lg-3 mb-3">
+            <div class="form-floating form-start-icon">
+              <input id="fdesde" type="date" placeholder=" " class="form-control" formControlName="fdesde" (change)="obtenerReporte()" [ngClass]="{ 'is-invalid': submitted && f.fdesde.errors }">
+              <label for="fdesde">Fecha desde</label>
+              <span class="icon"><span class="dicon calendar m-auto"></span></span>
+            </div>
+          </div>
+          <!-- Fecha hasta -->
+          <div class="col-12 col-lg-3 mb-3">
+            <div class="form-floating form-start-icon">
+              <input id="fhasta" type="date" placeholder=" " class="form-control" formControlName="fhasta" (change)="obtenerReporte()" [ngClass]="{ 'is-invalid': submitted && f.fhasta.errors }">
+              <label for="fhasta">Fecha hasta</label>
+              <span class="icon"><span class="dicon calendar m-auto"></span></span>
+            </div>
+          </div>
+          <!-- Estado -->
+          <div class="col-12 col-lg-3 mb-3">
+            <div class="form-floating form-start-icon">
+              <select class="custom-select" id="idVariable" formControlName="idVariable" (change)="obtenerReporte()">
+                <option value="0">{{ loadingTipo ? 'Cargando...' : 'Todos' }}</option>
+                <option *ngFor="let tipo of collectionTipos" [value]="tipo.id">{{ tipo.nombre }}</option>
+              </select>
+              <label for="idVariable">Variable de medición</label>
+              <span class="icon"><span class="dicon alert-circle m-auto"></span></span>
+            </div>
+          </div>
+          <!-- Servicio -->
+          <div class="col-12 col-lg-3 mb-3">
+            <div class="form-floating form-start-icon">
+              <select class="custom-select" id="idServicio" formControlName="idServicio" (change)="obtenerReporte()">
+                <option value="0">{{ loadingServicios ? 'Cargando...' : 'Todos' }}</option>
+                <option *ngFor="let s of servicios" [value]="s.id">{{ s.nombre }}</option>
+              </select>
+              <label for="idServicio">Servicio</label>
+              <span class="icon"><span class="dicon alert-circle m-auto"></span></span>
+            </div>
+          </div>
+        </div>
+      </form>
+
+    </app-card>
+  </div>
+
+  <div class="col-12 col-md-6 col-lg-3 mb-4">
+    <div class="card card-customer rounded mb-0 h-100">
+      <div class="card-block my-auto">
+        <div class="row align-items-center justify-content-center">
+          <div class="col">
+            <h2 class="mb-2 f-w-300 mb-0">{{ citasAtendidas }}</h2>
+            <h5 class="text-dark mb-0">Citas atendidas</h5>
+          </div>
+          <div class="col-auto">
+            <i class="feather icon-calendar f-30 text-white theme-bg"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-md-6 col-lg-3 mb-4">
+    <div class="card card-customer rounded mb-0 h-100">
+      <div class="card-block my-auto">
+        <div class="row align-items-center justify-content-center">
+          <div class="col">
+            <h2 class="mb-2 f-w-300 mb-0">{{ citasPagadas }}</h2>
+            <h5 class="text-dark mb-0">Citas pagadas</h5>
+          </div>
+          <div class="col-auto">
+            <i class="feather icon-dollar-sign f-30 text-white theme-bg"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-md-6 col-lg-3 mb-4">
+    <div class="card rounded mb-0 h-100">
+      <div class="card-block ticket-visitor">
+        <h3 class="mb-2">{{ citasSatisfaccion }}</h3>
+        <h5 class="text-dark f-w-400 mb-4">Encuestadas Satisfacción</h5>
+        <div class="progress">
+          <div class="progress-bar progress-c-theme2" role="progressbar" [style]="'width: ${((citasSatisfaccion*100)/citasAtendidas).toFixed(1)}%;height:13px;'" >{{citasSatisfaccion ? ((citasSatisfaccion*100)/citasAtendidas).toFixed(1) : 0 }}%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-md-6 col-lg-3 mb-4">
+    <div class="card rounded mb-0 h-100">
+      <div class="card-block ticket-visitor">
+        <h3 class="mb-2">{{ citasEfectividad }}</h3>
+        <h5 class="text-dark f-w-400 mb-4">Encuestadas Efectividad</h5>
+        <div class="progress">
+          <div class="progress-bar progress-c-theme2" role="progressbar"  [style]="'width: ${((citasEfectividad*100)/citasAtendidas).toFixed(1)}%;height:13px;'" >{{citasEfectividad ? ((citasEfectividad*100)/citasAtendidas).toFixed(1) : 0 }}%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 mb-3">
+    <app-card [options]="false" [customHeader]="false" cardTitle="Resultado general">
+      <div class="row">
+        <div class="col-12">
+          <table datatable [dtOptions]="dtResponsiveOptions" class="table table-sm table-hover table-caja display compact">
+          </table>
+        </div>
+      </div>
+    </app-card>
+  </div>
+
+  <div class="col-12 mb-3">
+    <app-card [options]="false" [customHeader]="false" cardTitle="Gráfico general">
+      <div class="rounded border p-2">
+        <h5 class="text-center mb-0">Reporte general de todas las sedes</h5>
+        <p class="text-center">{{ titleChart }}</p>
+        <div id="chartGeneral"></div>
+      </div>
+    </app-card>
+  </div>
+
+  <div class="col-12">
+    <app-card [options]="false" [customHeader]="false" cardTitle="Gráfico general de citas según el estado por sede">
+      <div class="row mx-0">
+
+        <!-- Mega plaza -->
+        <div class="col-12 mb-3">
+          <div class="border rounded p-2">
+            <h5 class="text-center mb-0">Mega Plaza</h5>
+            <p class="text-center">{{ titleChart }}</p>
+
+            <div class="row">
+              <div class="col-12 col-lg-6">
+                <div id="megaPlazaEstadosChart"></div>
+              </div>
+              <div class="col-12 col-lg-6">
+                <div id="megaPlazaMotivosChart"></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <!-- Pueblo libre -->
+        <div class="col-12 mb-3">
+          <div class="border rounded p-2">
+            <h5 class="text-center mb-0">Pueblo Libre</h5>
+            <p class="text-center">{{ titleChart }}</p>
+
+            <div class="row">
+              <div class="col-12 col-lg-6">
+                <div id="puebloLibreEstadosChart"></div>
+              </div>
+              <div class="col-12 col-lg-6">
+                <div id="puebloLibreMotivosChart"></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <!-- San Borja -->
+        <div class="col-12 mb-3">
+          <div class="border rounded p-2">
+            <h5 class="text-center mb-0">San Borja</h5>
+            <p class="text-center">{{ titleChart }}</p>
+
+            <div class="row">
+              <div class="col-12 col-lg-6">
+                <div id="sanBorjaEstadosChart"></div>
+              </div>
+              <div class="col-12 col-lg-6">
+                <div id="sanBorjaMotivosChart"></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </app-card>
+  </div>
+</div>
+
+
+
+
+<!-- BOTONERA ESCRITORIO -->
+<ul class="botonera-escritorio">
+  <li>
+    <button type="button" class="btn btn-primary btn-icon"   [placement]="'bottom'" ngbTooltip="Buscar" (click)= "obtenerReporte()"><i class="mdi mdi-magnify"></i></button>
+    <button *ngIf="this.accTot || this.accExc" type="button" class="btn btn-secondary btn-icon" [disabled]="!collectionData.length"   [placement]="'bottom'" ngbTooltip="Exportar" (click)= "exportarExcel()"><i class="mdi mdi-file-excel-outline"></i></button>
+  </li>
+</ul>
+
+<!-- BOTONERA MOVIL -->
+<app-float-button>
+  <button class="child" mat-fab color="primary"  matTooltip="Buscar" matTooltipPosition="left" (click)="obtenerReporte()">
+    <i class="mdi mdi-search-web"></i>
+  </button>
+  <button class="child" mat-fab color="primary" [disabled]="!collectionData.length"  matTooltip="Exportar" matTooltipPosition="left" (click)="exportarExcel()">
+    <mat-icon>file_download</mat-icon>
+  </button>
+</app-float-button>

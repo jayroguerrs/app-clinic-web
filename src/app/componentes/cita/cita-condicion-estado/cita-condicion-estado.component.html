@@ -1,0 +1,75 @@
+    <div class="modal-content">
+        <div class="modal-header card-header">
+            <h5 class="modal-title">Cambiar Estado de la Cita</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="modal.close(false)">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+        <div class="modal-body card-body">
+          <form [formGroup]="formGroup">
+            <div class="container-fluid">
+              <div class="row">
+                  <div class="col-12 text-center mb-3 lead">
+                      ¿Esta seguro de cambiar el estado de la cita a: <span class="font-weight-bold">{{ estadoString }}</span>?
+                  </div>
+              </div>
+
+              <div class="row" *ngIf="datosCita.idEstado == CitaEstado.ANULADA">
+                <div class="col-12">
+                  <div class="form-floating">
+                    <select class="form-select text-uppercase" id="motivos" formControlName="motivos" >
+                      <option value="">{{ loadingMotivos ? 'Cargando...' : '--Seleccionar un motivo--' }}</option>
+                      <option *ngFor="let motivo of motivos" [value]="motivo.id">{{ motivo.motivo }}</option>
+                    </select>
+                    <label for="motivos">Indique el motivo</label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row" *ngIf="datosCita.idEstado == CitaEstado.CANCELADA">
+                <div class="col-12">
+                  <div class="form-floating">
+                    <select class="form-select text-uppercase" id="motivos" formControlName="motivos" >
+                      <option value="">{{ loadingMotivos ? 'Cargando...' : '--Seleccionar un motivo--' }}</option>
+                      <option *ngFor="let motivo of motivos" [value]="motivo.id">{{ motivo.motivo }}</option>
+                    </select>
+                    <label for="motivos">Indique el motivo</label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row" *ngIf="datosCita.idEstado == CitaEstado.NOLLAMAR">
+                <div class="col-12">
+                  <div class="form-floating">
+                    <select class="form-select text-uppercase" id="motivos" formControlName="motivos" >
+                      <option value="">{{ loadingMotivos ? 'Cargando...' : '--Seleccionar un motivo--' }}</option>
+                      <option *ngFor="let motivo of motivos" [value]="motivo.id">{{ motivo.motivo }}</option>
+                    </select>
+                    <label for="motivos">Indique el motivo</label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row" *ngIf="datosCita.idEstado == CitaEstado.PENDIENTE">
+                <div class="col-12">
+                  <div class="form-floating">
+                    <select class="form-select text-uppercase" id="motivos" formControlName="motivos" >
+                      <option value="">{{ loadingMotivos ? 'Cargando...' : '--Seleccionar un motivo--' }}</option>
+                      <option class="text-uppercase" *ngFor="let motivo of motivos" [value]="motivo.id">{{ motivo.motivo }}</option>
+                    </select>
+                    <label for="motivos">Indique el motivo</label>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer card-footer">
+            <div class="form-row float-right">
+                <button type="button" (click)="cambiarEstado()" class="btn btn-primary"><i class="feather icon-check"></i><span>Si</span></button>
+                <button type="button" (click)="cerrarModal()" class="btn btn-danger" ><i class="feather icon-slash"></i>No</button>
+            </div>
+        </div>
+   </div>

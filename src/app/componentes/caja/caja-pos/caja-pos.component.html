@@ -1,0 +1,88 @@
+<div class="row">
+    <!-- FILTRO -->
+    <div class="col-sm-12">
+      <app-card [options]="false" cardTitle="CARGA DATOS POS" >            
+        <div class="row">
+        </div>
+      </app-card>
+    </div>
+    <!-- GRILLA -->
+    <div class="col-sm-12">      
+      <app-card [options]="false" [hidHeader]="true" cardTitle="LISTADO DE REGISTROS">
+
+        <form [formGroup]="frmPos">
+          <div class="form-row">
+        
+            <div class="mb-2 col-12 col-lg-2">
+              <div class="form-floating form-start-icon">
+                <select class="custom-select" id="idSede" formControlName="idSede" (change)="onSedeChange($event)">
+                  <option value="" selected> -- SELECCIONE --</option>
+                  <option value="0">{{ loadingSede ? 'Cargando...' : 'TODOS' }}</option>
+                  <option *ngFor="let sede of collectionSede" [value]="sede.id">{{ sede.nombre }}</option>
+                </select>
+                <label for="idSede">Sede</label>
+                <span class="icon"><span class="dicon sede m-auto"></span></span>
+              </div>  
+            </div>           
+  
+            <div *ngIf="this.frmPos.get('idSede')?.value !== ''" class="mb-2 col-12 col-lg-2">
+              <div class="form-floating form-start-icon">
+                <select 
+                  class="custom-select" 
+                  id="idTpRepo" 
+                  formControlName="tpRepo" 
+                  (change)="onTipRepoChange($event)">
+                  <option value="" selected> -- SELECCIONE --</option>
+                  <option *ngFor="let item of lstTipRepo" [value]="item.CodRepo">{{ item.DesRepo }}</option>                  
+                </select>
+                <label for="idTpRepo">Tipo de Reporte</label>
+                <span class="icon"><span class="fa-2x fa-solid fa-file-excel m-auto"></span></span>
+              </div>  
+            </div> 
+
+            <!-- <div class="form-group col-md-4">
+              <div class="form-floating form-start-icon">
+                <input id="filtroFechaInicio" type="date" placeholder=" " class="form-control" min="2020-01-01" max="2030-12-31">
+                <label for="filtroFechaInicio">Fecha de Carga</label>
+                <span class="icon"><span class="dicon calendar m-auto"></span></span>
+              </div>
+            </div> -->
+                          
+            <input 
+                *ngIf="this.frmPos.get('tpRepo')?.value !== ''"
+                #fileInput 
+                id="file" 
+                type="file"
+                class="btn btn-primary"                                                                
+                (change)="onFileSelected($event, fileInput)" 
+                accept=".xlsx, .xls"/>            
+            <button 
+                id="btnProcesar" 
+                type="button" 
+                class="btn btn-secondary btn-icon" 
+                [placement]="'bottom'" 
+                ngbTooltip="Procesar" 
+                (click)= "onProcesar()"
+                [disabled]="!frmPos.valid">
+              <i class="mdi mdi-sync"></i>
+            </button>  
+          </div>
+        </form>
+
+        <div *ngIf="this.data !== null">
+          <div class="table-container">          
+          <div class="table table-sm-responsive">
+                <table id="dtDataPos" class="table table-sm table-hover display compact">
+                </table>
+              </div>            
+            </div>  
+        </div>      
+        <div *ngIf="this.data === null">
+            <div class="alert alert-info" role="alert">
+                Sin registros
+              </div>
+        </div>  
+      </app-card>
+    </div>
+  </div>
+  

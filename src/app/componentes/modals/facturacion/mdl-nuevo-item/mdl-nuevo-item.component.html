@@ -1,0 +1,127 @@
+﻿<form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+  <div class="scard bg-transparent popins h-100">
+        <div class="modal-header card-header bg-gradient">
+            <h5 class="card-title text-white f-w-500 m-0">Nuevo Item</h5>
+            <button type="button" class="btn sbtn btn-sm btn-icon btn-active-color-primary h-auto w-auto p-0" (click)="cerrarModal(false)">
+              <span class="svg-icon svg-icon-1 text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor"></rect>
+                  <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor"></rect>
+                </svg>
+              </span>
+            </button>
+        </div>
+        <div class="card-body bg-white p-4 overflow-auto depilform position-relative" [ngClass]="{'overflow-auto': !loading, 'overflow-hidden': loading}">
+
+          <loader-circle *ngIf="loading"></loader-circle>
+
+            <div class="px-4">
+              <div class="form-row">
+                <p class="fs-16px fw-semibold text-dark">Datos nuevo item</p>
+
+                <!-- Servicio -->
+                <div class="mb-2 col-md-12">
+                  <label for="idServicio" class="form-label mb-0 text-secondary f-w-500">Servicio</label>
+                  <select #idServicio id="idServicio" formControlName="idServicio" class="form-indigo form-select form-indigo form-select-sm f-w-500">
+                    <option value="" >--Seleccionar--</option>
+                    <option *ngFor="let s of servicios" [value]="s.id" selected>{{ s.nombre }}</option>
+                  </select>
+                </div>
+
+                <!-- Tecnologia -->
+                <div *ngIf="idServicio.value == servicioEnum.CORPORAL360" class="mb-2 col-12">
+                  <label for="idTecnologia" class="form-label mb-0 text-secondary f-w-500">Tecnología</label>
+                  <select id="idTecnologia" formControlName="idTecnologia" class="form-indigo form-select form-indigo form-select-sm" [ngClass]="{'invalid': submittedNuevoItem && this.f.idTecnologia.errors}" >
+                    <option value="" >--Seleccionar--</option>
+                    <option *ngFor="let t of tecnologias" [value]="t.id" >{{ t.nombre }}</option>
+                  </select>
+                </div>
+
+                <!-- Zona -->
+                <div class="mb-2 col-12">
+                  <label for="idZona" class="form-label mb-0 text-secondary f-w-500">Zona Corporal</label>
+                  <ng-select #selectZona id="idZona" class="w-100" [ngClass]="{'invalid': submittedNuevoItem && this.f.idZona.errors}" [items]="zonasCorporales" [searchable]="false" bindLabel="descripcion" bindValue="id" placeholder="--Seleccionar--" formControlName="idZona">
+                    <ng-template ng-header-tmp>
+                      <input type="text" class="form-control form-control-sm border rounded text-indigo fs-13px" (input)="selectZona.filter($event.target.value)"/>
+                    </ng-template>
+                  </ng-select>
+                </div>
+
+                <!-- Promocion -->
+                <div class="mb-2 col-12">
+                  <label for="idPromocionPrecio" class="form-label mb-0 text-secondary f-w-500">Promoción</label>
+                  <ng-select #idPromocionPrecio id="idPromocionPrecio" class="w-100" [ngClass]="{'invalid': submittedNuevoItem && this.f.idPromocionPrecio.errors}" [items]="promocionesZona" [searchable]="false" bindLabel="nombre" bindValue="idPromocionPrecio" placeholder="--Seleccionar--" formControlName="idPromocionPrecio">
+                    <ng-template ng-header-tmp>
+                      <input type="text" class="form-control form-control-sm border rounded text-indigo fs-13px" (input)="idPromocionPrecio.filter($event.target.value)"/>
+                    </ng-template>
+                  </ng-select>
+                </div>
+
+                <!-- Sesion -->
+                <div class="mb-2 col-12 col-md-4">
+                  <label for="sesion" class="form-label mb-0 text-secondary f-w-500">Sesión</label>
+                  <input id="sesion" formControlName="sesion" [ngClass]="{'invalid': submittedNuevoItem && this.f.sesion.errors}" type="number" min="1" step="1" class="form-indigo form-control form-indigo form-control-sm" value="1" >
+                </div>
+                <!-- Precio -->
+                <div class="mb-2 col-12 col-md-4" lang="en-US">
+                  <label for="precio" class="form-label mb-0 text-secondary f-w-500">Precio</label>
+                  <input id="precio" formControlName="precio" [ngClass]="{'invalid': submittedNuevoItem && this.f.precio.errors}" type="number" inputmode="decimal" min="0" step="0.01" class="form-indigo form-control form-indigo form-control-sm fw-semibold text-right" value="0.00" >
+                </div>
+                <!-- Minutos -->
+                <div class="mb-2 col-12 col-md-4">
+                  <label for="minutos" class="form-label mb-0 text-secondary f-w-500">Minutos</label>
+                  <input id="minutos" formControlName="minutos" [ngClass]="{'invalid': submittedNuevoItem && this.f.minutos.errors}" type="number" min="0" step="1" class="form-indigo form-control form-indigo form-control-sm fw-semibold" value="0" >
+                </div>
+
+                <!-- Agendado por -->
+                <div *ngIf="primeraSesion" class="mb-2 col-12 col-lg-6">
+                  <label for="agendadoPor" class="form-label mb-0 text-secondary f-w-500">Agendado por:</label>
+                  <input type="hidden" formControlName="idAgendadoPor" >
+                  <div class="position-relative">
+                    <input id="agendadoPor" formControlName="agendadoPor" class="form-indigo cursor-pointer form-control form-indigo form-control-sm pe-35px" [ngClass]="{'invalid': submittedNuevoItem && this.f.idAgendadoPor.errors}" placeholder="Seleccionar personal"  readonly (click)="evtSeleccionarUsuario()">
+                    <fontawesome-svg class="position-absolute top-0 bottom-0 m-auto end-0 me-10px text-muted no-pointer-events" icon="user-vneck" type="light" [width]="20" [height]="20" ></fontawesome-svg>
+                  </div>
+                </div>
+
+                <!-- Origen Medio Contacto  -->
+                <div *ngIf="primeraSesion" class="mb-2 col-12 col-lg-6">
+                  <label for="idOrigenMedio" class="form-label mb-0 text-secondary f-w-500">Origen</label>
+                  <select id="idOrigenMedio" formControlName="idOrigenMedio" class="form-indigo form-select form-indigo form-select-sm" [ngClass]="{'invalid': submittedNuevoItem && this.f.idOrigenMedio.errors}">
+                    <option value="" selected>--Seleccionar--</option>
+                    <option *ngFor="let mc of mediosContacto" [value]="mc.id">{{ mc.nombre }}</option>
+                  </select>
+                </div>
+
+                <!-- Retoque tratamiento -->
+                <div class="mb-2 mb-md-0 col-6">
+                  <label class="form-label mb-0 text-secondary f-w-500">Retoque Tratamiento?</label>
+                  <div class="form-check form-switch form-check-custom form-check-solid me-10">
+                    <input #retroceso class="form-check-input w-60px cursor-pointer" type="checkbox" id="retroceso" formControlName="retroceso"/>
+                    <label class="form-check-label text-indigo" for="retroceso">
+                      {{ retroceso.checked ? 'Si' : 'No' }}
+                    </label>
+                  </div>
+                </div>
+
+                <!-- Pago web -->
+                <div class="mb-2 mb-md-0 col-6">
+                  <label class="form-label mb-0 text-secondary f-w-500">Pago por la web?</label>
+                  <div class="form-check form-switch form-check-custom form-check-solid me-10">
+                    <input #pagoWeb class="form-check-input w-60px cursor-pointer" type="checkbox" id="pagoWeb" formControlName="pagoWeb"/>
+                    <label class="form-check-label text-indigo" for="pagoWeb">
+                      {{ pagoWeb.checked ? 'Si' : 'No' }}
+                    </label>
+                  </div>
+                </div>
+              </div>
+             </div>
+        </div>
+        <div class="modal-footer bg-white py-3">
+            <div class="form-row float-right">
+              <button matRipple [disabled]="loading" type="button" class="btn sbtn btn-light mr-2" (click)="cerrarModal()">Cancelar</button>
+              <button matRipple type="submit" class="btn sbtn btn-primary shadow btn-shadow-primary" >Agregar</button>
+            </div>
+        </div>
+
+    </div>
+</form>

@@ -1,0 +1,211 @@
+﻿<!-- SPINNER -->
+<ngx-spinner
+  [template]="rutaImageSpinner">
+  <p style="color: white" > Cargando... </p>
+</ngx-spinner>
+
+
+<!-- BARRA TITULO -->
+<div class="col-sm-12">
+  <app-card [options]="false" [hidBlock]="true" cardTitle="PLANTILLA DE DOCUMENTO: {{ accion }}">
+  </app-card>
+</div>
+
+
+<div class="mx-0">
+  <form [formGroup]="formGroup">
+  <div class="row mx-0" >
+      <div class="col-sm-3">
+        <app-card [options]="false" cardTitle="Datos del documento">
+
+          <div *ngIf="!loading && acciones.ver" class="py-3">
+            <div  class="border rounded legend p-3 mb-3">
+              <label>Documento</label>
+              {{ plantilla.documento.nombre }}
+            </div>
+            <div  class="border rounded legend p-3 mb-3">
+              <label>Versión</label>
+              {{ plantilla.version }}
+            </div>
+            <div  class="border rounded legend p-3 mb-3">
+              <label>Estado</label>
+              {{ plantilla.estado ? 'Habilitado' : 'Deshabilitado' }}
+            </div>
+            <div  class="border rounded legend p-3 mb-3">
+              <label>Fecha Registro</label>
+              {{ plantilla.fechaRegistra | date: 'dd-MM-yyyy'}}
+            </div>
+          </div>
+
+          <div *ngIf="loading && (acciones.editar || acciones.ver)" class="py-3">
+            <div class="sk block control mb-3"></div>
+            <div class="sk block control mb-3"></div>
+            <div class="sk block control mb-3"></div>
+            <div class="sk block control"></div>
+          </div>
+
+          <div *ngIf=" !loading && (acciones.editar || acciones.crear)" class="py-3">
+            <div class="form-group">
+              <div class="form-floating">
+                <select #idDocumentoTipo class="custom-select" id="idDocumentoTipo" formControlName="idDocumentoTipo" (change)="mostrarTags(idDocumentoTipo.value)" [ngClass]="{ 'is-invalid': submitted && f.idDocumentoTipo.errors }">
+                  <option selected value=''>...Seleccionar...</option>
+                  <option *ngFor="let tipoDocumento of documentos" [value]="tipoDocumento.id" >{{ tipoDocumento.nombre }}</option>
+                </select>
+                <label for="idDocumentoTipo">Tipo de documento</label>
+              </div>
+              <div *ngIf="submitted && f.idDocumentoTipo.errors" class="invalid-feedback d-block">
+                <div *ngIf="f.idDocumentoTipo.errors.required">Seleccionar un tipo de documento</div>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="form-floating " >
+                <input type="number" min="1" step="1" class="form-control" id="version" formControlName="version" placeholder=" " [ngClass]="{ 'is-invalid': submitted && f.version.errors }">
+                <label for="version">Versión</label>
+              </div>
+              <div *ngIf="submitted && f.version.errors" class="invalid-feedback d-block">
+                <div *ngIf="f.version.errors.required">Ingresar la versión de la plantilla</div>
+              </div>
+            </div>
+            <div  class="border rounded legend p-2 px-3 mb-3">
+              <label>Estado</label>
+
+              <div>
+                <label>Desactivado&nbsp;<div class="switch switch-info d-inline m-r-10"><input type="checkbox" formControlName="estado" id="switch-i-1" /><label for="switch-i-1" class="cr"></label></div> Activado</label>
+              </div>
+            </div>
+            <div  class="border rounded legend p-3 mb-3">
+              <label>Fecha Registro</label>
+              {{ plantilla?.fechaRegistra | date: 'dd-MM-yyyy'}}
+            </div>
+
+            <hr>
+            <div  class="border rounded legend p-3 mb-3">
+              <label>Margenes</label>
+              <div class="form-row">
+                <div class="text-center col">
+                  <i class="feather icon-arrow-left"></i>
+                  <input class="form-control form-control-sm" type="number" min="0" formControlName="mLeft" (change)="updateMargins()">
+                  <span>px</span>
+                </div>
+                <div class="text-center col">
+                  <i class="feather icon-arrow-up"></i>
+                  <input class="form-control form-control-sm" type="number" min="0" formControlName="mTop" (change)="updateMargins()">
+                  <span>px</span>
+                </div>
+                <div class="text-center col">
+                  <i class="feather icon-arrow-right"></i>
+                  <input class="form-control form-control-sm" type="number" min="0" formControlName="mRight" (change)="updateMargins()">
+                  <span>px</span>
+                </div>
+                <div class="text-center col">
+                  <i class="feather icon-arrow-down"></i>
+                  <input class="form-control form-control-sm" type="number" min="0" formControlName="mBottom" (change)="updateMargins()">
+                  <span>px</span>
+                </div>
+              </div>
+              <div *ngIf="submitted && (f.mLeft.errors || f.mTop.errors || f.mRight.errors || f.mBottom.errors)" class="invalid-feedback d-block">
+                <div *ngIf="f.mLeft.errors.required || f.mTop.errors.required || f.mRight.errors.required || f.mBottom.errors.required">Ingresar los margenes de la hoja de plantilla</div>
+              </div>
+            </div>
+          </div>
+
+        </app-card>
+
+        <app-card cardTitle="Vista Previa" options="true" fullscreen="true">
+          <div *ngIf="loading" class="py-3">
+            <div class="sk block" style="height: 400px"></div>
+          </div>
+          <iframe *ngIf="!loading" #viewPdf style="width:100%; height: 500px" src="" allowfullscreen> </iframe>
+        </app-card>
+
+      </div>
+      <div class="col-sm-9">
+        <app-card [options]="false" cardTitle="Contenido del documento">
+          <div class="page">
+            <div *ngIf="loading && (acciones.editar || acciones.ver)" class="py-3">
+              <div class="sk block mb-3"></div>
+              <div class="sk block mb-3"></div>
+              <div class="sk block mb-3"></div>
+              <div class="sk block"></div>
+            </div>
+            <!--<textarea *ngIf="!loading" [froalaEditor]="options" formControlName="plantilla"  [(froalaModel)]="html" (ngModelChange)="changePage($event)"></textarea>
+            <div [froalaView]="formGroup.controls.plantilla.value"></div>-->
+            <!--<div *ngFor="let block of page.blocks" class="border p-3">
+              {{ block.text }}
+            </div>-->
+
+            <ckeditor *ngIf="!loading" [disabled]="acciones.ver"  [editor]="Editor" [config]="config" formControlName="plantilla" (ready)="onReady($event)" ></ckeditor>
+
+          </div>
+        </app-card>
+
+        <app-card [options]="false" cardTitle="Etiquetas">
+          <div class="mb-3">
+            <span *ngFor="let t of tagSelected" class="mr-1 rounded-pill btn-sm mb-1 d-inline-block" [class.btn-light]="!t.status" [class.btn-primary]="t.status" >{{t.value}}</span>
+          </div>
+        </app-card>
+      </div>
+  </div>
+  </form>
+</div>
+
+
+
+<!-- BOTONERA ESCRITORIO -->
+<ul class="botonera-escritorio">
+  <li>
+    <button type="button" class="btn btn-primary btn-icon" [placement]="'bottom'" ngbTooltip="Ver lista" (click)="onList()"><i class="mdi mdi-format-list-checkbox"></i></button>
+    <button *ngIf="!acciones.ver" type="button" class="btn btn-primary btn-icon" [placement]="'bottom'" ngbTooltip="Guardar" (click)="onSubmit()"><i class="mdi mdi-content-save-outline"></i></button>
+    <button *ngIf="acciones.ver && (this.accTot || this.accCrud || this.accUpdate)" type="button" class="btn btn-warning btn-icon" [placement]="'bottom'" ngbTooltip="Editar" (click)="onEdit()"><i class="mdi mdi-square-edit-outline"></i></button>
+    <button *ngIf="acciones.editar || acciones.crear" type="button" class="btn btn-secondary btn-icon" [placement]="'bottom'" ngbTooltip="Actualizar Vista Previa" (click)="onViewPdf()"><i class="mdi mdi-file-refresh-outline"></i></button>
+  </li>
+</ul>
+
+
+<!-- Menu Movil -->
+<div class="float-menu">
+  <button mat-fab color="primary" class="bg-primary" (click)="verOpciones()">
+    <mat-icon>settings</mat-icon>
+  </button>
+</div>
+<ng-template let-bottomSheetRef="bottomSheetRef" #menuMovil >
+  <div class="_content" >
+    <div class="_header">
+      <div class="px-4 pt-4 text-center">
+        <span class="d-inline-block topline"></span>
+        <p class="text-center text-white _title lead">Opciones</p>
+      </div>
+      <mat-divider class=""></mat-divider>
+    </div>
+
+    <mat-nav-list class="pt-0">
+      <a mat-list-item (click)= "onList();cerrarOpciones();">
+        <i class="mat-list-icon mdi mdi-format-list-checkbox"></i>
+        <span class=" opt-title">Ver lista</span>
+      </a>
+      <mat-divider></mat-divider>
+      <a mat-list-item (click)="onSubmit();cerrarOpciones();">
+        <i class="mat-list-icon mdi mdi-plus-circle-outline"></i>
+        <span class=" opt-title">Guardar</span>
+      </a>
+      <mat-divider></mat-divider>
+      <div *ngIf="parametros.accion === 0">
+        <a mat-list-item (click)="onEdit();cerrarOpciones();">
+          <i class="mat-list-icon mdi mdi-square-edit-outline"></i>
+          <span class=" opt-title">Editar</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+      <div *ngIf="acciones.editar || acciones.crear">
+        <a mat-list-item (click)="onViewPdf();cerrarOpciones();">
+          <i class="mat-list-icon mdi mdi-eye-outline"></i>
+          <span class=" opt-title">Actualizar vista previa</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+
+    </mat-nav-list>
+  </div>
+</ng-template>
+
+

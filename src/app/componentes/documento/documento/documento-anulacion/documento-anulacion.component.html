@@ -1,0 +1,66 @@
+<!-- FORMULARIO -->
+<form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+  <div class="modal-content">
+    <div class="modal-header card-header">
+      <h5 class="modal-title">ANULACIÓN DE DOCUMENTOS</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="cerrarModal()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body card-body">
+      <div class="mb-3">
+        <div class="form-floating">
+          <select #motivo class="custom-select" id="motivo" formControlName="motivo" [ngClass]="{ 'is-invalid': submitted && f.motivo.errors }">
+            <option selected value=''>...Seleccionar...</option>
+            <option value="Cambio de promoción">Cambio de promoción</option>
+            <option value="Retroceso">Retroceso</option>
+            <option value="Otro">Otro</option>
+          </select>
+          <label for="motivo">Motivo</label>
+        </div>
+        <div *ngIf="submitted && f.motivo.errors" class="invalid-feedback d-block">
+          <div *ngIf="f.motivo.errors.required">Seleccionar un motivo</div>
+        </div>
+      </div>
+
+      <div *ngIf="motivo.value === 'Otro'" class="mb-3">
+        <div >
+          <div  class="form-floating">
+            <textarea class="form-control" id="otro" placeholder=" " formControlName="otro" maxlength="150" [ngClass]="{ 'is-invalid': submitted && formGroup.hasError('requiredOtherValue') }"></textarea>
+            <label for="otro">Escribir otro motivo aquí...</label>
+          </div>
+        </div>
+        <div *ngIf="submitted && formGroup.hasError('requiredOtherValue')" class="invalid-feedback d-block">
+          <div >Escribir el motivo de anulación</div>
+        </div>
+      </div>
+
+      <!-- ENVIAR DOCUMENTO -->
+      <div class="border rounded legend p-3 pt-4">
+        <label class="text-uppercase font-weight-bold">Enviar por correo</label>
+        <div class="form-group d-inline">
+          <div class="radio radio-primary d-inline">
+            <input type="radio" formControlName="enviarCorreo" id="correoSi" value="1" >
+            <label for="correoSi" class="cr">Si</label>
+          </div>
+        </div>
+        <div class="form-group d-inline">
+          <div class="radio radio-primary d-inline">
+            <input type="radio" formControlName="enviarCorreo" id="correoNo" value="0">
+            <label for="correoNo" class="cr">No</label>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+    <div class="modal-footer card-footer">
+      <div class="form-row float-right">
+        <button type="submit" class="btn btn-outline-primary" ><i
+          class="feather icon-check"></i>Anular Documento</button>
+        <button type="reset" class="btn btn-outline-danger" (click)="cerrarModal()"><i
+          class="feather icon-slash"></i>Cancelar</button>
+      </div>
+    </div>
+  </div>
+</form>

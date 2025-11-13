@@ -1,0 +1,41 @@
+    <form [formGroup]="frmClienteFirma">
+        <div class="modal-content">
+            <div class="modal-header card-header">
+                <h5 class="modal-title">Firma de cliente</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="modal.close()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body card-body">
+
+                <div class="form-row">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Firma </span>
+                    </div>
+                    <!-- <canvas id="miCanvas" 
+                            (mousemove)="captureEvents($event.target)"
+                            style="border: 1px solid #000; width: 600px; height: 400px;"></canvas> -->
+                    
+                </div>
+                <!-- <button (click)="getImagen()">Copiar</button> -->
+                <!-- <button (click)="limpiarCanvas()">Limpiar</button> -->
+                <!-- <button (click)="cargarImage()">Cargar</button> -->
+                <div class="modal-footer card-footer">
+
+                    <div class="form-row float-right">
+                        <button type="button" class="btn btn-outline-primary">
+                            <i class="feather icon-save"></i>
+                            Guardar
+                        </button>
+
+                        <button type="button"  class="btn btn-outline-danger" (click)="cerrarModal()">
+                            <i class="feather icon-slash"></i>
+                            Cancelar
+                        </button>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </form>

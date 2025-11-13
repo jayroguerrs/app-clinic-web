@@ -1,0 +1,6 @@
+<div [class]="'row row-cols-'+column+' g-3'">
+  <div *ngFor="let item of items">
+    <button type="button" class="w-100" [class.active]="isActive(item.value)" [ngClass]="class"  (click)="select(item.value)" [ngbTooltip]="item.value + ' minutos'"
+            placement="top">{{ item.text }}</button>
+  </div>
+</div>

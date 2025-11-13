@@ -1,0 +1,17 @@
+<div class="row">
+  <!-- FILTRO -->
+  <div (click)="verPorsupervisados()" class="col-sm-12">
+    <app-card cardTitle="LISTADO DE USUARIOS A TU CARGO" [options]="false" [hidBlock]="true">
+    </app-card>
+  </div>
+
+  <!-- GRILLA -->
+  <div class="col-sm-12">
+    <app-card [options]="false" [hidHeader]="true">
+      <div class="table table-sm-responsive">
+        <table datatable [dtOptions]="dtResponsiveOptions" class="table table-sm table-hover table-usuario display compact">
+        </table>
+      </div>
+    </app-card>
+  </div>
+</div>

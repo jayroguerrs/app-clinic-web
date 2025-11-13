@@ -1,0 +1,77 @@
+<ng-template #modalClienteListado let-modal let-close="close">
+    <app-cliente-listado-modal
+    [modal]="modalClienteListadoRef">
+    </app-cliente-listado-modal>
+</ng-template>
+
+<ng-template #modalHistoriaClinicaDatos let-modal let-close="close">
+    <app-historia-clinica-datos
+    [modal]="modalHistoriaClinicaDatosRef">
+    </app-historia-clinica-datos>
+</ng-template>
+
+<!-- FILTRO -->
+<div class="col-sm-12">
+    <app-card [options]="false" cardTitle="EVOLUCIÓN DEL TRATAMIENTO DE DEPILACIÓN LÁSER">
+
+        <form  [formGroup]="frmHistoriaClinica">
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <div class="input-group input-group-sm">
+                        <div class="input-group-prepend"><span class="input-group-text">Nombre del paciente </span></div>
+                        <input type="text" class="form-control" formControlName="nombrePaciente" aria-span="Default" aria-describedby="inputGroup-sizing-default">
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+                    <div class="input-group input-group-sm">
+                        <div class="input-group-prepend"><span class="input-group-text">Números del paciente  </span></div>
+                        <input type="text" class="form-control" formControlName="numerosTelefonicos" aria-span="Default" aria-describedby="inputGroup-sizing-default">
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <div class="input-group input-group-sm">
+                        <div class="input-group-prepend"><span class="input-group-text">Edad</span></div>
+                        <input type="text" class="form-control" formControlName="edadPaciente" aria-span="Default" aria-describedby="inputGroup-sizing-default">
+                    </div>
+                </div>
+                <div class="form-group col-md-8">
+                    <div class="input-group input-group-sm">
+                        <div class="input-group-prepend"><span class="input-group-text">Foto Tipo Piel</span></div>
+                        <input type="text" class="form-control" formControlName="fotoTipoPiel" aria-span="Default" aria-describedby="inputGroup-sizing-default">
+                    </div>
+                </div>
+
+            </div>
+
+        </form>
+    </app-card>
+</div>
+
+<!-- GRILLA -->
+<div class="col-sm-12">
+    <app-card [options]="false" [customHeader]="true">
+        <div class="table table-sm-responsive"><table datatable [dtOptions]="dtResponsiveOptions" class="table table-sm table-hover table-historia-clinica"></table></div>
+    </app-card>
+
+</div>
+
+
+<!-- BOTONERA ESCRITORIO -->
+<ul class="botonera-escritorio">
+    <li>
+        <button id="btnBuscar"      type="button" class="btn btn-primary btn-icon"      [placement]="'top'" ngbTooltip="Buscar paciente" (click)="mostrarListaCliente(modalClienteListado)" ><i class="fa fa-search"></i></button>
+        <button *ngIf="this.accTot || this.accExc" id='export-excel1'  type="button" class="btn btn-primary btn-icon"      [placement]="'top'" ngbTooltip="Excel"><i class="fa fa-file-excel"></i></button>
+        <button *ngIf="this.accTot || this.accCrud || this.accCreate" id='btnAgregar'     type="button" class="btn btn-primary btn-icon"      [placement]="'top'" ngbTooltip="Agregar historia" (click)="agregarHistorial(modalHistoriaClinicaDatos)"><i class="fa fa-plus"></i></button>
+    </li>
+</ul>
+
+
+<!-- BOTONERA MOVIL -->
+<a class="botonera-movil"><i class="fa fa-cog"></i></a>
+<ul class="ul-botonera-movil">
+    <li id='export-excel2'><a><i class="fa fa-file-excel"></i></a></li>
+</ul>

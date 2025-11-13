@@ -1,0 +1,190 @@
+<!-- MODAL SEDE DATOS -->
+<!-- <ng-template #modalSedeDatos let-modal let-close="close">
+    <app-sede-datos [idSede]="idSede" [modal]="modalSedeDatosRef"></app-sede-datos>
+</ng-template> -->
+
+
+
+<!-- FILTRO GRILLA -->
+<div class="row">
+  <div class="col-sm-12">
+    <app-card [options]="false" cardTitle="TICKET: BUSCAR" [customHeader]="false">
+      <form  [formGroup]="frmFiltroTicket">
+
+        <div class="form-row">
+
+          <div class="col-lg-3 mb-3">
+            <div class="form-floating form-start-icon">
+              <select class="custom-select" id="idSede" formControlName="idSede" (change)="ticketListar()">
+                <option value="0">Todos</option>
+                <option *ngFor="let sede of maestroSede" [value]="sede.idSede">{{ sede.nombre }}</option>
+              </select>
+              <label for="idSede">Sede</label>
+              <span class="icon"><span class="dicon sede m-auto"></span></span>
+            </div>
+          </div>
+
+          <div class="col-lg-3 mb-3">
+            <div class="form-floating form-start-icon">
+              <input id="filterDesde" type="date" placeholder=" " class="form-control" formControlName="filterDesde" >
+              <label for="filterDesde">Fecha desde</label>
+              <span class="icon"><span class="dicon calendar m-auto"></span></span>
+            </div>
+          </div>
+
+          <div class="col-lg-3 mb-3">
+            <div class="form-floating form-start-icon">
+              <input id="filterHasta" type="date" placeholder=" " class="form-control" formControlName="filterHasta" >
+              <label for="filterHasta">Fecha hasta</label>
+              <span class="icon"><span class="dicon calendar m-auto"></span></span>
+            </div>
+          </div>
+
+        </div>
+      </form>
+    </app-card>
+  </div>
+</div>
+
+
+<!-- RESUMEN -->
+<!-- GRILLA RESUMEN-->
+
+<div class="form-row">
+  <div class="col-12 col-lg-3 mb-3 mb-lg-0">
+    <div class="card card-customer rounded mb-0">
+      <div class="card-block">
+        <div class="row align-items-center justify-content-center">
+          <div class="col">
+            <h3 class="f-w-300">{{ numTickets }}</h3>
+            <h5 class="text-muted mb-0">Tickets</h5>
+          </div>
+          <div class="col-auto">
+            <i class="mdi mdi-tag-text-outline f-30 text-white theme-bg"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-lg-3 mb-3 mb-lg-0">
+    <div class="card card-customer rounded mb-0">
+      <div class="card-block">
+        <div class="row align-items-center justify-content-center">
+          <div class="col">
+            <h3 class="f-w-300">{{ totalTickets }}</h3>
+            <h5 class="text-muted mb-0">Monto total</h5>
+          </div>
+          <div class="col-auto">
+            <i class="mdi mdi-cash-check f-30 text-white theme-bg"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-lg-3 mb-3 mb-lg-0">
+    <div class="card card-customer rounded mb-0">
+      <div class="card-block">
+        <div class="row align-items-center justify-content-center">
+          <div class="col">
+            <h3 class="f-w-300">{{ ticketsOK }}</h3>
+            <h5 class="text-muted mb-0">Activos</h5>
+          </div>
+          <div class="col-auto">
+            <i class="mdi mdi-check-all f-30 text-white theme-bg-green"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-lg-3">
+    <div class="card card-customer rounded">
+      <div class="card-block">
+        <div class="row align-items-center justify-content-center">
+          <div class="col">
+            <h3 class="f-w-300">{{ ticketsBAD }}</h3>
+            <h5 class="text-muted mb-0">Anulados</h5>
+          </div>
+          <div class="col-auto">
+            <i class="mdi mdi-cancel f-30 text-white theme-bg-red"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- GRILLA -->
+<div class="row popins">
+  <div class="col-sm-12">
+    <app-card [options]="false" [customHeader]="false" [hidHeader]="true">
+      <div class="table table-sm-responsive">
+        <table datatable [dtOptions]="dtResponsiveOptions" class="table table-sm table-hover table-ticket display compact popins"></table>
+      </div>
+    </app-card>
+  </div>
+</div>
+
+<!-- BOTONERA ESCRITORIO -->
+<ul class="botonera-escritorio">
+  <li>
+      <button id="btnListar1" type="button" class="btn btn-primary btn-icon" [placement]="'bottom'" ngbTooltip="Actualizar" (click)="ticketListar()"><i class="mdi mdi-sync"></i></button>
+      <button *ngIf="selected" type="button" class="btn btn-primary btn-icon" [placement]="'bottom'" ngbTooltip="Ver Ticket" (click)="verTicket()"><i class="mdi mdi-eye-outline"></i></button>
+      <button *ngIf="selected && ticketSelected.idEstado !== 29 && (usuarioActual.idperfil === TipoPerfil.SA  || usuarioActual.idperfil === TipoPerfil.SISTEMAS || usuarioActual.idperfil === TipoPerfil.ADMINISTRADOR || usuarioActual.idperfil === TipoPerfil.SUPERVISOR )" type="button" class="btn btn-danger btn-icon" [placement]="'bottom'" ngbTooltip="Anular" (click)="ticketAnular()"><i class="mdi mdi-cancel"></i></button>
+      <button *ngIf="this.numTickets && this.accTot || this.accExc" type="button" class="btn btn-secondary btn-icon" [placement]="'bottom'" ngbTooltip="Exportar" (click)="exportarTabla()"><i class="mdi mdi-file-excel-outline"></i></button>
+  </li>
+</ul>
+
+<!-- Menu Movil -->
+<div class="float-menu">
+  <button mat-fab color="primary" class="bg-primary" (click)="verOpciones()">
+    <mat-icon>settings</mat-icon>
+  </button>
+</div>
+<ng-template let-bottomSheetRef="bottomSheetRef" #menuMovil >
+  <div class="_content" >
+    <div class="_header">
+      <div class="px-4 pt-4 text-center">
+        <span class="d-inline-block topline"></span>
+        <p class="text-center text-white _title lead">Opciones</p>
+      </div>
+      <mat-divider class=""></mat-divider>
+    </div>
+
+    <mat-nav-list class="pt-0">
+      <div>
+        <a mat-list-item (click)= "ticketListar();cerrarOpciones();">
+          <i class="mat-list-icon mdi mdi-sync"></i>
+          <span class=" opt-title">Actualizar</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+      <div *ngIf="selected">
+        <a mat-list-item (click)= "verTicket();cerrarOpciones();">
+          <i class="mat-list-icon mdi mdi-eye-outline"></i>
+          <span class=" opt-title">Ver ticket</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+      <div *ngIf="selected && ticketSelected.idEstado !== 29 && (usuarioActual.idperfil === TipoPerfil.SA  || usuarioActual.idperfil === TipoPerfil.SISTEMAS || usuarioActual.idperfil === TipoPerfil.ADMINISTRADOR)">
+        <a mat-list-item (click)= "ticketAnular();cerrarOpciones();">
+          <i class="mat-list-icon mdi mdi-cancel"></i>
+          <span class=" opt-title">Anular</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+      <div *ngIf="numTickets">
+        <a mat-list-item (click)= "exportarTabla();cerrarOpciones();">
+          <i class="mat-list-icon mdi mdi-file-excel-outline"></i>
+          <span class=" opt-title">Exportar excel</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+
+    </mat-nav-list>
+  </div>
+</ng-template>
+
+
+
+

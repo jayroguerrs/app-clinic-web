@@ -1,0 +1,43 @@
+﻿<form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+  <div class="modal-content">
+    <div class="modal-header card-header">
+      <h5 class="modal-title">Generar historia clinica</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="cerrarModal()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+
+    <div class="modal-body card-body">
+
+      <div class="form-floating form-start-icon mb-3">
+        <input id="fecha" type="date" placeholder=" " class="form-control" formControlName="fecha" [max]="datePipe.transform(today,'yyyy-MM-dd')" >
+        <label for="fecha">Fecha</label>
+        <span class="icon"><span class="dicon calendar m-auto"></span></span>
+      </div>
+
+
+      <!--<div class="border rounded legend p-3 mb-3 pt-4">
+        <label class="text-uppercase font-weight-bold">Enviar por correo</label>
+        <div class="form-group d-inline">
+          <div class="radio radio-primary d-inline">
+            <input type="radio" formControlName="enviarCorreo" id="correoSi" value="1" >
+            <label for="correoSi" class="cr">Si</label>
+          </div>
+        </div>
+        <div class="form-group d-inline">
+          <div class="radio radio-primary d-inline">
+            <input type="radio" formControlName="enviarCorreo" id="correoNo" value="0">
+            <label for="correoNo" class="cr">No</label>
+          </div>
+        </div>
+      </div>-->
+
+    </div>
+    <div class="modal-footer card-footer">
+      <div class="form-row float-right">
+        <button type="submit" class="btn btn-outline-primary" ><i class="feather icon-save"></i>Guardar</button>
+        <button type="reset" class="btn btn-outline-danger" (click)="cerrarModal()"><i class="feather icon-slash"></i>Cancelar</button>
+      </div>
+    </div>
+  </div>
+</form>

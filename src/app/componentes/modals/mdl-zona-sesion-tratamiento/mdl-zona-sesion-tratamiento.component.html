@@ -1,0 +1,63 @@
+﻿<div class="modal-content">
+    <div class="modal-header card-header bg-gradient">
+      <h5 class="card-title text-white f-w-500 m-0">Sesión / Tratamientos</h5>
+      <button type="button" class="btn sbtn btn-sm btn-icon btn-active-color-primary h-auto w-auto p-0" (click)="cerrarModal(false)">
+            <span class="svg-icon svg-icon-1 text-white">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor"></rect>
+                <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor"></rect>
+              </svg>
+            </span>
+      </button>
+    </div>
+    <div class="modal-body card-body p-4 bg-light">
+
+        <h4 class="fw-bold">{{ Zona.descripcion }}</h4>
+
+        <form [formGroup]="formGroup" (ngSubmit)="evtOnAdd()">
+          <div class="input-group input-group-sm mb-3 d-inline-flex max-w-200px bg-transparent">
+            <select class="form-control rounded-left form-indigo rounded-start-15px" formControlName="sesion">
+              <option *ngFor="let m of utilsService.counter(15); let i = index" [value]="i+1" [disabled]="hasSelect(i+1)">Sesión {{ i+1 }}</option>
+            </select>
+            <button type="submit" class="sbtn btn-sm btn-indigo rounded-left-0 rounded-end-15px">Agregar</button>
+          </div>
+        </form>
+
+        <div class="mt-2 depilform">
+          <ng-container *ngIf="ldZonaTratamientos">
+            <div *ngFor="let i of utilsService.counter(5)" class="rounded-15px bg-light-indigo px-2 pl-3 py-2">
+              <div class="d-flex flex-row align-items-center mb-2">
+                <div class="sk d-block rounded w-80px h-15px"></div>
+                <div class="ml-auto sk d-block rounded w-25px h-35px"></div>
+              </div>
+              <div class="d-inline-flex">
+                <div *ngFor="let i of utilsService.counter(4)" class="sk d-block rounded-2px w-100px h-18px mr-1"></div>
+              </div>
+            </div>
+          </ng-container>
+
+          <ng-container *ngIf="!ldZonaTratamientos">
+            <div *ngFor="let item of collection; let i = index" class="bg-white shadow border border-2px border-indigo-medium rounded-15px px-2 pl-3 py-2" [class.mb-2]="i !== (collection.length-1)">
+            <div class="d-flex flex-row align-items-center mb-2">
+              <h5 class="fs-14px f-w-500 text-gray-800 mb-0">Sesión {{ item.sesion }}</h5>
+              <button tabindex="-1" matRipple [ngbTooltip]="'Quitar'" class=" sbtn ml-auto btn-light-danger p-2" (click)="evtRemoveItem(i)"><i class="fa-light fa-trash-can"></i></button>
+            </div>
+
+            <span class="text-gray-600 f-w-500 fs-12px">Tratamientos</span>
+            <ng-select #selectZona  class="w-100"  [items]="tratamientos" [searchable]="true" bindLabel="nombre" bindValue="id" placeholder="--Seleccionar--"  [(ngModel)]="item.idTratamientos" [multiple]="true"></ng-select>
+            <span class="d-block fs-10px mt-1 text-right">Actualizado por {{ item.usuarioRegistro }} | {{ item.fechaRegistro | date : 'dd/MM/yyyy hh:mm' }}</span>
+          </div>
+          </ng-container>
+
+        </div>
+
+    </div>
+
+    <div class="modal-footer bg-white py-3">
+      <div class="form-row float-right">
+        <button matRipple [disabled]="loading" type="reset" class="btn sbtn btn-light mr-2" (click)="cerrarModal()">Cancelar</button>
+        <button matRipple type="submit" class="btn sbtn btn-primary shadow btn-shadow-primary" (click)="onSubmit()">Guardar</button>
+      </div>
+    </div>
+
+</div>

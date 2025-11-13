@@ -1,0 +1,70 @@
+.filas {
+    border: 0px solid pink;
+}
+.horaDetalle {
+    font-size: 10px;
+}
+.horaPuntual {
+    font-size: 16px;
+}
+
+.ajuste {
+    padding-left: 0;
+    display: flex;
+    align-items: center;
+}
+
+#agendaCabecera {
+    padding-left: 0;
+    font-size: 9px;
+    background-color: black;
+    color: white;
+    font-weight: bold;
+}
+
+.con-hover:hover {
+    background-color: #6c757d;
+    color: white;
+}
+
+
+//estilo de botones de maquina
+.m-t-30 {
+    margin-top: 0px;
+}
+.m-b-20 {
+    margin-bottom: 0px;
+}
+
+.zona-item{
+  padding: 1rem 2rem;
+  display: block;
+  width: 100%;
+  border-bottom: 1px solid #dee2e6;
+  &:hover,
+  &.select{
+    background: rgba(0, 0, 0, 0.06);
+  }
+
+  &.select{
+    .cbx{
+      &:before{
+        content: "\e92b";
+        font-family: 'feather';
+        color: #00bfff;
+        font-size: 18px;
+        text-align: center;
+        line-height: 1;
+      }
+    }
+  }
+}
+
+.cbx{
+  border: 2px solid #00bfff;
+  border-radius: 4px;
+  height: 22px;
+  width: 22px;
+  background: #fff;
+  display: flex;
+}

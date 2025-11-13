@@ -1,0 +1,119 @@
+.ifoto{
+  background-color: #e9ecef;
+}
+.ifoto, .ifotoadd{
+  width: 50%;
+  height: 100px;
+  cursor: pointer;
+  position: relative;
+
+  img{
+    max-height: 100%;
+    max-width: 100%;
+    display: block;
+    margin: auto;
+  }
+
+  .actionfoto{
+    position: absolute;
+    bottom: 4px;
+    width: 100%;
+    display: flex;
+    button{
+      opacity: .5;
+      &:hover{
+        opacity: 1;
+      }
+    }
+  }
+
+}
+
+.ifotoadd{
+  width: 50%;
+  border-style: dashed !important;
+  border-width: 3px !important;
+  span{
+    background-size: 80px !important;
+    width: 80px !important;
+    height: 80px !important;
+    opacity: .1;
+  }
+  &:before{
+    content: "Seleccionar una imagen";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+  }
+  &.loading{
+    &:before{
+      content: "Cargando imagen..." !important;
+    }
+  }
+}
+
+.accordion{
+  ._title{
+    position: relative;
+    display: flex;
+    padding: 0px 43px 0px .75rem;
+    height: 43px;
+    line-height: 43px;
+    cursor: pointer;
+    span{
+      position: absolute;
+      width: 43px;
+      height: 43px;
+      right: 0;
+      top: 0;
+      opacity: .5;
+    }
+    &[data-collapse="false"]{
+      span{
+        -webkit-transform: rotate(180deg);
+        -moz-transform: rotate(180deg);
+        -ms-transform: rotate(180deg);
+        -o-transform: rotate(180deg);
+        transform: rotate(180deg);
+      }
+    }
+  }
+  ._contain{
+    display: block;
+    overflow: hidden;
+    -webkit-transition: all .5s;
+    -moz-transition: all .5s;
+    -ms-transition: all .5s;
+    -o-transition: all .5s;
+    transition: all .5s;
+    &.collapse{
+      max-height: 0;
+      height: 0;
+    }
+    &.show{
+      max-height: 1000px;
+      height: auto;
+    }
+  }
+}
+
+.image-carousel{
+  max-width: 100%;
+  width: auto;
+  max-height: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+::ng-deep .modal-backdrop.over{
+  z-index: 1072 !important;
+}
+::ng-deep .picsum-img-wrapper{
+  max-height: 1000px;
+  background-color: #3b3b3b;
+  box-sizing: content-box;
+  text-align: center;
+}
+

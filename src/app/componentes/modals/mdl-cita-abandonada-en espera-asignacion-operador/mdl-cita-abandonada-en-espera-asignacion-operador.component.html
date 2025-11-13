@@ -1,0 +1,57 @@
+<form [formGroup]="frmOperadores">
+  <div class="modal-content">
+
+    <div class="modal-header card-header">
+      <h5 class="modal-title">Asignación de citas abandonadas en espera</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="cerrarModal()"><span aria-hidden="true">&times;</span></button>
+    </div>
+
+    <div class="modal-body card-body">
+
+      <!-- GRILLAS -->
+      <div class="col-12">
+        <div class="form-row">
+
+          <div class="form-group col-12" id="div_fechaCita">
+            <div class="input-group input-group-sm d-inline-flex w-auto">
+              <div class="input-group-prepend"><span class="input-group-text">Fecha cita </span></div>
+              <input type="date" class="form-control" id="dtpFechaCita" formControlName="fechaCita" (change)="obtenerCitas()">
+            </div>
+          </div>
+
+          <!-- GRILLA CITA-->
+          <div class="form-group col-sm-12 col-md-12 col-lg-6">
+            <app-card cardTitle="" [hidHeader]="true">
+              <div class="table table-sm-responsive">
+                <table datatable [dtOptions]="dtResponsiveOptionsCita"  class="table table-sm table-hover table-cita display compact">
+                </table>
+              </div>
+            </app-card>
+          </div>
+
+          <!-- GRILLA USUARIOS-->
+          <div class="form-group col-sm-12 col-md-12 col-lg-6">
+            <app-card cardTitle="" [hidHeader]="true">
+              <div class="table table-sm-responsive">
+                <table datatable [dtOptions]="dtResponsiveOptionsUsuario"  class="table table-sm table-hover table-usuario display compact">
+                </table>
+              </div>
+            </app-card>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <div class="modal-footer card-footer">
+
+      <button type="button" class="btn btn-outline-primary" [placement]="'top'" ngbTooltip="Citas seleccionadas" aria-readonly="true"><i class="fa fa-bolt" ></i>{{_citasSeleccionadas.length}}</button>
+      <button type="button" class="btn btn-outline-primary" [placement]="'top'" ngbTooltip="Operadas seleccionadas" aria-readonly="true"><i class="fa fa-users"></i>{{_usuariosSeleccionados.length}}</button>
+
+      <button type="button" class="btn btn-outline-primary" (click)="distribuirCitas()"><i class="fa fa-cog"></i>Distribuir</button>
+      <button type="button" class="btn btn-outline-danger" (click)="grabarDistribuirCitas()"><i class="fa fa-save"></i>Guardar</button>
+
+    </div>
+  </div>
+</form>

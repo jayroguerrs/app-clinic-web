@@ -1,0 +1,135 @@
+﻿<!-- MODAL APERTURA CAJA -->
+<ng-template #modalCajaApertura let-modal let-close="close">
+  <app-caja-apertura
+    [modal] = "modalCajaAperturaRef"
+    [cajaDiario] = "datosCajaDiario"
+    [cajaDescripcion] = "cajaDescripcion">
+  </app-caja-apertura>
+</ng-template>
+
+
+<!-- MODAL CUADRE CAJA -->
+<ng-template #modalCajaCuadre let-modal let-close="close">
+  <app-caja-cuadre
+    [modal] = "modalCajaCuadreRef"
+    [idCaja] = "idCajaSeleccionado"
+    [caja] = "datosCajaDiario.descripcion"
+    [sede] = "datosCajaDiario.sede"
+    [Caja] = "cajaSeleccionado"
+  >
+  </app-caja-cuadre>
+</ng-template>
+
+
+<!-- MODAL CAJA DATOS -->
+<ng-template #modalCajaDatos let-modal let-close="close">
+  <app-caja-datos
+    (eventoCajaListar)="cajaListar()"
+    [idCaja] = "idCajaSeleccionado"
+    [modal] = "modalCajaDatosRef">
+  </app-caja-datos>
+</ng-template>
+
+<!-- SPINNER -->
+<ngx-spinner
+    [template]="rutaImageSpinner">
+    <p style="color: white" > Cargando... </p>
+</ngx-spinner>
+
+<div class="row">
+  <!-- TITULO -->
+  <div class="col-sm-12">
+    <app-card [options]="false" cardTitle="LISTADO DE CAJAS"  [hidBlock]="true">
+    </app-card>
+  </div>
+
+  <!-- GRILLA -->
+  <div class="col-sm-12">
+    <app-card [options]="false" [hidHeader]="true">
+
+      <div class="table table-sm-responsive">
+        <table datatable [dtOptions]="dtResponsiveOptions" class="table table-sm table-hover table-caja display compact">
+        </table>
+      </div>
+
+    </app-card>
+  </div>
+</div>
+
+
+<!-- BOTONERA ESCRITORIO -->
+<ul class="botonera-escritorio">
+  <li>
+    <button type="button" class="btn btn-primary btn-icon" [placement]="'bottom'" ngbTooltip="Listar" (click)= "cajaListar()"><i class="mdi mdi-sync"></i></button>
+    <button *ngIf="this.accTot || this.accCrud || this.accCreate" type="button" class="btn btn-primary btn-icon" [placement]="'bottom'" ngbTooltip="Nuevo" (click)= "cajaNuevo(modalCajaDatos)"><i class="mdi mdi-plus-circle-outline"></i></button>
+    <button *ngIf="selected && (this.accTot || this.accCrud || this.accUpdate)" type="button" class="btn btn-warning btn-icon" [placement]="'bottom'" ngbTooltip="Editar" (click)= "cajaEditar(modalCajaDatos)"><i class="mdi mdi-square-edit-outline"></i></button>
+    <button *ngIf="selected && cajaSeleccionado.apertura === 'Cerrada'" type="button" class="btn btn-primary btn-icon" [placement]="'bottom'" ngbTooltip="Abrir caja" id="btnAbrirCaja1" (click)= "cajaAbrirCerrar(true, modalCajaApertura)"><i class="mdi mdi-toggle-switch-outline"></i></button>
+    <button *ngIf="selected && cajaSeleccionado.apertura !== 'Cerrada'" type="button" class="btn btn-primary btn-icon" [placement]="'bottom'" ngbTooltip="Cerrar caja" id="btnCerrarCaja1" (click)= "cerrarCaja()"><i class="mdi mdi-toggle-switch-off-outline"></i></button>
+    <button *ngIf="selected" type="button" class="btn btn-primary btn-icon" [placement]="'bottom'" ngbTooltip="Cuadre caja" (click)= "cajaCuadre(modalCajaCuadre)"><i class="mdi mdi-cash-register"></i></button>
+  </li>
+</ul>
+
+
+<!-- Menu Movil -->
+<div class="float-menu">
+  <button mat-fab color="primary" class="bg-primary" (click)="verOpciones()">
+    <mat-icon>settings</mat-icon>
+  </button>
+</div>
+<ng-template let-bottomSheetRef="bottomSheetRef" #menuMovil >
+  <div class="_content" >
+    <div class="_header">
+      <div class="px-4 pt-4 text-center">
+        <span class="d-inline-block topline"></span>
+        <p class="text-center text-white _title lead">Opciones</p>
+      </div>
+      <mat-divider class=""></mat-divider>
+    </div>
+
+    <mat-nav-list class="pt-0">
+      <div>
+        <a mat-list-item (click)= "cajaListar();cerrarOpciones();">
+          <i class="mat-list-icon mdi mdi-sync"></i>
+          <span class=" opt-title">Listar</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+      <div>
+        <a *ngIf="this.accTot || this.accCrud || this.accCreate" mat-list-item (click)= "cajaNuevo(modalCajaDatos);cerrarOpciones();">
+          <i class="mat-list-icon mdi mdi-plus-circle-outline"></i>
+          <span class=" opt-title">Nuevo</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+      <div *ngIf="selected && (this.accTot || this.accCrud || this.accUpdate)">
+        <a mat-list-item (click)= "cajaEditar(modalCajaDatos);cerrarOpciones();">
+          <i class="mat-list-icon mdi mdi-square-edit-outline"></i>
+          <span class=" opt-title">Editar</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+      <div *ngIf="selected && cajaSeleccionado.apertura === 'Cerrada'">
+        <a mat-list-item (click)= "cajaAbrirCerrar(true, modalCajaApertura);cerrarOpciones();">
+          <i class="mat-list-icon mdi mdi-toggle-switch-outline"></i>
+          <span class=" opt-title">Abrir caja</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+      <div *ngIf="selected && cajaSeleccionado.apertura !== 'Cerrada'">
+        <a mat-list-item (click)= "cajaAbrirCerrar(false, modalCajaApertura);cerrarOpciones();">
+          <i class="mat-list-icon mdi mdi-toggle-switch-off-outline"></i>
+          <span class=" opt-title">Cerrar caja</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+      <div>
+        <a mat-list-item (click)= "cajaCuadre(modalCajaCuadre);cerrarOpciones();">
+          <i class="mat-list-icon mdi mdi-cash-register"></i>
+          <span class=" opt-title">Caja cuadre</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+
+    </mat-nav-list>
+  </div>
+</ng-template>

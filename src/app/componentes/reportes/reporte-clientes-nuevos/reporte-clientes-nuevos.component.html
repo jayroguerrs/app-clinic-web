@@ -1,0 +1,82 @@
+
+<!-- SPINNER -->
+<ngx-spinner
+  [template]="rutaImageSpinner">
+  <p style="color: white" > Cargando... </p>
+</ngx-spinner>
+
+
+<!-- BOTONERA ESCRITORIO -->
+<ul class="botonera-escritorio">
+  <li>
+    <button id="btnListar1" type="button" class="btn btn-primary btn-icon" [placement]="'bottom'" ngbTooltip="Actualizar"    (click)="evtOnReload()">                   <i class="mdi mdi-magnify"></i></button>
+  </li>
+</ul>
+
+<!-- Menu Movil -->
+<div class="float-menu">
+  <button mat-fab color="primary" class="bg-primary" >
+    <mat-icon>settings</mat-icon>
+  </button>
+</div>
+<ng-template let-bottomSheetRef="bottomSheetRef" #menuMovil >
+  <div class="_content" >
+    <div class="_header">
+      <div class="px-4 pt-4 text-center">
+        <span class="d-inline-block topline"></span>
+        <p class="text-center text-white _title lead">Opciones</p>
+      </div>
+      <mat-divider class=""></mat-divider>
+    </div>
+
+    <mat-nav-list class="pt-0">
+      <a mat-list-item (click)= "cerrarOpciones();">
+        <i class="mat-list-icon mdi mdi-sync"></i>
+        <span class=" opt-title">Actualizar</span>
+      </a>
+    </mat-nav-list>
+  </div>
+</ng-template>
+
+
+
+
+<div class="row">
+  <!-- FILTRO -->
+  <div class="col-sm-12">
+    <app-card [options]="false" cardTitle="REPORTE DE CLIENTES NUEVO">
+
+      <form  [formGroup]="formGroup" class="px-3">
+
+        <div class="form-row">
+          <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+            <div class="form-floating form-start-icon">
+              <input id="fechaDesde" type="date" placeholder=" " class="form-control" formControlName="fechaDesde" >
+              <label for="fechaDesde">Fecha Desde</label>
+              <span class="icon"><i class="mdi mdi-calendar"></i></span>
+            </div>
+          </div>
+
+          <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+            <div class="form-floating form-start-icon">
+              <input id="fechaHasta" type="date" placeholder=" " class="form-control" formControlName="fechaHasta" >
+              <label for="fechaHasta">Fecha Hasta</label>
+              <span class="icon"><i class="mdi mdi-calendar"></i></span>
+            </div>
+          </div>
+
+        </div>
+      </form>
+
+    </app-card>
+  </div>
+
+  <!-- GRILLA LISTADO-->
+  <div class="form-group col-md-12">
+    <div class="table table-sm-responsive"><table datatable [dtOptions]="dtResponsiveOptions" class="table table-sm table-hover table-citasAsignadas display compact"></table></div>
+  </div>
+
+</div>
+
+
+

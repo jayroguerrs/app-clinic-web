@@ -1,0 +1,61 @@
+<div class="scard mb-4 mb-xl-10 popins">
+  <div class="card-header">
+    <div class="card-title m-0">
+      <h3 class="fw-bold m-0">Registro Historial Masivo</h3>
+    </div>
+  </div>
+
+  <div class="card-body">
+
+      <p class="text-dark">Registra de manera masiva el historial de aviso, detalle, nota de varias citas. Seleccione e importe los datos de un archivo <span class="f-w-500">xls. o xlsx.</span></p>
+
+      <div class="bg-light-indigo rounded rounded border border-indigo p-2 h-250px position-relative mb-3">
+        <div class="w-100 d-flex h-100 border border-dashed border-indigo p-4 rounded">
+          <input #inputFile class="file " type="file" placeholder="Seleccionar archivo" (change)="onChangeFile($event)" accept=".xls,.xlsx">
+          <div class="center text-center m-auto no-pointer-events">
+            <p class="d-inline-block lead">Arrastre el archivo aquí o <a class="link-active f-w-500" (click)="inputFile.click()">Busque el archivo</a></p>
+            <p>El archivo excel debe tener las cabeceras <span class="f-w-500 text-indigo">"IDCITA, HISTORIA_NOTA, HISTORIA_AVISO, HISTORIA_DETALLE"</span></p>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="file" class="bg-light-indigo p-2 d-flex flex-row align-items-center rounded mb-3">
+        <div class="w-100 d-inline-block text-indigo">
+          <span class="lead f-w-500 d-block">{{file.name}}</span>
+          <span class="d-block small text-indigo font-italic">Tiene {{registros.length}} registros. {{ mensajeError }}</span>
+        </div>
+        <fontawesome-svg class="mr-2 text-indigo cursor-pointer" icon="xmark" type="regular" title="Quitar" [width]="24" [height]="24" (click)="onRemoveFile()"></fontawesome-svg>
+      </div>
+
+      <div *ngIf="this.accTot || this.accCrud || this.accCreate">
+        <button type="submit" matRipple class="sbtn btn btn-indigo" [disabled]="!file || ldSubmit || error" (click)="onSubmit()">
+          <span class="d-inline-flex align-middle" *ngIf="!ldSubmit">
+            Registrar
+          </span>
+          <span *ngIf="ldSubmit" class="d-flex align-items-center">
+            <fontawesome-svg icon="loader" type="duotone" [width]="20" [height]="20" class="spinner"></fontawesome-svg>
+            <span class="ml-2">Cargando</span>
+          </span>
+        </button>
+      </div>
+
+  </div>
+
+</div>
+
+
+<div class="scard mb-4 mb-xl-10 popins">
+  <div class="card-header" role="button">
+    <div class="card-title m-0 w-100">
+      <h3 class="fw-bold m-0">Historial Registro</h3>
+      <div class="ml-auto">
+        <button *ngIf="this.accTot || this.accCrud || this.accUpdate" matRipple class="btn btn-sm sbtn btn-indigo" (click)="onReloadTable()">Actualizar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-body">
+    <table datatable [dtOptions]="dtResponsiveOptions" class="table table-sm table-sm table-hover table-cliente display compact">
+    </table>
+  </div>
+</div>

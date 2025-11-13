@@ -1,0 +1,23 @@
+<div class="checkbox inline-block">
+  <hr *ngIf="menu.nivel==1"> 
+  <input type="checkbox" name="checkbox-usuario" id={{menu.idMenu}} 
+        [attr.tipoElemento]="1" 
+        [attr.idPerfilDetalle]="0" [attr.idPadre]="menu.idPadre"  
+        [checked]="menu.seleccionado" (change)="menuSeleccionado($event.target)">
+  <label for="{{menu.idMenu}}" class="cr">{{ menu.title }}</label>
+
+  <!-- <button class="btn btn-secondary btn-sm float-right"> Crear</button>
+  <button class="btn btn-secondary btn-sm float-right"> Editar</button>
+  <button class="btn btn-secondary btn-sm float-right"> Eliminar</button>
+  <button class="btn btn-secondary btn-sm float-right"> Export excel</button>
+  <button class="btn btn-secondary btn-sm float-right"> Imprimir</button>
+  <button class="btn btn-secondary btn-sm float-right"> Asignar</button> -->
+</div>
+
+<div *ngIf="menu.children" style="margin-left: 20px;">
+
+  <app-perfil-configuracion-menu 
+      [menu]="subMenu" 
+      *ngFor="let subMenu of menu.children">
+  </app-perfil-configuracion-menu>
+</div>

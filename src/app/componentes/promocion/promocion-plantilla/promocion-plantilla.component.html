@@ -1,0 +1,85 @@
+<!-- SPINNER -->
+<ngx-spinner 
+    [template]="rutaImageSpinner">
+    <p style="color: white" > Cargando... </p>
+</ngx-spinner>
+
+<!-- MODAL CON LISTADO DE VARIABLES PARA CREAR PLANTILLA -->
+<ng-template #modalAyudaPlantilla let-modal let-close="close">
+  <app-promocion-ayuda-plantilla [modal]="modalAyudaPlantillaRef"></app-promocion-ayuda-plantilla>
+</ng-template>
+
+<!-- FORMULARIO PRINCIPAL -->
+<form [formGroup]="frmPromocionPlantilla">
+  <div class="modal-header card-header">
+    <h5 class="modal-title">Plantilla de promoción</h5>
+    <button type="button" class="close basic-close" data-dismiss="modal" aria-label="Close" 
+        (click)="cerrarModal()"><span aria-hidden="true">&times;</span></button>
+  </div>
+
+  <div class="modal-body card-body">
+
+    <div class="form-row">
+      <div class="form-group col-md-12">
+
+        <div class="form-row">
+          <div class="form-group col-md-12">
+            <div class="input-group input-group-sm">
+                <div class="input-group-prepend"><span class="input-group-text" for="nombre">Promoción </span></div>
+                <input type="text" class="form-control dz-uppercase" formControlName="nombre"/>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">Sesiones involucradas</div>
+
+
+        <ngb-accordion [closeOthers]="true" #acc="ngbAccordion">
+
+          <ngb-panel *ngFor="let promocionBloque of promocionBloques">
+            <ng-template ngbPanelTitle>
+              
+              <div class="rTable">
+                <div class="rTableRow">
+                  <div class="rTableCell"><span style="font-weight: bold;">Sesión: </span><span> {{ promocionBloque.rangoIni }} - {{ promocionBloque.rangoFin}}</span></div>
+                  <div class="rTableCell"><span style="font-weight: bold;">Dscto: </span><span>{{ promocionBloque.descuentoPorcentaje }}</span></div>
+                  <div class="rTableCell"><span style="font-weight: bold;">Dscto Fijo: </span><span>{{ promocionBloque.descuentoFijo }}</span></div>
+                  <div class="rTableCell"><span style="font-weight: bold;">Aumento Fijo: </span><span>{{ promocionBloque.aumentFijo }}</span></div>
+                </div>
+              </div>
+            </ng-template>
+            <ng-template ngbPanelContent>
+              <div class="form-row">
+                <div class="form-group col-md-12">
+                  <div class="input-group input-group-sm">
+                    <div class="input-group-prepend"><span class="input-group-text" for="alias">Alias</span></div>
+                    <input type="text" class="form-control" [value]="promocionBloque.rangoIni.toString()  + ' - ' + promocionBloque.rangoFin.toString()" disabled>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group col-md-12">
+                  <div class="input-group input-group-sm">
+                    <div class="input-group-prepend"><span class="input-group-text">Contenido</span></div>
+                    <textarea id="textAreaPlantilla" (input)="actualizaValores($event.target, promocionBloque.id)" class="form-control" rows="8">{{promocionBloque.plantilla}}</textarea>
+                  </div>
+                </div>
+              </div>
+               
+            </ng-template>
+          </ngb-panel>
+
+        </ngb-accordion>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-footer card-footer">
+    <button type="button" class="btn btn-primary mr-auto" (click)="mostrarVariablesPlantilla(modalAyudaPlantilla)">Ayuda</button>
+    <button type="button" class="btn btn-primary" (click)="plantillaGrabar()">Guardar</button>
+    <button type="button" class="btn btn-secondary" (click)="cerrarModal()">Cerrar</button>
+  </div>
+
+</form>

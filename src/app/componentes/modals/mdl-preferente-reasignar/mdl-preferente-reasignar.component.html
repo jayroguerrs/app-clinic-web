@@ -1,0 +1,89 @@
+﻿
+<form [formGroup]="formGroup" (ngSubmit)="evtOnSubmit()" class="popins mh-100">
+  <div class="scard bg-transparent popins mh-100">
+        <div class="modal-header card-header bg-gradient">
+            <h5 class="card-title text-white f-w-500 m-0">Reasignar Preferente</h5>
+            <button type="button" class="btn sbtn btn-sm btn-icon btn-active-color-primary h-auto w-auto p-0" (click)="cerrarModal(false)">
+              <span class="svg-icon svg-icon-1 text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor"></rect>
+                  <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor"></rect>
+                </svg>
+              </span>
+            </button>
+        </div>
+        <div class="card-body bg-white p-0 depilform position-relative d-flex flex-column">
+
+          <loader-circle *ngIf="loading | async"></loader-circle>
+
+          <div class="depilform p-5">
+
+            <div class="d-flex flex-row align-items-center border rounded-15px border-2px border-light mb-3 p-3">
+              <div class="w-80px h-80px">
+                <img src="assets/images/user/blank.png" alt="" width="100%" height="auto" class="d-block m-auto rounded-circle">
+              </div>
+              <div *ngIf="(loading | async) === false" class="text-gray-700 pl-3 fs-14px">
+                <div class="mb-2"><span class="fw-semibold">Nombre:</span> {{ preferente?.nombres }} {{preferente?.apellidos }}</div>
+                <div class="mb-2"><span class="fw-semibold">Teléfono:</span> {{ preferente?.preferenteTelefono[0].numero }}</div>
+                <div class="mb-2"><span class="fw-semibold">Fecha Registro:</span> {{ preferente?.fechaRegistra | date: 'dd/MM/yyyy' }}</div>
+                <div class="mb-2"><span class="fw-semibold">Fecha Atención:</span> {{ preferente?.fechaPreferenteAtencion ? ( preferente?.fechaPreferenteAtencion | date: 'dd/MM/yyyy') : 'Sin asignar' }}</div>
+                <div class="mb-2"><span class="fw-semibold">Estado:</span> {{ preferente?.estadoPreferenteAtencion }}</div>
+                <div class="mb-2"><span class="fw-semibold">Operador:</span> {{ preferente?.teleoperador }}</div>
+              </div>
+            </div>
+
+<!--            <div *ngIf="(loading | async) === false">-->
+<!--              <div class="border border-4px border-indigo bg-light-indigo rounded-15px p-3 mb-3">-->
+<!--                <h4 class="mb-0 text-gray-800">{{ preferente?.nombres }} {{preferente?.apellidos}}</h4>-->
+<!--                <span class="text-gray-300">{{ preferente?.preferenteTelefono[0].numero }}</span>-->
+<!--              </div>-->
+<!--            </div>-->
+
+            <div class="mb-3">
+              <label class="label p-0 mb-1" for="idPerfiles">Reasignar a:</label>
+              <ng-select #selectPreferente id="idPerfiles" class="w-100 ng-select-custom"  [items]="usuarios" bindLabel="nombre" bindValue="idUsuario" formControlName="idUsuario" [multiple]="false" [searchable]="true" placeholder="--Seleccionar--">
+
+                <ng-template ng-label-tmp let-item="item">
+                  <div class="d-flex flex-column">
+                    <div>{{ item.nombre }}</div>
+                    <div class="fs-10px fw-semibold text-muted">{{item.usuario}} ({{item.sede}})</div>
+                  </div>
+                </ng-template>
+
+                <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                  <div class="d-flex flex-column">
+                    <div>{{ item.nombre }}</div>
+                    <div class="fs-10px fw-semibold text-muted">{{item.usuario}} ({{item.sede}})</div>
+                  </div>
+                </ng-template>
+
+              </ng-select>
+            </div>
+
+
+            <div>
+                <div class="scard mb-xl-10 popins border border-2 border-light-2">
+                  <div class="card-header min-h-45px">
+                    <div class="card-title m-0">
+                      <h6 class="fw-semibold text-gray-800 m-0">Observación</h6>
+                    </div>
+                    <button type="button" *ngIf="observaciones.length" [disabled]="!observaciones.length" matRipple class="sbtn btn btn-sm btn-light-danger btn-hover-danger align-self-center m-0" (click)="evtLimpiarObservacion()">Limpiar</button>
+                  </div>
+                  <div class="card-body overflow-hidden p-0 bg-history">
+                    <app-preferente-observacion #observacion [MaxHeight]="150" [IdPreferente]="idPreferente"></app-preferente-observacion>
+                  </div>
+                </div>
+            </div>
+
+          </div>
+
+        </div>
+        <div class="modal-footer bg-white py-3">
+            <div class="form-row float-right">
+              <button matRipple type="reset" class="btn sbtn btn-light mr-2" (click)="cerrarModal()">Cancelar</button>
+              <button matRipple type="submit" class="btn sbtn btn-primary shadow btn-shadow-primary" >Reasignar</button>
+            </div>
+        </div>
+
+    </div>
+</form>

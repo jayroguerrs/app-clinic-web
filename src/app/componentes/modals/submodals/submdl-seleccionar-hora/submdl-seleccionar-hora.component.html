@@ -1,0 +1,191 @@
+<form class="modal-content" [formGroup]="frmGroup" (ngSubmit)="onSubmit()">
+  <div class="modal-header bg-gradient border-bottom-0 py-3">
+    <h2 class="d-flex align-middle">
+      <div class="my-auto mr-3">
+        <button type="button" matRipple class="btn sbtn p-2 d-block text-white" (click)="onClose()">
+          <fontawesome-svg icon="arrow-left" [width]="22" [height]="22" type="duotone"></fontawesome-svg>
+        </button>
+      </div>
+      <div class="my-auto">
+        <h2 class="mb-0 fs-18px f-w-500 text-white">Seleccionar Horario</h2>
+      </div>
+    </h2>
+<!--    <div class="btn sbtn btn-sm btn-icon btn-active-color-primary h-auto w-auto p-0" (click)="onClose()">
+      <span class="svg-icon svg-icon-1 text-white">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor"></rect>
+          <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor"></rect>
+        </svg>
+      </span>
+    </div>-->
+  </div>
+  <div class="modal-body">
+
+    <div class="p-3">
+      <div class="form-row">
+        <div class="col-4">
+          <div class="position-relative">
+            <span class="mb-0 fs-10px position-absolute text-indigo ps-22px pt-10px">FECHA</span>
+            <input
+              #fecha
+              class="form-control form-indigo rounded-md bg-white h-51px fw-bold pt-20px cursor-pointer"
+              type="text"
+              mwlFlatpickr
+              [(ngModel)]="Fecha"
+              [altInput]="true"
+              [altFormat]="'D d, M. Y'"
+              [ngModelOptions]="{standalone: true}"
+              (ngModelChange)="obtenerMaquinaSede()"
+            >
+          </div>
+
+<!--          <div class="rounded-md border border-2px border-indigo py-2 px-3 text-indigo d-flex flex-column cursor-pointer" (click)="fecha.click()">-->
+<!--            <label class="mb-0 fs-10px">FECHA</label>-->
+<!--            <p class="mb-0 fw-bold text-truncate">{{ util.firstLetterUpperCase(Fecha | date: 'EE  dd, ': '': 'ES-pe') + util.firstLetterUpperCase(Fecha | date: 'MMM yyyy' : '': 'ES-pe') }}</p>-->
+<!--          </div>-->
+        </div>
+        <div class="col-4">
+          <ng-component [ngSwitch]="ldSede">
+            <div *ngSwitchCase="true" class="sk block w-100 h-51px rounded-md"></div>
+            <div *ngSwitchCase="false" class="rounded-md border border-2px border-indigo py-2 px-3 text-indigo d-flex flex-column bg-light-indigo">
+              <label class="mb-0 fs-10px">SEDE</label>
+              <p class="mb-0 fw-bold text-truncate text-uppercase">{{ sede ? sede.nombre : '---' }}</p>
+            </div>
+          </ng-component>
+        </div>
+        <div class="col-4">
+          <ng-component [ngSwitch]="ldServicio">
+            <div *ngSwitchCase="true" class="sk block w-100 h-51px rounded-md"></div>
+            <div *ngSwitchCase="false" class="rounded-md border border-2px border-indigo py-2 px-3 text-indigo d-flex flex-column bg-light-indigo">
+              <label class="mb-0 fs-10px">SERVICIO</label>
+              <p class="mb-0 fw-bold text-truncate text-uppercase">{{ servicio ? servicio.nombre : '---' }}</p>
+            </div>
+          </ng-component>
+        </div>
+        <div class="col-12 mt-3">
+          <ng-component [ngSwitch]="ldMaquina">
+            <div *ngSwitchCase="true" class="sk block w-100 h-51px rounded-md"></div>
+            <div *ngSwitchCase="false" class="rounded-md border border-2px border-indigo py-2 px-3 text-indigo d-flex flex-column">
+              <div class="d-flex align-items-center">
+                <div class="d-flex flex-column">
+                  <label class="mb-0 fs-10px">MAQUINA</label>
+                  <p class="mb-0 fw-bold text-truncate text-uppercase">{{ maquinaSede ? maquinaSede.maquina.substring(3, 10).replace('AQ', '') : '---' }}</p>
+                </div>
+                <div class="ml-auto">
+                  <span class="bg-indigo rounded px-3 py-1 small text-white">{{maquinaSede?.porcentaje}}%</span>
+                </div>
+              </div>
+              <div class="separator my-2"></div>
+              <div class="d-flex flex-column">
+                <div><label class="mb-0 fs-10px">TECNOLOGÍA DISPONIBLE</label></div>
+                <div><span class="bg-gradient px-3 rounded-pill py-1 small text-white" *ngFor="let t of maquinaSede?.tecnologias; let i = index" [class.mr-1]="i < maquinaSede?.tecnologias.length - 1">{{ t.nombre }}</span></div>
+              </div>
+            </div>
+          </ng-component>
+        </div>
+      </div>
+    </div>
+
+    <div class="mx-3">
+<!--      <div class="form-row">
+        <div class="col-12 col-md-4">
+          <div class="form-group popins">
+            <label class="fw-semibold text-gray-800 mb-1 required">Fecha</label>
+              <div class="position-relative" >
+                <span class="position-absolute no-pointer-events h-100 d-flex align-items-center ps-10px"><fontawesome-svg [width]="24" [height]="24" [icon]="'person'" [type]="'duotone'" ></fontawesome-svg></span>
+                <input disabled type="date" formControlName="fecha" class="form-control form-control-sm form-control-solid ps-42px bg-light-indigo">
+              </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-4">
+          <div class="form-group popins">
+            <label class="fw-semibold text-gray-800 mb-1 required">Servicio</label>
+            <ng-container [ngSwitch]="ldServicios">
+              <div class="position-relative" *ngSwitchCase="false">
+                <span class="position-absolute no-pointer-events h-100 d-flex align-items-center ps-10px"><fontawesome-svg [width]="24" [height]="24" [icon]="'person'" [type]="'duotone'" ></fontawesome-svg></span>
+                <select formControlName="idServicio" class="form-select form-select-sm form-select-solid ps-42px bg-light-indigo">
+                  <option value="">&#45;&#45;Seleccionar&#45;&#45;</option>
+                  <option *ngFor="let s of servicios" [value]="s.id">{{s.nombre}}</option>
+                </select>
+              </div>
+              <div *ngSwitchCase="true" class="sk block rounded h-42px"></div>
+            </ng-container>
+          </div>
+        </div>
+        <div class="col-12 col-md-4">
+          <div class="form-group popins">
+            <label class="fw-semibold text-gray-800 mb-1 required">Sede</label>
+            <ng-container [ngSwitch]="ldSedes">
+              <div class="position-relative" *ngSwitchCase="false">
+                <span class="position-absolute no-pointer-events h-100 d-flex align-items-center ps-10px"><fontawesome-svg [width]="24" [height]="24" [icon]="'person'" [type]="'duotone'" ></fontawesome-svg></span>
+                <select formControlName="idSede" class="form-select form-select-sm form-select-solid ps-42px bg-light-indigo">
+                  <option value="">&#45;&#45;Seleccionar&#45;&#45;</option>
+                  <option *ngFor="let s of sedes" [value]="s.idSede">{{s.nombre}}</option>
+                </select>
+              </div>
+              <div *ngSwitchCase="true" class="sk block rounded h-42px"></div>
+            </ng-container>
+          </div>
+        </div>
+      </div>-->
+
+      <!--<div class="mb-3 border p-3 rounded">
+        <label class="d-flex align-items-center fs-6 fw-semibold mb-2 required">Maquinas</label>
+        <div>
+          <ul class="d-inline-flex mb-0 pl-0 no-list">
+            <li *ngFor="let m of maquinas">
+              <btn matRipple class="maquina btn btn-sm px-2 sbtn text-white popins mr-1" [class.select]="maquinaIsSelect(m.idMaquina)" [attr.style]="'background-color:'+m.servicioColor" (click)="onSelectMaquina(m.idMaquina)" title="Seleccionar">
+                <span>{{ m.descripcion.substring(3, 10).replace('AQ', '') }}</span>
+                <span class="w-100 bg-white d-block h-6px rounded overflow-hidden border border-white"><span class="d-block h-100 bg-indigo" [attr.style]="'width:'+obtenerPorcentaje(m.idMaquina)+'%'"></span></span>
+              </btn>
+            </li>
+          </ul>
+        </div>
+      </div>-->
+
+<!--      <div class="mb-3 border p-3 rounded">-->
+<!--        <label class="d-flex align-items-center fs-6 fw-semibold mb-2 required">Minutos</label>-->
+<!--        <app-input-dialer #minutos class="w-100" [suffix]="' minutos'" [current]="10" [min]="10" [max]="500" [step]="5"></app-input-dialer>-->
+<!--      </div>-->
+
+      <div class="border border-2px border-dark rounded p-3 position-relative overflow-hidden">
+        <span *ngIf="!maquinaSelected" class="position-absolute start-0 top-0 h-100 w-100 bg-white opacity50 zindex2"></span>
+        <label class="d-flex align-items-center fs-6 fw-semibold mb-2 required">Horario</label>
+        <!--    <div class="row mx-0">
+              <div class="col-1">Hora</div>
+              <div class="col-11 text-center">Minutos</div>
+            </div>-->
+        <div #gridMinutos class="row row-minutos mx-0 border-bottom">
+          <div *ngFor="let cas of casilleros" class="col-1 p-0 min border-top border-end position-relative"
+               [ngClass]="{
+             'hover' : cas.hover,
+             'hoverStart': cas.hoverStart,
+             'hoverEnd': cas.hoverEnd,
+             'reserved': cas.reserved,
+             'reservedStart': cas.reservedStart,
+             'reservedEnd': cas.reservedEnd,
+             'selected': cas.selected,
+             'selectedStart': cas.selectedStart,
+             'selectedEnd': cas.selectedEnd,
+             'hoverDanger': cas.hover && cas.reserved,
+             'border-start' : cas.minuto % 60 === 0}"
+               (mouseover)="onHover(cas.minuto)"
+               (mouseleave)="onLeave()"
+               (click)="onSelect(cas.minuto)">
+          <span [ngbTooltip]="util.minutesToShortHour(cas.minuto)"
+                placement="top" tooltipClass="tooltip-indigo"
+                class="d-flex align-items-center pr-2 h-100 lh-1-5 f-w-500" [ngClass]="{ 'fs-18px' : cas.minuto % 60 === 0, 'fst-italic fs-12px': (cas.minuto % 60 !== 0) }" ><span [ngClass]="{ 'ml-1' : cas.minuto % 60 === 0}">{{ (cas.minuto % 60 !== 0) ? (cas.minuto % 60).toString().padStart(2,'0') : (cas.minuto / 60).toString().padStart(2,'0')}}</span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn sbtn btn-light-indigo mr-auto d-inline-flex" (click)="verTecnologias()">
+      <fontawesome-svg [width]="20" [height]="20" [icon]="'gears'" [type]="'duotone'"  class="mr-2"></fontawesome-svg> Tecnologias ({{tecnologiaSelected.length}})
+    </button>
+    <button type="reset" class="btn sbtn btn-light mr-2" (click)="onClose()">Cancelar</button>
+    <button [disabled]="!citaAgendada" type="submit" class="btn sbtn btn-primary shadow btn-shadow-primary">Aceptar</button>
+  </div>
+</form>

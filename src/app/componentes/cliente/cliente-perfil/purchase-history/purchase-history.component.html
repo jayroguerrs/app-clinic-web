@@ -1,0 +1,37 @@
+  <section class="container mt-4">
+    <div class="card shadow-sm">
+      <div class="card-header bg-primary text-white text-center">
+        <h2 class="mb-0">Historial de Compras</h2>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <!-- Información del cliente -->
+          <div class="col-12 col-md-6 mb-3">
+            <h5 class="text-muted">Documento de Identidad:</h5>
+            <p class="fw-bold">{{ client?.documentoIdentidad?.documento }}</p>
+          </div>
+          <div class="col-12 col-md-6 mb-3">
+            <h5 class="text-muted">Nombre del Cliente:</h5>
+            <p class="fw-bold">{{ client?.nombres }} {{ client?.apellidos }}</p>
+          </div>
+        </div>
+        <hr>
+        <!-- Iframe para el historial de compras -->
+        <div class="row">
+          <div class="col-12">
+            <iframe
+              class="w-100 border rounded"
+              style="height: 400px;"
+              title="Historial de Compras"
+              src="https://app.powerbi.com/reportEmbed?reportId=474585aa-eff0-4195-8ab8-308f19a0ffe2&autoAuth=true&ctid=c8f3e639-a841-41f4-8141-93c06114d5ea"
+              frameborder="0"
+              allowFullScreen="true">
+            </iframe>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer text-center">
+        <button class="btn btn-primary" (click)="cerrarModal()">Cerrar</button>
+      </div>
+    </div>
+  </section>

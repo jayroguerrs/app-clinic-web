@@ -1,0 +1,46 @@
+﻿
+        <div class="modal-header bg-white">
+          <h2 class="h5 fw-bold">Nueva Cita</h2>
+          <div class="btn sbtn btn-sm btn-icon btn-active-color-primary h-auto w-auto p-0" (click)="cerrarModal()">
+            <span class="svg-icon svg-icon-1">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor"></rect>
+                <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor"></rect>
+              </svg>
+            </span>
+          </div>
+        </div>
+        <div class="modal-body p-4">
+
+          <div class="form-group popins">
+            <label class="fw-semibold text-gray-800 required">Tecnología</label>
+            <div class="d-flex">
+              <select class="form-select form-select-solid mr-2" [formControl]="idTecnologia">
+                <option value="">...Seleccionar...</option>
+                <option *ngFor="let t of tecnologias" [value]="t.id" [disabled]="isSelect(t)">{{ t.nombre }}</option>
+              </select>
+              <button [disabled]="!idTecnologia.value" class="btn sbtn btn-primary" (click)="select()"><fontawesome-svg icon="plus" type="regular" [width]="20" [height]="20"></fontawesome-svg></button>
+            </div>
+          </div>
+
+          <div class="rounded-md p-3 bg-light-indigo">
+            <ng-component *ngIf="tecnologiasSelected.length">
+              <div *ngFor="let t of tecnologiasSelected; let i = index" >
+                <div class="border border-2px bg-white rounded-md px-3 py-2 d-flex align-items-center" [class.mb-3]="i < tecnologiasSelected.length - 1">
+                  <div class="fs-16px fw-bold text-indigo text-truncate">{{ t.nombre }}</div>
+                  <button class="btn sbtn btn-sm btn-light-danger ml-auto" (click)="remove(i)"><fontawesome-svg icon="trash-can" type="regular" [width]="20" [height]="20"></fontawesome-svg></button>
+                </div>
+              </div>
+            </ng-component>
+            <ng-component *ngIf="!tecnologiasSelected.length">
+              <p class="mb-0 text-indigo fw-bold fs-16px">No hay tecnologias asignadas</p>
+            </ng-component>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+                <button [disabled]="!tecnologiasSelected.length" type="submit" class="btn sbtn btn-primary shadow btn-shadow-primary" (click)="onSubmit()">Registrar</button>
+                <button type="reset" class="btn sbtn btn-light ml-2" (click)="cerrarModal()">Cancelar</button>
+        </div>
+
+

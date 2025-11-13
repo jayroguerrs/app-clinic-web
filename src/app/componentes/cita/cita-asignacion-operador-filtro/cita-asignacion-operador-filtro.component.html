@@ -1,0 +1,209 @@
+<form [formGroup]="frmOperadores">
+
+  <div class="modal-content popins">
+
+    <div class="modal-header card-header bg-gradient">
+      <h5 class="card-title text-white f-w-500 m-0">{{ titulo }}</h5>
+      <button type="button" class="btn sbtn btn-sm btn-icon btn-active-color-primary h-auto w-auto p-0" (click)="cerrarModal()">
+            <span class="svg-icon svg-icon-1 text-white">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor"></rect>
+                <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor"></rect>
+              </svg>
+            </span>
+      </button>
+    </div>
+
+
+    <div class="modal-body card-body">
+
+      <!-- SPINNER -->
+      <ngx-spinner
+      [template]="rutaImageSpinner">
+      <p style="color: white" > Cargando... </p>
+      </ngx-spinner>
+
+      <div class="row">
+        <!-- FILTROS -->
+        <div class="col-sm-12">
+          <input type="hidden" id="hdIds">
+          <app-card cardTitle="" [hidHeader]="true">
+            <div class="form-row">
+
+              <div class="form-group col-md-12 col-lg-3 col-xl-2">
+                <label class="f-w-500 text-gray-800 required fs-12px mb-0">Tipo Cliente</label>
+                <select class="form-select form-select-sm form-select-solid fs-12px" formControlName="tipoCliente" (change)="obtenerCitas()">
+                  <option [value]="2" >...TODOS...</option>
+                  <option [value]="1" >Cliente Nuevo</option>
+                  <option [value]="0" >Cliente Antiguo</option>
+                </select>
+              </div>
+
+              <div class="form-group col-md-12 col-lg-3 col-xl-2">
+                <label class="f-w-500 text-gray-800 required fs-12px mb-0">Sede</label>
+                <select class="form-select form-select-sm form-select-solid fs-12px" formControlName="idSede" (change)="obtenerCitas()">
+                  <option [value]="0">...Todas las sedes ...</option>
+                  <option *ngFor="let s of maestroSede" [value]="s.idSede">{{ s.nombre }}</option>
+                </select>
+              </div>
+
+              <div class="form-group col-md-12 col-lg-3 col-xl-2">
+                <label class="f-w-500 text-gray-800 required fs-12px mb-0">Fecha Desde</label>
+                <input
+                  type="text"
+                  mwlFlatpickr
+                  formControlName="fechaDesde"
+                  [altInput]="true"
+                  [convertModelValue]="true"
+                  [altFormat]="'d/m/Y'"
+                  class="form-control form-control-sm form-control-solid fs-12px"
+                  placeholder="dd/mm/yyyy a dd/mm/yyyy"
+                  (change)="obtenerCitas()"
+                />
+              </div>
+
+              <div class="form-group col-md-12 col-lg-3 col-xl-2">
+                <label class="f-w-500 text-gray-800 required fs-12px mb-0">Fecha Hasta</label>
+                <input
+                  type="text"
+                  mwlFlatpickr
+                  formControlName="fechaHasta"
+                  [altInput]="true"
+                  [convertModelValue]="true"
+                  [altFormat]="'d/m/Y'"
+                  class="form-control form-control-sm form-control-solid fs-12px"
+                  placeholder="dd/mm/yyyy a dd/mm/yyyy"
+                  (change)="obtenerCitas()"
+                />
+              </div>
+
+
+              <div class="form-group col-md-12 col-lg-3 col-xl-2">
+                <label class="f-w-500 text-gray-800 required fs-12px mb-0">Fecha confirmación</label>
+                <input
+                  type="text"
+                  mwlFlatpickr
+                  formControlName="fechaConfirmacion"
+                  [altInput]="true"
+                  [convertModelValue]="true"
+                  [altFormat]="'d/m/Y'"
+                  class="form-control form-control-sm form-control-solid fs-12px"
+                  placeholder="dd/mm/yyyy"
+                  (change)="obtenerCitas()"
+                />
+              </div>
+
+              <div class="form-group col-md-12 col-lg-3 col-xl-2">
+                <label class="f-w-500 text-gray-800 required fs-12px mb-0">Modo Asignación</label>
+                <select class="form-select form-select-sm form-select-solid fs-12px" formControlName="idModo" disabled>
+                  <option *ngFor= "let modo of modoAsignacion"  [value]="modo.id">{{ modo.descripcion}}</option>
+                </select>
+              </div>
+
+              <div class="form-group col-md-12 col-lg-3 col-xl-2">
+                <label class="f-w-500 text-gray-800 required fs-12px mb-0">Estado Cita</label>
+                <select class="form-select form-select-sm form-select-solid fs-12px" formControlName="idEstado" (change)="obtenerCitas()">
+                  <option [value]="0">--Todos--</option>
+                  <option *ngFor= "let e of estados"  [value]="e.id">{{ e.name}}</option>
+                </select>
+              </div>
+
+              <div class="form-group col-md-12 col-lg-3 col-xl-2">
+                <label class="f-w-500 text-gray-800 required fs-12px mb-0">Motivo</label>
+                <select class="form-select form-select-sm form-select-solid fs-12px" formControlName="idMotivo" (change)="obtenerCitas()">
+                  <option [value]="0">--Todos--</option>
+                  <option *ngFor= "let me of motivosEstado"  [value]="me.id">{{ me.motivo}}</option>
+                </select>
+              </div>
+
+              <div class="form-group col-md-12 col-lg-3 col-xl-2">
+                <label class="f-w-500 text-gray-800 required fs-12px mb-0">Asignado</label>
+                <label class="cursor-pointer popins form-check form-switch form-check-custom form-switch-indigo form-check-solid mx-0 position-relative">
+                  <input #asignado type="checkbox" class="no-pointer-events form-check-input w-65px h-36px" formControlName="sinAsignar" (change)="obtenerCitas()">
+                  <span class="position-absolute start-0 text-white ml-2 fs-10px " [class.d-none]="!asignado.checked">SI</span>
+                  <span class="position-absolute end-0 text-indigo mr-2 fs-10px " [class.d-none]="asignado.checked">NO</span>
+                </label>
+              </div>
+
+<!--              <div class="form-group col-md-12 col-lg-3">-->
+<!--                <div class="input-group input-group-sm">-->
+<!--                  <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-random"></i></span></div>-->
+<!--                  <select class="custom-select"  id="cboModo" formControlName="idModo" (change)="cambiarFechaModo()" disabled>-->
+<!--                    <option *ngFor= "let modo of modoAsignacion"  [value]="modo.id">{{ modo.descripcion}}</option>-->
+<!--                  </select>-->
+<!--                </div>-->
+<!--              </div>-->
+
+            <!--  <div class="form-group col-md-12 col-lg-3">
+                <div class="input-group input-group-sm">
+                  <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-random"></i></span></div>
+                  <select class="custom-select"  id="idSede" formControlName="idSede" (change)="obtenerCitas()">
+                    <option [value]="0" >...Todas las sedes ...</option>
+                    <option *ngFor="let s of maestroSede" [value]="s.idSede">{{ s.nombre }}</option>
+                  </select>
+                </div>
+              </div>-->
+
+
+<!--              <div class="form-group col-md-12 col-lg-3" id="div_fechaConfirmacion">-->
+<!--                <div class="input-group input-group-sm">-->
+<!--                  <div class="input-group-prepend"><span class="input-group-text">Confirmar el</span></div>-->
+<!--                  <input type="date" class="form-control" id="dtpFechaConfirmar" formControlName="fechaConfirmacion" >-->
+<!--                </div>-->
+<!--              </div>-->
+
+<!--              <div class="form-group col-md-12 col-lg-3" id="div_fechaCita">-->
+<!--                <div class="input-group input-group-sm">-->
+<!--                  <div class="input-group-prepend"><span class="input-group-text">Fecha confirmación </span></div>-->
+<!--                  <input type="date" class="form-control" id="dtpFechaCita" formControlName="fechaCita" (change)="obtenerCitas()">-->
+<!--                </div>-->
+<!--              </div>-->
+
+<!--              <div *ngIf="idUsuarioReasignacion == 0" class="form-group col-md-12 col-lg-3">-->
+<!--                <div class="checkbox d-inline">-->
+<!--                  <input type="checkbox" name="chkSinAsignar" id="chkSinAsignar" checked (change)="obtenerCitas()">-->
+<!--                  <label for="chkSinAsignar" class="cr">Sin Asignar</label>-->
+<!--                </div>-->
+<!--              </div>-->
+
+            </div>
+          </app-card>
+        </div>
+      </div>
+
+      <div class="form-row">
+
+        <!-- GRILLA CITA-->
+        <div class="form-group col-sm-12 col-md-12 col-lg-6">
+          <app-card cardTitle="" [hidHeader]="true">
+            <div class="table table-sm-responsive">
+              <table *ngIf="dtResponsiveOptionsCita" datatable [dtOptions]="dtResponsiveOptionsCita"  class="table table-sm table-hover table-cita display compact"></table>
+            </div>
+          </app-card>
+        </div>
+
+        <!-- GRILLA USUARIOS-->
+        <div class="form-group col-sm-12 col-md-12 col-lg-6">
+          <app-card cardTitle="" [hidHeader]="true">
+            <div class="table table-sm-responsive">
+              <table datatable [dtOptions]="dtResponsiveOptionsUsuario"  class="table table-sm table-hover table-usuario display compact">
+              </table>
+            </div>
+          </app-card>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="modal-footer card-footer">
+
+      <button matRipple type="button" class="btn btn-outline-primary" [placement]="'top'" ngbTooltip="Citas seleccionadas" aria-readonly="true"><i class="fa fa-bolt" ></i>{{_citasSeleccionadas.length}}</button>
+      <button matRipple type="button" class="btn btn-outline-primary" [placement]="'top'" ngbTooltip="Operadas seleccionadas" aria-readonly="true"><i class="fa fa-users"></i>{{_usuariosSeleccionados.length}}</button>
+
+      <button matRipple type="button" class="btn btn-outline-primary" (click)="distribuirCitas()"><i class="fa fa-cog"></i>Distribuir</button>
+      <button matRipple type="button" class="btn btn-outline-danger" (click)="grabarDistribuirCitas()"><i class="fa fa-save"></i>Guardar</button>
+
+    </div>
+  </div>
+</form>

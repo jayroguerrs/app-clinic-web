@@ -1,0 +1,219 @@
+<div class="row" >
+    <div class="col-sm-12">
+    <app-card cardTitle="BOX LISTADO" [options]="false" [hidBlock]="false">
+
+    </app-card>
+    </div>
+</div>
+
+<div class="col-sm-12" style="padding: 0 !important; margin-bottom: 4rem;">
+    <app-card [options]="false" [customHeader]="true" [hidHeader]="true">
+      <div style="display: flex; align-items: center; gap: 0.5rem;">
+        <h1 class="titulos" style="padding-left: 20px; padding-top: 16px;" >Boxs Disponibles</h1>
+
+      </div>
+      <div class="contenedor-filtros contenedor-busqueda-nombre-cliente" style="width: 100% !important;display: flex;justify-content: normal;gap: 1rem;">
+          <div class="contenedor-filtros-izquierda" style="width: 100%; padding-top: 20px;">
+              <div style="width: 100% !important; position: relative;">
+                  <mat-form-field style="width: 100%;" appearance="outline" class="form-field">
+                    <mat-label>Sede</mat-label>
+                    <mat-select [(ngModel)]="sedeSeleccionada" (selectionChange)="onSedeChange($event)" >
+                      <mat-option *ngFor="let sede of sedes" [value]="sede.idSede">{{ sede.nombre }}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+              </div>
+          </div>
+  
+          <div style="display: flex; align-items: center; padding: 0 20px 0 0;">
+              <button type="button" class="btn btn-primary es-mobile-none">Buscar</button>
+              <button type="button" class="btn btn-primary es-desktop-none" style="padding-left: 0.2rem !important; padding-right: 0.1rem !important;"><i class="mdi mdi-magnify" style="display: flex;margin-left: 0.5rem; font-size: 1.3rem;"></i></button>
+          </div>
+      </div>
+
+
+      <div style="display: flex; align-items: center; gap: 0.5rem;">
+        <h1 class="titulos" style="padding-left: 20px; margin-bottom: 0;">Piso</h1>
+        <mat-form-field appearance="standard" class="mini-mat-form-field">
+          <mat-select [(ngModel)]="pisoSeleccionado" (selectionChange)="onPisoChange($event)">
+            <mat-option *ngFor="let piso of pisos" [value]="piso">{{ piso }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <!-- <div class="contenedor-boxs">
+        <div *ngFor="let box of testBox" style="display: flex; flex-direction: column; align-items: center;">
+          <div (click)="showMdlDetalleBox()" style="
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #14ba14;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+          "></div>
+
+          <div style="font-weight: bold;">Box 1</div>
+
+          <div style="color: #14ba14; font-weight: bold;">(Disponible)</div>
+        </div>
+        
+      </div> -->
+      <div  #fullScreenDiv  *ngIf="imgPlanta" >
+        
+
+        <div  class="drag-area" style="position: relative; width: 100%;" (mouseenter)="mostrarBtnMaximize = true" (mouseleave)="mostrarBtnMaximize = false">
+          <div *ngFor="let box of boxes" class="box-circulo"
+            [ngClass]="{'bg-active': box.idEstado === 1,'bg-disabled': box.idEstado === 2, 'bg-attend': box.idEstado === 3}"
+            [ngStyle]="{'top': box.positionTop + '%', 'left': box.positionLeft + '%'}"
+            cdkDrag [cdkDragBoundary]="'.drag-area'"
+            [cdkDragDisabled]="!box.creado"
+            (cdkDragEnded)="onBoxDragEnd($event, box)"
+            >
+
+              <span style="padding-top: 0.25vw;">{{box.nombre}}</span> 
+              <span *ngIf="box.idEstado === 1" class="active-tx size-tx size-span">Disponible</span> 
+              <span *ngIf="box.idEstado === 2" class="disabled-tx size-tx size-span">No Disponible</span> 
+              <span *ngIf="box.idEstado === 3" class="attend-tx size-tx size-span">Atendiendo</span> 
+          </div>
+          <button *ngIf="mostrarBtnMaximize"
+            (click)="toggleFullScreen(fullScreenDiv)" 
+            class="btn-maximize">
+            <i class='feather icon-maximize'></i>
+          </button>
+  
+          <img [src]="imgPlanta" alt="Box 1" style="width: 100%; height: 100%; object-fit: contain;">
+        </div>
+
+        <!-- *ngIf="mostrarListadoDeEspera"  -->
+        <div style="background: linear-gradient(359deg, #04a9f5 0%, #33d4f9 100%); padding: 1rem; height: 100%;">
+          <div style="display: flex; flex-wrap: wrap; height: 70%;">
+            <div *ngFor="let casilla of casillas"
+                style="flex: 0 0 50%; box-sizing: border-box; padding: 0.5rem; height: 12.5%;">
+               <div style="font-size: 2.5vw;background: #fff; border-radius: 6px; padding: 0.5rem; text-align: center; font-weight: bold; height: 100%; display: flex; align-items: center; justify-content: center; min-height: 80px;"
+                  [style.background]="casilla.ocupada ? '#e3f2fd' : '#fff'" [class.casilla-pulsante]="casilla.pulsante">
+                {{ casilla.ocupada ? casilla.clienteNombre + ' ' + casilla.boxNombre : ' ' }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+        
+      <div style="display: flex; align-items: center; padding: 0 20px 0 0;">
+          <button ngbTooltip="Esteban Depilacion" (click)="agregarACasilla(50, 'Esteban', 'M3')"  type="button" class="btn btn-primary es-mobile-none">Caso 1</button>
+          <button ngbTooltip="Esteban Lo atienden" (click)="mockBoxAtendiendo()"  type="button" class="btn btn-primary es-mobile-none">Atender</button>
+          <button (click)="agregarACasillaDos(36, 'Maria', 'M3 - En espera')" type="button" class="btn btn-primary es-mobile-none">Caso 2</button>
+      </div>
+    </app-card>
+  
+      
+</div>
+  
+
+
+<ul class="botonera-escritorio">
+  <li>
+    <button (click)="showMdlAddBox()" type="button" class="btn btn-primary btn-icon"   [placement]="'bottom'" ngbTooltip="Nuevo" ><i class="mdi mdi-plus-circle-outline"></i></button>
+    <button *ngIf="guardarBoxCreado" type="button" class="btn btn-primary btn-icon"   [placement]="'bottom'" ngbTooltip="Guardar Box" ><i class="mdi mdi-check"></i></button>
+  </li>
+</ul>
+
+<div class="float-menu">
+  <button (click)="showMdlAddBox()" mat-fab class="my-color_gradient">
+    <mat-icon>add</mat-icon>
+  </button>
+</div>
+
+
+<!-- MODAL DE REGISTRO DE BOX -->
+<app-ui-modal #mdlAddBox dialogClass="modal-dialog-centered" hideFooter="true">
+  <div class="app-modal-header">
+    <h5 class="modal-title">Nuevo Box</h5>
+    <button type="button" class="close basic-close" data-dismiss="modal" aria-label="Close" (click)="mdlAddBox.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="app-modal-body">
+    <form [formGroup]="boxForm" (ngSubmit)="crearBox()">
+      <div class="form-row">
+
+        <!-- Sede -->
+        <div class="form-group w-100">
+          <div class="form-floating form-start-icon">
+            <select formControlName="sede" (change)="mdlOnSedeChange($event)" class="custom-select" id="numeroBox" name="numeroBox">
+              <option *ngFor="let sede of sedes" [value]="sede.idSede">{{ sede.nombre }}</option>
+            </select>
+            <label for="numeroBox">Sede</label>
+            <span class="icon"><span class="dicon machine m-auto"></span></span>
+          </div>
+        </div>
+
+        <!-- Nombre de Box -->
+        <div class="form-group w-100">
+          <div class="form-floating form-start-icon">
+            <input type="text"
+                   class="form-control"
+                   id="atendidoPor"
+                   formControlName="nombreBox"
+                   placeholder=" "
+                   maxlength="3">
+            <label for="atendidoPor">Nombre de Box</label>
+            <span class="icon">
+              <span class="dicon machine m-auto"></span>
+            </span>
+          </div>
+        </div>
+
+        <!-- Piso -->
+        <div class="form-group w-100">
+          <div class="form-floating form-start-icon">
+            <select formControlName="piso" class="custom-select" id="numeroBox" name="numeroBox" [disabled]="!boxForm.get('sede')?.value">
+              <option *ngFor="let piso of mdlPisos" [value]="piso">{{ piso }}</option>
+            </select>
+            <label for="idServicio">Piso</label>
+            <span class="icon"><span class="dicon machine m-auto"></span></span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="d-flex justify-content-center">
+        <button type="submit" class="btn btn-primary mb-2 mt-2" [placement]="'top'" ngbTooltip="Atender Cita" [disabled]="boxForm.invalid">Añadir</button>
+      </div>
+    </form>
+  </div>
+</app-ui-modal>
+
+
+<app-ui-modal #mdlDetalleBox dialogClass="modal-dialog-centered" hideFooter="true">
+    <div class="app-modal-header">
+    <h5 class="modal-title">Detalle de Box</h5>
+    <button type="button" class="close basic-close" data-dismiss="modal" aria-label="Close" (click)="mdlDetalleBox.hide()"><span aria-hidden="true">&times;</span></button>
+  </div>
+  <div class="app-modal-body">
+      <div class="form-row">
+        <div class="form-group w-100">
+          <div class="form-floating form-start-icon">
+            <input type="text"
+                   class="form-control"
+                   id="atendidoPor"
+                   name="atendidoPor"
+                   placeholder=" "
+                   disabled
+                   value="Esteban Yguia"
+                   >
+            <label for="atendidoPor">Atendiendo</label>
+            <span class="icon">
+                <span class="dicon user m-auto"></span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-end">
+        <button type="button" class="btn sbtn btn-light mb-2 mt-2" (click)="mdlDetalleBox.hide()" [placement]="'top'" ngbTooltip="Atender Cita">Cerrar</button>
+      </div>
+
+  </div>
+  
+</app-ui-modal>
+

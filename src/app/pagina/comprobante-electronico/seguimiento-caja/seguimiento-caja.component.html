@@ -1,0 +1,110 @@
+<div class="scard mb-4 mb-xl-10 popins">
+  <div class="card-header">
+    <div class="card-title m-0">
+      <h3 class="fw-bold m-0">Seguimiento de Cajas</h3>
+    </div>
+  </div>
+
+  <div class="card-body">
+
+    <form [formGroup]="formGroup" (ngSubmit)="evtOnSubmit()">
+
+      <div class="form-row depilform">
+        <div class="mb-2 col-12 col-md-6 col-lg-3">
+          <label for="fecha" class="form-label mb-0 text-secondary f-w-500">Fecha</label>
+          <ng2-flatpickr id="fecha" placeholder="DD/MM/YYYY" [config]="flatOptions" formControlName="fecha"></ng2-flatpickr>
+          <!--          <input id="fechaDesde" type="date" class="form-control form-indigo form-control-sm bg-light-indigo" formControlName="fechaDesde">-->
+        </div>
+
+        <div class="col-12">
+          <button [disabled]="formGroup.invalid " matRipple type="submit" class="btn btn-sm btn-indigo rounded-md">Buscar</button>
+        </div>
+      </div>
+
+    </form>
+
+  </div>
+</div>
+
+
+
+<div class="scard mb-4 mb-xl-10 popins" [class.overflow-hidden]="loading">
+  <div class="card-header">
+    <div class="card-title m-0">
+      <h3 class="fw-bold m-0">Movimiento general del día</h3>
+    </div>
+  </div>
+
+  <div class="card-body p-0 position-relative">
+    <loader-circle *ngIf="loading"></loader-circle>
+    <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+
+<!--    <div class="overflow-auto px-3 pt-3 d-flex mb-3">-->
+<!--      <button  matRipple class="btn btn-light rounded-md m-0 f-w-500 d-flex align-items-center py-2 px-3 " ><i class="fa-light fa-file-spreadsheet fs-22px"></i> <span class="small fs-14px">Imprimir</span></button>-->
+
+<!--    </div>-->
+
+    <div class="table-responsive">
+      <table class="table table-bordered poppins table-hover">
+        <thead>
+          <tr class="bg-light">
+            <th class="fs-12px f-w-normal py-5px" colspan="2"></th>
+            <th colspan="4" class="text-center fs-12px fw-bold py-5px bg-indigo text-white">
+              INGRESO - EGRESO DEL DÍA
+            </th>
+            <th [attr.colspan]="tiposPago.length" class="text-center fs-12px fw-bold py-5px bg-primary text-white">
+              FORMA DE PAGO - CAJA
+            </th>
+            <th colspan="3" class="text-center fs-12px fw-bold py-5px bg-success text-white">
+              INGRESOS A CAJA
+            </th>
+          </tr>
+          <tr class="bg-light">
+            <th class="fs-12px f-w-normal py-10px bg-indigo text-white">N°</th>
+            <th class="fs-12px f-w-normal py-10px bg-indigo text-white">Punto Venta</th>
+            <th class="fs-12px f-w-normal py-10px bg-indigo text-white">Venta del día</th>
+            <th class="fs-12px f-w-normal py-10px bg-indigo text-white">Devolución</th>
+            <th class="fs-12px f-w-normal py-10px bg-indigo text-white">Gasto</th>
+            <th class="fs-12px f-w-normal py-10px bg-indigo text-white">Total venta del día</th>
+            <th *ngFor="let tp of tiposPago" class="fs-12px f-w-normal py-10px bg-primary text-white">{{ tp.descripcion }}</th>
+            <th class="fs-12px f-w-normal py-10px bg-success text-white">Ing. de ventas del Día</th>
+            <th class="fs-12px f-w-normal py-10px bg-success text-white">Ing. de Otros días</th>
+            <th class="fs-12px f-w-normal py-10px bg-success text-white">Total ingreso</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let c of cajas">
+            <td class="fs-12px f-w-normal py-10px"></td>
+            <td class="fs-12px f-w-normal py-10px">{{ c.descripcion }}</td>
+            <td class="fs-12px f-w-500 py-10px text-right text-indigo">{{ totalCaja(c.id).toFixed(2) }}</td>
+            <td class="fs-12px f-w-500 py-10px text-right text-danger">(0.00)</td>
+            <td class="fs-12px f-w-500 py-10px text-right text-danger">(0.00)</td>
+            <td class="fs-12px f-w-500 py-10px text-right text-success">{{ totalCaja(c.id).toFixed(2) }}</td>
+            <td class="fs-12px f-w-500 py-10px text-right" *ngFor="let tp of tiposPago">{{ totalTipoPago(c.id, tp.idTipoPago).toFixed(2) }}</td>
+            <td class="fs-12px f-w-500 py-10px text-right text-indigo">{{ totalCaja(c.id).toFixed(2) }}</td>
+            <td class="fs-12px f-w-500 py-10px text-right">0.00</td>
+            <td class="fs-12px f-w-500 py-10px text-right text-success">{{ totalCaja(c.id).toFixed(2) }}</td>
+          </tr>
+        </tbody>
+
+        <tfoot>
+          <tr class="bg-light-indigo">
+            <td class="fs-12px fw-bold py-10px text-right " colspan="2">Totales</td>
+            <td class="fs-12px fw-bold py-10px text-right text-indigo">{{ totalCajas().toFixed(2) }}</td>
+            <td class="fs-12px fw-bold py-10px text-right text-danger">0.00</td>
+            <td class="fs-12px fw-bold py-10px text-right text-danger">0.00</td>
+            <td class="fs-12px fw-bold py-10px text-right text-success">{{ totalCajas().toFixed(2) }}</td>
+            <td class="fs-12px fw-bold py-10px text-right" *ngFor="let tp of tiposPago">{{ totalTiposPago(tp.idTipoPago).toFixed(2) }}</td>
+            <td class="fs-12px fw-bold py-10px text-right text-indigo">{{ totalCajas().toFixed(2) }}</td>
+            <td class="fs-12px fw-bold py-10px text-right">0.00</td>
+            <td class="fs-12px fw-bold py-10px text-right text-success">{{ totalCajas().toFixed(2) }}</td>
+          </tr>
+        </tfoot>
+
+      </table>
+    </div>
+
+
+  </div>
+</div>

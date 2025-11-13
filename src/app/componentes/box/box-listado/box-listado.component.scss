@@ -1,0 +1,117 @@
+.contenedor-boxs{
+    display: flex; 
+    flex-wrap: wrap; 
+    gap: 4.5rem; 
+    padding: 20px 38px;
+}
+
+@media (max-width: 992px) {
+    .contenedor-boxs{
+        gap: 2rem 0.8rem; 
+        padding: 20px 28px;
+    }
+}
+
+.box-circulo{
+    width: 2vw;
+    height: 2vw;
+    border-radius: 50%;
+    cursor: pointer;
+    position: absolute;
+    display: flex;
+    align-items: center;  
+    font-size: 1vw; 
+    color: white;            
+    font-weight: bold;
+    flex-direction: column;
+}
+
+.bg-active{
+  background-color: #14ba14;
+}
+
+.bg-disabled{
+  background-color: #d41616;
+}
+
+.bg-attend{
+  background-color: rgb(255, 154, 0);
+}
+
+.size-tx{
+   font-size: 0.9vw
+}
+
+.size-span{
+  margin-top: 0.4rem;
+  padding: 0 0.2rem;
+}
+
+.active-tx{
+  background: #14ba14;
+}
+
+.attend-tx{
+  background: rgb(255, 154, 0);
+}
+
+.disabled-tx{
+  background: #d41616;
+  white-space: nowrap;
+}
+
+.mini-mat-form-field {
+  width: 70px !important;
+  margin: 0 !important;
+  font-size: 0.85rem;
+}
+
+.btn-maximize{
+  position: absolute; 
+  bottom: 10px; 
+  right: 10px; 
+  padding: 10px 20px; 
+  font-size: 1.2vw; 
+  background-color: rgba(170, 170, 170, 0.5); 
+  color: white; 
+  border: none; 
+  border-radius: 5px; 
+  cursor: pointer; 
+  transition: background-color 0.3s ease;
+}
+
+.btn-maximize:hover {
+  background-color: #585858;  /* Gris más opaco en hover c4c4c4 */
+}
+
+.drag-area {
+    position: relative; /* Asegura que los elementos dentro sean relativos al contenedor */
+    width: 100%;
+}
+
+.box-container{
+  flex: 0 0 50%; box-sizing: border-box; padding: 0.5rem; height: calc(100% / 8);
+}
+
+.box-uni{
+  background: #fff; border-radius: 6px; padding: 1rem; text-align: center; font-weight: bold;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.casilla-pulsante {
+  animation: pulse 1s infinite ease-in-out;
+  box-shadow: 0 0 10px rgba(4, 169, 245, 0.5);
+  transition: all 0.3s ease;
+  border: 4px solid #04a9f5;
+}

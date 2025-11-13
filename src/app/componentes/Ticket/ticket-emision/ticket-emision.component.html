@@ -1,0 +1,260 @@
+﻿<!-- MODAL SELECCION USUARIO -->
+<ng-template #modalUsuarioSeleccion let-modal let-close="close">
+    <app-usuario-seleccion
+        (eventUsuarioSeleccionado)="eventUsuarioSeleccionado($event)"
+        [modal]="modalUsuarioSeleccionRef"
+        [idPerfil]="idPerfilBuscarUsuario"
+        [idSede]="idSedeBuscarUsuario">
+    </app-usuario-seleccion>
+</ng-template>
+
+
+<form [formGroup]="frmTicketDatos" (ngSubmit)="grabarTicket()">
+    <div class="modal-content">
+
+        <div class="modal-header card-header">
+            <h5 class="modal-title">{{ titulo }}</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="modal.close()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+        <div class="modal-body card-body" type="aria-hidden">
+
+             <!-- CLIENTE -->
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <div class="input-group input-group-sm">
+                        <div class="input-group-prepend"><span class="input-group-text" for="cliente" [placement]="'bottom'" ngbTooltip="Nombre del paciente"><i class="fas fa-user"></i></span></div>
+                        <input type="text" class="form-control dz-uppercase" formControlName="cliente" disabled/>
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+                    <div class="input-group input-group-sm">
+                        <div class="input-group-prepend"><span class="input-group-text" for="documento" [placement]="'bottom'" ngbTooltip="Número de documento"><i class="fas fa-id-card"></i></span></div>
+                        <input id="txtDocumento" type="text"
+                                class="form-control dz-uppercase"
+                                formControlName="documento"
+                                placeholder="Numero de documento"
+                                style="font-size: 15px; font-weight: bold;"
+                                (keypress)="numberOnly($event)"
+                                maxlength="12"
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <!-- CITA -->
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <div class="input-group input-group-sm">
+                        <div class="input-group-prepend"><span class="input-group-text" for="numeroCita">Cita</span></div>
+                        <input type="text" class="form-control dz-uppercase" formControlName="numeroCita" value="CI-00015" disabled/>
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+                    <div class="input-group input-group-sm">
+                        <div class="input-group-prepend"><label class="input-group-text" for="fechaCita" [placement]="'bottom'" ngbTooltip="Fecha de cita"><i class="fas fa-calendar"></i></label></div>
+                        <input type="date" class="form-control" formControlName="fechaCita" aria-label="Default" aria-describedby="inputGroup-sizing-default" disabled/>
+                    </div>
+                </div>
+            </div>
+
+            <hr>
+            <div class="form-row">
+                <!-- ESPECIALISTA QUE ATENDIÓ -->
+                <div class="form-group col-md-6">
+                    <div class="input-group input-group-sm" >
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" [placement]="'top'" ngbTooltip="Atendido por..."><i class="fas fa-user"></i>
+                            </label>
+                        </div>
+                        <input type="text" class="form-control"
+                            [value]=""
+                            [attr.atendidoPor-idUsuario]="0"
+                            name="atendidoPor"
+                            id="atendidoPor"
+                            placeholder="Atendido por" disabled />
+                        <div class="input-group-prepend">
+                            <button type="button" class="btn btn-primary btn-sm" [placement]="'top'" ngbTooltip="Buscar usuario" (click)="abrirSelecionarUsuario(modalUsuarioSeleccion)"><i class="fa fa-search"></i></button>
+                        </div>
+                        <div class="input-group-prepend">
+                            <button type="button" class="btn btn-primary btn-sm" [placement]="'top'" ngbTooltip="Borrar usuario" (click)="borrarUsuarioAtendidoPor()"><i class="fa fa-times"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group col-md-6 es-mobile-c">
+                  <div class="input-group input-group-sm">
+                    <div class="input-group-prepend"><span class="input-group-text" for="numeroBox" [placement]="'top'" ngbTooltip="N° Box"><i class="fa fa-home"></i></span></div>
+                    <select class="custom-select" id="numeroBox" formControlName="numeroBox" [ngClass]="{ 'is-invalid' : submitted && f.numeroBox.errors?.required }">
+                      <option value="" selected>--Seleccionar N° Box--</option>
+                      <option [value]="1" >01</option>
+                      <option [value]="2" >02</option>
+                      <option [value]="3" >03</option>
+                      <option [value]="4" >04</option>
+                      <option [value]="5" >05</option>
+                      <option [value]="6" >06</option>
+                      <option [value]="7" >07</option>
+                      <option [value]="8" >08</option>
+                      <option [value]="9" >09</option>
+                      <option [value]="10" >10</option>
+                      <option [value]="11" >11</option>
+                      <option [value]="12" >12</option>
+                      <option [value]="13" >13</option>
+                      <option [value]="14" >14</option>
+                      <option [value]="15" >15</option>
+                      <option [value]="16" >16</option>
+                      <option [value]="17" >17</option>
+                      <option [value]="18" >18</option>
+                      <option [value]="19" >19</option>
+                      <option [value]="20" >20</option>
+                      <option [value]="21" >21</option>
+                      <option [value]="22" >22</option>
+                      <option [value]="23" >23</option>
+                      <option [value]="24" >24</option>
+                      <option [value]="25" >25</option>
+                      <option [value]="26" >26</option>
+                      <option [value]="27" >27</option>
+                      <option [value]="28" >28</option>
+                      <option [value]="29" >29</option>
+                      <option [value]="30" >30</option>
+                      <option [value]="31" >31</option>
+                      <option [value]="32" >32</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group col-md-6 es-mobile-c">
+                  <div class="input-group input-group-sm">
+                    <div class="input-group-prepend"><span class="input-group-text" for="idMaquinaMarca" [placement]="'top'" ngbTooltip="Maquina"><i class="fa fa-tag"></i></span></div>
+                    <select class="custom-select" id="idMaquinaMarca" formControlName="idMaquinaMarca" [ngClass]="{ 'is-invalid' : submitted && f.idMaquinaMarca.errors?.required }">
+                      <option value="" selected>--Seleccionar Maquina--</option>
+                      <option *ngFor="let m of maquinaMarcas" [value]="m.id" >{{ m.nombre }}</option>
+                    </select>
+                  </div>
+                </div>
+
+                    <!-- PREGUNTA SIGUIENTE CITA -->
+                    <div class="form-group col-md-6 es-mobile-c">
+                        <div class="input-group input-group-sm">
+                            <div class="input-group-prepend"><span class="input-group-text" for="documento">¿Siguiente cita?</span>
+                            </div>&nbsp;
+                            <div class="radio radio-primary radio-fill d-inline">
+                                <input type="radio" name="esSiguienteCita" id="radioSigCita1" checked value="0">
+                                <label for="radioSigCita1" class="cr">NO</label>
+                            </div>
+
+                            <div class="radio radio-primary radio-fill d-inline">
+                                <input type="radio" name="esSiguienteCita" id="radioSigCita2" value="1">
+                                <label for="radioSigCita2" class="cr">SI</label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            <div class="form-row es-mobile-c">
+                  <!--NUMERO Y TIPO DE COMPROBANTE -->
+                <div class="form-group col-md-6">
+                    <div class="input-group input-group-sm">
+                        <div class="input-group-prepend"><span class="input-group-text" for="tipoComprobante" [placement]="'top'" ngbTooltip="Tipo comprobante"><i class="fa fa-file"></i></span></div>
+                        <select class="custom-select" formControlName="tipoComprobante" (change)="change_TipoComprobante($event)">
+                            <option *ngFor="let tipoComprobante of maestroTipoComprobante" [value]="tipoComprobante.id">{{ tipoComprobante.descripcion }}</option>
+                        </select>
+                        <div class="input-group-prepend"><label class="input-group-text" for="numeroTicket">#</label></div>
+                        <input type="text" id="txtNumeroTicket" class="form-control dz-uppercase" formControlName="numeroTicket" value="TK-00001" maxlength="21   " disabled/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row es-mobile-c">
+                    <div class="form-group col-md-6">
+                        <div class="input-group input-group-sm">
+                            <div class="input-group-prepend"><label class="input-group-text" for="tipoPago" [placement]="'top'" ngbTooltip="Forma de pago"><i class="fa fa-credit-card"></i></label></div>
+                            <select class="custom-select" formControlName="tipoPago" id="cboTipoPago" (change)="change_TipoPago($event)">
+                                <option *ngFor="let tipoPago of maestroTipoPago" [value]="tipoPago.idTipoPago">{{ tipoPago.descripcion }}</option>
+                            </select>
+                            <select class="custom-select" formControlName="tipoPagoEntidad" id="cboTipoPagoEntidad">
+                                <option *ngFor="let tipoPagoEntidad of maestroTipoPagoEntidad" [value]="tipoPagoEntidad.id">{{ tipoPagoEntidad.descripcion }}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6">
+
+                    </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <div class="input-group input-group-sm">
+                        <div class="input-group-prepend"><span class="input-group-text" for="total" >Total</span></div>
+                        <input type="text" class="form-control dz-uppercase" formControlName="total" disabled style="text-align:right; background-color: rgb(138, 245, 138); font-size: 16px; font-weight: bold;"/>
+                    </div>
+                </div>
+                <!-- <div class="form-group col-md-4 es-mobile-c">
+                    <div class="input-group input-group-sm">
+                        <div class="input-group-prepend"><label class="input-group-text" for="recibido">Recibido</label></div>
+                        <input type="text" class="form-control dz-uppercase"
+                                currencyMask [options]="options" style="text-align:right; background-color: rgb(161, 222, 255); font-size: 16px; font-weight: bold;"
+                                formControlName="recibido" (ngModelChange)="mostrarVuelto()"/>
+                    </div>
+                </div> -->
+                
+                <div class="form-group col-md-4">
+                    <div class="input-group input-group-sm">
+                        <div class="input-group-prepend"><label class="input-group-text" for="pagoFinal">Pago Final</label></div>
+                        <input type="text" class="form-control dz-uppercase"
+                                currencyMask [options]="options" style="text-align:right; background-color: rgb(161, 222, 255); font-size: 16px; font-weight: bold;"
+                               formControlName="pagoFinal" name="pagoFinal"/>
+                    </div>
+                </div>
+
+                <!-- <div class="form-group col-md-4 es-mobile-c">
+                    <div class="input-group input-group-sm">
+                        <div class="input-group-prepend"><span class="input-group-text" for="vuelto">Vuelto</span></div>
+                        <input type="text" class="form-control dz-uppercase" formControlName="vuelto" disabled style="text-align:right; background-color: rgb(243, 227, 161); font-size: 16px; font-weight: bold;"/>
+                    </div>
+                </div> -->
+            </div>
+
+            <div class="form-row">
+                    <div class="form-group col-md-12">
+                        <table id="customers">
+                            <thead>
+                                <tr>
+                                    <th scope="col">ZONAS</th>
+                                    <th scope="col">SESIÓN</th>
+                                    <th scope="col">PRECIO</th>
+                                    <th *ngIf="permitirEliminar" scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let zona of cita.zonasCorporales">
+                                    <td scope="row">{{ zona.descripcion }}</td>
+                                    <td scope="row">{{ zona.sesion }}</td>
+                                    <td scope="row" style="text-align: right;">{{ formatoMoneda(zona.precio) }}</td>
+                                    <td *ngIf="permitirEliminar" scope="row" style="width: 26px; margin-left: 2px; padding-left: 5px; margin-top: 0px; margin-bottom: 1px;"
+                                                            [placement]="'bottom'"
+                                                            ngbTooltip="Eliminar zona"
+                                                            (click)="eliminarZona(zona)"
+                                                            class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+            </div>
+
+        </div>
+
+
+
+        <div class="modal-footer card-footer">
+            <div class="form-row float-right">
+                <button id="btnGrabar" type="submit" class="btn btn-outline-primary" ><i class="feather icon-save"></i><span>Grabar</span></button>
+                <button id="btnCancelar" type="reset"  class="btn btn-outline-danger" (click)="cerrarModal()"><i class="feather icon-slash"></i>Cancelar</button>
+            </div>
+        </div>
+
+    </div>
+</form>

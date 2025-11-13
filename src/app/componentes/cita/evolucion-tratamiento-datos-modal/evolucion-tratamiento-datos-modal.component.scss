@@ -1,0 +1,69 @@
+.actions{
+  button{
+    .dicon{
+      opacity: .5;
+    }
+    &:hover{
+      .dicon{
+        opacity: 1;
+      }
+    }
+  }
+}
+
+.addHistory{
+  -webkit-transition: all .2s;
+  -moz-transition: all .2s;
+  -ms-transition: all .2s;
+  -o-transition: all .2s;
+  transition: all .2s;
+  cursor: pointer;
+  text-align: center;
+  .dicon{
+    height: 50px;
+    background-size: 50px;
+    opacity: .3;
+  }
+  &:hover{
+    -webkit-box-shadow: 0 1px 20px 0 rgba(69, 90, 100, 0.08);
+    -moz-box-shadow: 0 1px 20px 0 rgba(69, 90, 100, 0.08);
+    box-shadow: 0 1px 20px 0 rgba(69, 90, 100, 0.08);
+  }
+}
+
+.historia{
+  -webkit-animation: output .5s ease-in-out;
+  -o-animation: output .5s ease-in-out;
+  animation: output .5s ease-in-out;
+  .mat-list-item{
+    background-color: red !important;
+  }
+}
+@keyframes output {
+  0%{
+    -webkit-transform: scale(1.05);
+    -moz-transform:scale(1.05);
+    -ms-transform: scale(1.05);
+    -o-transform:scale(1.05);
+    transform: scale(1.05);
+  }
+  50%{
+    -webkit-transform: scale(0.95);
+    -moz-transform: scale(0.95);
+    -ms-transform: scale(0.95);
+    -o-transform: scale(0.95);
+    transform: scale(0.95);
+  }
+  100%{
+    -webkit-transform: scale(1);
+    -moz-transform: scale(1);
+    -ms-transform: scale(1);
+    -o-transform: scale(1);
+    transform: scale(1);
+  }
+}
+
+.modal-backdrop.over{
+  z-index: 1072 !important;
+}
+

@@ -1,0 +1,26 @@
+<header>
+  <div class="m-header" [style.display]="this.headerStyle">
+    <a class="mobile-menu" id="mobile-collapse1" href="javascript:" (click)="emitirEvento()">
+      <span></span>
+    </a>
+    <a [routerLink]="['/Inicio']" class="b-brand">
+      <!-- <div class="b-bg">
+        <i class="feather icon-trending-up"></i>
+      </div>
+      <span class="b-title">Datta Able</span>logo-blanco -->
+      <img src="assets/landing/logos/Logo-Depilzone-2.png" alt="DEPILZONE" />
+    </a>
+  </div>
+  
+  <a class="mobile-menu" 
+        [ngClass]="{'on' : this.menuClass}" id="mobile-header" href="javascript:" 
+        (click)="goToback()">
+    <i class="feather icon-arrow-left"></i>
+  </a>
+  
+  <div class="collapse navbar-collapse" [style.display]="this.collapseStyle">
+    <app-nav-left class="mr-auto" [style.display]="this.headerStyle"></app-nav-left>
+    <app-nav-right class="ml-auto"></app-nav-right>
+  </div>
+
+</header>

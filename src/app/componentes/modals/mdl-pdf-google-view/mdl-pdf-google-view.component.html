@@ -1,0 +1,39 @@
+<div class="scard bg-transparent popins mh-100">
+  <div class="modal-header card-header bg-gradient">
+    <h5 class="card-title text-white f-w-500 m-0">Vista Previa del Comprobante</h5>
+    <button type="button" class="btn sbtn btn-sm btn-icon btn-active-color-primary h-auto w-auto p-0" (click)="activeModal.close()">
+              <span class="svg-icon svg-icon-1 text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor"></rect>
+                  <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor"></rect>
+                </svg>
+              </span>
+    </button>
+  </div>
+
+  <div class="card-body bg-white p-0 depilform position-relative d-flex flex-column">
+    <div class="py-6 px-6 border-bottom h-100">
+      <div class="w-100 m-auto h-100">
+        <iframe class="d-block max-h-100" [ngClass]="{'iframe-oculto': mostrarPdfViewer}" *ngIf="_url" #iframe [src]="getUrl | safe" width='100%' height='600px' frameborder='0' allowfullscreen></iframe>
+      
+        <pdf-viewer #pdfviewer
+          *ngIf="mostrarPdfViewer"
+          [src]="urlVisualizar"
+          [render-text]="true"
+          [original-size]="false"
+          style="width: 100%; height: 500px;"
+        ></pdf-viewer>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-footer bg-white py-3">
+    <div class="form-row float-right">
+      <button matRipple type="button" class="btn sbtn btn-light-primary mr-2 d-flex align-items-center" (click)="ver()"><fontawesome-svg class="mr-2" icon="eye" type="light" [width]="18" [height]="18"></fontawesome-svg> Ver</button>
+      <button matRipple type="button" class="btn sbtn btn-light-indigo mr-2 d-flex align-items-center" (click)="imprimir()"><fontawesome-svg class="mr-2" icon="print" type="light" [width]="18" [height]="18"></fontawesome-svg> Imprimir</button>
+      <button matRipple type="button" class="btn sbtn btn-light mr-2" (click)="activeModal.close()">Cerrar</button>
+    </div>
+  </div>
+
+</div>
+

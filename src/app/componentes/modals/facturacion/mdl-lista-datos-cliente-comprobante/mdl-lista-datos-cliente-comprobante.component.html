@@ -1,0 +1,68 @@
+﻿<div class="scard bg-transparent popins mh-100">
+      <div class="modal-header card-header bg-gradient">
+          <h5 class="card-title text-white f-w-500 m-0">Lista de datos del cliente para la facturación</h5>
+          <button type="button" class="btn sbtn btn-sm btn-icon btn-active-color-primary h-auto w-auto p-0" (click)="cerrarModal(false)">
+            <span class="svg-icon svg-icon-1 text-white">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor"></rect>
+                <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor"></rect>
+              </svg>
+            </span>
+          </button>
+      </div>
+      <div class="card-body bg-white p-4 overflow-auto depilform position-relative">
+
+        <loader-circle *ngIf="ldBuscarCliente"></loader-circle>
+
+          <form [formGroup]="formGroup" (ngSubmit)="evtBuscarCliente()" class="form-row">
+            <div class="col-12 mb-2">
+              <label for="numeroDocumentoCliente" class="form-label mb-0 text-secondary f-w-500">Número (RUC, DNI, Etc)</label>
+
+              <div class="input-group">
+                <input id="numeroDocumentoCliente" type="text" placeholder="N° del documento" formControlName="numeroDocumentoCliente" class="form-indigo form-control form-indigo form-control-sm w-auto rounded-end-0px" [ngClass]="{ 'is-invalid bg-color-light-danger border-danger': submitted && f.numeroDocumentoCliente.errors }">
+                <div class="input-group-append" [ngbTooltip]="ldBuscarCliente ? 'Buscando' : 'Buscar'">
+                  <button type="submit" matRipple class="btn btn-sm btn-indigo rounded rounded-left-0" >
+                    <i *ngIf="!ldBuscarCliente" class="fa-regular fa-magnifying-glass m-0"></i>
+                    <i *ngIf="ldBuscarCliente" class="fa-duotone fa-spinner-third fa-spin m-0"></i>
+                  </button>
+                </div>
+              </div>
+
+
+              <div *ngIf="submitted && f.numeroDocumentoCliente.errors" class="invalid-feedback d-block">
+                <div *ngIf="f.numeroDocumentoCliente.errors.required">* Campo requerido</div>
+              </div>
+            </div>
+          </form>
+
+
+          <div *ngFor="let c of collection" class="card mb-3 border border-indigo-medium rounded-md cursor-pointer" [class.border-3px]="selected" (click)="evtSelect(c)">
+            <div class="card-body p-3">
+              <div class="form-row">
+                <div class="col-12 col-lg-6">
+                  <p class="mb-0 fw-bold text-secondary fs-12px mb-1 text-indigo">Tipo Documento</p>
+                  <p class="fs-12px mb-2">{{c.tipoDocumentoCliente}}</p>
+                </div>
+                <div class="col-12 col-lg-6">
+                  <p class="mb-0 fw-bold text-secondary fs-12px mb-1 text-indigo">N° Documento</p>
+                  <p class="fs-12px mb-2">{{ c.numeroDocumentoCliente }}</p>
+                </div>
+              </div>
+
+              <p class="mb-0 fw-bold text-secondary fs-12px mb-1 text-indigo">Nombre / Razón Social</p>
+              <p class="fs-12px mb-0">{{c.nombreCliente}}</p>
+
+              <p *ngIf="c.idTipoDocumentoCliente === enumFacturaTipoDocumento.RUC" class="mb-0 fw-bold text-secondary fs-12px mb-1 text-indigo mt-3">Dirección Fiscal</p>
+              <p *ngIf="c.idTipoDocumentoCliente === enumFacturaTipoDocumento.RUC" class="fs-12px mb-0">{{c.direccion}}</p>
+            </div>
+          </div>
+
+      </div>
+      <div class="modal-footer bg-white py-3">
+          <div class="form-row float-right">
+            <button matRipple [disabled]="ldBuscarCliente" type="reset" class="btn sbtn btn-light mr-2" (click)="cerrarModal()">Cancelar</button>
+            <button [disabled]="!selected" matRipple type="submit" class="btn sbtn btn-primary shadow btn-shadow-primary" (click)="evtSeleccionar()">Seleccionar</button>
+          </div>
+      </div>
+
+  </div>

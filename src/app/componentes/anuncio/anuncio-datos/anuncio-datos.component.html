@@ -1,0 +1,49 @@
+    <form [formGroup]="frmAnuncioDatos">
+         <div class="modal-content">
+            <div class="modal-header card-header">
+                <h5 class="modal-title">{{ accion }} Anuncio</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="modal.close()"><span aria-hidden="true">&times;</span></button>
+            </div>
+
+            <div class="modal-body card-body">
+                <input type="hidden" formControlName="idAnuncio">
+
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        <div class="input-group input-group-sm">
+                            <div class="input-group-prepend"><span class="input-group-text" for="titulo">Titulo </span></div>
+                            <input type="text" class="form-control dz-uppercase" formControlName="titulo"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-12">
+                        <div class="input-group input-group-sm">
+                            <div class="input-group-prepend"><span class="input-group-text" for="informacion">Información </span></div>
+                            <textarea class="form-control" formControlName="informacion" rows="8"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        <div class="picture-container">
+                          <label for="imagen">Imagen del anuncio</label>
+                          <div class="picture sizePictureAnuncio" name="imagen">
+                            <img [src]="rutaImagenAnuncio" class="picture-src">
+                            <input type="file" #ImageAnuncio accept="image/*" formControlName="imagen"
+                              (change)="mostrarFotoAnuncio($event.target.files)">
+                          </div>
+                        </div>
+                      </div>
+                </div>
+
+            </div>
+            
+            <div class="modal-footer card-footer">
+                <div class="form-row float-right">
+                    <button type="button" class="btn btn-outline-primary" (click)="anuncioGrabar()"><i class="feather icon-save"></i>Guardar</button>
+                    <button type="button"  class="btn btn-outline-danger" (click)="cerrarModal()"><i class="feather icon-slash"></i>Cancelar</button>
+                </div>
+            </div>
+        </div> 
+    </form>

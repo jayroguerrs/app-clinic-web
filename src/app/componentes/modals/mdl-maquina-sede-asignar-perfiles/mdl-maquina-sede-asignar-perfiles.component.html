@@ -1,0 +1,43 @@
+﻿<form [formGroup]="formGroup" (ngSubmit)="evtOnSubmit()">
+  <div class="scard bg-transparent popins h-100">
+    <div class="modal-header card-header bg-gradient">
+      <h5 class="card-title text-white f-w-500 m-0">Asignar Perfiles</h5>
+      <button type="button" class="btn sbtn btn-sm btn-icon btn-active-color-primary h-auto w-auto p-0" (click)="cerrarModal()">
+              <span class="svg-icon svg-icon-1 text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor"></rect>
+                  <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor"></rect>
+                </svg>
+              </span>
+      </button>
+    </div>
+    <div class="card-body bg-white p-4 depilform position-relative" >
+
+      <loader-circle *ngIf="loading"></loader-circle>
+
+      <div class="px-4">
+        <div class="form-row">
+          <p class="fs-16px fw-semibold text-dark">Seleccionar perfiles</p>
+
+          <!-- Zona -->
+          <div class="mb-2 col-12">
+            <label for="idPerfiles" class="form-label mb-0 text-secondary f-w-500">Perfiles</label>
+            <ng-select #selectZona id="idPerfiles" class="w-100" [ngClass]="{'invalid': submitted && this.f.idPerfiles.errors}" [items]="perfiles" [searchable]="false" bindLabel="Nombre" bindValue="IdPerfil" placeholder="--Seleccionar--" formControlName="idPerfiles" [multiple]="true">
+              <ng-template ng-header-tmp>
+                <input type="text" class="form-control form-control-sm border rounded text-indigo fs-13px" autofocus (input)="selectZona.filter($event.target.value)"/>
+              </ng-template>
+            </ng-select>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer bg-white py-3">
+      <div class="form-row float-right">
+        <button matRipple [disabled]="loading" type="button" class="btn sbtn btn-light mr-2" (click)="cerrarModal()">Cancelar</button>
+        <button matRipple type="submit" class="btn sbtn btn-primary shadow btn-shadow-primary" >Agregar</button>
+      </div>
+    </div>
+
+  </div>
+</form>

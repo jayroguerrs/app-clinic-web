@@ -1,0 +1,112 @@
+﻿<!-- SPINNER -->
+<ngx-spinner
+    [template]="rutaImageSpinner">
+    <p style="color: white" > Cargando... </p>
+</ngx-spinner>
+
+<form [formGroup]="frmMaquinaSedeDatos" (ngSubmit)="maquinaSedeGrabar()">
+    <div class="modal-content">
+        <div class="modal-header card-header">
+            <h5 class="modal-title">{{ accion }} Maquina Sede</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="modal.close()"><span aria-hidden="true">&times;</span></button>
+        </div>
+       <div class="modal-body card-body">
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <div class="form-floating">
+                      <select class="custom-select dz-uppercase" id="cboMaquina" formControlName="cboMaquina" [ngClass]="{ 'is-invalid': submitted && f.cboMaquina.errors }">
+                        <option value= ''>...Seleccionar...</option>
+                        <option *ngFor="let maquina of listaMaquinas" [value]="maquina.id">{{ maquina.descripcion }}</option>
+                      </select>
+                      <label for="cboMaquina">Maquina <span class="text-danger">*</span></label>
+                    </div>
+                    <div *ngIf="submitted && f.cboMaquina.errors" class="invalid-feedback d-block">
+                      <div *ngIf="f.cboMaquina.errors.required">Seleccione una maquina</div>
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+                    <div class="form-floating">
+                      <select class="custom-select" id="cboSede" formControlName="cboSede" [ngClass]="{ 'is-invalid': submitted && f.cboSede.errors }">
+                        <option value= ''>...Seleccionar...</option>
+                        <option *ngFor="let sede of listaSedes" [value]="sede.idSede">{{ sede.nombre }}</option>
+                      </select>
+                      <label for="cboSede">Sede <span class="text-danger">*</span></label>
+                    </div>
+                    <div *ngIf="submitted && f.cboSede.errors" class="invalid-feedback d-block">
+                      <div *ngIf="f.cboSede.errors.required">Seleccione una sede</div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <div class="form-floating">
+                      <input type="time" class="form-control dz-uppercase" id="maqSedeHoraInicio" placeholder=" " formControlName="maqSedeHoraInicio" [ngClass]="{ 'is-invalid': submitted && f.maqSedeHoraInicio.errors }" >
+                      <label for="maqSedeHoraInicio">Hora Inicio <span class="text-danger">*</span></label>
+                    </div>
+                    <div *ngIf="submitted && f.maqSedeHoraInicio.errors" class="invalid-feedback d-block">
+                      <div *ngIf="f.maqSedeHoraInicio.errors.required">Ingrese una hora de inicio</div>
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+                    <div class="form-floating">
+                      <input type="time" class="form-control dz-uppercase" id="maqSedeHoraTermino" placeholder=" " formControlName="maqSedeHoraTermino" [ngClass]="{ 'is-invalid': submitted && f.maqSedeHoraTermino.errors }" >
+                      <label for="maqSedeHoraTermino">Hora Termino <span class="text-danger">*</span></label>
+                    </div>
+                    <div *ngIf="submitted && f.maqSedeHoraTermino.errors" class="invalid-feedback d-block">
+                      <div *ngIf="f.maqSedeHoraTermino.errors.required">Ingrese una hora de termino</div>
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                   <div class="form-floating">
+                     <select class="custom-select" id="idServicio" formControlName="idServicio" [ngClass]="{ 'is-invalid': submitted && f.idServicio.errors }">
+                       <option value="">--Seleccionar--</option>
+                       <option *ngFor="let serv of servicios" [value]="serv.id">{{ serv.nombre }}</option>
+                     </select>
+                     <label for="idEstado">Servicio</label>
+                     <div *ngIf="submitted && f.idServicio.errors" class="invalid-feedback d-block">
+                       <div *ngIf="f.idServicio.errors.required">Seleccione un servicio</div>
+                     </div>
+                   </div>
+                </div>
+           </div>
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    <div class="form-floating">
+                      <input maxlength="50" type="text" class="form-control dz-uppercase" id="maqSedeDescripcion" placeholder=" " formControlName="maqSedeDescripcion" [ngClass]="{ 'is-invalid': submitted && f.maqSedeDescripcion.errors }" >
+                      <label for="maqSedeDescripcion">Descripción </label>
+                    </div>
+                    <div *ngIf="submitted && f.maqSedeDescripcion.errors" class="invalid-feedback d-block">
+                      <div *ngIf="f.maqSedeDescripcion.errors.required">Ingrese una descripción</div>
+                    </div>
+                </div>
+            </div>
+           <div class="form-row">
+             <div class="col-md-6 col-lg-6">
+               <div class="form-floating">
+                 <select class="custom-select" id="idFicticio" formControlName="idFicticio" [ngClass]="{ 'is-invalid': submitted && f.idFicticio.errors }">
+                   <option [value]="1">SI</option>
+                   <option [value]="0">NO</option>
+                 </select>
+                 <label for="idFicticio">Ficticio</label>
+               </div>
+             </div>
+              <div class="col-md-6 col-lg-6">
+                  <div class="form-floating">
+                    <select class="custom-select" id="idEstado" formControlName="idEstado" [ngClass]="{ 'is-invalid': submitted && f.idEstado.errors }">
+                      <option [value]="1">ACTIVO</option>
+                      <option [value]="0">INACTIVO</option>
+                    </select>
+                    <label for="idEstado">Estado</label>
+                  </div>
+              </div>
+            </div>
+        </div>
+        <div class="modal-footer card-footer">
+            <div class="form-row float-right">
+                <button type="submit" class="btn btn-outline-primary" ><i class="feather icon-save"></i>Guardar</button>
+                <button type="reset"  class="btn btn-outline-danger" (click)="cerrarModal()"><i class="feather icon-slash"></i>Cancelar</button>
+            </div>
+        </div>
+
+    </div>
+</form>

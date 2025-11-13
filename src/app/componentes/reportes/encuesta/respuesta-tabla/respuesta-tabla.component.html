@@ -1,0 +1,16 @@
+<div class="">
+  <table datatable [dtOptions]="dtResponsiveOptions" class="table table-sm table-hover display compact">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>RESPUESTA</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let respuesta of respuestas; let i = index">
+        <td width="50" class="text-center">{{ i + 1 }}</td>
+        <td>{{ respuesta }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

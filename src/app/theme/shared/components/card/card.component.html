@@ -1,0 +1,41 @@
+<!-- [ngClass]="cardClass" -->
+<div  class="card cardClass"
+      [ngClass]="cardClass"
+      [@cardRemove]="cardRemove"
+      #toAnimate style="border-radius: 10px;"> <!-- animates animatesInitMode="show" [animatesOnInit]="{useVisibility: false, disabled: true}" -->
+
+  <div class="card-header text-white" *ngIf="!hidHeader" [ngClass]="headerClass" [ngStyle]="{ 'background-color': headerColor }">
+
+    <h5 *ngIf="!customHeader" [ngClass]="titleClass" [ngStyle]="{ 'color': headerFontColor }">{{ cardTitle }}</h5>
+    <h6 *ngIf="!customHeader && cardTitle2!=''" style="font-size: 10px;"  [ngStyle]="{ 'color': headerFontColor }" class="mb-0">{{ cardTitle2 }}</h6>
+
+    <div class="card-header-right" *ngIf="this.options && !customHeader">
+      <div class="btn-group card-option dropdown" ngbDropdown>
+
+        <button type="button" class="btn dropdown-toggle btn-icon" ngbDropdownToggle>
+          <i class="feather icon-more-horizontal" [ngClass]="titleClass"></i>
+        </button>
+
+        <ul class="list-unstyled card-option dropdown-menu dropdown-menu-right" ngbDropdownMenu>
+          <li *ngIf="this.fullscreen" class="dropdown-item full-card" (click)="fullCardToggle(toAnimate, '', true)"><a href="javascript:"><span><i class="feather" [ngClass]="fullIcon"></i> {{this.cardClass === 'full-card' ? 'Restaurar' : 'Maximizar'}}</span></a></li>
+          <li *ngIf="this.collapse" class="dropdown-item minimize-card" (click)="collapsedCardToggle($event)"><a href="javascript:"><span><i class="feather" [ngClass]="collapsedIcon"></i> {{this.collapsedCard === 'collapsed' ? 'Expandir' : 'Colapsar'}} </span>
+            <span style="display:none"><i class="feather icon-plus"></i></span></a></li>
+          <li *ngIf="this.reload" class="dropdown-item reload-card" (click)="cardRefresh()"><a href="javascript:"><i class="feather icon-refresh-cw"></i> Actualizar</a></li>
+          <li *ngIf="this.remove" class="dropdown-item close-card" (click)="cardRemoveAction()"><a href="javascript:"><i class="feather icon-trash"></i> Quitar</a></li>
+          <li *ngIf="this.pdf" class="dropdown-item close-card" (click)="cardPdfAction()"><a href="javascript:"><i class="far fa-file-pdf"></i> Exportar PDF</a></li>
+          <li *ngIf="this.excel" class="dropdown-item close-card" (click)="cardExcelAction()"><a href="javascript:"><i class="far fa-file-excel"></i> Exportar Excel</a></li>
+        </ul>
+
+      </div>
+    </div>
+
+    <ng-content *ngIf="customHeader" select=".app-card-header"></ng-content>
+  </div>
+
+  <div [@collapsedCard]="collapsedCard" [ngClass]="collapsedCardCustom" *ngIf="!hidBlock">
+    <div class="card-block" [ngClass]="blockClass">
+      <ng-content></ng-content>
+    </div>
+  </div>
+  <div class="card-loader" *ngIf="loadCard"><i class="pct-loader1 anim-rotate"></i></div>
+</div>

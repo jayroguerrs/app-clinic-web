@@ -1,0 +1,38 @@
+<section *ngIf="layout === 1" class="h-list-body">
+  <a href="javascript:" class="h-close-text" (click)="this.onChatCollapse.emit();"><i class="feather icon-chevrons-right"></i></a>
+  <div class="main-friend-cont scroll-div">
+    <!-- ----------------------------------- -->
+    <ng-container >
+      <div class="main-friend-list" >
+        <perfect-scrollbar  ngClass="datta-scroll" [style.max-width]="'350px'" [style.max-height]="'calc(100vh - 85px)'" [usePSClass]="'datta'" [disabled]="null" [autoPropagation] ="true">
+            <section *ngFor="let notificacion of notificaciones" class="card-notification">
+                <h6>Operadora: {{ notificacion.nombreOperador.length > 21 ? (notificacion.nombreOperador | slice:0:21) + '...' : notificacion.nombreOperador }}</h6>
+                <h5>"MARCAR COMO PAGADO LA CITA": <span>{{notificacion.idCita}}</span></h5>
+                <div class="actions-btns">
+                  <button type="button" (click)="revisarCita(notificacion.celularCliente, notificacion.fechaCita, notificacion.idCita)">Revisar</button>
+                  <button type="button" (click)="completarNotificacion(notificacion.idNotificacion)">Completado</button>
+                </div>
+            </section>
+        </perfect-scrollbar>
+      </div>
+
+    </ng-container>
+  </div>
+</section>
+<header *ngIf="layout === 2" class="h-list-header" >
+  <div class="input-group">
+    <input type="text" id="search-friends" class="form-control" placeholder="Search Friend . . ." [(ngModel)]="searchFriends">
+  </div>
+</header>
+<section *ngIf="layout === 2" class="h-list-body">
+  <a href="javascript:" class="h-close-text" (click)="this.onChatCollapse.emit();"><i class="feather icon-chevrons-right"></i></a>
+  <div class="main-friend-cont scroll-div">
+    <div class="main-friend-list">
+      <perfect-scrollbar ngClass="datta-scroll" [style.max-width]="'350px'" [style.max-height]="'calc(100vh - 85px)'" [usePSClass]="'datta'" [disabled]="null" [autoPropagation] ="true">
+        <ng-container *ngFor="let friends of friendsList | dataFilter : searchFriends">
+          <app-friend (onChatOn)="onChatOn(friends.id)" [friends]="friends"></app-friend>
+        </ng-container>
+      </perfect-scrollbar>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,251 @@
+// Colores de fondo para encabezados - Cambiado a azul #00bfff
+.bg-success-light {
+  background-color: rgba(0, 191, 255, 0.1);
+  border-bottom: 1px solid rgba(0, 191, 255, 0.2);
+}
+
+.bg-danger-light {
+  background-color: rgba(220, 53, 69, 0.1);
+  border-bottom: 1px solid rgba(220, 53, 69, 0.2);
+}
+
+// Iconos de estado con animación
+.status-icon-container {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin-bottom: 1rem;
+  
+  .status-icon {
+    font-size: 3rem;
+  }
+}
+
+// Animación de pulso para éxito - Cambiado a azul #00bfff
+.success-pulse {
+  background-color: rgba(0, 191, 255, 0.1);
+  animation: success-pulse 2s infinite;
+  
+  .status-icon {
+    animation: icon-float 3s ease-in-out infinite;
+    color: #00bfff; // Color del icono actualizado
+  }
+}
+
+// Animación de pulso para error
+.danger-pulse {
+  background-color: rgba(220, 53, 69, 0.1);
+  animation: danger-pulse 2s infinite;
+}
+
+// Actualizado para usar azul #00bfff
+@keyframes success-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(0, 191, 255, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 15px rgba(0, 191, 255, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(0, 191, 255, 0);
+  }
+}
+
+@keyframes danger-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 15px rgba(220, 53, 69, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(220, 53, 69, 0);
+  }
+}
+
+@keyframes icon-float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+// Estilos para modal
+.modal-content {
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.modal-header {
+  padding: 1.25rem;
+  
+  .modal-title {
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    
+    // Texto en color azul para títulos de success
+    &.text-success {
+      color: #ffffff !important; // Forzar color azul
+    }
+  }
+  
+  .close {
+    opacity: 0.5;
+    transition: all 0.2s;
+    
+    &:hover {
+      opacity: 1;
+      transform: scale(1.1);
+    }
+  }
+}
+
+.modal-body {
+  padding: 2rem;
+  
+  // Actualizar textos success a azul
+  .text-success {
+    color: #ffffff !important;
+  }
+}
+
+.modal-footer {
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  padding: 1rem 1.5rem;
+  
+  .btn {
+    transition: all 0.3s;
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    // Botones de acción primaria en azul
+    &.btn-primary {
+      background-color: #00bfff;
+      border-color: #00bfff;
+      
+      &:hover {
+        background-color: darken(#00bfff, 10%);
+        border-color: darken(#00bfff, 10%);
+      }
+    }
+    
+    // Outline buttons
+    &.btn-outline-primary {
+      color: #00bfff;
+      border-color: #00bfff;
+      
+      &:hover {
+        background-color: #00bfff;
+        color: white;
+      }
+    }
+  }
+}
+
+// Estilos específicos para botones redondeados
+.rounded-pill {
+  border-radius: 50px;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+// Estilos para alertas
+.alert {
+  border-radius: 0.5rem;
+  border-left-width: 4px;
+  
+  &.alert-info {
+    background-color: rgba(0, 191, 255, 0.1);
+    border-left-color: #00bfff;
+  }
+  
+  &.alert-warning {
+    background-color: rgba(255, 193, 7, 0.1);
+    border-left-color: #ffc107;
+  }
+}
+
+// Estilos para detalles de error
+.error-details {
+  text-align: left;
+  border-left: 4px solid #dc3545;
+}
+
+// Actualización de la barra de progreso
+.progress-bar.bg-success {
+  background-color: #00bfff !important;
+}
+
+// Sobreescribir colores específicos para el tema de denegado
+.bg-danger-light {
+  background-color: #dc3545;
+}
+
+.text-danger {
+  color: #dc3545 !important;
+}
+
+.danger-pulse {
+  .status-icon {
+    color: #dc3545;
+  }
+}
+
+// Animación específica para el pulso rojo
+@keyframes danger-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 15px rgba(220, 53, 69, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(220, 53, 69, 0);
+  }
+}
+
+// Estilos para el botón de contacto
+.btn-danger {
+  background-color: #dc3545;
+  border-color: #dc3545;
+  
+  &:hover {
+    background-color: darken(#dc3545, 10%);
+    border-color: darken(#dc3545, 10%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
+  }
+}
+
+// Estilo para el encabezado del modal
+.modal-header-error {
+  background-color: #dc3545;
+  color: white;
+  
+  .modal-title {
+    color: white !important;
+  }
+}
+
+// Icono de usuario denegado
+.status-icon-container.danger-pulse {
+  background-color: rgba(220, 53, 69, 0.1);
+  animation: danger-pulse 2s infinite;
+}
+
+// Detalles del error
+.error-details {
+  text-align: left;
+  border-left: 4px solid #dc3545;
+  background-color: rgba(220, 53, 69, 0.05);
+}

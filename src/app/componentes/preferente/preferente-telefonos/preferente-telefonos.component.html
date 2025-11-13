@@ -1,0 +1,47 @@
+<ng-template #modalTelefono let-modal let-clore="close">
+    <form [formGroup]="frmTelefonos">
+        <div class="modal-content">
+
+            <div class="modal-header card-header">
+                <h5 class="modal-title">Teléfonos de contacto</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body card-body">
+
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <div class="input-group input-group-sm">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" for="telNuevo">Telefono</span>
+                            </div>
+                            <input type="text" class="form-control" formControlName="telNuevo" appCellMask [pais]="51" (keyup.enter)="addTag()"/>
+                            <div class="input-group-prepend">
+                                <button class="btn btn-dark border border-left-0" type="button" (click)="addTag();">
+                                    <span class="fa fa-fw fa-check"></span></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="editor-tag bootstrap-tagsinput" id="divListaTelefono">
+
+                        <span *ngFor="let telefono of listaNumerosDetalle" class="tag label label-info d-flex flex-row align-items-center" >
+                            <span>{{ telefono.numero }}</span>
+                            <span class="fa-solid fa-delete-left ml-auto" (click)="removeTag(telefono)" ></span>
+<!--                            <span class="icon-delete ml-auto" (click)="removeTag(telefono)" [attr.data-role]="'remove'"></span>-->
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer card-footer">
+                <label type="button" class="btn btn-outline-primary" (click)="modal.close('Save click')">
+                    <i class="feather icon-save mx-0"></i>
+                </label>
+            </div>
+
+        </div>
+    </form>
+</ng-template>

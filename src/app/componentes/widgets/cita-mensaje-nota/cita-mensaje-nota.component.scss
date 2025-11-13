@@ -1,0 +1,30 @@
+.historial{
+  > div{
+    &:not(:last-child){
+      padding-bottom: 1rem;
+    }
+  }
+  .texto{
+    &:before{
+      content: "";
+      position: absolute;
+      display: block;
+      left: -2px;
+      width: 15px;
+      top: 0;
+      background-color: #8488c6;
+      height: 12px;
+      border-radius: 3px;
+      -webkit-transform: skew(38deg);
+      -moz-transform: skew(38deg);
+      -ms-transform: skew(38deg);
+      -o-transform: skew(38deg);
+      transform: skew(38deg);
+    }
+    &.destacado{
+      &:before{
+        background-color: #3F51B1 !important;
+      }
+    }
+  }
+}

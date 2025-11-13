@@ -1,0 +1,123 @@
+<table class="table table-layout-fixed popins">
+    <thead>
+    <tr class="bg-white">
+      <td class="text-center align-middle w-150px">
+        <span class="bg-light-indigo cursor-default rounded d-flex h-37px">
+          <fontawesome-svg class="m-auto" icon="calendar-arrow" [width]="24" [height]="24" type="light"></fontawesome-svg>
+        </span>
+      </td>
+      <td><span class="rounded bg-indigo px-2 py-2 d-block text-center f-w-500 text-white w-100">LUN</span></td>
+      <td><span class="rounded bg-indigo px-2 py-2 d-block text-center f-w-500 text-white w-100">MAR</span></td>
+      <td><span class="rounded bg-indigo px-2 py-2 d-block text-center f-w-500 text-white w-100">MIE</span></td>
+      <td><span class="rounded bg-indigo px-2 py-2 d-block text-center f-w-500 text-white w-100">JUE</span></td>
+      <td><span class="rounded bg-indigo px-2 py-2 d-block text-center f-w-500 text-white w-100">VIE</span></td>
+      <td><span class="rounded bg-indigo px-2 py-2 d-block text-center f-w-500 text-white w-100">SAB</span></td>
+      <td><span class="rounded bg-indigo px-2 py-2 d-block text-center f-w-500 text-white w-100">DOM</span></td>
+    </tr>
+    </thead>
+    <tbody>
+      <ng-container [ngSwitch]="ldSemanas">
+        <ng-container *ngSwitchCase="false">
+          <tr *ngFor="let week of weeks; let i = index;">
+            <td>
+              <div class="d-flex">
+                <button *ngIf="!week.saved" [disabled]="submitted && loadingSubmitted" type="button" class="btn sbtn btn-icon btn-danger shadow btn-shadow-danger w-35px mr-2 h-41px" (click)="trashWeek(i)">
+                  <fontawesome-svg icon="trash-can" type="regular" [width]="20" [height]="20" class="m-auto"></fontawesome-svg>
+                </button>
+                <div class="btn sbtn cursor-default bg-light-indigo w-100 ms-3 text-indigo no-pointer-events text-nowrap h-41px">
+                  <span class="d-block text-truncate">#{{i+1}} Sem</span>
+                  <!--<span class="d-block">{{ week[0].date | date: 'dd-MM-yyyy' }}</span>
+                  <span class="d-block">{{ week[(week.length-1)].date | date: 'dd-MM-yyyy' }}</span>-->
+                </div>
+              </div>
+            </td>
+            <td *ngFor="let day of week.dias">
+              <button [disabled]="submitted || (Parametros.accionActual === accionCronograma.VER && !day.cita)" matRipple class="btn btn-light btn-light-hover w-100 btn-shadow hover-shadow position-relative m-0 h-41px" (click)="onSelectSchedule(day)" [class.day-selected]="diaSelected === day">
+                <span *ngIf="!day.cita" class="w-10px h-10px top-0 bottom-0 end-0 start-0 m-auto">+</span>
+                <span class="position-absolute top-0 start-0 bottom-0 fs-1 d-flex flex-column">
+                  <span class="d-block mt-auto lh-1 fs-20px">{{ day.date | date: 'dd' }}</span>
+                  <span class="d-block text-uppercase small mb-auto fs-11px f-w-500 lh-1">{{ day.date | date: 'MMM' : '': 'es-PE' }}</span>
+                </span>
+                <span *ngIf="day.cita" class="p-1 position-absolute end-0 bottom-0 top-0 h-32px fs-1 btn text-white d-flex flex-column my-auto mr-1" [attr.style]="'background-color:'+day.cita.servicioColor" [class.bg-success]="day.submitted && day.statusSubmit === 'success'" [class.bg-danger]="day.submitted && day.statusSubmit === 'error'">
+                  <span class="d-block mt-auto lh-1 fs-15px">{{ verTecnologias(day.cita.detalles) }}</span>
+                  <span class="d-block text-uppercase small mb-auto fs-11px f-w-500 lh-1 text-white">{{day.cita.minutos}} MIN</span>
+                </span>
+
+                <fontawesome-svg *ngIf="day.submitted && day.loadingSubmit" icon="spinner-third" [width]="30" [height]="30" type="duotone" animation="spinner" class="position-absolute top-0 bottom-0 end-0 start-0 m-auto text-primary"></fontawesome-svg>
+                <!--          <fontawesome-svg *ngIf="day.submitted && day.statusSubmit" icon="calendar-check" [width]="30" [height]="30" type="duotone" class="position-absolute top-0 bottom-0 end-0 start-0 m-auto" [class.text-success]="day.statusSubmit === 'success'" [class.text-danger]="day.statusSubmit === 'error'"></fontawesome-svg>-->
+
+              </button>
+            </td>
+          </tr>
+        </ng-container>
+        <ng-container *ngSwitchCase="true">
+          <tr *ngFor="let i of utilService.counter(2)">
+            <td><div class="sk block rounded h-41px"></div></td>
+            <td><div class="sk block rounded h-41px"></div></td>
+            <td><div class="sk block rounded h-41px"></div></td>
+            <td><div class="sk block rounded h-41px"></div></td>
+            <td><div class="sk block rounded h-41px"></div></td>
+            <td><div class="sk block rounded h-41px"></div></td>
+            <td><div class="sk block rounded h-41px"></div></td>
+            <td><div class="sk block rounded h-41px"></div></td>
+          </tr>
+        </ng-container>
+      </ng-container>
+
+    </tbody>
+  </table>
+
+<full-calendar [options]="calendarOptions" class="d-none"></full-calendar>
+
+
+
+
+<ng-template #opciones let-modal let-close="close" let-d="dismiss" class="fadeIn">
+  <div class="modal-header card-header bg-gradient border-bottom-0 py-3">
+    <h2 class="h5 fw-bold d-flex flex-column">
+      <span class="text-white">Cita: {{modalCita}}</span>
+      <span class="fs-14px fw-semibold text-white-50">{{modalFecha}}</span>
+    </h2>
+    <button class="btn sbtn btn-sm btn-icon btn-active-color-primary h-auto w-auto p-0" (click)="modal.close()">
+    <span class="svg-icon svg-icon-1 text-white">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor"></rect>
+        <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor"></rect>
+      </svg>
+    </span>
+    </button>
+  </div>
+<!--
+  <div class="modal-header bg-white">
+    <h2 class="h5 f-w-500 d-flex flex-column">
+      <span>Cita: {{modalCita}}</span>
+      <span class="fs-14px text-indigo">{{modalFecha}}</span>
+    </h2>
+    <button type="button" class="btn sbtn btn-sm btn-icon btn-active-color-primary h-auto w-auto p-0" (click)="modal.dismiss()">
+      <span class="svg-icon svg-icon-1">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor"></rect>
+          <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor"></rect>
+        </svg>
+      </span>
+    </button>
+  </div>-->
+  <div class="modal-body p-0 py-3 overflow-hidden">
+    <div class="list-group rounded-0">
+      <button class="list-group-item list-group-item-action border-0 d-flex align-items-center" (click)="verCita();modal.dismiss()">
+        <fontawesome-svg icon="eye" [width]="20" [height]="24" type="light" class="mr-3"></fontawesome-svg>
+        <span class="fs-16px">Ver</span>
+      </button>
+      <button class="list-group-item list-group-item-action border-0 d-flex align-items-center" (click)="editarCita();modal.dismiss()">
+        <fontawesome-svg icon="pen" [width]="20" [height]="24" type="light" class="mr-3"></fontawesome-svg>
+        <span class="fs-16px">Editar</span>
+      </button>
+      <button class="list-group-item list-group-item-action border-0 d-flex align-items-center" (click)="atenderCita();modal.dismiss()">
+        <fontawesome-svg icon="hand-pointer" [width]="20" [height]="24" type="light" class="mr-3"></fontawesome-svg>
+        <span class="fs-16px">Atender</span>
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+

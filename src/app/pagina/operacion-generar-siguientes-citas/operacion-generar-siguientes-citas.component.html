@@ -1,0 +1,154 @@
+<div class="scard mb-4 mb-xl-10 popins">
+  <div class="card-header">
+    <div class="card-title m-0">
+      <h3 class="fw-bold m-0">Buscar citas sin siguiente cita</h3>
+    </div>
+  </div>
+
+  <div class="card-body">
+
+    <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+
+      <div class="form-row depilform">
+        <div class="mb-2 col-12 col-md-6 col-lg-3">
+          <label class="fw-semibold text-gray-800 required mb-0 ">Fecha Desde</label>
+          <div class="position-relative">
+            <fontawesome-svg class="position-absolute ps-13px pt-2 no-pointer-events form-indigo" icon="calendar-day" type="light-alt" [width]="24" [height]="24"></fontawesome-svg>
+            <input
+            type="text"
+            mwlFlatpickr
+              [altInput]="true"
+            [convertModelValue]="true"
+            [altFormat]="'d F Y'"
+            dateFormat="Y-m-d"
+            class="form-control form-control-solid form-indigo form-control-sm ps-48px"
+            placeholder="DD/MM/YYYY"
+            formControlName="fechaDesde"
+            readonly
+          />
+          </div>
+
+        </div>
+
+        <div class="mb-2 col-12 col-md-6 col-lg-3">
+          <label class="fw-semibold text-gray-800 required mb-0">Fecha Hasta</label>
+          <div class="position-relative">
+            <fontawesome-svg class="position-absolute ps-13px form-indigo pt-2 no-pointer-events" icon="calendar-day" type="light-alt" [width]="24" [height]="24"></fontawesome-svg>
+            <input
+            type="text"
+            mwlFlatpickr
+            [altInput]="true"
+            [convertModelValue]="true"
+            [altFormat]="'d/m/Y'"
+            dateFormat="Y-m-d"
+            class="form-control form-control-solid form-indigo form-control-sm ps-48px"
+            placeholder="DD/MM/YYYY"
+            formControlName="fechaHasta"
+            readonly
+          />
+          </div>
+        </div>
+
+        <div class="mb-2 col-12 col-md-6 col-lg-3">
+          <label for="idServicio" class="form-label mb-0 text-secondary f-w-500">Servicio</label>
+          <select id="idServicio" class="form-indigo form-select form-indigo form-select-sm" formControlName="idServicio">
+            <option [value]="0">-- Todos --</option>
+            <option *ngFor="let s of servicios" [value]="s.id">{{ s.nombre }}</option>
+          </select>
+        </div>
+
+        <div class="col-12">
+          <button [disabled]="formGroup.invalid" matRipple type="submit" class="btn btn-sm btn-indigo rounded-md">Buscar</button>
+        </div>
+      </div>
+
+    </form>
+
+
+  </div>
+
+</div>
+
+
+<div class="scard mb-4 mb-xl-10 popins">
+  <div class="card-header">
+    <div class="card-title m-0 w-100">
+      <h3 class="fw-bold m-0">Listado de citas</h3>
+    </div>
+  </div>
+
+  <div class="card-body">
+
+    <form [formGroup]="formGroupSiguienteCita" (ngSubmit)="onSubmitSiguienteCita()">
+
+      <div class="form-row depilform">
+
+        <div class="mb-2 col-12">
+          <div class="form-check form-check-custom form-check-solid d-inline-flex mr-3">
+            <input class="form-check-input" type="radio" name="idTipo" formControlName="idTipo" [value]="1" id="tipo1"/>
+            <label class="form-label mb-0 text-secondary ml-1 f-w-500" for="tipo1">
+              Fecha Específica
+            </label>
+          </div>
+
+          <div class="form-check form-check-custom form-check-solid d-inline-flex ">
+            <input class="form-check-input" type="radio" name="idTipo" formControlName="idTipo" [value]="2" id="tipo2"/>
+            <label class="form-label mb-0 text-secondary ml-1 f-w-500" for="tipo2">
+              Número meses
+            </label>
+          </div>
+        </div>
+
+        <div *ngIf="idTipo === 1" class="mb-2 col-12 col-lg-4">
+          <label for="numeroMeses" class="form-label mb-0 text-secondary f-w-500">Fecha de la siguiente cita</label>
+          <div class="input-group input-group-indigo mb-3">
+            <div class="position-relative">
+              <fontawesome-svg class="position-absolute form-indigo ps-13px pt-2 no-pointer-events" icon="calendar-day" type="light-alt" [width]="24" [height]="24"></fontawesome-svg>
+              <input
+              type="text"
+              mwlFlatpickr
+              [altInput]="true"
+              [convertModelValue]="true"
+              [altFormat]="'d F Y'"
+              dateFormat="Y-m-d"
+              class="form-control form-indigo form-control-sm text-center border-right-0"
+              placeholder="DD/MM/YYYY"
+              formControlName="fecha"
+              readonly
+            />
+            </div>
+            <div class="input-group-append">
+              <button [disabled]="!collection.length || formGroupSiguienteCita.invalid || ldSiguienteCita || completados" matRipple type="submit" class="btn btn-sm btn-indigo" (click)="evtGenerarSiguienteCita()">Generar Siguiente Cita</button>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="idTipo === 2" class="mb-2 col-12 col-lg-4">
+          <label for="numeroMeses" class="form-label mb-0 text-secondary f-w-500">N° de meses para la siguiente cita</label>
+          <div class="input-group input-group-indigo mb-3">
+            <select id="numeroMeses" class="form-select form-select-sm w-auto" formControlName="numeroMeses" [disableControl]="!collection.length || formGroupSiguienteCita.invalid || ldSiguienteCita || completados">
+              <option value="1.5">1 Mes y medio</option>
+              <option *ngFor="let v of utilsService.counter(18); let i = index" [value]="i + 1">{{ i+1 }} {{ (i+1) > 1 ? 'Meses': 'Mes' }}</option>
+            </select>
+            <div class="input-group-append">
+              <button [disabled]="!collection.length || formGroupSiguienteCita.invalid || ldSiguienteCita || completados" matRipple type="submit" class="btn btn-sm btn-indigo" (click)="evtGenerarSiguienteCita()">Generar Siguiente Cita</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <div *ngIf="submittedSiguienteCita">
+      <div class="rounded-pill bg-light border border-light-indigo border-8px">
+        <div class="bar h-20px rounded-pill" [style.width]="porcentaje+'%'" ></div>
+      </div>
+      <p class="pl-3">Completado {{porcentaje}}%</p>
+    </div>
+
+
+
+    <table datatable [dtOptions]="dtResponsiveOptions" class="table table-sm table-sm table-hover table-cliente display compact">
+    </table>
+    <loader-circle *ngIf="ldCollection"></loader-circle>
+  </div>
+</div>

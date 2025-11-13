@@ -1,0 +1,35 @@
+.tachado {
+    text-decoration: line-through;
+}
+
+.tachado-fondo{
+    background-color: #ededed;
+    opacity: 0.5;
+}
+
+table {
+    width: 100%;
+}
+
+.contenedor_comisiones{
+    display: flex; 
+    justify-content: space-between; 
+    padding: 24px 10px 24px 28px;
+}
+
+.contenedor_comisiones_tipos{
+    display: flex;  
+    gap: 2rem;
+}
+
+@media (max-width: 1522px) {
+    .contenedor_comisiones{
+      display: block;
+    }
+  }
+  
+  @media (max-width: 1237px) {
+    .contenedor_comisiones_tipos{
+      flex-direction: column;
+    }
+  }

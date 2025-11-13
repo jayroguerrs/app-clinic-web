@@ -1,0 +1,32 @@
+<!-- SPINNER -->
+<ngx-spinner
+  [template]="rutaImageSpinner">
+  <p style="color: white" > Cargando... </p>
+</ngx-spinner>
+
+
+<div class="row">
+  <div class="col-sm-12">
+    <app-card cardTitle="FACTURACIÓN - TIPOS DE MONEDA" [options]="false" [hidBlock]="true">
+    </app-card>
+  </div>
+
+  <!-- GRILLA -->
+  <div class="col-sm-12">
+    <app-card [options]="false" cardTitle="LISTADO DE TIPOS DE MONEDA" [hidHeader]="true">
+
+      <tbl-factura-moneda #tabla></tbl-factura-moneda>
+
+    </app-card>
+  </div>
+</div>
+
+
+<!-- BOTONERA ESCRITORIO -->
+<ul class="botonera-escritorio">
+  <li>
+    <button type="button" class="btn btn-primary btn-icon" [placement]="'bottom'" ngbTooltip="Listar" (click)= "onReload()"><i class="mdi mdi-sync"></i></button>
+    <button type="button" class="btn btn-primary btn-icon" [placement]="'bottom'" ngbTooltip="Nuevo" (click)= "onCreate()"><i class="mdi mdi-plus-circle-outline"></i></button>
+    <button *ngIf="selected" type="button" class="btn btn-warning btn-icon" [placement]="'bottom'" ngbTooltip="Editar" (click)= "onEdit()"><i class="mdi mdi-square-edit-outline"></i></button>
+  </li>
+</ul>

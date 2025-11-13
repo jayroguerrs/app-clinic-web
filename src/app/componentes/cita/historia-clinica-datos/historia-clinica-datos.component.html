@@ -1,0 +1,69 @@
+<form [formGroup]="frmHistoriaClinica">
+    <div class="modal-content">
+        <div class="modal-header card-header">
+            <h5 class="modal-title">{{ accion }} Historia Clinica</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="cerrarModal()"><span aria-hidden="true">&times;</span></button>
+        </div>
+
+            <div class="modal-body card-body">
+
+                <div class="form-row">
+                    <input type="hidden" formControlName="idCliente">
+                    <div class="form-group col-md-6">
+                        <div class="input-group input-group-sm">
+                            <div class="input-group-prepend"><span class="input-group-text" for="fechaHistoria">Fecha Historia</span></div>
+                            <input type="date" class="form-control" formControlName="fechaHistoria" aria-label="Default" aria-describedby="inputGroup-sizing-default"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <div class="input-group input-group-sm">
+                            <div class="input-group-prepend"><label class="input-group-text" for="cliIdDocumentoIdentidadTipo">Zona de tratamiento</label></div>
+                            <select class="custom-select" formControlName="zonaTratamiento">
+                                <option select value=''>...Seleccionar...</option>
+                                <option *ngFor="let zonaTratamiento of zonasTratamiento" [value]="zonaTratamiento.id">{{ zonaTratamiento.descripcion }}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                  
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <div class="input-group input-group-sm">
+                            <div class="input-group-prepend"><span class="input-group-text" for="fluencia">Fluencia</span></div>
+                            <input type="text" class="form-control dz-uppercase" formControlName="fluencia"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <div class="input-group input-group-sm">
+                            <div class="input-group-prepend"><span class="input-group-text" for="kjcm">KJ / 150CM2</span></div>
+                            <input type="text" class="form-control dz-uppercase" formControlName="kjcm"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-2">
+                        <div class="input-group input-group-sm">
+                            <div class="input-group-prepend"><span class="input-group-text" for="idCita">Cita</span></div>
+                            <input type="text" class="form-control dz-uppercase" formControlName="idCita"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-2">
+                        <div class="input-group input-group-sm">
+                            <div class="input-group-prepend"><span class="input-group-text" for="sesion">Sesión</span></div>
+                            <input type="text" class="form-control dz-uppercase" formControlName="sesion"/>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            
+            <div class="modal-footer card-footer">
+                <div class="form-row float-right">
+                    <button type="button" class="btn btn-outline-primary" (click)="historiaClinicaGrabar()"><i class="feather icon-save"></i>Guardar</button>
+                    <button type="button"  class="btn btn-outline-danger" (click)="cerrarModal()"><i class="feather icon-slash"></i>Cancelar</button>
+                </div>
+            </div>
+    </div> 
+</form>   

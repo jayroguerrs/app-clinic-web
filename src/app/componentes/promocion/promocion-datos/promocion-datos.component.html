@@ -1,0 +1,174 @@
+<ngx-spinner
+  [template]="rutaImageSpinner">
+  <p style="color: white" > Cargando... </p>
+</ngx-spinner>
+
+<form [formGroup]="frmPromocionDatos" (ngSubmit)="promocionGrabar()">
+  <div class="modal-header card-header">
+    <h5 class="modal-title">Datos de promoción</h5>
+    <button type="button" class="close basic-close" data-dismiss="modal" aria-label="Close"
+        (click)="cerrarModal()"><span aria-hidden="true">&times;</span></button>
+  </div>
+
+  <div class="modal-body card-body">
+    <div class="form-row"><h5>Promoción</h5>
+    </div>
+
+    <div class="form-row">
+
+      <div class="form-group col-md-12">
+        <div class="form-floating">
+          <input type="text" class="form-control dz-uppercase" id="formControlName" placeholder=" " formControlName="nombre"  [ngClass]="{ 'is-invalid': submitted && f.nombre.errors }">
+          <label for="formControlName">Nombre</label>
+        </div>
+      </div>
+
+      <div class="col-12 mb-3">
+        <div class="border rounded p-3 legend">
+          <label class="mb-3 text-muted">Fecha duración</label>
+
+          <div class="form-row">
+            <div class="col-md-6">
+              <div class="form-floating">
+                <input type="date" class="form-control " id="fechaInicio" placeholder=" " formControlName="fechaInicio"  >
+                <label for="fechaInicio">Fecha Inicio</label>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-floating">
+                <input type="date" class="form-control " id="fechaFin" placeholder=" " formControlName="fechaFin"  >
+                <label for="fechaFin">Fecha Fin</label>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="col-12 mb-3">
+        <div class="border rounded p-3 legend">
+          <label class="mb-3 text-muted">Dias permitidos</label>
+          <div>
+            <label>Lu&nbsp;<div class="switch switch-info d-inline m-r-10"><input type="checkbox" id="switch-i-1" formControlName="chkLu"/><label for="switch-i-1" class="cr"></label></div></label>
+            <label>Ma&nbsp;<div class="switch switch-info d-inline m-r-10"><input type="checkbox" id="switch-i-2" formControlName="chkMa"/><label for="switch-i-2" class="cr"></label></div></label>
+            <label>Mi&nbsp;<div class="switch switch-info d-inline m-r-10"><input type="checkbox" id="switch-i-3" formControlName="chkMi"/><label for="switch-i-3" class="cr"></label></div></label>
+            <label>Ju&nbsp;<div class="switch switch-info d-inline m-r-10"><input type="checkbox" id="switch-i-4" formControlName="chkJu"/><label for="switch-i-4" class="cr"></label></div></label>
+            <label>Vi&nbsp;<div class="switch switch-info d-inline m-r-10"><input type="checkbox" id="switch-i-5" formControlName="chkVi"/><label for="switch-i-5" class="cr"></label></div></label>
+            <label>Sa&nbsp;<div class="switch switch-info d-inline m-r-10"><input type="checkbox" id="switch-i-6" formControlName="chkSa"/><label for="switch-i-6" class="cr"></label></div></label>
+            <label>Do&nbsp;<div class="switch switch-info d-inline m-r-10"><input type="checkbox" id="switch-i-7" formControlName="chkDo"/><label for="switch-i-7" class="cr"></label></div></label>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 mb-3">
+        <div class="border rounded p-3 legend">
+          <label class="mb-3 text-muted">Sesiones involucradas</label>
+          <div>
+            <table class="mb-0">
+              <thead>
+              <tr>
+                <th colspan="2">Sesiones</th>
+                <th rowspan="2">Descuento%</th>
+                <th rowspan="2">Desc. fijo</th>
+                <th rowspan="2">Aume. fijo</th>
+                <th rowspan="2" *ngIf="idPromocion == 0"><button type="button" (click)="addBloque(0)" class="form-control-sm button-d">+</button></th>
+              </tr>
+              <tr>
+                <th>De</th>
+                <th>Al</th>
+              </tr>
+              </thead>
+              <tbody id="tbSessiones" #bloque></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group col-12">
+        <div class="form-floating">
+          <textarea type="text" class="form-control" id="condicion" placeholder=" " formControlName="condicion" ></textarea>
+          <label for="condicion">Condición </label>
+        </div>
+      </div>
+
+      <div class="form-group col-12">
+        <div class="form-floating">
+          <select class="custom-select" id="precioBase" formControlName="precioBase" >
+            <option value="">--Seleccionar--</option>
+            <option value="0">[ SIN PRECIO BASE ]</option>
+            <option [value]="item.idPromocion" *ngFor="let item of maestroItemsPromocion">{{ item.descripcion }}</option>
+          </select>
+          <label for="precioBase">Precio base</label>
+        </div>
+      </div>
+
+      <div class="form-group col-12">
+        <div class="form-floating">
+          <select class="custom-select" id="zonaUsar" formControlName="zonaUsar" >
+            <option value="">--Seleccionar--</option>
+            <option [value]="zonaUsar.valor" *ngFor="let zonaUsar of zonasUsar">{{ zonaUsar.descripcion }}</option>
+          </select>
+          <label for="zonaUsar">Zonas a usar</label>
+        </div>
+      </div>
+
+      <div class="form-group col-12">
+        <div class="form-floating">
+          <select class="custom-select" id="perfilAcceso" formControlName="perfilAcceso" >
+            <option value="" selected>TODOS</option>
+            <option [value]="item.idPerfil" *ngFor="let item of maestroPerfiles">{{ item.nombre }}</option>
+          </select>
+          <label for="perfilAcceso">Perfil acceso</label>
+        </div>
+      </div>
+
+      <div class="form-group col-12">
+        <div class="form-floating">
+          <select class="custom-select" id="idPromocionCategoria" formControlName="idPromocionCategoria" >
+            <option value="" selected>..SELECCIONAR..</option>
+            <option [value]="item.id" *ngFor="let item of categorias">{{ item.nombre }}</option>
+          </select>
+          <label for="idPromocionCategoria">Categoria</label>
+        </div>
+      </div>
+
+      <div class="form-group col-12">
+        <div class="form-floating">
+          <select class="custom-select" id="idServicio" formControlName="idServicio" [ngClass]="{ 'is-invalid': submitted && f.idServicio.errors }">
+            <option value="">--Seleccionar--</option>
+            <option [value]="serv.id" *ngFor="let serv of servicios">{{ serv.nombre }}</option>
+          </select>
+          <label for="idServicio">Servicio</label>
+        </div>
+      </div>
+
+      <div class="form-group col-12">
+        <div class="form-floating">
+          <select class="custom-select" id="activo" formControlName="activo" >
+            <option value="1">ACTIVO</option>
+            <option value="2">INACTIVO</option>
+          </select>
+          <label for="activo">Estado</label>
+        </div>
+      </div>
+
+      <div class="form-group col-12">
+        <div class="form-floating">
+          <select class="custom-select" id="vigente" formControlName="vigente" >
+            <option [value]="1">SI</option>
+            <option [value]="0">NO</option>
+          </select>
+          <label for="vigente">Vigente</label>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="modal-footer card-footer">
+    <button type="submit" class="btn btn-primary" >Guardar</button>
+    <button type="reset" class="btn btn-secondary" (click)="cerrarModal()">Cerrar</button>
+  </div>
+
+  </form>

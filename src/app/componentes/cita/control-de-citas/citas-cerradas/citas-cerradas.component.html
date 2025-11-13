@@ -1,0 +1,231 @@
+
+
+<div class="col-sm-12" style="padding: 0 !important;">
+  <app-card [options]="false" [customHeader]="true" [hidHeader]="true">
+    <h1 style="padding-left: 20px; font-size: 1.6rem; padding-top: 16px;">Citas Cerradas <span *ngIf="!fechaFiltro && !fechaFiltroFinal && !palabraBusqueda && !isChecked || !fechaFiltro && !palabraBusqueda && !isChecked">{{"(" + mesActual + ")"}}</span><span *ngIf="isChecked">{{"(" + "todas" + ")"}}</span> </h1>
+
+    <div class="contenedor-filtros">
+      <div class="contenedor-filtros-izquierda">
+
+        <mat-form-field appearance="outline" style="margin-right: 0.5rem;" style="width: 100% !important;">
+          <mat-label>Buscar Cliente</mat-label>
+          <input (keyup)="applyFilterBusqueda($any($event.target).value)" [(ngModel)]="palabraBusqueda"  matInput placeholder="Celular, Nombre..." >
+        </mat-form-field>
+
+        <mat-form-field (click)="picker.open()" appearance="outline" style="width: 100% !important;">
+          <mat-label>Filtro por Tiempo (Desde)</mat-label>
+          <input [(ngModel)]="fechaFiltro" (dateChange)="mostrarControlDeCitaFechaIncio()" style="cursor: pointer !important;" readonly matDatepickerToggleIcon matInput [matDatepicker]="picker"  />
+          <mat-datepicker-toggle matSuffix [for]="picker">
+            <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+          </mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+
+        <div ngbTooltip="Primero seleccione la fecha de inicio (desde)"  >
+
+          <mat-form-field *ngIf="!fechaInicio" appearance="outline" style="width: 100% !important;">
+            <mat-label >Filtro por Tiempo (Hasta)</mat-label>
+            <input [(ngModel)]="fechaFiltroFinal" style="cursor: pointer !important;" readonly matDatepickerToggleIcon matInput [matDatepicker]="picker2"  />
+            <mat-datepicker-toggle matSuffix>
+              <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+            </mat-datepicker-toggle>
+            <mat-datepicker #picker2></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <mat-form-field *ngIf="fechaInicio" (click)="picker2.open()" appearance="outline" style="width: 100% !important;">
+          <mat-label>Filtro por Tiempo (Hasta)</mat-label>
+          <input [(ngModel)]="fechaFiltroFinal" (dateChange)="mostrarControlDeCitaFechaFinal()" style="cursor: pointer !important;" readonly matDatepickerToggleIcon matInput [matDatepicker]="picker2"  />
+          <mat-datepicker-toggle matSuffix [for]="picker2">
+            <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+          </mat-datepicker-toggle>
+          <mat-datepicker #picker2></mat-datepicker>
+        </mat-form-field>
+
+        <i class="feather icon-filter" style="margin-left: 0.5rem; font-size: 1.3rem; padding-bottom: 1rem;"></i>
+      </div>
+      <div>
+        <button ngbTooltip="Eliminar los filtros." (click)="limpiarFiltroBusqueda()" type="button" class="btn btn-light">Limpiar</button>
+        <button (click)="applyFilterButton()" type="button" class="btn btn-primary">Buscar</button>
+
+        <i class="feather icon-settings" style="margin-left: 0.6rem; font-size: 1.3rem;"></i>
+      </div>
+    </div>
+    
+
+    <div>
+      <!-- <ul style="display: flex; padding: 0.5rem 24px; gap: 1rem; flex-wrap: wrap;">
+        <li class="opcion">NUEVO</li>
+        <li class="opcion">EDITAR</li>
+        <li class="opcion">SUSPENDER</li>
+        <li class="opcion">EXPORTA</li>
+        <mat-divider [vertical]="true"></mat-divider>
+        <li class="opcion">VER DETALLES</li> 
+      </ul> -->
+      <ul style="display: flex; padding: 0.5rem 24px; gap: 1rem; flex-wrap: wrap;">
+        <li class="opcion" ><mat-slide-toggle [(ngModel)]="isChecked" (change)="mostrarTodasLasCitas($event)">MOSTRAR TODO</mat-slide-toggle></li>
+      </ul>
+    </div>
+
+    <div class="table-container" >
+      <table mat-table matSort  [dataSource]="dataSource">
+
+        <ng-container matColumnDef="idCita">
+          <th mat-header-cell *matHeaderCellDef> Id Cita </th>
+          <!-- <td style="cursor: pointer;" (click)="mostrarCitaDetalle(element)"  [ngClass]="[element.tachado ? 'tachado-fondo' : '']"  class="contenido-tabla mostrar-detalle" mat-cell *matCellDef="let element"> {{element.idCita}} </td> -->
+          <td mat-cell *matCellDef="let data"  class="contenido-tabla"  [ngClass]="[data.tachado ? 'tachado-fondo' : '']" style="display: flex; align-items: center;" > 
+            <button mat-icon-button 
+                    [style.visibility]="!data.expandable ? 'hidden' : ''"
+                    [style.marginLeft.px]="data.level * 0"
+                    (click)="treeControl.toggle(data)">
+              <mat-icon class="mat-icon-rtl-mirror">
+                {{treeControl.isExpanded(data) ? 'expand_more' : 'chevron_right'}}
+              </mat-icon>
+            </button>
+            <div (click)="mostrarCitaDetalle(data)" class="mostrar-detalle" style="padding-top: 4px; cursor: pointer;">
+
+              <i *ngIf="!data.children && !data.estado" class="feather icon-corner-down-right"></i>{{data.idCita}}
+      
+            </div>
+          </td>
+        </ng-container>
+      
+        <ng-container matColumnDef="nombre">
+          <th mat-header-cell *matHeaderCellDef> Nombre </th>
+          <td (click)="mostrarClienteDetalle(element.idCliente)"  [ngClass]="[element.tachado ? 'tachado-fondo' : '']" class="contenido-tabla mostrar-detalle" style="cursor: pointer;" mat-cell *matCellDef="let element">
+             {{element.paciente}}
+          </td>
+        </ng-container>
+      
+        <ng-container matColumnDef="celular">
+          <th mat-header-cell *matHeaderCellDef> Celular </th>
+          <td  class="contenido-tabla" mat-cell *matCellDef="let element"  [ngClass]="[element.tachado ? 'tachado-fondo' : '']"> {{ element.celular}} </td>
+        </ng-container>
+      
+        <ng-container matColumnDef="sede">
+          <th mat-header-cell *matHeaderCellDef> Sede </th>
+          <td  class="contenido-tabla" mat-cell *matCellDef="let element"  [ngClass]="[element.tachado ? 'tachado-fondo' : '']"> {{element.nombreSede}} </td>
+        </ng-container>
+      
+        <ng-container matColumnDef="nuevo">
+          <th mat-header-cell *matHeaderCellDef> Nuevo </th>
+          <td  class="contenido-tabla" mat-cell *matCellDef="let element"  [ngClass]="[element.tachado ? 'tachado-fondo' : '']">
+            <span style="padding: 6px 10px; font-size: 12px;" *ngIf="element.clienteNuevo === 'Nuevo'" class="badge badge-pill badge-success">{{element.clienteNuevo}}</span>
+            <span style="padding: 6px 10px; font-size: 12px;" *ngIf="element.clienteNuevo === 'No Nuevo'" class="badge badge-pill badge-danger">{{element.clienteNuevo}}</span>
+          </td>
+        </ng-container>
+      
+        <ng-container matColumnDef="origen">
+          <th mat-header-cell *matHeaderCellDef> Origen </th>
+          <td class="contenido-tabla" mat-cell [ngClass]="[element.tachado ? 'tachado-fondo' : '']" *matCellDef="let element"> {{element.medioDeContacto}} </td>
+        </ng-container>
+        <ng-container matColumnDef="monto" >
+          <th mat-header-cell *matHeaderCellDef> Pago Final </th>
+          <td class="contenido-tabla" mat-cell [ngClass]="[element.tachado ? 'tachado' : '', element.tachado ? 'tachado-fondo' : '']" *matCellDef="let element"> {{ "S/. " + element.pagoFinal.toFixed(2)}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="fecha_pagado">
+          <th mat-header-cell *matHeaderCellDef> Fecha Pagado </th>
+          <td class="contenido-tabla" mat-cell  [ngClass]="[element.tachado ? 'tachado-fondo' : '']" *matCellDef="let element" style="font-weight: 700;"> {{!element.fechaPagado ? element.fechaCita : element.fechaPagado}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="fecha_de_cita">
+          <th mat-header-cell *matHeaderCellDef> Fecha de Cita </th>
+          <td class="contenido-tabla" mat-cell  [ngClass]="[element.tachado ? 'tachado-fondo' : '']" *matCellDef="let element"> {{element.fechaCita}} </td>
+        </ng-container>
+      
+        <ng-container matColumnDef="estado">
+          <th mat-header-cell *matHeaderCellDef> Estado de Cita </th>
+          <td class="contenido-tabla" mat-cell *matCellDef="let element"  [ngClass]="[element.tachado ? 'tachado-fondo' : '']">
+            <!-- <span style="padding: 6px 10px; font-size: 12px; color: white !important;" *ngIf="element.estado === 1" class="badge badge-pill badge-warning">Proceso</span> -->
+            <span style="padding: 6px 10px; font-size: 12px;" class="badge badge-pill badge-success">{{element.estado}}</span>
+            <!-- <span style="padding: 6px 10px; font-size: 12px; color: white !important;" *ngIf="element.estado !== 'Atendida'" class="badge badge-pill badge-warning">{{element.estado}}</span> -->
+          </td>
+        </ng-container>
+      
+        <ng-container *ngIf="mostrarAbonados" matColumnDef="abonado">
+            <th mat-header-cell *matHeaderCellDef> Abonado </th>
+            <td class="contenido-tabla" mat-cell *matCellDef="let element"  [ngClass]="[element.tachado ? 'tachado-fondo' : '']">
+              <span style="padding: 6px 10px; font-size: 12px; color: white !important;" *ngIf="!element.abonado" class="badge badge-pill badge-warning">No Abonado</span>
+              <span style="padding: 6px 10px; font-size: 12px; color: white !important;" *ngIf="element.abonado" class="badge badge-pill badge-primary">Abonado</span>
+            </td>
+        </ng-container>
+      
+        <ng-container matColumnDef="acciones">
+          <th mat-header-cell *matHeaderCellDef> Acciones </th>
+          <td class="contenido-tabla" mat-cell *matCellDef="let element; let i = index"  [ngClass]="[element.tachado ? 'tachado-fondo' : '']">
+            
+            <!-- Este es para el padre -->
+            <i *ngIf="!mostrarAbonados && element.children" [ngbTooltip]="verificarTodosTachados(element.children) ? 'Activar Todas las Zonas' : 'Desactivar Todas las Zonas' " (click)="quitarCitasAbonadasDelPadre(element, verificarTodosTachados(element.children))" [class]="verificarTodosTachados(element.children) ? 'feather icon-rotate-ccw' : 'feather icon-minus'" style="margin-left: 0.6rem; font-size: 1.2rem; color: gray; cursor: pointer;"></i>
+            <div *ngIf="mostrarAbonados && element.children">
+              <i *ngIf="!element.abonado" [ngbTooltip]="verificarTodosTachados(element.children) ? 'Activar Todas las Zonas' : 'Desactivar Todas las Zonas' " (click)="quitarCitasAbonadasDelPadre(element, verificarTodosTachados(element.children))" [class]="verificarTodosTachados(element.children) ? 'feather icon-rotate-ccw' : 'feather icon-minus'" style="margin-left: 0.6rem; font-size: 1.2rem; color: gray; cursor: pointer;"></i>
+            </div>
+
+            <!-- Este es para el hijo  -->
+            <i *ngIf="!mostrarAbonados && !element.children" [ngbTooltip]="element.tachado ? 'Activar Zona' : 'Desactivar Zona' " (click)="quitarCitasAbonadas(element)" [class]="element.tachado ? 'feather icon-rotate-ccw' : 'feather icon-minus'" style="margin-left: 0.6rem; font-size: 1.2rem; color: gray; cursor: pointer;"></i>
+            <div *ngIf="mostrarAbonados && !element.children">
+              <i *ngIf="!element.abonado" [ngbTooltip]="element.tachado ? 'Activar Zona' : 'Desactivar Zona' " (click)="quitarCitasAbonadas(element)" [class]="element.tachado ? 'feather icon-rotate-ccw' : 'feather icon-minus'" style="margin-left: 0.6rem; font-size: 1.2rem; color: gray; cursor: pointer;"></i>
+            </div>
+      
+      
+            <i *ngIf="!element.children && !element.tachado" (click)="abrirModalEditarPagoFinal(element.id, element.idCita, element.pagoFinal)" ngbTooltip="Editar Pago Final" class="mdi mdi-pencil m-0" style="margin-left: 0.6rem !important; font-size: 1.2rem; color: gray; cursor: pointer;"></i>
+          </td>
+      
+          
+      
+        </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumnsControl"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumnsControl;"></tr>
+      </table>
+    
+    </div>
+
+     <mat-paginator
+          [length]="totalControlDecitas"
+          [pageSizeOptions]="[elementos_por_pagina]"
+          showFirstLastButtons
+          (page)="onPageChange($event)"
+        ></mat-paginator>
+    <!-- ? Paginacion para las rows por pagina-->
+    <!-- <mat-paginator showFirstLastButtons></mat-paginator> -->
+    <!-- <mat-paginator [pageSizeOptions]="[6, 10, 20]" showFirstLastButtons></mat-paginator> -->
+    <mat-divider></mat-divider>
+<!-- 
+      <app-comision [montoTotal]="montoTotal" 
+      [porcentaje]="4" 
+      [porcentajeSobreMontoTotal]="porcentajeSobreMontoTotal"></app-comision> -->
+
+      <!-- ? COMISIONES -->
+      <div class="contenedor_comisiones">
+        <div class="contenedor_comisiones_tipos">
+            <app-comision [montoTotal]="montoTotalPrimeraComision" 
+            [tipoDeComision]="1" 
+            [porcentaje]="4" 
+            [porcentajeSobreMontoTotal]="porcentajeSobrePrimerMontoTotal"></app-comision>
+      
+            <app-comision [montoTotal]="montoTotalSegundaComision" 
+            [tipoDeComision]="2" 
+            [porcentaje]="1.5" 
+            [porcentajeSobreMontoTotal]="porcentajeSobreSegundoMontoTotal"></app-comision>
+      
+            <app-comision [montoTotal]="montoTotalTerceraComision" 
+            [tipoDeComision]="3" 
+            [porcentaje]="3" 
+            [porcentajeSobreMontoTotal]="porcentajeSobreTercerMontoTotal"></app-comision>
+
+        </div>
+
+        <app-comision [montoTotal]="montoTotal" 
+        [porcentaje]="0" 
+        [tipoDeComision]="0" 
+        [porcentajeSobreMontoTotal]="porcentajeSobreMontoTotal"></app-comision>
+      </div>
+
+
+  </app-card>
+
+
+</div>
+
+

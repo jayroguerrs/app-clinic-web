@@ -1,0 +1,7 @@
+<div class="float-button-containter" [class.open]="open">
+  <button  (click)="view()" class="parent" mat-fab color="primary" >
+    <mat-icon>{{ !open ? 'settings' : 'close' }}</mat-icon>
+  </button>
+  <ng-content></ng-content>
+</div>
+

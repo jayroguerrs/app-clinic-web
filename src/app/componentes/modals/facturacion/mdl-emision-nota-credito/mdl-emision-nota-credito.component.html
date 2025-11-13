@@ -1,0 +1,388 @@
+﻿
+<form [formGroup]="formGroup" (ngSubmit)="evtOnSubmit()" class="popins mh-100">
+  <div class="scard bg-transparent popins mh-100">
+        <div class="modal-header card-header bg-gradient">
+            <h5 class="card-title text-white f-w-500 m-0">Emitir Nota de Crédito</h5>
+            <button type="button" class="btn sbtn btn-sm btn-icon btn-active-color-primary h-auto w-auto p-0" (click)="cerrarModal(false)">
+              <span class="svg-icon svg-icon-1 text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor"></rect>
+                  <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor"></rect>
+                </svg>
+              </span>
+            </button>
+        </div>
+        <div class="card-body bg-white p-0 depilform position-relative d-flex flex-column">
+
+          <loader-circle *ngIf="loading | async"></loader-circle>
+
+          <div class="h-100 mh-100 p-4" [ngClass]="{'overflow-auto': (loading | async) === false, 'overflow-hidden': (loading | async) === true}">
+            <div class="form-row">
+
+              <div class="col-12 col-xl-12">
+                <div class="border rounded p-3 mb-2">
+                  <p class="fs-16px fw-semibold text-dark">Datos de la Nota de Crédito</p>
+
+                  <div class="form-row">
+                    <div class="mb-2 col-md-2 col-lg-3">
+                      <label for="idSede" class="form-label mb-0 text-secondary f-w-500">Sede</label>
+                      <select id="idSede" class="form-indigo form-select form-indigo form-select-sm" formControlName="idSede" [ngClass]="{'invalid' : submitted && f.idSede.errors}">
+                        <option value="">--Seleccionar--</option>
+                        <option *ngFor="let s of sedes" [value]="s.id">{{ s.nombre }}</option>
+                      </select>
+                    </div>
+                    <div class="mb-2 col-md-2 col-lg-3">
+                      <label for="serie" class="form-label mb-0 text-secondary f-w-500">Serie Comprobante</label>
+                      <input type="hidden" class="form-indigo form-control form-indigo form-control-sm" formControlName="serie" >
+                      <select id="serie" class="form-indigo form-select form-indigo form-select-sm" formControlName="idSerie" [ngClass]="{'invalid' : submitted && f.idSerie.errors}">
+                        <option *ngFor="let s of seriesComprobante" [value]="s.id">{{ s.serie }}</option>
+                      </select>
+                    </div>
+                    <div class="mb-2 col-md-2 col-lg-3">
+                      <label for="numero" class="form-label mb-0 text-secondary f-w-500">N° comprobante</label>
+                      <input id="numero" [showMaskTyped]="true" [shownMaskExpression]="'00000000'" mask="00000000" type="text" placeholder="N° de comprobante" formControlName="numero" class="form-indigo form-control form-indigo form-control-sm bg-light-indigo" >
+                    </div>
+                  </div>
+
+                  <div class="form-row mt-3">
+
+                    <div class="mb-2 col-md-12 col-lg-6">
+                        <label for="idTipoComprobanteModifica" class="form-label mb-0 text-secondary f-w-500">Tipo Comprobante a modificar</label>
+                        <select id="idTipoComprobanteModifica" class="form-indigo form-select form-indigo form-select-sm" formControlName="idTipoComprobanteModifica" [ngClass]="{'invalid' : submitted && f.idTipoComprobanteModifica.errors}">
+                          <option *ngFor="let tc of tiposComprobantes" [value]="tc.id">{{ tc.descripcion }}</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 col-md-2 col-lg-3">
+                      <label for="idSerieComprobanteModifica" class="form-label mb-0 text-secondary f-w-500">Serie Comprobante modificar</label>
+                      <input type="hidden" placeholder="Serie de comprobante" class="form-indigo form-control form-indigo form-control-sm" formControlName="serieComprobanteModifica" >
+                      <select id="idSerieComprobanteModifica" class="form-indigo form-select form-indigo form-select-sm" formControlName="idSerieComprobanteModifica" [ngClass]="{'invalid' : submitted && f.idSerieComprobanteModifica.errors}">
+                        <option value="">--Seleccionar--</option>
+                        <option *ngFor="let s of seriesComprobanteModifica" [value]="s.id">{{ s.serie }}</option>
+                      </select>
+                    </div>
+                    <div class="mb-2 col-md-2 col-lg-3">
+                      <label for="numeroComprobanteModifica" class="form-label mb-0 text-secondary f-w-500">N° de comprobante modificar</label>
+                      <input id="numeroComprobanteModifica" type="number" min="0" placeholder="N° de comprobante" class="appearance-textfield form-indigo form-control form-indigo form-control-sm" formControlName="numeroComprobanteModifica" [ngClass]="{'invalid' : submitted && f.numeroComprobanteModifica.errors}">
+                    </div>
+                    <div class="mb-2 col-md-12 col-lg-12">
+                      <label for="idTipoNotaCredito" class="form-label mb-0 text-secondary f-w-500">Tipo Nota de Crédito</label>
+                      <select id="idTipoNotaCredito" class="form-indigo form-select form-indigo form-select-sm" formControlName="idTipoNotaCredito" [ngClass]="{'invalid' : submitted && f.idTipoNotaCredito.errors}">
+                        <option value="">--Seleccionar--</option>
+                        <option *ngFor="let tnc of tiposNotaCredito" [value]="tnc.id">{{ tnc.nombre }}</option>
+                      </select>
+                    </div>
+
+                    <div class="mt-2 col-12 text-right">
+                      <button matRipple type="button" class="btn btn-sm btn-primary rounded m-0 d-inline-flex align-items-center" (click)="evtVerComprobante()">
+                        <i class="fa-duotone fa-file-check fs-20px"></i>
+                        <span>Ver Comprobante</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="border rounded p-3 mb-2" >
+                  <p class="fs-16px fw-semibold text-dark">Observaciones</p>
+                  <div class="form-row">
+                    <div class="col-12">
+
+                      <textarea formControlName="observaciones" class="form-indigo form-control form-indigo form-control-sm h-100px"></textarea>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+              <div *ngIf="comprobante" class="col-12 col-xl-12">
+
+                <div class="border rounded p-3 mb-2">
+                  <h4 class="text-center fs-20px fw-semibold text-dark mb-3">Comprobante</h4>
+
+                  <div class="form-row">
+
+                    <div class="col-12 mb-3">
+                      <div class="mx-0 row border rounded border-2px border-muted pt-3">
+                        <div class="col-12 col-lg-4">
+                          <p class="fs-16px fw-semibold text-dark mb-1">{{ comprobante.tipoComprobante }}</p>
+                          <p class="text-gray-600 f-w-500">{{ comprobante.serieComprobante }}-{{ comprobante.numeroComprobante }}</p>
+                        </div>
+                        <div class="col-12 col-lg-4 text-center ">
+                          <p class="fs-16px fw-semibold text-dark mb-1">Fecha Emisión</p>
+                          <p class="text-gray-600 f-w-500">{{ comprobante.fechaEmision | date: 'dd/MM/yyyy hh:mm a' }}</p>
+                        </div>
+                        <div class="col-12 col-lg-4 text-right">
+                          <p class="fs-16px fw-semibold text-dark mb-1">Monto Total</p>
+                          <p class="text-gray-600 f-w-500">S/ {{ comprobante.total.toFixed(2) }}</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-12">
+                      <div class="mx-0 row border rounded border-2px border-muted pt-3">
+                        <div class="col-12 col-lg-4">
+                          <p class="fs-16px fw-semibold text-dark mb-1">{{ comprobante.comprobanteCliente?.tipoDocumento }}</p>
+                          <p class="text-gray-600 f-w-500">{{ comprobante.comprobanteCliente?.numeroDocumento }}</p>
+                        </div>
+                        <div class="col-12 col-lg-4 text-center ">
+                          <p class="fs-16px fw-semibold text-dark mb-1">Nombre o Razón Social</p>
+                          <p class="text-gray-600 f-w-500">{{ comprobante.comprobanteCliente?.nombre }}</p>
+                        </div>
+                        <div class="col-12 col-lg-4 text-right">
+                          <p class="fs-16px fw-semibold text-dark mb-1">Dirección</p>
+                          <p class="text-gray-600 f-w-500">{{ comprobante.comprobanteCliente?.direccion }}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <p class="fs-16px fw-semibold text-dark mt-3">Datos del comprobante</p>
+
+                  <div class="form-row">
+
+                    <div class="mb-2 col-md-6 col-lg-6">
+                      <label class="form-label mb-0 text-secondary f-w-500">Tipo de Comprobante</label>
+                      <input type="text" class="form-control form-control-sm border-muted border-2px" readonly [value]="comprobante.tipoComprobante">
+                    </div>
+
+                    <!--- Serie y N° de Factura --->
+                    <div class="mb-2 mb-md-0 mb-lg-2 col-md-6 col-lg-6 col-xl-6">
+                      <div class="d-flex flex-row">
+                        <div class="w-100px me-10px">
+                          <label class="form-label mb-0 text-secondary f-w-500">Serie</label>
+                          <input class="form-control form-control-sm border-muted border-2px" type="text" [value]="comprobante.serieComprobante" readonly>
+                        </div>
+                        <div class="w-100">
+                          <label class="form-label mb-0 text-secondary f-w-500">Número</label>
+                          <input type="text" placeholder="N° del comprobante" [value]="comprobante.numeroComprobante.toString().padStart(8,'0')" class="form-control form-control-sm border-muted border-2px" readonly>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="mb-2 col-md-6 col-lg-6 col-xl-6">
+                      <div class="d-flex flex-row">
+                        <div class="w-100px me-10px ">
+                          <label class="form-label mb-0 text-secondary f-w-500">IGV %</label>
+                          <input type="text" class="form-control form-control-sm border-muted border-2px" readonly [value]="comprobante.porcentajeIgv">
+                        </div>
+                        <div class="w-100">
+                          <label class="form-label mb-0 text-secondary f-w-500">Tipo de Operación</label>
+                          <input type="text" class="form-control form-control-sm border-muted border-2px" readonly [value]="comprobante.sunatTransaccion">
+                        </div>
+                      </div>
+                    </div>
+
+
+                    <div class="mb-2 col-md-6 col-lg-6 col-xl-6">
+                      <div class="d-flex flex-row">
+                        <div class="w-100px me-10px">
+                          <label class="form-label mb-0 text-secondary f-w-500">Moneda</label>
+                          <input type="text" class="form-control form-control-sm border-muted border-2px" [value]="comprobante.tipoMonedaSimbolo" readonly>
+                        </div>
+                        <div class="w-100">
+                          <div class="depilform">
+                            <label class="form-label mb-0 text-secondary f-w-500">Tipo de Cambio</label>
+                            <input type="text" placeholder="0.000" class="form-control form-control-sm border-muted border-2px" readonly>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+
+                    <div class="mb-2 col-md-6 col-lg-6">
+                      <label class="form-label mb-0 text-secondary f-w-500">Tipo de Pago</label>
+                      <input type="text" class="form-control form-control-sm border-muted border-2px" [value]="comprobante.tipoPago" readonly>
+                    </div>
+
+                    <div class="mb-2 col-md-6 col-lg-6" [class.d-none]="!verEntidadTipoPago">
+                      <label class="form-label mb-0 text-secondary f-w-500">Entidad Tipo de Pago</label>
+                      <select class="form-indigo form-select form-indigo form-select-sm" >
+                        <option value="">--Seleccionar--</option>
+                        <option *ngFor="let tc of entidadesTipoPago" [value]="tc.id" >{{ tc.nombre }}</option>
+                      </select>
+                    </div>
+
+                    <div class="mb-2 col-6" [class.d-none]="!verPagoEfectivo">
+                      <label class="form-label mb-0 text-secondary f-w-500" for="pagoEfectivo">Pago Efectivo</label>
+                      <input id="pagoEfectivo" currencyMask [options]="options" type="text" class="form-control form-control-sm border-muted border-2px" >
+                    </div>
+
+                    <div class="mb-2 col-6" [class.d-none]="!verPagoTarjeta">
+                      <label class="form-label mb-0 text-secondary f-w-500" for="pagoTarjeta">Pago Tarjeta</label>
+                      <input id="pagoTarjeta" currencyMask [options]="options" type="text" class="form-control form-control-sm border-muted border-2px" >
+                    </div>
+
+                    <div class="mb-2 col-6" [class.d-none]="!verCodigoOperacion">
+                      <label class="form-label mb-0 text-secondary f-w-500" for="codigoOperacion">N° Operación / N° Pedido</label>
+                      <input id="codigoOperacion" type="text" class="form-control form-control-sm border-muted border-2px" >
+                    </div>
+
+                  </div>
+                  <div class="form-row">
+
+                    <div class="col-4">
+                      <label class="form-label mb-0 text-secondary f-w-500">Total</label>
+                      <input type="text" currencyMask [options]="options" class="form-control form-control-sm border-muted border-2px" [value]="comprobante.total" readonly>
+                    </div>
+                    <div class="col-4">
+                      <label class="form-label mb-0 text-secondary f-w-500">Pago Total</label>
+                      <input id="recibido" currencyMask [options]="options" type="text" class="form-control form-control-sm border-muted border-2px" [value]="comprobante.recibido" readonly>
+                    </div>
+                    <div class="col-4">
+                      <label class="form-label mb-0 text-secondary f-w-500">Vuelto</label>
+                      <input id="vuelto" currencyMask [options]="options" type="text" class="form-control form-control-sm border-muted border-2px" [value]="comprobante.vuelto" readonly>
+                    </div>
+
+
+                  </div>
+
+
+                  <p class="fs-16px fw-semibold text-dark mt-3">Detalle del comprobante</p>
+                  <div class="d-flex flex-row">
+                    <div class="w-100 mr-2 d-flex align-items-center">
+                      <label class="form-label mb-0 text-secondary f-w-500">ITEM</label>
+                    </div>
+                    <div class="w-85px mr-2 d-flex align-items-center">
+                      <label class="form-label mb-0 text-secondary f-w-500">
+                        <span class="d-block text-center">V/U</span>
+                        <span class="d-block small text-center">(Sin Igv)</span>
+                      </label>
+                    </div>
+                    <div class="w-85px mr-2 d-flex align-items-center">
+                      <label class="form-label mb-0 text-secondary f-w-500">IGV</label>
+                    </div>
+                    <div class="w-85px mr-2 d-flex align-items-center">
+                      <label class="form-label mb-0 text-secondary f-w-500">SUB TOTAL</label>
+                    </div>
+                    <div class="w-85px d-flex align-items-center">
+                      <label class="form-label mb-0 text-secondary f-w-500">TOTAL</label>
+                    </div>
+                  </div>
+                  <div *ngIf="ldBuscarComprobante">
+                    <div *ngFor="let d of utilsService.counter(5); let i = index" class="mb-2">
+                      <div class="d-flex flex-row w-100">
+                        <div class="w-100 mr-2"><span class="sk d-block rounded-md w-100 h-42px"></span></div>
+                        <div class="w-85px mr-2"><span class="sk d-block rounded-md w-100 h-42px"></span></div>
+                        <div class="w-85px mr-2"><span class="sk d-block rounded-md w-100 h-42px"></span></div>
+                        <div class="w-85px mr-2"><span class="sk d-block rounded-md w-100 h-42px"></span></div>
+                        <div class="w-85px mr-2"><span class="sk d-block rounded-md w-100 h-42px"></span></div>
+                        <div class="w-38px mr-2"><span class="sk d-block rounded-md w-100 h-42px"></span></div>
+                        <div class="w-38px"><span class="sk d-block rounded-md w-100 h-42px"></span></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div *ngIf="!ldBuscarComprobante || comprobante" class="form-row ">
+                    <div *ngFor="let dc of comprobante?.detalles; let i = index" class="col-12 d-flex flex-row mb-2">
+                      <!-- descripcion producto / servicio -->
+                      <div class="w-100 mr-2">
+                        <input id="zona" type="text" class="form-control form-control-sm border-muted border-2px" [value]="'[' + dc.unidadMedida + '] ' + dc.zona + ' - SS' + dc.sesion" readonly>
+                      </div>
+                      <!-- precio unitario -->
+                      <div class="w-85px mr-2">
+                        <input id="valorUnitario" type="text" inputmode="decimal" min="0" step="0.01" class="form-control form-control-sm border-muted border-2px" [value]="dc.valorUnitario.toFixed(2)" readonly>
+                      </div>
+                      <!-- igv unitario -->
+                      <div class="w-85px mr-2">
+                        <input id="igvUnitario" type="text" inputmode="decimal" min="0" step="0.01" class="form-control form-control-sm border-muted border-2px" [value]="dc.igv.toFixed(2)" readonly>
+                      </div>
+                      <!-- subTotal -->
+                      <div class="w-85px mr-2">
+                        <input id="subTotal" type="text" inputmode="decimal" min="0" step="0.01" class="form-control form-control-sm border-muted border-2px" [value]="dc.subTotal.toFixed(2)" readonly>
+                      </div>
+                      <!-- total -->
+                      <div class="w-85px">
+                        <input id="total" type="text" inputmode="decimal" min="0" step="0.01" class="form-control form-control-sm border-muted border-2px" [value]="dc.total.toFixed(2)" readonly>
+                      </div>
+<!--                      <div class="w-38px mr-2" ngbTooltip="Editar item">-->
+<!--                        <button type="button" matRipple class="btn rounded btn-sm m-0 px-2 btn-warning"  (click)="evtEditarItem(dc)">-->
+<!--                          <fontawesome-svg icon="pen" type="regular" [width]="20" [height]="20"></fontawesome-svg>-->
+<!--                        </button>-->
+<!--                      </div>-->
+<!--                      <div class="w-38px mr-2" [ngbTooltip]=" dc.selectComprobante ? 'Excluir Item' : 'Añadir Item' ">-->
+<!--                        <button type="button" matRipple class="btn rounded btn-sm m-0 px-2" [ngClass]="{'btn-danger' : dc.selectComprobante, 'btn-indigo' : !dc.selectComprobante}"  (click)="evtQuitarItem(i)">-->
+<!--                          <fontawesome-svg *ngIf="dc.selectComprobante" icon="eye-slash" type="regular" [width]="20" [height]="20"></fontawesome-svg>-->
+<!--                          <fontawesome-svg *ngIf="!dc.selectComprobante" icon="eye" type="regular" [width]="20" [height]="20"></fontawesome-svg>-->
+<!--                        </button>-->
+<!--                      </div>-->
+<!--                      <div class="w-38px" [ngbTooltip]="'Eliminar Item'">-->
+<!--                        <button type="button" matRipple class="btn rounded btn-sm m-0 px-2 btn-danger"  (click)="evtEliminarItem(i)">-->
+<!--                          <fontawesome-svg icon="trash-can" type="regular" [width]="20" [height]="20"></fontawesome-svg>-->
+<!--                        </button>-->
+<!--                      </div>-->
+                    </div>
+<!--                    <div class="col-12 d-flex flex-row mb-2">-->
+<!--                      <div class="w-38px ml-auto" ngbTooltip="Añadir Item">-->
+<!--                        <button matRipple type="button" class="btn rounded btn-sm m-0 px-2 btn-indigo" (click)="evtAgregarNuevoItem()">-->
+<!--                          <fontawesome-svg icon="plus" type="regular" [width]="20" [height]="20"></fontawesome-svg>-->
+<!--                        </button>-->
+<!--                      </div>-->
+<!--                    </div>-->
+                    <div class="col-12 d-flex flex-row mb-2">
+                      <div class="w-100 text-right align-self-center mr-2"><label class="form-label text-dark  mb-0 fs-16px">Subtotal</label></div>
+                      <div class="w-85px align-self-center mr-2 text-right"><label class="form-label text-dark f-w-500 mb-0 fs-16px">S/</label></div>
+                      <div class="w-85px">
+                        <input type="text" class="form-control form-control-sm border-muted border-2px text-end" [value]="comprobante ? comprobante.subTotal.toFixed(2) : 0.00" readonly>
+                      </div>
+                    </div>
+                    <div class="col-12 d-flex flex-row mb-2">
+                      <div class="w-100 text-right align-self-center mr-2"><label class="form-label text-dark  mb-0 fs-16px">IGV ({{ comprobante ? comprobante.porcentajeIgv : 0 }}%)</label></div>
+                      <div class="w-85px align-self-center mr-2 text-right"><label class="form-label text-dark f-w-500 mb-0 fs-16px">S/</label></div>
+                      <div class="w-85px">
+                        <input type="text" class="form-control form-control-sm border-muted border-2px text-end" [value]="comprobante ? comprobante.totalIgv.toFixed(2) : 0.00" readonly>
+                      </div>
+                    </div>
+                    <div class="col-12 d-flex flex-row mb-2">
+                      <div class="w-100 text-right align-self-center mr-2"><label class="form-label text-dark mb-0 fs-16px">Gratuita </label></div>
+                      <div class="w-85px align-self-center mr-2 text-right"><label class="form-label text-dark f-w-500 mb-0 fs-16px">S/</label></div>
+                      <div class="w-85px">
+                        <input type="text" class="form-control form-control-sm border-muted border-2px text-end" [value]="comprobante ? comprobante.totalGratuita.toFixed(2) : 0.00" readonly>
+                      </div>
+                    </div>
+                    <div class="col-12 d-flex flex-row mb-2">
+                      <div class="w-100 text-right align-self-center mr-2"><label class="form-label text-dark mb-0 fs-16px">Inafecta </label></div>
+                      <div class="w-85px align-self-center mr-2 text-right"><label class="form-label text-dark f-w-500 mb-0 fs-16px">S/</label></div>
+                      <div class="w-85px">
+                        <input type="text" class="form-control form-control-sm border-muted border-2px text-end" [value]="comprobante ? comprobante.totalInafecta.toFixed(2) : 0.00" readonly>
+                      </div>
+                    </div>
+                    <div class="col-12 d-flex flex-row mb-2" >
+                      <div class="w-100 text-right align-self-center mr-2"><label class="form-label text-dark mb-0 fs-16px">Exonerada </label></div>
+                      <div class="w-85px align-self-center mr-2 text-right"><label class="form-label text-dark f-w-500 mb-0 fs-16px">S/</label></div>
+                      <div class="w-85px">
+                        <input type="text" class="form-control form-control-sm border-muted border-2px text-end" [value]="comprobante ? comprobante.totalExonerada.toFixed(2) : 0.00" readonly>
+                      </div>
+                    </div>
+                    <div class="col-12 d-flex flex-row mb-2" >
+                      <div class="w-100 text-right align-self-center mr-2"><label class="form-label text-dark f-w-500 mb-0 fs-16px">Total</label></div>
+                      <div class="w-85px align-self-center mr-2 text-right"><label class="form-label text-dark f-w-500 mb-0 fs-16px">S/</label></div>
+                      <div class="w-85px">
+                        <input type="text" class="form-control form-control-sm border-muted border-2px text-end" [value]="comprobante ? comprobante.total.toFixed(2) : 0.00" readonly>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="mt-3">
+              <label for="formato" class="form-label mb-0 text-secondary f-w-500">Formato</label>
+              <select id="formato" class="form-indigo form-select form-indigo form-select-sm" formControlName="formato">
+                <option value="TICKET">TICKET</option>
+                <option value="A4">A4</option>
+                <option value="A5">A5</option>
+              </select>
+            </div>
+          </div>
+
+
+        </div>
+        <div class="modal-footer bg-white py-3">
+            <div class="form-row float-right">
+              <button matRipple type="reset" class="btn sbtn btn-light mr-2" (click)="cerrarModal()">Cancelar</button>
+              <button matRipple type="submit" class="btn sbtn btn-primary shadow btn-shadow-primary" >Emitir</button>
+            </div>
+        </div>
+
+    </div>
+</form>

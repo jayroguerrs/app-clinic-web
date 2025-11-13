@@ -1,0 +1,159 @@
+<div class="form-row">
+
+  <!-- Citas Pendientes 360-->
+  <div class="col-12 mb-3">
+    <app-card class="card-alert" cardTitle="RESUMEN DE CITAS: PENDIENTES (360)" >
+
+      <table #tblCitasPendientes datatable [dtOptions]="dtOptionsTableCitasPendientes" class="table table-sm table-hover display compact"></table>
+
+    </app-card>
+  </div>
+
+  <!-- Citas Pendientes Hollywood-->
+  <div class="col-12 mb-3">
+    <app-card class="card-alert" cardTitle="RESUMEN DE CITAS: PENDIENTES (Hollywood Peel)" >
+
+      <table id="tblCitasPendientes" datatable [dtOptions]="dtOptionsTableCitasPendientesHollywoodPeel" class="table table-sm table-hover display compact"></table>
+
+    </app-card>
+  </div>
+
+  <!-- Citas Realizadas 360-->
+  <div class="col-12 mb-3">
+    <app-card class="card-success" cardTitle="RESUMEN DE CITAS: REALIZADAS (360)" >
+
+      <table id="tblCitasRealizadas" datatable [dtOptions]="dtOptionsTableCitasRealizadas" class="table table-sm table-hover display compact"></table>
+
+    </app-card>
+  </div>
+
+  
+  <!-- Citas Realizadas Hollywood-->
+  <div class="col-12 mb-3">
+    <app-card class="card-success" cardTitle="RESUMEN DE CITAS: REALIZADAS (Hollywood Peel)" >
+
+      <table id="tblCitasRealizadas" datatable [dtOptions]="dtOptionsTableCitasRealizadasHollywoodPeel" class="table table-sm table-hover display compact"></table>
+
+    </app-card>
+  </div>
+
+
+  <div class="col-12 mb-3">
+    <div class="scard mb-3 popins">
+      <div class="card-header">
+        <div class="card-title m-0">
+          <h3 class="fw-bold m-0">Cronogramas</h3>
+        </div>
+      </div>
+      <div class="card-body p-0">
+        <div>
+          <app-tbl-cliente-cronogramas #tblClienteCronogramas [IdCliente]="idCliente" [IdServicio]="3"></app-tbl-cliente-cronogramas>
+<!--          <img src="assets/images/gifs/programando.gif" height="auto" width="100%" class="max-w-500px d-block mx-auto" >-->
+<!--          <p class="text-center position-absolute bottom-0 start-0 end-0 text-white fs-25px">En construcción</p>-->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-lg-6 mb-3">
+    <app-contratos #resumenContratos [TipoServicio]="'360'" [IdCliente]="idCliente" [IdServicio]="3" (onShowOptions)="mostrarContratoOpciones(mdlOpcionesContratos,$event)"></app-contratos>
+    
+    <app-contratos #resumenContratos [TipoServicio]="'Hollywood Peel'" [IdCliente]="idCliente" [IdServicio]="13" (onShowOptions)="mostrarContratoOpciones(mdlOpcionesContratos,$event)"></app-contratos>
+  </div>
+
+  <div class="col-12 col-lg-6 mb-3">
+    <div class="mb-3">
+      <app-documentos-cliente #documentosEmitidos [tipoServicio]="'360'" [IdCliente]="idCliente" [IdServicio]="3"  (onShowOptions)="visualizarOpciones(mdlOpcionesDocumento,$event)" class="mb-3"></app-documentos-cliente>
+    </div>
+
+    <div class="mb-3">
+      <app-documentos-cliente #documentosEmitidos [tipoServicio]="'Hollywood Peel'" [IdCliente]="idCliente" [IdServicio]="13"  (onShowOptions)="visualizarOpciones(mdlOpcionesDocumento,$event)" class="mb-3"></app-documentos-cliente>
+    </div>
+
+    <app-documentos-cliente #documentosEmitidosAnulados [tipoServicio]="'360'" [Status]="0" [IdServicio]="3" [IdCliente]="idCliente" (onShowOptions)="visualizarOpciones(mdlOpcionesDocumento,$event)"></app-documentos-cliente>
+    <app-documentos-cliente #documentosEmitidosAnulados [tipoServicio]="'Hollywood Peel'" [Status]="0" [IdServicio]="13" [IdCliente]="idCliente" (onShowOptions)="visualizarOpciones(mdlOpcionesDocumento,$event)"></app-documentos-cliente>
+  
+  </div>
+
+</div>
+
+<!-- MOSTRAR OPCIONES CITA -->
+<app-ui-modal #mdlOpcionesCitas dialogClass="modal-dialog-centered" hideFooter="true">
+  <div class="app-modal-header">
+    <h5 class="modal-title">Opciones de cita</h5>
+    <button type="button" class="close basic-close" data-dismiss="modal" aria-label="Close" (click)="mdlOpcionesCitas.hide()"><span aria-hidden="true">&times;</span></button>
+  </div>
+  <div class="app-modal-body">
+    <div class="form-row">
+      <div [class.col-4]="citaSelected?.estado.nombre !== 'Atendida'"[class.col-12]="citaSelected?.estado.nombre === 'Atendida'">
+        <button id="btnCitaVisualizar" type="button" class="btn btn-outline-primary w-100 m-0" [placement]="'bottom'" ngbTooltip="Ver"           (click)= "citaVisualizar(); mdlOpcionesCitas.hide()">    <i class="fa fa-search"></i>Ver</button>
+      </div>
+      <div *ngIf="citaSelected?.estado.nombre !== 'Atendida'" class="col-4">
+        <button id="btnCitaAtender" type="button" class="btn btn-outline-primary w-100 m-0" [placement]="'bottom'" ngbTooltip="Atender"       (click)= "citaAtender(); mdlOpcionesCitas.hide()">       <i class="far fa-hand-point-up"></i>Atender</button>
+      </div>
+<!--      <div class="col-6">-->
+<!--        <button type="button" class="btn btn-outline-primary w-100 m-0" [placement]="'bottom'" ngbTooltip="Ver "       (click)= "verCronograma(); mdlOpcionesCitas.hide()">       <i class="far fa-hand-point-up"></i>Ver Cronograma</button>-->
+<!--      </div>-->
+      <div class="col-4" *ngIf="citaSelected?.estado.nombre !== 'Atendida'">
+        <button id="btnCitaEditar" type="button" class="btn btn-outline-primary w-100 m-0" [placement]="'bottom'" ngbTooltip="Editar"   (click)= "citaEditar(); mdlOpcionesCitas.hide()">   <i class="mdi mdi-square-edit-outline"></i>Editar</button>
+      </div>
+    </div>
+  </div>
+</app-ui-modal>
+
+
+<!-- MOSTRAR OPCIONES DOCUMENTO -->
+<ng-template #mdlOpcionesDocumento let-modal let-close="close" let-d="dismiss" class="fadeIn">
+  <div class="modal-header">
+    <h5 class="modal-title">Opciones de documento</h5>
+    <button type="button" class="close basic-close" data-dismiss="modal" aria-label="Close" (click)="modal.close()"><span aria-hidden="true">&times;</span></button>
+  </div>
+  <div class="modal-body">
+    <div class="form-row">
+      <div class="col-12 col-lg-4 mb-3 mb-lg-0" >
+        <button type="button" class="btn btn-outline-primary w-100 m-0 d-inline-flex justify-content-center" [placement]="'bottom'" ngbTooltip="Ver Documento" (click)="visualizarDocumento(); modal.close()"><i class="mdi mdi-eye-outline"></i>Ver</button>
+      </div>
+      <div *ngIf="documentoSelected?.idEstado === 1" class="col-12 col-lg-4 mb-3 mb-lg-0" >
+        <button  type="button" class="btn btn-outline-danger w-100 m-0 d-inline-flex justify-content-center" [placement]="'bottom'" ngbTooltip="Anular Documento" (click)="anularDocumento(modalDocumentoAnular); modal.close()"><i class="mdi mdi-cancel"></i>Anular</button>
+      </div>
+      <div *ngIf="documentoSelected?.idEstado === 0" class="col-12 col-lg-4 mb-3 mb-lg-0" >
+        <button  type="button" class="btn btn-outline-secondary w-100 m-0 d-inline-flex justify-content-center" [placement]="'bottom'" ngbTooltip="Restaurar Documento" (click)="restaurarDocumento(); modal.close()"><i class="mdi mdi-restore"></i>Restaurar</button>
+      </div>
+      <div class="col-12 col-lg-4" >
+        <button  type="button" class="btn btn-outline-secondary w-100 m-0 d-inline-flex justify-content-center" [placement]="'bottom'" ngbTooltip="Enviar Documento" (click)="enviarDocumentoCorreo(); modal.close()"><i class="mdi mdi-email-send-outline"></i>Enviar</button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+
+<!-- MOSTRAR OPCIONES contratos -->
+<app-ui-modal #mdlOpcionesContratos dialogClass="modal-dialog-centered" hideFooter="true">
+  <div class="app-modal-header">
+    <h5 class="modal-title">Opciones resumen de contrato</h5>
+    <button type="button" class="close basic-close" data-dismiss="modal" aria-label="Close" (click)="mdlOpcionesContratos.hide()"><span aria-hidden="true">&times;</span></button>
+  </div>
+  <div class="app-modal-body">
+    <div class="form-row">
+      <div *ngIf="contratoSelected?.idEstado" class="col-4">
+        <button  type="button" class="btn btn-outline-danger w-100 m-0 d-inline-flex justify-content-center"  (click)="anularContrato(); mdlOpcionesContratos.hide()"><i class="mdi mdi-cancel"></i>Anular</button>
+      </div>
+      <div [class.col-4]="contratoSelected?.idEstado" [class.col-6]="!contratoSelected?.idEstado">
+        <button type="button" class="btn btn-outline-primary w-100 m-0 d-inline-flex justify-content-center"  (click)="verContrato(); mdlOpcionesContratos.hide()"><i class="mdi mdi-eye-outline"></i>Ver</button>
+      </div>
+      <div [class.col-4]="contratoSelected?.idEstado" [class.col-6]="!contratoSelected?.idEstado">
+        <button  type="button" class="btn btn-outline-secondary w-100 m-0 d-inline-flex justify-content-center"  (click)="enviarContrato(); mdlOpcionesContratos.hide()"><i class="mdi mdi-email-send-outline"></i>Enviar</button>
+      </div>
+    </div>
+  </div>
+</app-ui-modal>
+
+
+<!-- ANULAR DOCUMENTO -->
+<ng-template #modalDocumentoAnular let-modal let-close="close">
+  <app-documento-anulacion
+    (eventoDocumentoListar)="null"
+    [modal]="modalDocumentoAnularRef"
+    [documento]="documentoSelected">
+  </app-documento-anulacion>
+</ng-template>

@@ -1,0 +1,163 @@
+.form-container {
+  padding: 0.5rem;
+  
+  .form-header {
+    .security-icon {
+      font-size: 3rem;
+      display: block;
+      margin: 0 auto 1rem;
+    }
+  }
+
+  // Estilos para los campos del formulario
+  .form-group {
+    margin-bottom: 1.5rem;
+    
+    .input-group {
+      border-radius: 0.5rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      transition: all 0.3s ease;
+      
+      &:focus-within {
+        box-shadow: 0 5px 15px rgba(0,123,255,0.1);
+      }
+      
+      .input-group-text {
+        border-top-left-radius: 0.5rem;
+        border-bottom-left-radius: 0.5rem;
+        border: none;
+      }
+      
+      .form-control, .custom-select {
+        border-left: none;
+        border-top-right-radius: 0.5rem;
+        border-bottom-right-radius: 0.5rem;
+        height: 3rem;
+        padding-left: 1rem;
+        transition: border-color 0.15s ease-in-out;
+        
+        &::placeholder {
+          color: #aaa;
+          font-size: 0.9rem;
+        }
+        
+        &:focus {
+          box-shadow: none;
+          border-color: #007bff;
+        }
+      }
+    }
+  }
+
+  // Alerta con estilo moderno
+  .alert {
+    border-radius: 0.5rem;
+    border-left: 4px solid #ffc107;
+    background-color: rgba(255, 193, 7, 0.1);
+  }
+}
+
+// Modal header y footer modernos
+:host ::ng-deep {
+  .modal-header {
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+  }
+
+  .modal-footer {
+    border-top: 1px solid rgba(0,0,0,0.05);
+    background: linear-gradient(to right, #ffffff, #f8f9fa);
+  }
+  
+  // Estilos para el autocomplete de Material
+  .cdk-overlay-container {
+    z-index: 2000 !important; // Mayor que el z-index del modal
+  }
+
+  .cdk-overlay-backdrop {
+    z-index: 1900 !important;
+  }
+
+  // Contenedor específico para el autocomplete
+  .autocomplete-wrapper {
+    position: relative;
+    z-index: 5;
+    pointer-events: auto !important;
+    
+    input {
+      cursor: text !important;
+      pointer-events: auto !important;
+    }
+  }
+
+  // Estilos específicos para el panel de autocompletado
+  .mat-autocomplete-panel {
+    border-radius: 0.5rem !important;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1) !important;
+    margin-top: 5px !important;
+    position: relative;
+    z-index: 2000 !important;
+    pointer-events: auto !important;
+    
+    .mat-option {
+      font-size: 0.9rem;
+      height: 3rem;
+      line-height: 3rem;
+      
+      &:hover {
+        background-color: rgba(0, 123, 255, 0.1);
+      }
+      
+      &.mat-selected {
+        background-color: rgba(0, 123, 255, 0.2);
+        color: #007bff;
+      }
+    }
+  }
+  
+  // Estilos para que el input de material mantenga el diseño de bootstrap
+  .mat-form-field {
+    width: 100%;
+    
+    .mat-form-field-wrapper {
+      padding-bottom: 0;
+    }
+    
+    .mat-form-field-flex {
+      background: transparent;
+    }
+    
+    .mat-form-field-underline {
+      display: none;
+    }
+  }
+}
+
+
+
+.modal-open .cdk-overlay-container,
+.modal-open .mat-autocomplete-panel,
+.modal-open input,
+.modal-open .form-control {
+  pointer-events: auto !important;
+}
+
+.cdk-overlay-container {
+  z-index: 2000 !important; // más alto que el modal (Bootstrap usa 1050)
+}
+
+.mat-autocomplete-panel {
+  z-index: 2100 !important;
+  position: absolute !important;
+  pointer-events: auto !important;
+}
+
+.input-group .form-control {
+  position: relative;
+  z-index: 2;
+}
+
+
+/deep/ .cdk-overlay-container {
+  z-index: 2000;
+}
+

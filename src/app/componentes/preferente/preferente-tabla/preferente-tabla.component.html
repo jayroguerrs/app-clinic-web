@@ -1,0 +1,27 @@
+<table class="table table-sm">
+
+    <thead class="thead-dark">
+        <tr>
+            <th *ngFor="let columna of sColumnas" >
+                <div *ngIf="columna.visible !== false">{{ columna.nombreColumna }}</div>
+            </th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr *ngFor="let filaDatos of sDatos">
+
+            <td *ngFor="let columna of sColumnas; let i = index">
+                <div *ngIf="columna.visible !== false"><span [innerHTML]="this.datosColumna(filaDatos, columna) | safeHtml"></span></div>
+            </td>
+        </tr>
+        <tr>
+
+        </tr>
+    </tbody>
+
+    <tfoot>
+
+    </tfoot>
+
+</table>

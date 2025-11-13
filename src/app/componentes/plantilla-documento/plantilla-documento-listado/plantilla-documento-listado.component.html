@@ -1,0 +1,75 @@
+﻿<!-- SPINNER -->
+<ngx-spinner
+  [template]="rutaImageSpinner">
+  <p style="color: white" > Cargando... </p>
+</ngx-spinner>
+
+<div class="row">
+  <!-- BARRA TITULO -->
+  <div class="col-sm-12">
+    <app-card [options]="false" [hidBlock]="true" cardTitle="LISTADO DE PLANTILLAS">
+    </app-card>
+  </div>
+  <!-- GRILLA -->
+  <div class="col-12">
+    <app-card [options]="false" [hidHeader]="true">
+
+      <div class="table table-sm-responsive">
+        <table datatable [dtOptions]="dtResponsiveOptions" class="table table-sm table-hover table-tipoComprobante display compact">
+        </table>
+      </div>
+
+    </app-card>
+  </div>
+</div>
+
+<!-- BOTONERA ESCRITORIO -->
+<ul class="botonera-escritorio">
+  <li>
+    <button type="button" class="btn btn-primary btn-icon" [placement]="'bottom'" ngbTooltip="Listar" (click)="refreshTable()"><i class="mdi mdi-sync"></i></button>
+    <button *ngIf="this.accTot || this.accCrud || this.accCreate" type="button" class="btn btn-primary btn-icon" [placement]="'bottom'" ngbTooltip="Nuevo" (click)="onCreate()"><i class="mdi mdi-plus-circle-outline"></i></button>
+    <button *ngIf="selected && (this.accTot || this.accCrud || this.accUpdate)" type="button" class="btn btn-warning btn-icon" [placement]="'bottom'" ngbTooltip="Editar" (click)="onEdit()"><i class="mdi mdi-square-edit-outline"></i></button>
+    <button *ngIf="selected" type="button" class="btn btn-secondary btn-icon" [placement]="'bottom'" ngbTooltip="Ver" (click)="onView()"><i class="mdi mdi-eye-outline"></i></button>
+  </li>
+</ul>
+
+
+<!-- Menu Movil -->
+<div class="float-menu">
+  <button mat-fab color="primary" class="bg-primary" (click)="verOpciones()">
+    <mat-icon>settings</mat-icon>
+  </button>
+</div>
+<ng-template let-bottomSheetRef="bottomSheetRef" #menuMovil >
+  <div class="_content" >
+    <div class="_header">
+      <div class="px-4 pt-4 text-center">
+        <span class="d-inline-block topline"></span>
+        <p class="text-center text-white _title lead">Opciones</p>
+      </div>
+      <mat-divider class=""></mat-divider>
+    </div>
+
+    <mat-nav-list class="pt-0">
+      <a mat-list-item (click)= "refreshTable();cerrarOpciones();">
+        <i class="mat-list-icon mdi mdi-sync"></i>
+        <span class=" opt-title">Actualizar lista</span>
+      </a>
+      <mat-divider></mat-divider>
+      <a mat-list-item (click)="onCreate();cerrarOpciones();">
+        <i class="mat-list-icon mdi mdi-plus-circle-outline"></i>
+        <span class=" opt-title">Nuevo plantilla</span>
+      </a>
+      <mat-divider></mat-divider>
+      <a mat-list-item (click)="onEdit();cerrarOpciones();">
+        <i class="mat-list-icon mdi mdi-square-edit-outline"></i>
+        <span class=" opt-title">Editar plantilla</span>
+      </a>
+      <mat-divider></mat-divider>
+      <a mat-list-item (click)="onView();cerrarOpciones();">
+        <i class="mat-list-icon mdi mdi-eye-outline"></i>
+        <span class=" opt-title">Ver plantilla</span>
+      </a>
+    </mat-nav-list>
+  </div>
+</ng-template>

@@ -1,0 +1,442 @@
+  <form class="modal-content" [formGroup]="frmGroup" (ngSubmit)="onSubmit()">
+    <div *ngIf="ldCita" class="modal-header p-0">
+      <div class="sk block w-100 h-70px"></div>
+    </div>
+    <div *ngIf="!ldCita" class="modal-header py-3" [ngClass]="bgHeader">
+      <h2 class="d-flex align-middle">
+        <div class="my-auto mr-3">
+          <button type="button" matRipple class="btn sbtn p-2 d-block" [ngClass]="textHeader" (click)="bsModalRef.dismiss()">
+            <fontawesome-svg icon="arrow-left" [width]="22" [height]="22" type="duotone"></fontawesome-svg>
+          </button>
+        </div>
+        <div class="my-auto">
+          <h2 class="mb-0 fs-18px f-w-500" [ngClass]="textHeader">{{title}} {{subtitle}} {{parametros.citaAccionActual !== accionCita.NUEVA ? '('+_cita?.idCita+')' : ''}}</h2>
+<!--          <h3 class="mb-0 fs-14px" [ngClass]="textHeader">Acción: {{subtitle}}</h3>-->
+        </div>
+      </h2>
+      <div ngbDropdown>
+        <button type="button" matRipple class="btn sbtn btn-sm btn-icon bg-white-10 h-auto w-auto px-2 no-after position-relative align-items-center justify-content-center" [ngClass]="textHeader" ngbDropdownToggle>
+          <fontawesome-svg icon="ellipsis-vertical" [width]="22" [height]="22" type="duotone"></fontawesome-svg>
+          <span class="pulse-ring pulse-white"></span>
+        </button>
+        <div ngbDropdownMenu class="menu popins">
+          <button type="button" *ngIf="parametros?.citaAccionActual === accionCita.VER" matRipple ngbDropdownItem class="f-w-500 rounded-0 list-group-item list-group-item-action border-0 d-flex align-items-center text-warning btn-hover-warning trs" (click)="evtEditar()">
+            <fontawesome-svg icon="pen" [width]="22" [height]="22" type="light" class="mr-3"></fontawesome-svg>
+            <span class="fs-16px">Editar</span>
+          </button>
+          <button type="button" *ngIf="parametros?.citaAccionActual !== accionCita.NUEVA" matRipple ngbDropdownItem class="f-w-500 rounded-0 list-group-item list-group-item-action border-0 d-flex align-items-center text-muted btn-hover-muted trs" (click)="evtHistorial()">
+            <fontawesome-svg icon="clock-rotate-left" [width]="22" [height]="22" type="light" class="mr-3"></fontawesome-svg>
+            <span class="fs-16px">Ver Historial</span>
+          </button>
+          <button type="button" *ngIf="parametros.citaAccionActual === accionCita.NUEVA || parametros.citaAccionActual === accionCita.EDITAR" matRipple ngbDropdownItem class="f-w-500 rounded-0 list-group-item list-group-item-action border-0 d-flex align-items-center text-indigo btn-hover-indigo trs" (click)="evtHorario()">
+            <fontawesome-svg icon="calendar-clock" [width]="22" [height]="22" type="light" class="mr-3"></fontawesome-svg>
+            <span class="fs-16px">Horario</span>
+          </button>
+          <div *ngIf="parametros?.citaAccionActual !== accionCita.NUEVA" class="dropdown-divider"></div>
+          <button type="button" *ngIf="parametros?.citaAccionActual === accionCita.ATENDER" matRipple ngbDropdownItem class="f-w-500 rounded-0 list-group-item list-group-item-action border-0 d-flex align-items-center text-success btn-hover-success trs" (click)="evtAtender()">
+            <fontawesome-svg icon="hand-pointer" [width]="22" [height]="22" type="light" class="mr-3"></fontawesome-svg>
+            <span class="fs-16px">Marcar Atendida</span>
+          </button>
+          <button type="button" *ngIf="parametros?.citaAccionActual === accionCita.VER" matRipple ngbDropdownItem class="f-w-500 rounded-0 list-group-item list-group-item-action border-0 d-flex align-items-center text-success-light btn-hover-success-light trs" (click)="evtEstado(citaEstado.CONFIRMADA)">
+            <fontawesome-svg icon="calendar-check" [width]="22" [height]="22" type="light" class="mr-3"></fontawesome-svg>
+            <span class="fs-16px">Confirmar Cita</span>
+          </button>
+          <button type="button" *ngIf="parametros?.citaAccionActual === accionCita.VER" matRipple ngbDropdownItem class="f-w-500 rounded-0 list-group-item list-group-item-action border-0 d-flex align-items-center text-dark-primary btn-hover-dark-primary trs" (click)="evtEstado(citaEstado.ASISTENCIACONFIRMADA)">
+            <fontawesome-svg icon="calendar-check" [width]="22" [height]="22" type="light" class="mr-3"></fontawesome-svg>
+            <span class="fs-16px">Confirmar Asistencia</span>
+          </button>
+          <button type="button" *ngIf="parametros?.citaAccionActual === accionCita.VER" matRipple ngbDropdownItem class="f-w-500 rounded-0 list-group-item list-group-item-action border-0 d-flex align-items-center text-black btn-hover-black trs" (click)="evtEstado(citaEstado.CANCELADA)">
+            <fontawesome-svg icon="ban" [width]="22" [height]="22" type="light" class="mr-3"></fontawesome-svg>
+            <span class="fs-16px">Cancelar</span>
+          </button>
+          <button type="button" *ngIf="parametros?.citaAccionActual === accionCita.VER" matRipple ngbDropdownItem class="f-w-500 rounded-0 list-group-item list-group-item-action border-0 d-flex align-items-center text-danger btn-hover-danger trs"  (click)="evtEstado(citaEstado.ANULADA)">
+            <fontawesome-svg icon="calendar-xmark" [width]="22" [height]="22" type="light" class="mr-3"></fontawesome-svg>
+            <span class="fs-16px">Anular</span>
+          </button>
+          <button type="button" *ngIf="parametros?.citaAccionActual === accionCita.VER" matRipple ngbDropdownItem class="f-w-500 rounded-0 list-group-item list-group-item-action border-0 d-flex align-items-center text-purple btn-hover-purple trs" (click)="evtEstado(citaEstado.PENDIENTE)">
+            <fontawesome-svg icon="calendar-exclamation" [width]="22" [height]="22" type="light" class="mr-3"></fontawesome-svg>
+            <span class="fs-16px">Pendiente</span>
+          </button>
+          <button type="button" *ngIf="parametros?.citaAccionActual === accionCita.VER" matRipple ngbDropdownItem class="f-w-500 rounded-0 list-group-item list-group-item-action border-0 d-flex align-items-center text-brown btn-hover-brown trs" (click)="evtEstado(citaEstado.NOLLAMAR)">
+            <fontawesome-svg icon="calendar-exclamation" [width]="22" [height]="22" type="light" class="mr-3"></fontawesome-svg>
+            <span class="fs-16px">No Llamar</span>
+          </button>
+        </div>
+      </div>
+
+
+    </div>
+    <div class="modal-body overflow-auto">
+      <mat-progress-bar mode="indeterminate" *ngIf="ldSubmit"></mat-progress-bar>
+
+      <div class="m-3">
+        <div *ngIf="parametros?.citaAccionActual === accionCita.VER || parametros?.citaAccionActual === accionCita.ATENDER" >
+          <ng-container [ngSwitch]="ldCita">
+            <div *ngSwitchCase="false" class="form-row">
+              <div class="col-12 col-md-6 mb-3">
+                <div class="rounded-md border border-2px border-start-5px border-indigo py-2 px-3 text-indigo d-flex flex-column">
+                  <label class="mb-0 fs-10px text-uppercase">Fecha</label>
+                  <p class="mb-0 fw-bold text-truncate text-uppercase">{{ _cita ? util.firstLetterUpperCase(_cita.fechaCita | date: 'dd MMMM, y':'':'ES-es') : '' }}</p>
+                </div>
+              </div>
+              <div class="col-12 col-md-6 mb-3">
+                <div class="rounded-md border border-2px border-start-5px border-indigo py-2 px-3 text-indigo d-flex flex-column">
+                  <label class="mb-0 fs-10px text-uppercase">Sede</label>
+                  <p class="mb-0 fw-bold text-truncate text-uppercase">{{ _cita?.sede }}</p>
+                </div>
+              </div>
+              <div class="col-12 col-md-6 mb-3">
+                <div class="rounded-md border border-2px border-start-5px border-indigo py-2 px-3 text-indigo d-flex flex-column">
+                  <label class="mb-0 fs-10px text-uppercase">Servicio</label>
+                  <p class="mb-0 fw-bold text-truncate text-uppercase">{{ _cita?.servicio }}</p>
+                </div>
+              </div>
+              <div class="col-6 mb-3">
+                <div class="rounded-md border border-2px border-start-5px border-indigo py-2 px-3 text-indigo d-flex flex-column">
+                  <label class="mb-0 fs-10px text-uppercase">Tipo de Cita</label>
+                  <p class="mb-0 fw-bold text-truncate text-uppercase">{{ _cita?.tipoCita }}</p>
+                </div>
+              </div>
+              <div class="col-6 mb-3">
+                <div class="rounded-md border border-2px border-start-5px border-indigo py-2 px-3 text-indigo d-flex flex-column">
+                  <label class="mb-0 fs-10px text-uppercase">Maquina</label>
+                  <p class="mb-0 fw-bold text-truncate text-uppercase">{{ _cita?.maquina.substring(3, 10).replace('AQ', '') }}</p>
+                </div>
+              </div>
+              <div class="col-6 mb-3">
+                <div class="rounded-md border border-2px border-start-5px border-indigo py-2 px-3 text-indigo d-flex flex-column">
+                  <label class="mb-0 fs-10px text-uppercase">Hora Inicio</label>
+                  <p class="mb-0 fw-bold text-truncate text-uppercase">{{ util.horaStringToFormat12Hour(_cita?.horaInicio) }}</p>
+                </div>
+              </div>
+              <div class="col-6 mb-3">
+                <div class="rounded-md border border-2px border-start-5px border-indigo py-2 px-3 text-indigo d-flex flex-column">
+                  <label class="mb-0 fs-10px text-uppercase">Hora Termino</label>
+                  <p class="mb-0 fw-bold text-truncate text-uppercase">{{ util.horaStringToFormat12Hour(_cita?.horaTermino) }}</p>
+                </div>
+              </div>
+              <div *ngIf="parametros?.citaAccionActual === accionCita.VER && _cita?.idEstado === citaEstado.ATENDIDA" class="col-6 mb-3">
+                <div class="rounded-md border border-2px border-start-5px border-indigo py-2 px-3 text-indigo d-flex flex-column">
+                  <label class="mb-0 fs-10px text-uppercase">Atendido por</label>
+                  <p class="mb-0 fw-bold text-truncate text-uppercase">{{ _cita?.atendidoPor }}</p>
+                </div>
+              </div>
+              <div *ngIf="parametros?.citaAccionActual === accionCita.VER && _cita?.idEstado === citaEstado.ATENDIDA" class="col-6 mb-3">
+                <div class="rounded-md border border-2px border-start-5px border-indigo py-2 px-3 text-indigo d-flex flex-column">
+                  <label class="mb-0 fs-10px text-uppercase">N° de Box</label>
+                  <p class="mb-0 fw-bold text-truncate text-uppercase">{{ _cita?.numeroBox }}</p>
+                </div>
+              </div>
+              <div *ngIf="parametros?.citaAccionActual === accionCita.VER && _cita?.idEstado === citaEstado.ATENDIDA" class="col-6 mb-3">
+                <div class="rounded-md border border-2px border-start-5px border-indigo py-2 px-3 text-indigo d-flex flex-column">
+                  <label class="mb-0 fs-10px text-uppercase">Nombre Maquina</label>
+                  <p class="mb-0 fw-bold text-truncate text-uppercase">{{ _cita?.maquina }}</p>
+                </div>
+              </div>
+
+              <div *ngIf="parametros?.citaAccionActual === accionCita.ATENDER" class="col-12 col-md-6">
+                <div class="mb-3 popins">
+                  <label class="fw-semibold text-gray-800 mb-1">Atendido por</label>
+                  <div class="position-relative" >
+                    <span class="position-absolute no-pointer-events h-100 d-flex align-items-center ps-10px text-muted"><fontawesome-svg [width]="24" [height]="24" [icon]="'user'" [type]="'duotone'" ></fontawesome-svg></span>
+                    <input #idUsuarioAtendio type="hidden" class="form-control form-control-solid ps-42px" formControlName="idUsuarioAtendio">
+                    <input type="text" class="form-control form-control-sm form-control-solid ps-42px cursor-pointer" formControlName="usuarioAtendio" placeholder="--Seleccionar--" [ngClass]="{'bg-color-light-danger': submitted && f.idUsuarioAtendio.errors}" (click)="selectUser()">
+                  </div>
+                  <div *ngIf="submitted && f.idUsuarioAtendio.errors" class="invalid-feedback d-block">* Seleccionar el usuario que atendio</div>
+                </div>
+              </div>
+
+              <div *ngIf="parametros?.citaAccionActual === accionCita.ATENDER" class="col-12 col-md-6">
+                <div class="mb-3 popins">
+                  <label class="fw-semibold text-gray-800 mb-1" for="numeroBox">N° Box</label>
+                  <div class="position-relative" >
+                    <span class="position-absolute no-pointer-events h-100 d-flex align-items-center ps-10px text-muted"><fontawesome-svg [width]="24" [height]="24" [icon]="'user'" [type]="'duotone'" ></fontawesome-svg></span>
+                    <select class="form-select form-select-sm form-select-solid ps-42px" id="numeroBox" formControlName="numeroBox" [ngClass]="{'bg-color-light-danger': submitted && f.numeroBox.value == 0}">
+                      <option [value]="0" selected>--Seleccionar--</option>
+                      <option [value]="1" >01</option>
+                      <option [value]="2" >02</option>
+                      <option [value]="3" >03</option>
+                      <option [value]="4" >04</option>
+                      <option [value]="5" >05</option>
+                      <option [value]="6" >06</option>
+                      <option [value]="7" >07</option>
+                      <option [value]="8" >08</option>
+                      <option [value]="9" >09</option>
+                      <option [value]="10" >10</option>
+                      <option [value]="11" >11</option>
+                      <option [value]="12" >12</option>
+                      <option [value]="13" >13</option>
+                      <option [value]="14" >14</option>
+                      <option [value]="15" >15</option>
+                      <option [value]="16" >16</option>
+                      <option [value]="17" >17</option>
+                      <option [value]="18" >18</option>
+                      <option [value]="19" >19</option>
+                      <option [value]="20" >20</option>
+                      <option [value]="21" >21</option>
+                      <option [value]="22" >22</option>
+                      <option [value]="23" >23</option>
+                      <option [value]="24" >24</option>
+                      <option [value]="25" >25</option>
+                      <option [value]="26" >26</option>
+                      <option [value]="27" >27</option>
+                      <option [value]="28" >28</option>
+                      <option [value]="29" >29</option>
+                      <option [value]="30" >30</option>
+                      <option [value]="31" >31</option>
+                      <option [value]="32" >32</option>
+                    </select>
+                  </div>
+                  <div *ngIf="submitted && f.numeroBox.value == 0" class="invalid-feedback d-block">* Seleccionar el número del box</div>
+                </div>
+              </div>
+
+              <div *ngIf="parametros?.citaAccionActual === accionCita.ATENDER" class="col-12 col-md-6">
+                <div class="mb-3 popins">
+                  <label class="fw-semibold text-gray-800 mb-1">Maquina</label>
+                  <div class="position-relative">
+                    <span class="position-absolute no-pointer-events h-100 d-flex align-items-center ps-10px"><fontawesome-svg [width]="24" [height]="24" [icon]="'building'" [type]="'duotone'"  ></fontawesome-svg></span>
+                    <select formControlName="idMaquinaMarca" class="form-select form-select-sm form-select-solid ps-42px" [ngClass]="{'bg-color-light-danger': submitted && f.idMaquinaMarca.errors}">
+                      <option value="">--Seleccionar--</option>
+                      <option *ngFor="let m of maquinaMarcas" [value]="m.id">{{ m.nombre }}</option>
+                    </select>
+                    <div *ngIf="submitted && f.idMaquinaMarca.errors?.required" class="invalid-feedback d-block">* Seleccionar el nombre de maquina</div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <div *ngSwitchCase="true" class="form-row">
+              <div *ngFor="let x of util.counter(7)" class="col-12 col-md-6">
+                <div class="sk block rounded h-58px"></div>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+
+        <div *ngIf="parametros?.citaAccionActual === accionCita.EDITAR || parametros?.citaAccionActual === accionCita.NUEVA">
+          <div class="form-row">
+
+            <div class="col-12 col-md-4 col-lg-6">
+              <div class="mb-3 popins">
+                <label class="fw-semibold text-gray-800 mb-1">Fecha</label>
+                <ng-container [ngSwitch]="ldServicios">
+                  <div class="position-relative" *ngSwitchCase="false">
+                    <span class="position-absolute no-pointer-events h-100 d-flex align-items-center ps-10px text-indigo"><fontawesome-svg [width]="24" [height]="24" [icon]="'calendar-day'" [type]="'duotone'" ></fontawesome-svg></span>
+                    <input type="text" formControlName="fecha" readonly class="form-control form-control-sm form-control-solid ps-42px bg-light-indigo text-indigo fw-500">
+                  </div>
+                  <div *ngSwitchCase="true" class="sk block rounded h-41px"></div>
+                </ng-container>
+              </div>
+            </div>
+            <div class="col-12 col-md-4 col-lg-6">
+              <div class="mb-3 popins">
+                <label class="fw-semibold text-gray-800 mb-1">Sede</label>
+                <div class="position-relative">
+                  <span class="position-absolute no-pointer-events h-100 d-flex align-items-center ps-10px text-indigo"><fontawesome-svg [width]="24" [height]="24" [icon]="'building'" [type]="'duotone'"  ></fontawesome-svg></span>
+                  <select [disabled] formControlName="idSede" class="form-select form-select-sm form-select-solid ps-42px bg-light-indigo text-indigo">
+                    <option value="">--Seleccionar--</option>
+                    <option *ngFor="let s of Sedes" [value]="s.idSede">{{ s.nombre }}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-md-4 col-lg-6">
+              <div class="mb-3 popins">
+                <label class="fw-semibold text-gray-800 mb-1">Servicio</label>
+
+                <ng-container [ngSwitch]="ldServicios">
+                  <div class="position-relative" *ngSwitchCase="false">
+                    <span class="position-absolute no-pointer-events h-100 d-flex align-items-center ps-10px text-indigo"><fontawesome-svg [width]="24" [height]="24" [icon]="'person'" [type]="'duotone'" ></fontawesome-svg></span>
+                    <select formControlName="idServicio" class="form-select form-select-sm form-select-solid ps-42px bg-light-indigo text-indigo">
+                      <option value="">--Seleccionar--</option>
+                      <option *ngFor="let s of servicios" [value]="s.id">{{s.nombre}}</option>
+                    </select>
+                  </div>
+                  <div *ngSwitchCase="true" class="sk block rounded h-41px"></div>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="col-12 col-md-4 col-lg-6">
+              <div class="mb-3 popins">
+                <label class="fw-semibold text-gray-800 mb-1 required">Tipo Cita</label>
+                <ng-container [ngSwitch]="ldTiposCita">
+                  <div class="position-relative" *ngSwitchCase="false">
+                    <span class="position-absolute no-pointer-events h-100 d-flex align-items-center ps-10px"><fontawesome-svg [width]="24" [height]="24" [icon]="'person'" [type]="'duotone'"  ></fontawesome-svg></span>
+                    <select [disableControl]="parametros?.citaAccionActual === accionCita.VER" formControlName="idTipoCita" class="form-select form-select-sm form-select-solid ps-42px" [ngClass]="{'bg-color-light-danger': submitted && f.idTipoCita.errors}">
+                      <option value="">--Seleccionar--</option>
+                      <option *ngFor="let t of tiposCita" [value]="t.id">{{t.nombre}}</option>
+                    </select>
+                  </div>
+                  <div *ngSwitchCase="true" class="sk block rounded h-41px"></div>
+                </ng-container>
+                <div *ngIf="submitted && f.idTipoCita.errors?.required" class="invalid-feedback d-block">* Seleccionar un tipo de _cita</div>
+              </div>
+            </div>
+            <div class="col-12 col-md-4 col-lg-6">
+              <div class="mb-3 popins">
+                <label class="fw-semibold text-gray-800 mb-1">Maquina</label>
+                <div class="position-relative">
+                  <span class="position-absolute no-pointer-events h-100 d-flex align-items-center ps-10px"><fontawesome-svg [width]="24" [height]="24" [icon]="'door-closed'" [type]="'duotone'"  ></fontawesome-svg></span>
+                  <input type="hidden" formControlName="idMaquina" disabled class="form-control form-control-solid ps-42px">
+                  <input readonly type="text" formControlName="maquina" class="form-control form-control-sm form-control-solid ps-42px" [ngClass]="{'bg-color-light-danger': submitted && f.idMaquina.errors}">
+                </div>
+                <div *ngIf="submitted && f.idMaquina.errors?.required" class="invalid-feedback d-block">* Seleccionar la maquina al seleccionar la hora</div>
+              </div>
+            </div>
+            <div class="col-12 col-md-4 col-lg-6">
+              <div class="mb-3 popins">
+                <label class="fw-semibold text-gray-800 mb-1 required">Hora Inicio</label>
+                <div class="position-relative">
+                  <span class="position-absolute no-pointer-events h-100 d-flex align-items-center ps-10px"><fontawesome-svg [width]="24" [height]="24" [icon]="'door-closed'" [type]="'duotone'" ></fontawesome-svg></span>
+                  <input type="hidden" formControlName="horaInicio">
+                  <input type="text" [value]="horaInicio" class="form-control form-control-sm form-control-solid ps-42px cursor-pointer" placeholder="Seleccionar hora" readonly [ngClass]="{'bg-color-light-danger': submitted && f.horaInicio.errors}" (click)="evtHorario()">
+                </div>
+                <div *ngIf="submitted && f.horaInicio.errors?.required" class="invalid-feedback d-block">* Seleccionar la hora</div>
+              </div>
+            </div>
+            <div class="col-12 col-md-4 col-lg-6">
+              <div class="mb-3 popins">
+                <label class="fw-semibold text-gray-800 mb-1 required">Hora Termino</label>
+                <div class="position-relative" >
+                  <span class="position-absolute no-pointer-events h-100 d-flex align-items-center ps-10px"><fontawesome-svg [width]="24" [height]="24" [icon]="'clock'" [type]="'duotone'" ></fontawesome-svg></span>
+                  <input type="hidden" formControlName="horaTermino">
+                  <input type="text" [value]="horaTermino" class="form-control form-control-sm form-control-solid ps-42px cursor-pointer" placeholder="Seleccionar hora" readonly [ngClass]="{'bg-color-light-danger': submitted && f.horaTermino.errors}" (click)="evtHorario()">
+                </div>
+                <div *ngIf="submitted && f.horaTermino.errors?.required" class="invalid-feedback d-block">* Seleccionar la hora</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-light-indigo py-3 px-5 text-indigo text-uppercase fw-semibold mx-n4">
+          Zonas Seleccionadas
+        </div>
+
+        <div class="py-3 zonas">
+          <app-card-cita-detalle-corporal360 #cardDetalle [IdServicio]="IdServicio" [IdCita]="IdCita" [Tecnologias]="tecnologias" [Parametros]="parametros" [Detalles]="citaDetalles" class="popins"></app-card-cita-detalle-corporal360>
+        </div>
+
+
+        <div class="form-row chat-container-360-mobile">
+          <div class="chat-360 mb-3">
+            <div class="scard mb-xl-10 popins border">
+              <div class="card-header min-h-45px">
+                <div class="card-title m-0">
+                  <h3 class="fw-semibold text-gray-800 m-0">Historia notas</h3>
+                </div>
+                <button type="button" *ngIf="citaMensajeNota.collection.length" [disabled]="!citaMensajeNota.collection.length" matRipple class="sbtn btn btn-sm btn-light-danger btn-hover-danger align-self-center m-0" (click)="clearCitaMensajeNota()">Limpiar</button>
+              </div>
+              <div class="card-body overflow-hidden p-0 bg-history">
+                <app-cita-mensaje-nota #citaMensajeNota [MaxHeight]="200" [IdCliente]="IdCliente" [IdCita]="IdCita" [Parametros]="parametros"></app-cita-mensaje-nota>
+              </div>
+            </div>
+            <div *ngIf="submitted && citaMensajeNota.hasValue" class="invalid-feedback d-block">* Tienes una nota pendiente de confirmar</div>
+          </div>
+          <div class="chat-360 mb-3">
+            <div class="scard mb-xl-10 popins border">
+              <div class="card-header min-h-45px">
+                <div class="card-title m-0">
+                  <h3 class="fw-semibold text-gray-800 m-0">Historia avisos</h3>
+                </div>
+                <button type="button" *ngIf="citaMensajeAviso.collection.length" [disabled]="!citaMensajeAviso.collection.length" matRipple class="sbtn btn btn-sm btn-light-danger btn-hover-danger align-self-center m-0" (click)="clearCitaMensajeAviso()">Limpiar</button>
+              </div>
+              <div class="card-body p-0 overflow-hidden bg-history">
+                <app-cita-mensaje-aviso #citaMensajeAviso [MaxHeight]="200" [IdCita]="IdCita" [IdCitaEstado]="_cita?.idEstado" [Parametros]="parametros"></app-cita-mensaje-aviso>
+              </div>
+            </div>
+            <div *ngIf="submitted && citaMensajeAviso.hasValue" class="invalid-feedback d-block">* Tienes un aviso pendiente de confirmar</div>
+          </div>
+          <div class="chat-360 mb-3">
+            <div class="scard mb-xl-10 popins border">
+              <div class="card-header min-h-45px">
+                <div class="card-title m-0">
+                  <h3 class="fw-semibold text-gray-800 m-0">Historia detalles</h3>
+                </div>
+                <button type="button" *ngIf="citaMensajeDetalle.collection.length" [disabled]="!citaMensajeDetalle.collection.length" matRipple class="sbtn btn btn-sm btn-light-danger btn-hover-danger align-self-center m-0" (click)="clearCitaMensajeDetalle()">Limpiar</button>
+              </div>
+              <div class="card-body p-0 overflow-hidden bg-history">
+                <app-cita-mensaje-detalle #citaMensajeDetalle [MaxHeight]="200" [IdCita]="IdCita" [Parametros]="parametros"></app-cita-mensaje-detalle>
+              </div>
+            </div>
+            <div *ngIf="submitted && citaMensajeDetalle.hasValue" class="invalid-feedback d-block">* Tienes un detalle pendiente de confirmar</div>
+          </div>
+        </div>
+
+        <!--? Zonas 360 antiguo <div class="bg-light-indigo py-3 px-5 text-indigo text-uppercase fw-semibold mx-n4">
+          Zonas Seleccionadas
+        </div>
+
+        <div class="py-3 zonas">
+          <app-card-cita-detalle-corporal360 #cardDetalle [IdServicio]="IdServicio" [IdCita]="IdCita" [Tecnologias]="tecnologias" [Parametros]="parametros" [Detalles]="citaDetalles" class="popins"></app-card-cita-detalle-corporal360>
+        </div> -->
+
+
+        <!--<div class="form-row">
+          <div class="col-12">
+            <div class="scard mb-5 mb-xl-10 popins border">
+              <div class="card-header min-h-45px">
+                <div class="card-title m-0">
+                  <h3 class="fw-semibold text-gray-800 m-0">Zonas seleccionadas</h3>
+                </div>
+              </div>
+              <div class="card-body bg-color-light">
+
+&lt;!&ndash;                <div class="row">&ndash;&gt;
+&lt;!&ndash;                  <div *ngFor="let d of citaDetalles; let i = index" class="col-12 mb-3" >&ndash;&gt;
+&lt;!&ndash;                    <div class="scard bgi-no-repeat card-xl-stretch bgi-no-repeat h-100" style="background-position: right top; background-size: 30% auto; background-image: url('https://preview.keenthemes.com/metronic8/demo1/assets/media/svg/shapes/abstract-2.svg')">&ndash;&gt;
+&lt;!&ndash;                      <div class="card-body">&ndash;&gt;
+&lt;!&ndash;                        <div class="row">&ndash;&gt;
+&lt;!&ndash;                          <div class="col-12 col-md-6">&ndash;&gt;
+&lt;!&ndash;                            <label class="lh-1 fw-semibold text-gray-800 mb-0">Zona</label>&ndash;&gt;
+&lt;!&ndash;                            <p class="lh-1 mb-0">{{ d.zona }}</p>&ndash;&gt;
+&lt;!&ndash;                            <div class="dropdown-divider border-top-dashed"></div>&ndash;&gt;
+&lt;!&ndash;                          </div>&ndash;&gt;
+&lt;!&ndash;                          <div class="col-12 col-md-6">&ndash;&gt;
+&lt;!&ndash;                            <label class="lh-1 fw-semibold text-gray-800 mb-0">Tecnología</label>&ndash;&gt;
+&lt;!&ndash;                            <p class="lh-1 mb-0">{{ d.tecnologia }}</p>&ndash;&gt;
+&lt;!&ndash;                            <div class="dropdown-divider border-top-dashed"></div>&ndash;&gt;
+&lt;!&ndash;                          </div>&ndash;&gt;
+&lt;!&ndash;                          <div class="col-12 col-md-6">&ndash;&gt;
+&lt;!&ndash;                            <label class="lh-1 fw-semibold text-gray-800 mb-0">Sesión</label>&ndash;&gt;
+&lt;!&ndash;                            <p class="lh-1 mb-0">{{ d.sesion }}</p>&ndash;&gt;
+&lt;!&ndash;                            <div class="dropdown-divider border-top-dashed"></div>&ndash;&gt;
+&lt;!&ndash;                          </div>&ndash;&gt;
+&lt;!&ndash;                          <div class="col-12 col-md-6">&ndash;&gt;
+&lt;!&ndash;                            <label class="lh-1 fw-semibold text-gray-800 mb-0">Duración</label>&ndash;&gt;
+&lt;!&ndash;                            <p class="lh-1 mb-0">{{ d.minutos }} minutos</p>&ndash;&gt;
+&lt;!&ndash;                            <div class="dropdown-divider border-top-dashed"></div>&ndash;&gt;
+&lt;!&ndash;                          </div>&ndash;&gt;
+&lt;!&ndash;                          <div class="col-12 col-md-6">&ndash;&gt;
+&lt;!&ndash;                            <label class="fw-semibold text-gray-800 mb-0">Agendado</label>&ndash;&gt;
+&lt;!&ndash;                            <p class="mb-0">{{ d.sesion === 1 ? d.usuarioAgendado : '-&#45;&#45;&#45;&#45; &#45;&#45;&#45;&#45; &#45;&#45;&#45;&#45;' }}</p>&ndash;&gt;
+&lt;!&ndash;                          </div>&ndash;&gt;
+&lt;!&ndash;                        </div>&ndash;&gt;
+&lt;!&ndash;                      </div>&ndash;&gt;
+&lt;!&ndash;                    </div>&ndash;&gt;
+&lt;!&ndash;                  </div>&ndash;&gt;
+&lt;!&ndash;                </div>&ndash;&gt;
+
+                <app-card-cita-detalle-corporal360 #tabla [IdServicio]="IdServicio" [IdCita]="IdCita" [Tecnologias]="tecnologias" [Parametros]="parametros" [Detalles]="citaDetalles" class="popins"></app-card-cita-detalle-corporal360>
+              </div>
+            </div>
+          </div>
+        </div>-->
+
+      </div>
+
+    </div>
+    <div class="modal-footer">
+<!--      <div class="bg-light-indigo rounded d-inline-flex h-41px px-3 mr-auto">-->
+<!--        <span class="my-auto f-w-500 text-indigo fs-18px">Total: S/ {{ getTotal.toFixed(2) }}</span>-->
+<!--      </div>-->
+      <button matRipple type="reset" class="btn sbtn btn-light" (click)="onClose()">Cerrar</button>
+      <button [disabled]="ldSubmit" matRipple *ngIf="parametros?.citaAccionActual === accionCita.EDITAR || parametros?.citaAccionActual === accionCita.NUEVA" type="submit" class="btn sbtn btn-primary shadow btn-shadow-primary ml-2" >
+        Guardar
+      </button>
+    </div>
+  </form>
+
+

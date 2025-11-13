@@ -1,0 +1,119 @@
+<form [formGroup]="formGroup" (ngSubmit)="evtBuscar()">
+
+<div class="modal-header card-header bg-gradient border-bottom-0">
+  <h2 class="d-flex align-middle">
+    <div class="my-auto">
+      <h2 class="mb-0 fs-18px f-w-500 text-white" >Buscar Preferente</h2>
+    </div>
+  </h2>
+  <button type="button" class="btn sbtn btn-sm btn-icon btn-active-color-primary h-auto w-auto p-0" (click)="modal.close(false)">
+    <span class="svg-icon svg-icon-1 text-white">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor"></rect>
+        <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor"></rect>
+      </svg>
+    </span>
+  </button>
+</div>
+
+<div class="modal-body card-body p-4">
+
+  <div class="form-row mb-3">
+<!--    <div class="btn-group btn-group-sm rounded-md" role="group">-->
+<!--      <button type="button" class="btn btn-primary" [class.bg-indigo]="usuType === 1" (click)="evtChangeType(1)">Usu. Facebook</button>-->
+<!--      <button type="button" class="btn btn-primary" [class.bg-indigo]="usuType === 2" (click)="evtChangeType(2)">Usu. Instagram</button>-->
+<!--    </div>-->
+
+    <div class="col-12 col-lg-2">
+      <div ngbDropdown class="d-block w-100">
+        <button type="button" class="btn btn-outline-primary btn-sm rounded-md w-100 m-0" ngbDropdownToggle>{{ typeDate.name }}</button>
+        <div ngbDropdownMenu>
+          <button type="button" ngbDropdownItem (click)="evtChangeDateType(1)">Mes Actual</button>
+          <button type="button" ngbDropdownItem (click)="evtChangeDateType(2)">Rango Fecha</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-lg-2">
+      <div ngbDropdown class="d-block w-100">
+        <button type="button" class="btn btn-outline-primary btn-sm rounded-md w-100 m-0" ngbDropdownToggle>{{ typeUsu.name }}</button>
+        <div ngbDropdownMenu>
+          <button type="button" ngbDropdownItem (click)="evtChangeUsuType(1)">Usu. Facebook</button>
+          <button type="button" ngbDropdownItem (click)="evtChangeUsuType(2)">Usu. Instagram</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="form-row">
+    <div *ngIf="typeDate.id === 2" class="col-12 col-lg-2">
+      <div class="form-group ">
+        <label class="f-w-500 text-gray-800 required fs-12px mb-0">Fecha Desde</label>
+        <input
+          type="text"
+          mwlFlatpickr
+          [altInput]="true"
+          [convertModelValue]="true"
+          [altFormat]="'d/m/Y'"
+          dateFormat="Y-m-d"
+          class="form-control form-control-sm form-control-solid fs-12px"
+          placeholder="dd/mm/yyyy"
+          formControlName="fechaDesde"
+          readonly
+          [ngClass]="{ 'bg-color-light-danger': submitted && f.fechaDesde.errors }"
+        />
+      </div>
+    </div>
+    <div *ngIf="typeDate.id === 2" class="col-12 col-lg-2">
+      <div class="form-group ">
+        <label class="f-w-500 text-gray-800 required fs-12px mb-0">Fecha Hasta</label>
+        <input
+          type="text"
+          mwlFlatpickr
+          [altInput]="true"
+          [convertModelValue]="true"
+          [altFormat]="'d/m/Y'"
+          dateFormat="Y-m-d"
+          class="form-control form-control-sm form-control-solid fs-12px"
+          placeholder="dd/mm/yyyy"
+          formControlName="fechaHasta"
+          readonly
+          [ngClass]="{ 'bg-color-light-danger': submitted && f.fechaHasta.errors }"
+        />
+      </div>
+    </div>
+    <div class="col-12 col-lg-2" *ngIf="typeUsu.id === 1">
+      <div class="form-group ">
+        <label class="f-w-500 text-gray-800 required fs-12px mb-0">Usu. Facebook</label>
+        <input type="text" class="form-control form-control-sm form-control-solid fs-12px" formControlName="usuFacebook" placeholder="Ingresar usuario de facebook" [ngClass]="{ 'bg-color-light-danger': submitted && f.usuFacebook.errors }">
+      </div>
+    </div>
+    <div class="col-12 col-lg-2" *ngIf="typeUsu.id === 2">
+      <div class="form-group ">
+        <label class="f-w-500 text-gray-800 required fs-12px mb-0">Usu. Instagram</label>
+        <input type="text" class="form-control form-control-sm form-control-solid fs-12px" formControlName="usuInstagram" placeholder="Ingresar usuario de instagram" [ngClass]="{ 'bg-color-light-danger': submitted && f.usuInstagram.errors }">
+      </div>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <button matRipple type="submit" class="btn btn-sm btn-indigo rounded-md d-flex align-items-center"><i class="mdi mdi-magnify"></i> Buscar</button>
+    <button [disabled]="!selected" matRipple type="button" class="btn btn-sm btn-warning rounded-md d-flex align-items-center" (click)="evtEditar()"><i class="mdi mdi-pencil"></i> Editar</button>
+  </div>
+
+  <div class="form-row">
+    <div class="col-sm-12">
+      <div class="table table-sm-responsive">
+        <table datatable [dtOptions]="optionsTable" class="table table-sm table-sm table-hover display compact"></table>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="modal-footer">
+  <button type="reset" class="btn sbtn btn-light mr-2" (click)="cerrarModal()">Cerrar</button>
+</div>
+
+</form>

@@ -1,0 +1,264 @@
+<ng-template  #modalAsignacion let-modal let-close="close">
+  <app-cita-asignacion-operador
+    [idUsuarioReasignacion]="idUsuarioReasignacion"
+    [modal]="modalAsignacionRef"
+    [nombreReasignado] = "nombreUsuarioReasignacion">
+  </app-cita-asignacion-operador>
+</ng-template>
+
+<!-- SPINNER -->
+<ngx-spinner
+    [template]="rutaImageSpinner">
+    <p style="color: white" > Cargando... </p>
+</ngx-spinner>
+
+
+<!-- BOTONERA ESCRITORIO -->
+<ul class="botonera-escritorio">
+  <li>
+    <button id="btnListar1" type="button" class="btn btn-primary btn-icon" [placement]="'bottom'" ngbTooltip="Actualizar"    (click)="asignacionListar()">                   <i class="mdi mdi-sync"></i></button>
+    <button id="btnAsignacion1" type="button" class="btn btn-primary btn-icon" [placement]="'bottom'" ngbTooltip="Asignación"    (click)="irAsignacion(modalAsignacion, false)" ><i class="mdi mdi-account-question-outline"></i></button>
+    <button type="button" class="btn btn-indigo bg-indigo  btn-icon" [placement]="'bottom'" ngbTooltip="Asignación Citas Pasadas"    (click)="evtAsignacionFiltro()" ><i class="mdi mdi-account-question-outline"></i></button>
+    <button *ngIf="mostrarReasignacion" type="button" class="btn btn-primary btn-icon" [placement]="'bottom'" ngbTooltip="Re-asignación" (click)="irAsignacion(modalAsignacion, true)" ><i class="mdi mdi-account-plus-outline"></i></button>
+  </li>
+</ul>
+
+<!-- Menu Movil -->
+<div class="float-menu">
+  <button mat-fab color="primary" class="bg-primary" (click)="verOpciones()">
+    <mat-icon>settings</mat-icon>
+  </button>
+</div>
+<ng-template let-bottomSheetRef="bottomSheetRef" #menuMovil >
+  <div class="_content" >
+    <div class="_header">
+      <div class="px-4 pt-4 text-center">
+        <span class="d-inline-block topline"></span>
+        <p class="text-center text-white _title lead">Opciones</p>
+      </div>
+      <mat-divider class=""></mat-divider>
+    </div>
+
+    <mat-nav-list class="pt-0">
+      <a mat-list-item (click)= "asignacionListar();cerrarOpciones();">
+        <i class="mat-list-icon mdi mdi-sync"></i>
+        <span class=" opt-title">Actualizar</span>
+      </a>
+      <mat-divider></mat-divider>
+      <a mat-list-item (click)="irAsignacion(modalAsignacion, false);cerrarOpciones();">
+        <i class="mat-list-icon mdi mdi-account-question-outline"></i>
+        <span class=" opt-title">Asignación</span>
+      </a>
+      <mat-divider></mat-divider>
+      <div>
+        <a mat-list-item (click)="irAsignacion(modalAsignacion, true);cerrarOpciones();">
+          <i class="mat-list-icon mdi mdi-account-plus-outline"></i>
+          <span class=" opt-title">Re-asignación</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+
+    </mat-nav-list>
+  </div>
+</ng-template>
+
+
+
+
+<div class="row">
+  <!-- FILTRO -->
+  <div class="col-sm-12">
+    <app-card [options]="false" cardTitle="ASIGNACIÓN DE CITAS">
+
+      <form  [formGroup]="frmFiltro" class="px-3">
+
+        <div class="form-row">
+          <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+            <div class="form-floating form-start-icon">
+              <input id="filtroFecha" type="date" placeholder=" " class="form-control" formControlName="filtroFecha" (change)="citaListar()" >
+              <label for="filtroFecha">Fecha confirmación</label>
+              <span class="icon"><i class="mdi mdi-calendar"></i></span>
+            </div>
+          </div>
+
+          <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+            <!--<div class="form-floating form-start-icon">
+              <select class="custom-select" id="asignadoA" name="asignadoA" formControlName="asignadoA" (change)="citaListar()">
+                <option  [value]="0" >...TODOS...</option>
+                <option  [value]="usuario.idUsuario" *ngFor="let usuario of maestroUsuarios">{{usuario.nombre}} - {{usuario.usuario}}</option>
+              </select>
+              <label for="asignadoA">Asignado a</label>
+              <span class="icon"><i class="mdi mdi-account-question-outline"></i></span>
+            </div>-->
+            <div class="select2Float">
+              <ng-select
+                [items]="dataUsuarios"
+                bindLabel="text"
+                bindValue="id"
+                [clearable]="true"
+                formControlName="asignadoA">
+              </ng-select>
+              <label>Asignado a</label>
+              <span class="icon"><i class="mdi mdi-account-question-outline"></i></span>
+            </div>
+          </div>
+
+          <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+            <div class="form-floating form-start-icon">
+              <select class="custom-select" id="tipoSiguiente" name="tipoSiguiente" formControlName="tipoSiguiente" (change)="citaListar()">
+                <option  [value]="0" >...SELECCIONAR...</option>
+                <option  [value]="1" >DIA SIGUIENTE</option>
+                <option  [value]="2" >SEMANA SIGUIENTE</option>
+                <option  [value]="3" >CITA PASADA</option>
+              </select>
+              <label for="tipoSiguiente">Tipo siguiente</label>
+              <span class="icon"><i class="mdi mdi-calendar-arrow-right"></i></span>
+            </div>
+          </div>
+
+          <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+           
+            <div class="select2Float">
+              <ng-select
+                [items]="dataUsuarios"
+                bindLabel="text"
+                bindValue="id"
+                [clearable]="true"
+                formControlName="asignadoPor">
+              </ng-select>
+              <label>Asignado por</label>
+              <span class="icon"><i class="mdi mdi-account-check-outline"></i></span>
+            </div>
+          </div>
+
+          <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+            <div class="form-floating form-start-icon">
+              <select class="custom-select" id="idSede" formControlName="idSede" (change)="citaListar()">
+                <option [value]="0" >...TODOS...</option>
+                <option *ngFor="let s of maestroSede" [value]="s.idSede">{{ s.nombre }}</option>
+              </select>
+              <label for="idSede">Sede</label>
+              <span class="icon"><i class="mdi mdi-calendar-arrow-right"></i></span>
+            </div>
+          </div>
+
+
+          <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+            <div class="form-floating form-start-icon">
+              <select class="custom-select" id="tipoCliente" formControlName="tipoCliente" (change)="citaListar()">
+                <option [value]="2" >...TODOS...</option>
+                <option [value]="1" >Cliente Nuevo</option>
+                <option [value]="0" >Cliente Antiguo</option>
+              </select>
+              <label for="idSede">Tipo Cliente</label>
+              <span class="icon"><i class="mdi mdi-account-question-outline"></i></span>
+            </div>
+          </div>
+
+
+        </div>
+      </form>
+
+      <div class="form-group px-3">
+        <div class="form-row">
+
+          <div class="form-group col-md-9">
+            <table class="resumen center">
+              <caption>RESUMEN DE CITAS</caption>
+              <tbody>
+              <tr>
+                <td>Sin Confirmar</td><td>Dia Siguiente</td><td>Semana Siguiente</td>
+              </tr>
+              <tr>
+                <td>{{ sinConfirmar }}</td><td>{{ diaSiguiente }}</td><td>{{ semanaSiguiente }}</td>
+              </tr>
+              <tr>
+                <td>Reprogramada</td><td>Cancelada</td><td>Anulada</td>
+              </tr>
+              <tr>
+                <td>{{ reprogramada }}</td><td>{{ cancelada }}</td><td>{{ anulada}}</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="form-group col-md-3">
+            <table class="resumen avance">
+              <caption>RESUMEN AVANCE</caption>
+              <tbody>
+              <tr>
+                <td>Pendiente</td><td>{{ asigPendiente }}</td>
+              </tr>
+              <tr>
+                <td>Visto</td><td>{{ asigVisto }}</td>
+              </tr>
+              <tr>
+                <td>Trabajado</td><td>{{ asigTrabajado }}</td>
+              </tr>
+              <tr>
+                <td>Total</td><td>{{ asigTotal }}</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- TOTAL DE CITAS -->
+      <div class="position-relative d-flex mb-2">
+        <button matRipple class="d-inline-flex text-dark border rounded-pill px-3 py-1 mx-auto z-index-2 cursor-pointer shadow-sm position-relative bg-white" (click)="toggle()"> <span class="mr-2">Ver total</span><fontawesome-svg icon="chevron-down" type="regular" [width]="20" [height]="20" [class.fa-rotate-180]="!collapsed"></fontawesome-svg></button>
+        <span class="bg-light h-2px w-100 position-absolute top-0 bottom-0 m-auto left-0"></span>
+      </div>
+
+      <div class="form-row collapsible overflow-hidden p-3" id="resumenes" [@collapse]="collapsed">
+        <div class="mb-2 col-6 col-xs-6 col-sm-4 col-md-4 col-lg-3">
+          <div class="label text-white tag registrado"><span>Registrada</span><span class="ml-auto">{{ contarRegistrada }}</span></div>
+        </div>
+        <div class="mb-2 col-6 col-xs-6 col-sm-4 col-md-4 col-lg-3">
+          <div class="label text-white tag pendiente" ><span>Pendiente</span><span class="ml-auto">{{ contarPendiente }}</span></div>
+        </div>
+        <div class="mb-2 col-6 col-xs-6 col-sm-4 col-md-4 col-lg-3">
+          <div class="label text-white tag confirmada" ><span>Confirmada</span><span class="ml-auto">{{ contarConfirmada }}</span></div>
+        </div>
+        <div class="mb-2 col-6 col-xs-6 col-sm-4 col-md-4 col-lg-3">
+          <div class="label text-white tag asistenciaConfirmada" ><span>Asistencia Confirmada</span><span class="ml-auto">{{ contarAsistenciaConfirmada }}</span></div>
+        </div>
+        <div class="mb-2 col-6 col-xs-6 col-sm-4 col-md-4 col-lg-3">
+          <div class="label text-white tag reprogramada" ><span>Reprogramada</span><span class="ml-auto">{{ contarReprogramada }}</span></div>
+        </div>
+        <div class="mb-2 col-6 col-xs-6 col-sm-4 col-md-4 col-lg-3">
+          <div class="label text-white tag atendida" ><span>Atendida</span><span class="ml-auto">{{ contarAtendida }}</span></div>
+        </div>
+        <div class="mb-2 col-6 col-xs-6 col-sm-4 col-md-4 col-lg-3">
+          <div class="label text-white tag cancelada" ><span>Cancelada</span><span class="ml-auto">{{ contarCancelada }}</span></div>
+        </div>
+        <div class="mb-2 col-6 col-xs-6 col-sm-4 col-md-4 col-lg-3">
+          <div class="label text-white tag anulada" ><span>Anulada</span><span class="ml-auto">{{ contarAnulada }}</span></div>
+        </div>
+        <div class="mb-2 col-6 col-xs-6 col-sm-4 col-md-4 col-lg-3">
+          <div class="label text-white tag generado" ><span>Generado por Sistema</span><span class="ml-auto">{{ contarGenerado }}</span></div>
+        </div>
+        <div class="mb-2 col-6 col-xs-6 col-sm-4 col-md-4 col-lg-3">
+          <div class="label text-white tag nollamar" ><span>No Llamar</span><span class="ml-auto">{{ contarNollamar }}</span></div>
+        </div>
+        <div class="mb-2 col-6 col-xs-6 col-sm-6 col-md-4 col-lg-3">
+          <div class="label text-white tag noasistio" ><span>No asistio</span><span class="ml-auto">{{ contarNoasistio }}</span></div>
+        </div>          
+        <div class="mb-2 col-6 col-xs-6 col-sm-4 col-md-4 col-lg-3">
+          <div class="label text-white tag total" ><span>TOTAL</span><span class="ml-auto">{{ contarTotal }}</span></div>
+        </div>
+      </div>
+
+    </app-card>
+  </div>
+
+  <!-- GRILLA LISTADO-->
+  <div class="form-group col-md-12">
+    <div class="table table-sm-responsive"><table datatable [dtOptions]="dtResponsiveOptions" class="table table-sm table-hover table-citasAsignadas display compact"></table></div>
+  </div>
+
+</div>
+
+
+

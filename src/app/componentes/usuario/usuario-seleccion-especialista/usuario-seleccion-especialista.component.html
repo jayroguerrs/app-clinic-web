@@ -1,0 +1,52 @@
+<!-- SPINNER -->
+<ngx-spinner
+    [template]="rutaImageSpinner">
+    <p style="color: white" > Cargando... </p>
+</ngx-spinner>
+
+<!-- FORMULARIO -->
+<div class="modal-content">
+
+    <div class="modal-header card-header">
+        <h5 class="modal-title">Usuarios</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="cerrarModal()"><span aria-hidden="true">&times;</span></button>
+    </div>
+
+    <div class="modal-body card-body">
+
+        <div class="col-lg-12 col-md-12">
+            <div class="h-list-header m-b-5">
+            <div class="input-group">
+                <input type="text" id="msg-friends" class="form-control" placeholder="Buscar usuario . . ." (input)="buscarUsuario(true)">
+                <div class="input-group-append">
+                <span class="input-group-text" (click)="buscarUsuario(true)"><i class='feather icon-search'></i></span>
+                <span class="input-group-text" (click)="buscarUsuario(false)"><i class='feather icon-delete'></i></span>
+                </div>
+            </div>
+            </div>
+            <div class="h-list-body">
+            <div class="msg-user-list scroll-div">
+                <div class="main-friend-list">
+                <perfect-scrollbar ngClass="datta-scroll" [style.max-width]="'100%'" [style.max-height]="'calc(100vh - 300px)'" [usePSClass]="'datta'" [disabled]="null" [autoPropagation] ="true">
+                    <div id="usuario-lista" *ngFor="let user of userListTemp; let i = index" class="media userlist-box"
+                        (click)="seleccionarUsuario(user)"
+                        (dblclick)="devolverUsuario(user)"
+                        [attr.data-id]="user.idUsuario"
+                        [attr.data-username]="user.nombre">
+                        <a class="media-left" href="javascript:">
+                            <img *ngIf="user.foto !== imgNulled" class="media-object img-radius" src="{{user.foto}}" alt="{{ user.nombre }}" class="rounded-circle2">
+                            <div *ngIf="user.foto === imgNulled" class="imgNulled"><i class="feather icon-user"></i></div>
+                        </a>
+                        <div class="media-body">
+                            <h6 class="chat-header" style="color: rgb(62, 50, 230);">{{user.nombre}}
+                                <small class="d-block" style="color: green;">{{user.usuario}}  - ({{ user.sede }})</small>
+                            </h6>
+                        </div>
+                    </div>
+                </perfect-scrollbar>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>

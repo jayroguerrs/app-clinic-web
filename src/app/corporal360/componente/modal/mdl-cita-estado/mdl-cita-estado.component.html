@@ -1,0 +1,88 @@
+<div class="modal-header card-header bg-gradient border-bottom-0">
+  <h2 class="d-flex align-middle">
+    <div class="my-auto mr-3">
+      <fontawesome-svg icon="shield-exclamation" [width]="22" [height]="22" type="duotone" class="text-white"></fontawesome-svg>
+    </div>
+    <div class="my-auto">
+      <h2 class="mb-0 fs-18px f-w-500 text-white" >Cambiar el estado de la Cita</h2>
+    </div>
+  </h2>
+  <button [disabled]="ldSubmit" class="btn sbtn btn-sm btn-icon btn-active-color-primary h-auto w-auto p-0" (click)="modal.close(false)">
+    <span class="svg-icon svg-icon-1 text-white">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor"></rect>
+        <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor"></rect>
+      </svg>
+    </span>
+  </button>
+</div>
+
+<div class="modal-body card-body p-0">
+  <mat-progress-bar *ngIf="ldSubmit" mode="indeterminate"></mat-progress-bar>
+  <div class="h-100 p-4">
+    <div class="h-100 overflow-auto">
+      <div class="text-center mb-3 lead text-dark position-sticky top-0 bg-white p-3">
+        ¿Esta seguro de cambiar el estado de la cita a: <span class="font-weight-bold">{{ estadoString }}</span>?
+      </div>
+
+      <div class="d-flex flex-column">
+        <ng-container [ngSwitch]="ldMotivos">
+          <div *ngSwitchCase="true">
+            <div *ngFor="let i of utilsService.counter(5)" class="item d-flex p-3 bg-hover-light flex-row align-items-center justify-content-between cursor-pointer mb-0">
+              <span class="sk block rounded h-16px mr-5"></span>
+              <span class="sk block h-21px w-21px rounded-circle"></span>
+            </div>
+          </div>
+          <div *ngSwitchCase="false">
+            <label *ngFor="let m of motivos; let i = index" class="item d-flex p-3 bg-hover-light flex-row align-items-center justify-content-between cursor-pointer mb-0" [class.selected]="isSelected(m)" (click)="select(m)">
+              <span class="fs-16px f-w-500">{{m.motivo}}</span>
+              <input name="idMotivo" type="radio">
+            </label>
+          </div>
+        </ng-container>
+      </div>
+
+      <!--
+      <div class="row" *ngIf="cita.idEstado == CitaEstado.ANULADA">
+        <div class="col-12">
+          <div class="form-floating">
+            <select class="form-select text-uppercase" id="motivos" formControlName="motivos" >
+              <option value="">{{ loadingMotivos ? 'Cargando...' : '&#45;&#45;Seleccionar un motivo&#45;&#45;' }}</option>
+              <option *ngFor="let motivo of motivos" [value]="motivo.id">{{ motivo.motivo }}</option>
+            </select>
+            <label for="motivos">Indique el motivo</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="row" *ngIf="cita.idEstado == CitaEstado.CANCELADA">
+        <div class="col-12">
+          <div class="form-floating">
+            <select class="form-select text-uppercase" id="motivos" formControlName="motivos" >
+              <option value="">{{ loadingMotivos ? 'Cargando...' : '&#45;&#45;Seleccionar un motivo&#45;&#45;' }}</option>
+              <option *ngFor="let motivo of motivos" [value]="motivo.id">{{ motivo.motivo }}</option>
+            </select>
+            <label for="motivos">Indique el motivo</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="row" *ngIf="cita.idEstado == CitaEstado.PENDIENTE">
+        <div class="col-12">
+          <div class="form-floating">
+            <select class="form-select text-uppercase" id="motivos" formControlName="motivos" >
+              <option value="">{{ loadingMotivos ? 'Cargando...' : '&#45;&#45;Seleccionar un motivo&#45;&#45;' }}</option>
+              <option class="text-uppercase" *ngFor="let motivo of motivos" [value]="motivo.id">{{ motivo.motivo }}</option>
+            </select>
+            <label for="motivos">Indique el motivo</label>
+          </div>
+        </div>
+      </div>-->
+
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <button [disabled]="ldSubmit" type="reset" class="btn sbtn btn-light mr-2" (click)="cerrarModal()">Cancelar</button>
+  <button [disabled]="( validarMotivo && !motivoSelected ) || ldSubmit || ldMotivos" type="submit" class="btn sbtn btn-primary shadow btn-shadow-primary" (click)="cambiarEstado()">Aceptar</button>
+</div>

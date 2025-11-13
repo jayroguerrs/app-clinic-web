@@ -1,0 +1,80 @@
+// En nav-collapse.component.scss
+.nav-item.pcoded-hasmenu {
+  transition: all 0.3s ease;
+  
+  .nav-link {
+    transition: all 0.3s ease;
+    border-radius: 6px;
+    margin: 2px 8px;
+    
+    &.active {
+      font-weight: 600;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+  }
+  
+  .pcoded-submenu {
+    transition: all 0.3s ease;
+    border-radius: 0 8px 8px 0;
+    margin-left: 10px;
+    
+    li {
+      margin: 2px 0;
+      
+      a {
+        transition: all 0.3s ease;
+        border-radius: 4px;
+        margin: 1px 8px;
+        padding: 8px 20px;
+        
+        &.active {
+          font-weight: 600;
+          position: relative;
+          
+          &::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 4px;
+            height: 20px;
+            transform: translateY(-50%);
+            border-radius: 2px;
+            opacity: 0.8;
+          }
+        }
+      }
+    }
+  }
+  
+  .pcoded-mtext {
+    transition: all 0.3s ease;
+  }
+  
+  .pcoded-micon {
+    transition: all 0.3s ease;
+    
+    i {
+      transition: all 0.3s ease;
+    }
+  }
+  
+  .pcoded-badge, .badge {
+    transition: all 0.3s ease;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    padding: 2px 8px;
+  }
+}
+
+// Estados activosc
+.nav-item.pcoded-hasmenu.active,
+.nav-item.pcoded-hasmenu.pcoded-trigger {
+  .nav-link {
+    font-weight: 600;
+  }
+  
+  .pcoded-submenu {
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+}

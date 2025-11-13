@@ -1,0 +1,46 @@
+<div class="d-flex flex-column">
+  <div class="p-2">
+    <div #scroll [class]="'historial cita-avisos min-h-'+MaxHeight+'px max-h-'+MaxHeight+'px overflow-auto p-2'">
+
+      <ng-container [ngSwitch]="getLoading">
+        <div *ngSwitchCase="false">
+          <div *ngFor="let h of collection; let i = index" class="d-flex mb-3">
+            <div>
+              <span class="d-flex w-37px h-37px rounded-circle bg-indigo mr-1 position-relative" placement="right" [ngbTooltip]="h.usuarioRegistro"><span class="text-white f-w-500 m-auto">{{utilService.shortName(h.usuarioRegistro)}}</span></span>
+            </div>
+            <div class="d-flex flex-column">
+              <div class="texto position-relative d-flex flex-row" [class.destacado]="h.destacado">
+                <span class="text-white position-relative p-2 rounded d-inline-flex z-index-2 text-break" style="white-space: normal;" [ngClass]="{ 'bg-gradient' : h.destacado, 'bg-medium-indigo' : !h.destacado }">{{h.texto}}</span>
+                <span *ngIf="h.destacado" class="w-20px h-20px bg-gradient rounded-circle d-flex text-white ms-5px"><fontawesome-svg icon="star" type="sharp-solid" width="12" height="12" class="m-auto"></fontawesome-svg></span>
+              </div>
+              <span class="small fs-10px text-indigo mt-1">{{ h.fechaRegistro | date: 'dd-MM-yyyy hh:mm a' }}
+                <button *ngIf="h.borrar" matRipple class="btn btn-sm sbtn btn-light-danger btn-hover-danger btn-sm p-1 fs-10px" (click)="remove(i)" title="Eliminar">
+              <fontawesome-svg icon="trash-can" [height]="10" [width]="10" type="regular" ></fontawesome-svg>
+            </button>
+          </span>
+            </div>
+          </div>
+        </div>
+        <app-history *ngSwitchCase="true"></app-history>
+      </ng-container>
+
+    </div>
+  </div>
+
+  <div class="chat-group">
+    <div class="bg-light p-2" [ngClass]="{'bg-color-light-danger': getSubmitted && hasValue}">
+      <form class="d-flex w-100" [formGroup]="frmGroup" (ngSubmit)="add()">
+        <div class="d-flex w-100 position-relative">
+          <input class="form-control form-control-sm form-control-solid bg-white f-w-light pe-36px" formControlName="mensaje" placeholder="Escribe un mensaje aquí" type="text">
+          <label class="d-flex mb-0 position-absolute end-10px top-0 bottom-0 cursor-pointer text-muted text-hover-indigo" ngbTooltip="Destacado">
+            <input #chbxDestacado type="checkbox" formControlName="destacado" class="w-0 h-0 opacity-0 no-pointer-events appearance-none">
+            <fontawesome-svg icon="star" type="sharp-solid" width="24" height="24" class="m-auto" [class.text-indigo]="chbxDestacado.checked"></fontawesome-svg>
+          </label>
+        </div>
+        <button [disabled]="getLoading" type="submit" class="btn btn-sm sbtn bgmutd text-secondary" [class.text-danger]="getSubmitted && hasValue">
+          <fontawesome-svg icon="paper-plane-top" type="solid" width="24" height="24"></fontawesome-svg>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

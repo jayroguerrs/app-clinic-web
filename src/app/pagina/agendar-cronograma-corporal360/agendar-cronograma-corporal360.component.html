@@ -1,0 +1,263 @@
+<form [formGroup]="frmGroup">
+
+  <div class="row">
+    <div class="col-6-cr">
+      <div class="scard mb-2 mb-xl-10 popins">
+        <div class="card-header">
+          <div class="card-title m-0" style="width: 100%; justify-content: space-between;">
+            <h3 class="fw-bold m-0">Datos Generales</h3>
+
+            <div class="es-mobile-none">
+              <button *ngIf="accionActual !== 1" type="button" matRipple class="btn btn-warning btn-icon" [placement]="'bottom'" ngbTooltip="Editar" (click)="onEdit()">                     <i class="mdi mdi-pencil"></i></button>
+            </div>
+          </div>
+
+        </div>
+        <div class="card-body">
+          <div class="form-row">
+            <div class="col-12 col-lg-3">
+              <div class="form-group popins">
+                <label class="fw-semibold text-gray-800 mb-1">Cliente </label>
+                <ng-container [ngSwitch]="ldCliente">
+                  <div *ngSwitchCase="false" class="position-relative">
+                    <input  type="text" formControlName="cliente" class="form-control form-control-sm form-control-solid bg-light-indigo text-indigo" readonly>
+                    <button matRipple type="button" class="btn btn-sm sbtn position-absolute top-0 bottom-0 end-0 mr-1 h-30px my-auto bg-indigo text-white py-1 px-2" (click)="goToClient(cliente.id)" placement="top" ngbTooltip="Ver perfil" ><fontawesome-svg icon="turn-down-right" [width]="18" [height]="18" type="regular" class="d-block"></fontawesome-svg></button>
+                  </div>
+                  <div *ngSwitchCase="true" class="sk block rounded h-41px"></div>
+                </ng-container>
+              </div>
+            </div>
+            <div class="col-12 col-lg-3">
+              <div class="form-group popins">
+                <label class="fw-semibold text-gray-800 mb-1">N° de Documento </label>
+                <ng-container [ngSwitch]="ldCliente">
+                  <input *ngSwitchCase="false" type="text" formControlName="documento" class="form-control form-control-sm form-control-solid bg-light-indigo text-indigo" readonly>
+                  <div *ngSwitchCase="true" class="sk block rounded h-41px"></div>
+                </ng-container>
+              </div>
+            </div>
+            <div class="col-12 col-lg-3">
+              <div class="form-group popins">
+                <label class="fw-semibold text-gray-800 mb-1">N° de Celular</label>
+                <ng-container [ngSwitch]="ldCliente">
+                  <input *ngSwitchCase="false" type="text" formControlName="telefono" class="form-control form-control-sm form-control-solid bg-light-indigo text-indigo" readonly>
+                  <div *ngSwitchCase="true" class="sk block rounded h-41px"></div>
+                </ng-container>
+              </div>
+            </div>
+            <div class="col-12 col-lg-3">
+              <div class="form-group popins">
+                <label class="fw-semibold text-gray-800 mb-1 required">Sede de cita</label>
+                <ng-container [ngSwitch]="ldSede">
+                  <select [disableControl]="[accionCronograma.VER, accionCronograma.ASIGNARCITAS].includes(accionActual) || (accionCronograma.EDITAR && calendario?.citas.length)" *ngSwitchCase="false" formControlName="idSede" class="form-select form-select-sm form-select-solid" [ngClass]="{'bg-color-light-danger': submitted && f.idSede.errors}">
+                    <option value="">--Seleccionar--</option>
+                    <option *ngFor="let s of sedes" [value]="s.idSede">{{s.nombre}}</option>
+                  </select>
+                  <div *ngSwitchCase="true" class="sk block rounded h-41px"></div>
+                  <div *ngIf="submitted && f.idSede.errors" class="invalid-feedback d-block">
+                    <div *ngIf="f.idSede.errors.required">Seleccionar la sede</div>
+                  </div>
+                </ng-container>
+
+              </div>
+            </div>
+            <!--<div class="col-12 col-lg-3">
+              <div class="form-group popins">
+                <label class="fw-semibold text-gray-800 mb-1">Fecha de cita</label>
+                <div class="position-relative">
+                  <fontawesome-svg [width]="24" [height]="24" [icon]="'calendar-day'" [type]="'duotone'" class="position-absolute no-pointer-events h-100 d-flex align-items-center ps-10px" ></fontawesome-svg>
+                  <input type="text" class="form-control form-control-solid ps-42px" placeholder="aaaa-mm-dd" readonly>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-lg-3">
+              <div class="form-group popins">
+                <label class="fw-semibold text-gray-800 mb-1">Hora de inicio</label>
+                <div class="position-relative">
+                  <fontawesome-svg [width]="24" [height]="24" [icon]="'clock'" [type]="'duotone'" class="position-absolute no-pointer-events h-100 d-flex align-items-center ps-10px" ></fontawesome-svg>
+                  <input type="text" class="form-control form-control-solid ps-42px" placeholder="hh:mm:ss" readonly>
+                </div>
+              </div>
+            </div>-->
+            <div class="col-12 col-lg-3">
+              <div class="form-group popins">
+                <label class="fw-semibold text-gray-800 mb-1 required">Tipo de Cliente</label>
+                <ng-container [ngSwitch]="ldTipoCliente">
+                  <select [disableControl]="accionActual === accionCronograma.VER || accionActual === accionCronograma.ASIGNARCITAS" *ngSwitchCase="false" formControlName="idTipoCliente" class="form-select form-select-sm form-select-solid" [ngClass]="{'bg-color-light-danger': submitted && f.idTipoCliente.errors}">
+                    <option value="">--Seleccionar--</option>
+                    <option *ngFor="let t of tiposCliente" [value]="t.idTipoCliente">{{t.tipoCliente}}</option>
+                  </select>
+                  <div *ngSwitchCase="true" class="sk block rounded h-41px"></div>
+                  <div *ngIf="submitted && f.idTipoCliente.errors" class="invalid-feedback d-block">
+                    <div *ngIf="f.idTipoCliente.errors.required">Seleccionar el tipo de cliente</div>
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+<!--            <div class="col-12 col-lg-3">-->
+<!--              <div class="form-group popins">-->
+<!--                <label class="fw-semibold text-gray-800 mb-1">Tipo de Cita</label>-->
+<!--                <ng-container [ngSwitch]="ldTipoCita">-->
+<!--                  <select *ngSwitchCase="false" formControlName="idTipoCita" class="form-select form-select-solid">-->
+<!--                    <option value="">&#45;&#45;Seleccionar&#45;&#45;</option>-->
+<!--                    <option *ngFor="let t of tiposCita" [value]="t.idTipoCita">{{t.nombre}}</option>-->
+<!--                  </select>-->
+<!--                  <div *ngSwitchCase="true" class="sk block rounded h-41px"></div>-->
+<!--                </ng-container>-->
+<!--              </div>-->
+<!--            </div>-->
+            <div class="col-12 col-lg-3">
+              <div class="form-group popins">
+                <label class="fw-semibold text-gray-800 mb-1 required">Tipo de Servicio</label>
+                <ng-container [ngSwitch]="ldServicio">
+                  <select [disableControl]="[accionCronograma.ASIGNARCITAS].includes(accionActual)" *ngSwitchCase="false" (change)="obtenerTratamiento($event)" formControlName="idServicio" class="form-select form-select-sm form-select-solid bg-light-indigo" [disabled]="disabledTipoServicio" [ngClass]="{'bg-color-light-danger': submitted && f.idServicio.errors}">
+                    <option value="">--Seleccionar--</option>
+                    <option *ngFor="let s of servicios" [value]="s.id">{{s.nombre}}</option>
+                  </select>
+                  <div *ngSwitchCase="true" class="sk block rounded h-41px"></div>
+                  <div *ngIf="submitted && f.idServicio.errors" class="invalid-feedback d-block">
+                    <div *ngIf="f.idServicio.errors.required">Seleccionar el tipo de servicio</div>
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+            <!--<div class="col-12 col-lg-3">
+              <div class="form-group popins">
+                <label class="fw-semibold text-gray-800 mb-1 required">Tecnología</label>
+                <ng-container [ngSwitch]="ldTecnologia">
+                  <select *ngSwitchCase="false" formControlName="idTecnologia" class="form-select form-select-solid">
+                    <option value="">&#45;&#45;Seleccionar&#45;&#45;</option>
+                    <option *ngFor="let t of tecnologias" [value]="t.id">{{t.nombre}}</option>
+                  </select>
+                  <div *ngSwitchCase="true" class="sk block rounded h-41px"></div>
+                </ng-container>
+              </div>
+            </div>-->
+            <div class="col-12 col-lg-3">
+              <div class="form-group popins">
+                <label class="fw-semibold text-gray-800 mb-1 required">Zona</label>
+                <ng-container [ngSwitch]="ldZonas">
+                  <div class="position-relative" *ngSwitchCase="false">
+                    <span class="position-absolute no-pointer-events h-100 d-flex align-items-center ps-10px" ><fontawesome-svg [width]="24" [height]="24" [icon]="'person'" [type]="'duotone'"></fontawesome-svg></span>
+                    <select [disableControl]="[accionCronograma.ASIGNARCITAS].includes(accionActual) || !editable || frmGroup.get('idServicio')?.value == 0" formControlName="idZona" class="form-select form-select-sm form-select-solid ps-42px" [ngClass]="{'bg-color-light-danger': submitted && f.idZona.errors}">
+                      <option value="">--Seleccionar--</option>
+                      <option *ngFor="let z of zonas" [value]="z.id">{{z.descripcion}} ({{z.genero}})</option>
+                    </select>
+                  </div>
+                  <div *ngSwitchCase="true" class="sk block rounded h-41px"></div>
+                  <div *ngIf="submitted && f.idZona.errors" class="invalid-feedback d-block">
+                    <div *ngIf="f.idZona.errors.required">Seleccionar la zona</div>
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+
+            <div class="col-12 col-lg-3">
+              <div class="form-group popins">
+                <label class="fw-semibold text-gray-800 mb-1 required">Tratamiento</label>
+                <ng-container [ngSwitch]="ldTratamiento">
+                  <div class="position-relative" *ngSwitchCase="false">
+                    <span class="position-absolute no-pointer-events h-100 d-flex align-items-center ps-10px" ><fontawesome-svg [width]="24" [height]="24" [icon]="'person'" [type]="'duotone'"></fontawesome-svg></span>
+                    <select [disableControl]="[accionCronograma.ASIGNARCITAS].includes(accionActual) || !editable  || frmGroup.get('idServicio')?.value == 0" formControlName="idTratamiento" class="form-select form-select-sm form-select-solid ps-42px" [ngClass]="{'bg-color-light-danger': submitted && f.idTratamiento.errors}">
+                      <option value="">--Seleccionar--</option>
+                      <option *ngFor="let t of tratamientos" [value]="t.id">{{t.nombre}}</option>
+                    </select>
+                  </div>
+                  <div *ngSwitchCase="true" class="sk block rounded h-41px"></div>
+                  <div *ngIf="submitted && f.idTratamiento.errors" class="invalid-feedback d-block">
+                    <div *ngIf="f.idTratamiento.errors.required">Seleccionar un tratamiento</div>
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+
+            <div class="col-12 col-lg-3">
+              <div class="form-group popins">
+                <label class="fw-semibold text-gray-800 mb-1">Precio</label>
+                <ng-container [ngSwitch]="ldCliente">
+                  <input *ngSwitchCase="false" [disableControl]="[accionCronograma.ASIGNARCITAS, accionCronograma.VER].includes(accionActual)" type="text" formControlName="precio" class="form-control form-control-sm form-control-solid" [options]="options" currencyMask>
+                  <div *ngSwitchCase="true" class="sk block rounded h-41px"></div>
+                </ng-container>
+<!--                <div *ngIf="submitted && f.precio.errors || submitted && getPrecio() === 0" class="invalid-feedback d-block">-->
+<!--                  <div *ngIf="f.precio.errors?.required || getPrecio() === 0">Ingresar el precio</div>-->
+<!--                </div>-->
+              </div>
+            </div>
+
+            <div class="col-12 col-lg-3 p-t-24">
+              <button *ngIf="accionActual === accionCronogramaP.NUEVA || accionActual === accionCronogramaP.EDITAR" matRipple class="btn btn-sm sbtn btn-primary mr-2 d-flex" (click)="onCreate()">
+                <fontawesome-svg width="24" height="24" icon="floppy-disk" type="light" class="mr-2"></fontawesome-svg>
+                {{ accionActual === accionCronogramaP.NUEVA ? 'Guardar' : 'Actualizar' }}
+              </button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6-cr">
+      <div class="scard mb-2 mb-xl-10 popins">
+        <div class="card-header">
+          <div class="card-title m-0">
+            <h3 class="fw-bold m-0">Citas</h3>
+          </div>
+          <div class="d-flex">
+<!--            <button [disabled]="accionActual === accionCronograma.VER || accionActual === accionCronograma.NUEVA" type="button" class="sbtn btn btn-primary btn-active-primary align-self-center m-0 shadow btn-shadow-primary " (click)="showAvailable()">Ver Disponibles</button>-->
+          </div>
+        </div>
+        <div class="card-body position-relative">
+          <span *ngIf="accionCronograma.VER === accionActual || accionCronograma.NUEVA === accionActual" class="position-absolute start-0 top-0 end-0 bottom-0 bg-white-50 z-index-2 cursor-not-allowed"></span>
+
+          <app-calendar *ngIf="!ldCliente" #calendario
+                        [IdCliente]="cliente?.id"
+                        [IdServicio]="f.idServicio.value"
+                        [IdZona]="f.idZona.value"
+                        [IdSede]="f.idSede.value"
+                        [IdTipoCliente]="f.idTipoCliente.value"
+                        [IdGenero]="cliente?.idGenero"
+                        [Sedes]="sedes"
+                        [Parametros]="parametros"
+                        [IdPreferente]="_idPreferente"
+                        [IdCita]="_idCita"
+                        [IdTratamiento]="f.idTratamiento.value"
+                        [AccionCita]="_accionCita"
+                        (onListarCitas)="listarCitas($event)"
+          ></app-calendar>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+</form>
+
+
+<!-- BOTONERA ESCRITORIO -->
+<ul class="botonera-escritorio" style="z-index: 1040; top: 4px !important; right: 14px !important;">
+  <li>
+    <button *ngIf="accionActual !== accionCronograma.NUEVA" type="button" matRipple class="btn btn-secondary btn-icon" [placement]="'bottom'" ngbTooltip="Ver historial" (click)="onViewHistory()"> <i class="mdi mdi-history"></i>            </button>
+    <button *ngIf="accionActual !== accionCronograma.NUEVA" id="btnBuscar1"   type="button" class="btn btn-primary btn-icon"  [placement]="'bottom'" ngbTooltip="Recargar" (click)="onReload()" >             <i class="mdi mdi-sync"></i></button>
+
+  </li>
+</ul>
+
+
+<div class="float-menu">
+  <button (click)="onEdit()" type="button" mat-fab class="my-color_gradient"   [placement]="'bottom'" ngbTooltip="Editar"  >
+    <i class="mdi mdi-calendar-edit doc-icon"></i>
+  </button>
+
+  <button (click)="asignarCita()" id="btnImpTicket1" mat-fab type="button" class="my-color_gradient"   [placement]="'bottom'" ngbTooltip="Asignar Cita"  >                    
+    <i class="mdi mdi-calendar-month-outline doc-icon"></i>         
+  </button>
+
+  <button (click)="onViewHistory()" *ngIf="accionActual !== accionCronograma.NUEVA" id="btnImpTicket1" mat-fab type="button" class="my-color_gradient"   [placement]="'bottom'" ngbTooltip="Ver historial"  >                    
+    <i class="mdi mdi-history doc-icon">     </i>   
+  </button>
+
+  <button  (click)="onReload()" *ngIf="accionActual !== accionCronograma.NUEVA" id="btnImpTicket1" mat-fab type="button" class="my-color_gradient"   [placement]="'bottom'" ngbTooltip="Recargar"  >                    
+    <i class="mdi mdi-sync doc-icon"></i>      
+  </button>
+</div>

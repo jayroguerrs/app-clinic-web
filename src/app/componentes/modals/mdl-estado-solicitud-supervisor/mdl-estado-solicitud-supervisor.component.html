@@ -1,0 +1,100 @@
+<div *ngIf="estadoDeAprobacion === 3" class="modal-content">
+    <div class="modal-header card-header ">
+        <h5 class="modal-title text-success">
+            <i class="feather icon-check-circle mr-2"></i>
+            Solicitud Enviada
+        </h5>
+        <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="cerrarModal()">
+            <span aria-hidden="true">&times;</span>
+        </button> -->
+    </div>
+
+    <div class="modal-body card-body text-center">
+        <div class="status-icon-container success-pulse mb-4">
+            <i class="feather icon-send text-success status-icon"></i>
+        </div>
+
+        <h4 class="mb-3">Solicitud Enviada a Supervisión</h4>
+        
+        <p class="lead text-muted">
+            Su solicitud ha sido enviada al supervisor para aprobación.
+        </p>
+        
+        <div class="progress-container mt-4">
+            <div class="d-flex justify-content-between mb-1">
+                <span>Procesando solicitud</span>
+                <span class="text-success">En progreso</span>
+            </div>
+            <div class="progress">
+                <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" 
+                     role="progressbar" 
+                     style="width: 75%">
+                </div>
+            </div>
+        </div>
+        
+        <div class="alert alert-info mt-4" role="alert">
+            <i class="feather icon-info mr-2"></i>
+            Se le notificará cuando el supervisor haya tomado una decisión.
+        </div>
+    </div>
+
+    <div class="modal-footer card-footer d-flex justify-content-end">
+        <button type="button" class="btn btn-outline-secondary" (click)="recargar()">
+            <i class="feather icon-rotate-cw mr-1"></i>
+            Recargar
+        </button>
+        <button type="button" class="btn btn-outline-danger ml-2" (click)="cerrarSesion()">
+            <i class="feather icon-log-out mr-1"></i>
+            Cerrar sesión
+        </button>
+    </div>
+</div>
+
+<div *ngIf="estadoDeAprobacion === 0" class="modal-content">
+    <div class="modal-header-error card-header bg-danger-light">
+        <h5 class="modal-title text-danger">
+            <i class="feather icon-x-circle mr-2"></i>
+            Solicitud Denegada
+        </h5>
+    </div>
+
+    <div class="modal-body card-body text-center">
+        <div class="status-icon-container danger-pulse mb-4">
+            <i class="feather icon-user-x text-danger status-icon"></i>
+        </div>
+
+        <h4 class="mb-3 text-danger">Acceso No Autorizado</h4>
+        
+        <p class="lead text-muted">
+            Lo sentimos, su usuario ha sido <strong>denegado</strong> por el supervisor.
+        </p>
+        
+        <div class="error-details mt-4 p-3 bg-light rounded">
+            <div class="d-flex align-items-center mb-3">
+                <i class="feather icon-alert-circle text-muted mr-2"></i>
+                <span>Estado: <strong class="text-danger">Denegado</strong></span>
+            </div>
+            <div class="d-flex align-items-center">
+                <i class="feather icon-clock text-muted mr-2"></i>
+                <span>Fecha: <strong>{{fechaDenegacion | date:'dd/MM/yyyy HH:mm'}}</strong></span>
+            </div>
+        </div>
+        
+        <div class="alert alert-warning mt-4" role="alert">
+            <i class="feather icon-info mr-2"></i>
+            Por favor contacte a su supervisor para obtener más información.
+        </div>
+    </div>
+
+    <div class="modal-footer card-footer d-flex justify-content-end">
+        <button type="button" class="btn btn-outline-secondary" (click)="recargar()">
+            <i class="feather icon-rotate-cw mr-1"></i>
+            Recargar
+        </button>
+        <button type="button" class="btn btn-outline-danger ml-2" (click)="cerrarSesion()">
+            <i class="feather icon-log-out mr-1"></i>
+            Cerrar sesión
+        </button>
+    </div>
+</div>

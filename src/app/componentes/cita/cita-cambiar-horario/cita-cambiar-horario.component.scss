@@ -1,0 +1,53 @@
+.filas {
+    border: 0px solid pink;
+}
+.horaDetalle {
+    font-size: 10px;
+}
+.horaPuntual {
+    font-size: 16px;
+}
+
+.ajuste {
+    padding-left: 0;
+    display: flex;
+    align-items: center;
+}
+
+#agendaCabecera {
+    padding-left: 0;
+    font-size: 9px;
+    background-color: black;
+    color: white;
+    font-weight: bold;
+}
+
+.con-hover:hover {
+    background-color: #6c757d;
+    color: white;
+}
+
+
+//ESTILO DE BOTONES (MAQUINA)
+button.selected{
+    color:white;
+    font-weight: bold;
+    background-color: #42bef7;
+    opacity: 1 !important;
+}
+
+
+//estilo de botones de maquina
+.m-t-30 {
+    margin-top: 0px;
+}
+.m-b-20 {
+    margin-bottom: 0px;
+}
+.btn {
+    padding: 3px;
+    border-radius: 0.25rem;
+    font-size: 14px;
+    margin-right: 5px;
+    transition: all 0.3s ease-in-out;
+}

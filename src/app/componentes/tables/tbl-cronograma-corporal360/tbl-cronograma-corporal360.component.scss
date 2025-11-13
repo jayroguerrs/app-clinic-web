@@ -1,0 +1,14 @@
+:host{
+  table{
+    *{
+      font-family: 'Poppins', serif !important;
+    }
+    td{
+      padding: 6.5px;
+      border: none;
+    }
+  }
+}
+.list-group-item{
+  padding: 0.75rem 2.25rem !important;
+}

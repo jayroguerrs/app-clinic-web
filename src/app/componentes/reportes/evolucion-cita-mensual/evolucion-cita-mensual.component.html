@@ -1,0 +1,59 @@
+<!-- SPINNER -->
+<ngx-spinner
+    [template]="rutaImageSpinner">
+    <p style="color: white" > Cargando... </p>
+</ngx-spinner>
+
+<div class="row">
+  <!-- FILTRO -->
+  <div class="col-sm-12">
+    <app-card cardTitle="EVOLUCION DE CITAS MENSUAL" [options]="false" [hidBlock]="false">
+      <form [formGroup] = "frmFiltroGrilla">
+        <div class="form-row">
+          <div class="form-group col-sm-6 col-md-4 col-lg-3">
+            <div class="input-group input-group-sm">
+              <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-calendar" [placement]="'bottom'" ngbTooltip="Fecha"></i></span></div>
+              <input type="date" class="form-control" formControlName="filtroFecha" (change)="consultar()" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+            </div>
+          </div>
+
+          <div class="form-group col-sm-6 col-md-4 col-lg-3">
+            <div class="input-group input-group-sm">
+              <div class="input-group-prepend"><label class="input-group-text" for="idSede"><i class="fa fa-building" [placement]="'bottom'" ngbTooltip="Sede"></i></label></div>
+              <select class="custom-select" formControlName="filtroSede" (ngModelChange)="consultarPorSede()">
+                <option value='0'>TODOS</option>
+                <option *ngFor="let sede of maestroSede" [value]="sede.idSede">{{ sede.nombre }}</option>
+              </select>
+            </div>
+          </div>
+
+        </div>
+      </form>
+    </app-card>
+  </div>
+
+  <!-- DATOS -->
+  <div class="col-sm-12 disable-select" >
+    <div class="form-row">
+      <div class="table table-sm-wrapper">
+        <table>
+          <thead>
+          <tr>
+            <th rowspan="2"><img src="../../../../assets/images/logo-thumb.png"></th>
+            <th *ngFor="let dato of datos.dias" [attr.colspan]="dato.dias" class="ajuste" style="background-color: #3f4d67; color: white;">{{dato.nombre}}</th>
+          </tr>
+          <tr>
+            <th *ngFor="let fecha of datos.fechasSiguienteMes" class="ajuste"><span>{{fecha | date : 'dd'}}</span></th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let dato of datos.evolucionCitaMensual; let indice = index" [ngStyle]="{'background-color': (indice % 2 == 0) ? '#8ce2ff' : 'white' }">
+            <td class="ajuste">{{ dato.fechaProceso | date: 'dd-MM'}}</td>
+            <td class="ajuste datos" *ngFor="let detalle of dato.detalles">{{ detalle.citas}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

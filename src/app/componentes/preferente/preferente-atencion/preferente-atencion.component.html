@@ -1,0 +1,102 @@
+<form [formGroup]="frmAtencion">
+  <div class="modal-header card-header">
+    <h5 class="modal-title">Atención del preferente</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="cerrarModal()"><span
+        aria-hidden="true">&times;</span></button>
+  </div>
+
+  <div class="modal-body card-body">
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <div class="form-floating form-start-icon">
+          <select class="custom-select" id="idEstAtenPadr" formControlName="idEstAtenPadr" (change)="onEstadoChange()">
+            <option value=''>...Seleccionar...</option>
+            <option *ngFor="let estado of maestroEstadoAtendido" [value]="estado.id">{{ estado.descripcion }}</option>
+          </select>
+          <label for="idEstAtenPadr">Estado atención</label>
+          <span class="icon"><span class="dicon alert-circle m-auto"></span></span>          
+        </div>
+        <div *ngIf="this.frmAtencion.get('idEstAtenPadr').touched && frmAtencion.get('idEstAtenPadr').invalid"
+            class="text-danger">
+            Seleccione el Estado de Atención
+          </div>
+      </div>
+      <div class="form-group col-md-6">
+        <div class="form-floating form-start-icon">
+          <select class="custom-select" id="idEstAtenHijo" formControlName="idEstAtenHijo">
+            <option value=''>...Seleccionar...</option>
+            <option *ngFor="let estado of hijoEstadoAtendido" [value]="estado.id">{{ estado.descripcion }}</option>
+          </select>
+          <label for="idEstAtenHijo">Sub Estado atención</label>
+          <span class="icon"><span class="dicon alert-circle m-auto"></span></span>          
+        </div>
+        <div *ngIf="this.frmAtencion.get('idEstAtenHijo').touched && frmAtencion.get('idEstAtenHijo').invalid"
+            class="text-danger">
+            Seleccione el Sub Estado de Atención
+          </div>
+      </div>
+      <div class="form-group col-md-12">
+        <label for="teleoperadoraSelect" class="font-weight-bold">Zona</label>
+        <ng-select #selectPreferente id="idPerfiles" class="w-100 ng-select-custom" [items]="lstZonaServicio"
+          bindLabel="zona" bindValue="idZona" formControlName="idZona" [multiple]="false" [searchable]="true"
+          placeholder="--Seleccionar Zona--" (change)="onZonaPromocionChange()">
+          <ng-template *ngIf="lstZonaServicio.length > 0" ng-label-tmp let-item="item">
+            <div class="d-flex flex-column">
+              <div>{{ item.zona }}</div>
+              <div class="fs-10px fw-semibold text-muted">
+                <label style="color: #000064;"><strong>Servicio :</strong></label> {{item.servicio}}
+                <label style="color: lightseagreen;"><strong>Género :</strong></label> {{item.genero}}
+              </div>
+            </div>
+          </ng-template>
+          <ng-template *ngIf="lstZonaServicio.length > 0" ng-option-tmp let-item="item" let-index="index"
+            let-search="searchTerm">
+            <div class="d-flex flex-column">
+              <div>{{ item.zona }}</div>
+              <div class="fs-10px fw-semibold text-muted">
+                <label style="color: #000064;"><strong>Servicio :</strong></label> {{item.servicio}}
+                <label style="color: lightseagreen;"><strong>Género :</strong></label> {{item.genero}}
+              </div>
+            </div>
+          </ng-template>
+        </ng-select>      
+      </div>
+      <div class="form-group col-md-12">
+        <label for="teleoperadoraSelect" class="font-weight-bold">Promociones</label>
+        <ng-select #selectPreferente id="idPerfiles" class="w-100 ng-select-custom" [items]="lstZonaPromocion"
+          bindLabel="descripcion" bindValue="idPromocion" formControlName="idPromocion" [multiple]="false"
+          [searchable]="true" placeholder="--Seleccionar Promoción--">
+          <ng-template *ngIf="lstZonaPromocion.length > 0" ng-label-tmp let-item="item">
+            <div class="d-flex flex-column">
+              <div><label><strong>S/. [{{ item.precioBase }}]</strong></label> - {{ item.descripcion }}</div>
+            </div>
+          </ng-template>
+          <ng-template *ngIf="lstZonaPromocion.length > 0" ng-option-tmp let-item="item" let-index="index"
+            let-search="searchTerm">
+            <div class="d-flex flex-column">
+              <div><label><strong>S/. [{{ item.precioBase }}]</strong></label> - {{ item.descripcion }}</div>
+            </div>
+          </ng-template>
+        </ng-select>       
+      </div>
+      <div class="form-group col-md-12">
+        <div class="form-floating">
+          <div class="textarea">
+            <textarea id="txtComentario" class="form-control" formControlName="txtComentario" placeholder=" "
+              rows="3"></textarea>
+            <label for="txtComentario">Comentario</label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer card-footer">
+    <button 
+      type="button" 
+      class="btn btn-primary" 
+      (click)="preferenteAtendido()"
+      [disabled]="frmAtencion.invalid">
+      <i class="feather icon-save"></i> Guardar
+    </button>
+  </div>
+</form>

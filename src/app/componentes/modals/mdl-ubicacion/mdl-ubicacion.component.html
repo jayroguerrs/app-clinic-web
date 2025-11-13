@@ -1,0 +1,63 @@
+﻿<form [formGroup]="frmGroup" (ngSubmit)="onSubmit()" class="popins">
+    <div class="modal-content">
+        <div class="modal-header card-header">
+            <h5 class="modal-title">Ubicación</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="cerrarModal()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body card-body">
+            <div class="form-row">
+              <div class="col-12 col-md-6">
+                <div class="form-group">
+                  <label class="fw-semibold text-gray-800">Departamento</label>
+                  <select class="form-select form-select-solid" formControlName="idDepartamento">
+                    <option value="">--Seleccionar--</option>
+                    <option *ngFor="let dep of departamentos" [value]="dep.id">{{ dep.nombre }}</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-group">
+                  <label class="fw-semibold text-gray-800">Ciudad</label>
+                  <select class="form-select form-select-solid" formControlName="idCiudad" [ngClass]="{ 'is-invalid bg-color-light-danger': submitted && f.idCiudad.errors }">
+                    <option value="">--Seleccionar--</option>
+                    <option *ngFor="let c of ciudades" [value]="c.id">{{ c.nombre }}</option>
+                  </select>
+                  <div *ngIf="submitted && f.idCiudad.errors" class="invalid-feedback d-block">
+                    <div *ngIf="f.idCiudad.errors.required">Seleccione una ciudad</div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-group">
+                  <label class="fw-semibold text-gray-800">Distrito</label>
+                  <select class="form-select form-select-solid" formControlName="idDistrito" [ngClass]="{ 'is-invalid bg-color-light-danger': submitted && f.idDistrito.errors }">
+                    <option value="">--Seleccionar--</option>
+                    <option *ngFor="let d of distritos" [value]="d.id">{{ d.nombre }}</option>
+                  </select>
+                  <div *ngIf="submitted && f.idDistrito.errors" class="invalid-feedback d-block">
+                    <div *ngIf="f.idDistrito.errors.required">Seleccione un distrito</div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="form-group">
+                  <label class="fw-semibold text-gray-800 required">Dirección</label>
+                  <textarea formControlName="direccion" class="form-control form-control-solid" rows="2" [ngClass]="{ 'is-invalid bg-color-light-danger': submitted && f.direccion.errors }"></textarea>
+                  <div *ngIf="submitted && f.direccion.errors" class="invalid-feedback d-block">
+                    <div *ngIf="f.direccion.errors.required">Ingrese una dirección</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+        <div class="modal-footer card-footer bg-white">
+            <div class="form-row float-right">
+                <button matRipple type="submit" class="sbtn btn btn-primary"><i
+                        class="feather icon-save"></i>Guardar</button>
+            </div>
+        </div>
+
+    </div>
+</form>

@@ -1,0 +1,450 @@
+.cont-chats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Define 3 columnas de igual ancho */
+  gap: 16px; /* Espaciado entre columnas */
+  height: 100%;
+  padding: 0px 16px;
+  margin-bottom: 16px;
+  form {
+    width: 100%;
+  }
+  /* Habilitar scroll horizontal en dispositivos móviles */
+  @media (max-width: 768px) {
+    display: block; /* Cambiar a diseño de bloque para scroll horizontal */
+    overflow-x: auto; /* Habilitar desplazamiento horizontal */
+    white-space: nowrap; /* Evitar que las columnas se envuelvan */
+    form {
+      margin-right: 16px;
+    }
+  }
+}
+
+.cont-chats > * {
+  display: inline-block; /* Asegurar que los hijos se comporten como bloques en línea en móviles */
+  width: calc(100% / 3); /* Cada columna ocupa un tercio del ancho */
+  @media (max-width: 768px) {
+    width: auto; /* Ajustar automáticamente el ancho en móviles */
+  }
+}
+
+.my-chat--comments {
+  height: 100%;
+  app-card {
+    height: 100%;
+  }
+}
+
+.upd-mydate--input {
+  display: flex;
+  justify-content: space-between;
+  padding-right: 9px;
+  align-items: center;
+  i {
+    font-size: 15px;
+    color: #ffffff;
+    padding: 5px;
+    cursor: pointer;
+    background-color: #000;
+    border-radius: 12%;
+  }
+}
+
+.globo{
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    color: white;
+    align-items: center;
+    justify-content: center;
+    font-size: .8rem;
+}
+
+.msg-card {
+    .msg-user-list {
+        height: 100% !important;
+    }
+    .h-list-body{
+        max-height: 200px;
+        display: block;
+        height: 100vh;
+    }
+}
+.h-list-body{
+  max-height: 200px;
+  display: block;
+  height: 100vh;
+}
+
+perfect-scrollbar {
+    max-width: 100%;
+    max-height: 200px;
+}
+
+.chat-cont {
+    padding: 5px 10px !important;
+    white-space: pre-wrap;
+    word-break: break-word !important;
+}
+.chat-time i,
+.chat-time {
+    font-size: 9px !important;
+    margin: 0 !important;
+}
+
+.msg-user-chat {
+    padding-top: 0 !important;
+    background-color: white;
+}
+
+
+td {
+    padding: 5px;
+}
+
+//STILO DE INPUT TEXT
+.txtBox {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    border: 1px;
+    border-color: white;
+    background-color: white;
+    text-align: right;
+    padding-left: 0px;
+  }
+  input:focus,
+  input.form-control:focus {
+    outline: none !important;
+    outline-width: 0 !important;
+    box-shadow: none;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+  }
+
+
+  //ANCHOS DE COLUMNAS
+//thead> tr>:nth-child(1),
+//tbody> tr>:nth-child(1) { width: 20%; }
+//thead> tr>:nth-child(2),
+//tbody> tr>:nth-child(2) { width: 30%; }
+//thead> tr>:nth-child(3),
+//tbody> tr>:nth-child(3) { width: 6%; }
+//thead> tr>:nth-child(4),
+//tbody> tr>:nth-child(4) { width: 6%; }
+//thead> tr>:nth-child(5),
+//tbody> tr>:nth-child(5) { width: 5%; }
+//thead> tr>:nth-child(6),
+//tbody> tr>:nth-child(6) { width: 25%; }
+//thead> tr>:nth-child(7),
+//tbody> tr>:nth-child(7) { width: 1%; }
+thead> tr>:nth-child(1),
+thead> tr>:nth-child(2),
+thead> tr>:nth-child(5),
+thead> tr>:nth-child(7){
+  width: 76px;
+}
+th {
+    text-align: center;
+}
+
+.b{
+    font-weight: bold;
+}
+
+
+// .card .card-block,
+// .card .card-body{
+//     border: 1px solid #04a9f5 !important;
+//     border-radius: 5px !important;
+// }
+
+
+//ESTILOS PARA BOTON CONFIRMADO
+.button-green {
+    background-color: rgb(82, 213, 82);
+    border-radius: 50%;
+    width: 31px;
+    height: 31px;
+}
+.button-gray {
+    background-color: gray;
+    border-radius: 50%;
+    width: 31px;
+    height: 31px;
+}
+
+.hcid{
+  font-size: 10px !important;
+  line-height: 10px;
+}
+.historial-clinico .mat-list-item{
+  height: 70px !important;
+}
+
+.image-carousel{
+  max-width: 100%;
+  width: auto;
+  max-height: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+::ng-deep .modal-backdrop.over{
+  z-index: 1072 !important;
+}
+::ng-deep .picsum-img-wrapper{
+  max-height: 1000px;
+  background-color: #3b3b3b;
+  box-sizing: content-box;
+  text-align: center;
+}
+
+::ng-deep .carousel-indicators{
+  margin-bottom: 0;
+}
+
+::ng-deep .carousel-control-prev,
+::ng-deep.carousel-control-next{
+  align-items: end;
+  padding-bottom: 12px;
+}
+.oldPrice{
+  position: relative;
+  color: #3b3b3b;
+  opacity: .4;
+  font-weight: bold;
+  &:before{
+    content: "";
+    display: block;
+    position: absolute;
+    width: 100%;
+    left: 0;
+    height: 1px;
+    background: #4a4a4a;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+  }
+}
+
+#selectZonas{
+  border: 1px solid #ced4da;
+  border-radius: 0.2rem;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  ::ng-deep .select2-selection{
+    border: none !important;
+  }
+}
+.porcentaje{
+  position: absolute;
+  font-size: 10px;
+  color: #fff;
+  background: #0a6aa1;
+  border-radius: 4px;
+  padding: 0 4px;
+  top: -41%;
+  transform: rotate(-16deg);
+  left: -9px;
+
+}
+
+.tachado {
+  text-decoration: line-through;
+}
+
+.tachado-fondo{
+  background-color: #ededed;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.ver-zonas-duplicadas-boton{
+  width: 24px;
+  height: 24px;
+  color: black;
+}
+
+.ver-zonas-duplicadas-boton:hover{
+  background: #dbdbdb;
+  color: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+
+}
+
+::ng-deep .select2-selection__rendered {
+  user-select: text !important;
+}
+
+::ng-deep .select2-container--default .select2-selection--single .select2-selection__rendered {
+  user-select: text !important;
+}
+
+::ng-deep .dropdown-menu.show::before {
+  display: none !important;
+  content: none !important;
+}
+
+.tx-l{
+  text-align: left !important;
+} 
+
+ngb-accordion ::ng-deep .card-header {
+    padding: 0px 10px 1px 10px;
+    border: none;
+    box-shadow: none;
+}
+
+ngb-accordion ::ng-deep .card-body {
+    border: none;
+    box-shadow: none;
+}
+
+
+ngb-accordion ::ng-deep .card-header button {
+    width: 100%;
+    text-decoration: none;
+    text-align: left;
+    margin: 0;
+    padding: 0;
+    box-shadow: none;
+    font-size: 1.4rem;
+    color: #575757;
+    box-shadow: none;
+    display: none;
+}
+ngb-accordion ::ng-deep .card-header button:focus {
+    box-shadow: none;
+}
+ngb-accordion ::ng-deep .card {
+    border-radius: 12px !important;
+    overflow: hidden;
+    margin-bottom: 0 !important;
+    box-shadow: none;
+}
+
+
+ngb-accordion ::ng-deep .card-body {
+  padding: 5px 0;
+}
+
+.bg-light-m{
+  background-color: #e5e5e5 !important;
+}
+
+.btn-terminar-cita{
+  color: #89898a;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  border: 1px solid #ced4da;
+  margin-bottom: 1rem;
+}
+
+.plus-icon{
+  font-size: 32px; 
+  padding: 0;
+}
+
+.doble-plus-icon{
+  font-size: 20px; 
+  position: absolute;
+  top: 10px;
+  right:10px;
+}
+
+.duplicado-card{
+  z-index: 2;
+  position: absolute; 
+  top: -20px; 
+  left: -8px;
+  font-size: 12px;
+  background: linear-gradient(to right, #fbff00, #ffb347);
+  padding: 4px;
+  border: 2px solid #ffb327;
+  color: #7e4900;
+  border-radius: 8px;
+  font-weight: 700;
+}
+
+.zona-title-m{
+  font-size: 18px; text-align: center; padding-left: 1.5rem; padding-right: 1.5rem; margin-bottom: 0.1rem; background-color: #04a9f5; color: white; font-weight: 600;
+}
+
+.check-tratamiento{
+
+  width: 28px !important; height: 28px; accent-color: #469c01;
+}
+
+
+@keyframes heartbeat {
+  0%, 100% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.1);
+  }
+  50% {
+    transform: scale(1);
+  }
+}
+
+.wattsicon-c-mobile {
+  animation: heartbeat 1s infinite;
+}
+
+.blinking-circle {
+  width: 28px;
+  height: 28px;
+  background-color: #ff9a00;
+  border-radius: 50%;
+  position: absolute;
+  bottom: 14px;
+  right: 14px;
+  animation: blink 1.8s infinite;
+  z-index: 3;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.contenedor-img{
+  background: #EEEEEE; 
+  padding: 10px; 
+  border-radius: 10px; 
+  height: fit-content;
+}
+
+// En cita-registro.component.scss
+@keyframes palpitar {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+}
+
+.palpitar {
+  animation: palpitar 0.6s ease-in-out 3;
+}
+
+.btn-confirmar-pago{
+  width: auto !important; height: auto !important;padding: 0.5rem 0.2rem !important;
+}
+
+.h-80 {
+  height: 80%;
+}
+
+.h-60 {
+  height: 60%;
+}

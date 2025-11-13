@@ -1,0 +1,213 @@
+<div class="row">
+  <div class="col-sm-12">
+    <div class="card">
+      <div class="card-header">
+        <h5>Generador de URLs con parámetros UTM</h5>
+        <span class="d-block m-t-5">Crea links de seguimiento para tus campañas de marketing</span>
+      </div>
+      <div class="card-body">
+        <form [formGroup]="utmForm" class="utm-form">
+          <div class="row">
+            <!-- URL Base -->
+            <div class="col-md-12 mb-4">
+              <div class="form-group">
+                <label for="baseUrl" class="form-label">URL del sitio web *</label>
+                <input 
+                  type="text" 
+                  id="baseUrl" 
+                  class="form-control" 
+                  formControlName="baseUrl"
+                  placeholder="https://www.tudominio.com"
+                >
+                <div *ngIf="utmForm.get('baseUrl')?.invalid && utmForm.get('baseUrl')?.touched" class="text-danger">
+                  URL inválida. Debe comenzar con http:// o https://
+                </div>
+                <small class="text-muted">Ingresa la URL completa incluyendo https://</small>
+              </div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <!-- UTM Source -->
+              <div class="form-group">
+                <label for="utmSource" class="form-label">UTM Source *</label>
+                <div class="autocomplete-container">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <input type="text"
+                           placeholder="Selecciona una fuente"
+                           matInput
+                           formControlName="utmSourceInput"
+                           [matAutocomplete]="autoSource"
+                           [disabled]="isLoading">
+                    <mat-autocomplete #autoSource="matAutocomplete" 
+                                     [displayWith]="displaySourceFn"
+                                     (optionSelected)="onSourceSelected($event)">
+                      <mat-option *ngFor="let option of filteredSourceOptions | async" [value]="option">
+                        {{ option.name }}
+                      </mat-option>
+                    </mat-autocomplete>
+                    <div *ngIf="isLoading" class="loading-indicator position-absolute" style="right: 10px; top: 10px;">
+                      <i class="fa fa-spinner fa-spin"></i>
+                    </div>
+                  </mat-form-field>
+                </div>
+                <div class="source-icons" *ngIf="utmForm.get('utmSource')?.value">
+                  <span class="source-badge" [ngClass]="'source-' + getSourceName(utmForm.get('utmSource')?.value)">
+                    {{ getSourceName(utmForm.get('utmSource')?.value) }}
+                  </span>
+                </div>
+                <small class="text-muted">¿De dónde viene el tráfico? (Facebook, Google, Newsletter...)</small>
+              </div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <!-- UTM Campaign -->
+              <div class="form-group">
+                <label for="utmCampaign" class="form-label">UTM Campaign *</label>
+                <div class="autocomplete-container">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <input type="text"
+                           placeholder="Selecciona una campaña"
+                           matInput
+                           formControlName="utmCampaignInput"
+                           [matAutocomplete]="autoCampaign"
+                           [disabled]="!utmForm.get('utmSource')?.value || isLoading">
+                    <mat-autocomplete #autoCampaign="matAutocomplete" 
+                                     [displayWith]="displayCampaignFn"
+                                     (optionSelected)="onCampaignSelected($event)">
+                      <mat-option *ngFor="let option of filteredCampaignOptions | async" [value]="option">
+                        {{ option.name }}
+                      </mat-option>
+                    </mat-autocomplete>
+                    <div class="select-icon position-absolute" style="right: 10px; top: 10px;">
+                      <i class="fa" [ngClass]="!utmForm.get('utmSource')?.value ? 'fa-lock' : 'fa-search'"></i>
+                    </div>
+                  </mat-form-field>
+                </div>
+                <div class="campaign-preview" *ngIf="utmForm.get('utmCampaign')?.value">
+                  <div class="campaign-tag">
+                    <i class="fa fa-tag"></i>
+                    {{ utmForm.get('utmCampaign')?.value }}
+                  </div>
+                </div>
+                <small class="text-muted">Nombre específico de la campaña</small>
+              </div>
+            </div>
+
+            <div class="col-md-4 mb-3">
+              <!-- UTM Medium -->
+              <div class="form-group">
+                <label for="utmMedium" class="form-label">UTM Medium *</label>
+                <input 
+                  type="text" 
+                  id="utmMedium" 
+                  class="form-control" 
+                  formControlName="utmMedium"
+                  placeholder="cpc, banner, email"
+                >
+                <small class="text-muted">Canal de marketing (cpc, banner, email...)</small>
+              </div>
+            </div>
+
+            <div class="col-md-4 mb-3">
+              <!-- UTM Term -->
+              <div class="form-group">
+                <label for="utmTerm" class="form-label">UTM Term</label>
+                <input 
+                  type="text" 
+                  id="utmTerm" 
+                  class="form-control" 
+                  formControlName="utmTerm"
+                  placeholder="palabras clave"
+                >
+                <small class="text-muted">Términos de búsqueda pagada</small>
+              </div>
+            </div>
+
+            <div class="col-md-4 mb-3">
+              <!-- UTM Content -->
+              <div class="form-group">
+                <label for="utmContent" class="form-label">UTM Content</label>
+                <input 
+                  type="text" 
+                  id="utmContent" 
+                  class="form-control" 
+                  formControlName="utmContent"
+                  placeholder="banner-logo, texto-pie"
+                >
+                <small class="text-muted">Elemento específico que se ha clickeado</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mt-4">
+            <div class="col-12">
+              <div class="card bg-light">
+                <div class="card-body p-3">
+                  <label class="form-label fw-bold">Generated UTM Tracking URL</label>
+                  
+                  <!-- Mensaje cuando no hay URL base válida -->
+                  <div *ngIf="!isUrlBaseValid()" class="url-warning-container mb-3">
+                    <div class="alert alert-warning mb-0 d-flex align-items-center">
+                      <i class="fa fa-exclamation-triangle me-2"></i>
+                      <div>
+                        <strong>Atención:</strong> Ingresa una URL válida en el campo "URL del sitio web" para generar el enlace de seguimiento.
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="input-group">
+                    <input 
+                      type="text" 
+                      class="form-control" 
+                      [value]="generatedUrl" 
+                      readonly
+                    >
+                    <button 
+                      class="btn btn-primary" 
+                      type="button" 
+                      [disabled]="!generatedUrl"
+                      (click)="copyToClipboard()"
+                      [ngClass]="{'btn-success': urlCopied}"
+                    >
+                      <i class="fa" [ngClass]="urlCopied ? 'fa-check' : 'fa-copy'"></i>
+                      {{ urlCopied ? 'Copiado!' : 'Copiar' }}
+                    </button>
+                  </div>
+                  
+                  <!-- Botón para resetear el formulario -->
+                  <div class="text-end mt-3">
+                    <button 
+                      type="button" 
+                      class="btn btn-outline-secondary btn-reset" 
+                      (click)="resetForm()"
+                    >
+                      <i class="fa fa-refresh me-1"></i> Resetear formulario
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <!-- Explicación de los parámetros UTM -->
+        <div class="row mt-5">
+          <div class="col-12">
+            <div class="alert alert-info" role="alert">
+              <h5 class="alert-heading">¿Qué son los parámetros UTM?</h5>
+              <p>Los parámetros UTM son etiquetas que se añaden al final de una URL para rastrear la efectividad de las campañas de marketing online en Google Analytics.</p>
+              <hr>
+              <ul>
+                <li><strong>UTM Source:</strong> Identifica la fuente del tráfico (Google, Facebook, Newsletter)</li>
+                <li><strong>UTM Campaign:</strong> Nombre de la campaña específica</li>
+                <li><strong>UTM Medium:</strong> Canal de marketing (email, CPC, banner)</li>
+                <li><strong>UTM Term:</strong> Palabras clave de búsqueda pagada</li>
+                <li><strong>UTM Content:</strong> Identifica qué enlace específico fue clickeado</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

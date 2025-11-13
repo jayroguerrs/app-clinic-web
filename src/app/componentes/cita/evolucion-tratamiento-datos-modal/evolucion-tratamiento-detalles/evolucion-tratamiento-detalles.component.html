@@ -1,0 +1,274 @@
+<form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+
+  <div class="modal-content">
+  <div class="modal-header card-header">
+    <h5 class="modal-title">{{ estado ? 'EDITAR' : 'AGREGAR' }} HISTORIAL</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="onClose()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="modal-body card-body">
+
+    <div class="form-row">
+
+      <!-- Zonas -->
+      <div class="col-12">
+        <span class="mb-3 subtitle d-block">Zona</span>
+        <div class="form-group">
+          <div class="form-floating form-start-icon">
+            <select #citaDetalle class="custom-select" id="citaDetalle" formControlName="detalle" (change)="verDetalle( citaDetalle.value )" [ngClass]="{ 'is-invalid': submitted && f.detalle.errors }">
+              <option *ngIf="!estado" value="">--Seleccionar--</option>
+              <option *ngFor="let detalle of citaDetalles" [value]="detalle.id" [class.d-none]="hasHistory(detalle.id)">{{ detalle.zona.nombre }}</option>
+            </select>
+            <label for="citaDetalle">Zona</label>
+            <span class="icon">
+                <span class="dicon human m-auto"></span>
+              </span>
+          </div>
+          <div *ngIf="submitted && f.detalle.errors" class="invalid-feedback d-block">
+            <div *ngIf="f.detalle.errors.required">Seleccione una zona</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- N° sesion -->
+      <div class="col-12 mb-3">
+        <div class="form-floating form-start-icon">
+          <input id="sesion" type="number" placeholder=" " formControlName="sesion" class="form-control" readonly>
+          <label for="sesion" >N° Sesión</label>
+          <span class="icon"><span class="dicon hash-tag-square m-auto"></span></span>
+        </div>
+      </div>
+
+      <!-- Fototipo Piel -->
+      <div class="col-12 mb-3">
+        <div class="form-floating ">
+          <select class="custom-select" id="fototipoPiel" formControlName="fototipoPiel" >
+            <option selected value=''>...Seleccionar...</option>
+            <option value="1">I</option>
+            <option value="2">II</option>
+            <option value="3">III</option>
+            <option value="4">IV</option>
+            <option value="5">V</option>
+          </select>
+          <label for="fototipoPiel" >Fototipo de piel</label>
+        </div>
+        <!--<div *ngIf="submitted && f.fototipoPiel.errors" class="invalid-feedback d-block">
+          <div *ngIf="f.fototipoPiel.errors.required">Seleccione un equipo laser</div>
+        </div>-->
+      </div>
+
+      <!-- Equipo Utilizado -->
+      <div class="col-12 mb-3">
+        <span class="mb-3 subtitle d-block">Equipo utilizado</span>
+        <div class="form-floating">
+          <select #equipoUtilizado class="custom-select" id="equipoUtilizado" formControlName="equipoUtilizado" [ngClass]="{ 'is-invalid': submitted && f.equipoUtilizado.errors }">
+            <option selected value=''>...Seleccionar...</option>
+            <option *ngFor="let equipo of equiposLaser" [value]="equipo.id">{{ equipo.nombre }}</option>
+          </select>
+          <label for="equipoUtilizado" (click)="equipoUtilizado.click()">Equipo laser utilizado</label>
+        </div>
+        <!--<div *ngIf="submitted && f.equipoUtilizado.errors" class="invalid-feedback d-block">
+          <div *ngIf="f.equipoUtilizado.errors.required">Seleccione un equipo laser</div>
+        </div>-->
+      </div>
+
+      <!-- Sub-Zona / Dosis -->
+      <div *ngIf="evolucionTratamientoZona.dosis.length" class="col-12">
+        <span class="mb-3 subtitle d-block">Sub-Zona / Dosis</span>
+
+        <div  *ngFor="let d of evolucionTratamientoZona.dosis; let i = index"   [id]="'accordion'+i" class="border rounded mb-3 accordion">
+            <div class="_title" (click)="show('accordion'+i)" data-collapse="true">{{ d.zona }}<span class="dicon arrow-up"></span></div>
+            <div class="_contain collapse">
+              <div class="p-2">
+                <div class="form-row">
+                  <div class="col-6 mb-2">
+                    <div class="form-floating">
+                      <input [id]="'julios_'+i" type="text" placeholder=" " class="form-control" [value]="d.valorJulios" (keypress)="updateValue(d.idZona,0, i, $event)" (keyup)="updateValue(d.idZona,0, i, $event)">
+                      <label [for]="'julios_'+i" >Julios</label>
+                    </div>
+                  </div>
+                  <div class="col-6 mb-2">
+                    <div class="form-floating">
+                      <input [id]="'continuo_'+i" type="text" placeholder=" " class="form-control" [value]="d.valorContinuo" (keypress)="updateValue(d.idZona,1, i, $event)" (keyup)="updateValue(d.idZona,1, i, $event)">
+                      <label [for]="'continuo_'+i" >Continuo/kj</label>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="form-floating">
+                      <input [id]="'stackmovil_'+i" type="text" placeholder=" " class="form-control" [value]="d.valorStackMovil" (keypress)="updateValue(d.idZona,2, i, $event)" (keyup)="updateValue(d.idZona,2, i, $event)">
+                      <label [for]="'stackmovil_'+i" >Stack Movil Pt/kj</label>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="form-floating">
+                      <input [id]="'stackfijo_'+i" type="text" placeholder=" " class="form-control" [value]="d.valorStackFijo" (keypress)="updateValue(d.idZona,3, i, $event)" (keyup)="updateValue(d.idZona,3, i, $event)">
+                      <label [for]="'stackfijo_'+i" >Stack Fijo Pt/p</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+
+      </div>
+
+      <!-- Reacciones -->
+      <div class="col-12">
+        <span class="mb-3 subtitle d-block">Reacciones</span>
+
+        <div class="mb-3">
+          <div class="form-floating">
+            <select class="form-select" id="edema" formControlName="edema">
+              <option value="0">0</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+            </select>
+            <label for="edema">Edema</label>
+          </div>
+        </div>
+        <div class="mb-3">
+          <div class="form-floating">
+            <select class="form-select" id="eritema" formControlName="eritema">
+              <option value="0">0</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+            </select>
+            <label for="eritema">Eritema</label>
+          </div>
+        </div>
+        <div class="mb-3">
+          <div class="form-floating">
+            <select class="form-select" id="dolor" formControlName="dolor">
+              <option value="0">0</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+            </select>
+            <label for="dolor">Dolor</label>
+          </div>
+        </div>
+        <div class="mb-3">
+          <div class="form-floating">
+            <select class="form-select" id="agujas" formControlName="agujas">
+              <option value="0">0</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+            </select>
+            <label for="agujas">Agujas</label>
+          </div>
+        </div>
+        <div class="mb-3">
+          <div class="form-floating">
+            <select class="form-select" id="quemaduras" formControlName="quemaduras">
+              <option value="0">No</option>
+              <option value="1">Si</option>
+            </select>
+            <label for="quemaduras">Quemaduras</label>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Comentarios -->
+      <div class="col-12">
+        <span class="mb-3 subtitle d-block">Comentarios</span>
+
+        <div class="mb-3">
+          <div class="form-floating">
+            <div class="textarea">
+              <textarea #comentario id="comentario" maxlength="1000" class="form-control" formControlName="comentario" placeholder=" "></textarea>
+              <label for="comentario">Comentario</label>
+            </div>
+            <p class="mb-0 text-right small">{{ comentario.value.length }} / 1000</p>
+          </div>
+        </div>
+        <div class="mb-3">
+          <div class="form-floating">
+            <div class="textarea">
+              <textarea #comentarioCliente id="comentarioCliente" maxlength="1000" class="form-control" formControlName="comentarioCliente" placeholder=" "></textarea>
+              <label for="comentarioCliente">Comentario cliente</label>
+            </div>
+            <p class="mb-0 text-right small">{{ comentarioCliente.value.length }} / 1000</p>
+          </div>
+        </div>
+        <div class="mb-3">
+          <div class="form-floating">
+            <div class="textarea">
+              <textarea #comentarioSesion id="comentarioSesion" maxlength="1000" class="form-control" formControlName="comentarioSesion" placeholder=" "></textarea>
+              <label for="comentarioSesion">Comentario sesion</label>
+            </div>
+            <p class="mb-0 text-right small">{{ comentarioSesion.value.length }} / 1000</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fotos -->
+      <div class="col-12">
+        <div class="">
+          <span class="mb-3 subtitle d-block">Fotos</span>
+          <div class="d-flex">
+            <input class="d-none" #imagen type="file" accept="image/*" (change)="onCaptureImage($event)">
+            <div *ngFor="let foto of fotos; let i = index" class="ifoto border rounded mr-1">
+              <img [src]="foto" alt="">
+              <div class="actionfoto">
+                <div class="w-50 text-center"><button type="button" class="bg-white border rounded p-1 d-inline-flex mr-1" (click)="showImages()"><span class="dicon eye"></span></button></div>
+                <div class="w-50 text-center"><button type="button" class="bg-white border rounded p-1 d-inline-flex" (click)="removeImage(i)" ><span class="dicon trash"></span></button></div>
+              </div>
+            </div>
+
+            <div *ngIf="fotos.length < 1" class="ifotoadd border rounded d-flex mr-1" [class.loading]="ldObtenerFotosById" (click)="imagen.click()">
+              <span class="dicon camera-image m-auto"></span>
+            </div>
+            <div *ngIf="fotos.length < 2" class="ifotoadd border rounded d-flex" [class.loading]="ldObtenerFotosById" (click)="imagen.click()">
+              <span class="dicon camera-image m-auto"></span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="modal-footer card-footer">
+    <div class="form-row float-right">
+      <button type="submit" class="btn btn-outline-primary" ><i class="feather icon-save"></i>Guardar</button>
+      <button type="reset" class="btn btn-outline-danger" (click)="onClose()"><i class="feather icon-slash"></i>Cancelar</button>
+    </div>
+  </div>
+</div>
+
+</form>
+
+
+
+
+
+<!-- MOSTRAR FOTOS -->
+<ng-template #modalFotosEvolucion let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Imagenes de zona</h5>
+    <button type="button" class="close basic-close" data-dismiss="modal" aria-label="Close" (click)="modal.close()"><span aria-hidden="true">&times;</span></button>
+  </div>
+  <div class="modal-body">
+
+    <ngb-carousel *ngIf="fotos.length">
+      <ng-template ngbSlide *ngFor="let foto of fotos">
+        <div class="picsum-img-wrapper p-5">
+          <img class="image-carousel" [src]="foto" alt="Random first slide">
+        </div>
+      </ng-template>
+    </ngb-carousel>
+
+  </div>
+</ng-template>
+

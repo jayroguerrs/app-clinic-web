@@ -1,0 +1,54 @@
+﻿<!-- SPINNER -->
+<ngx-spinner [template]="rutaImageSpinner">
+    <p style="color: white"> Cargando... </p>
+</ngx-spinner>
+
+
+<form [formGroup]="frmGroup" (ngSubmit)="onSubmit()">
+    <div class="modal-content depilform popins">
+        <div class="modal-header card-header bg-gradient">
+            <h5 class="modal-title text-white fw-500">{{ categoria ? 'Editar' : 'Nueva' }} Categoría</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="cerrarModal()">
+                <span aria-hidden="true" class="text-white">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body card-body">
+              <div class="form-group">
+                  <div class="form-floating">
+                    <input type="text" maxlength="50" class="form-control dz-uppercase" id="maqDescripcion" placeholder=" " formControlName="nombre" [ngClass]="{ 'is-invalid': submitted && f.nombre.errors }" >
+                    <label for="maqDescripcion">Nombre <span class="text-danger">*</span></label>
+                  </div>
+                  <div *ngIf="submitted && f.nombre.errors" class="invalid-feedback d-block">
+                    <div *ngIf="f.nombre.errors.required">Ingrese nombre de la categoria</div>
+                  </div>
+              </div>
+              <div class="form-group mb-0">
+                  <div class="form-floating">
+                    <select class="form-select" id="idEstado" formControlName="idEstado">
+                      <option [value]="1">ACTIVO</option>
+                      <option [value]="0">INACTIVO</option>
+                    </select>
+                    <label for="idEstado">Estado</label>
+                  </div>
+              </div>
+        </div>
+        <div class="modal-footer card-footer bg-white py-3">
+            <div class="form-row float-right">
+                <button 
+                        matRipple 
+                        type="submit" 
+                        class="btn btn-outline-primary">
+                        <i class="feather icon-save"></i>Guardar
+                </button>
+                <button 
+                        matRipple        
+                        type="reset" 
+                        class="btn btn-outline-danger" 
+                        (click)="cerrarModal()">
+                        <i class="feather icon-slash"></i>Cancelar
+                </button>
+            </div>
+        </div>
+
+    </div>
+</form>

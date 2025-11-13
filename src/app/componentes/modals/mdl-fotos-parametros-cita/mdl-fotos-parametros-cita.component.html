@@ -1,0 +1,62 @@
+<form>
+
+    <div class="modal-header card-header">
+        <h5 class="modal-title">AGREGAR FOTOS DE TRATAMIENTO</h5>
+        <button (click)="cerrarModal(false)" type="button" class="close" data-dismiss="modal" aria-label="Close"
+          ><span aria-hidden="true">&times;</span></button>
+    </div>
+
+    <div class="modal-body card-body overflow-y-auto" style="max-height: 70vh; min-height: 70vh;">
+        <div class="d-flex justify-content-center" style="position: relative;">
+          <webcam
+            [trigger]="triggerObservable"
+            [height]="300"
+            [width]="300"
+            (imageCapture)="handleImage($event)"
+            [allowCameraSwitch]="true">
+          </webcam>
+          <button style="position: absolute; bottom: 10px; padding: 14px 16px; margin: 0; background-color: #04a9f5; border-radius: 100%;" type="button" class="btn btn-outline-primary" (click)="triggerSnapshot();"><i style="margin: 0 !important; color: white; font-size: 24px;" class="feather icon-camera"></i></button>
+        </div>
+
+        
+        <div class="legend p-cont" style="padding: 1rem 0 !important;">
+          <h5 style="font-size: 14px;" class="mb-0 fw-bold">FOTOS TOMADAS {{'(' + imagenesTomadas.length+ ')'}}</h5>
+        </div>
+
+        <ng-container *ngIf="imagenesTomadas.length === 0" >
+          <div class="d-flex flex-column align-items-center justify-content-center p-4 text-center text-muted">
+            <i class="feather icon-camera-off mb-3" style="font-size: 48px;"></i>
+            <h5 class="mb-0">Ninguna foto tomada</h5>
+            <small>Captura una imagen usando la cámara</small>
+          </div>
+
+        </ng-container>
+
+        <div class="row" style="padding:0 0 0 15px !important">
+          <div class="col-4" style="padding: 0 !important; padding-right: 15px !important;position: relative;" *ngFor="let img of imagenesTomadas; let i = index">
+            <img (click)="abrirImagen(img)" [src]="img" class="img-fluid mb-3" style="height: 160px !important; width: 100%;" alt="">
+            <button (click)="quitarImagen(i)" type="button" class="btn btn-outline-danger" style="position: absolute; padding: 5px 8px !important; right: 0; top: -8px; background-color: white;color: #f44236;" ><i class="feather icon-trash-2" style="margin: 0; font-size: 18px !important;"></i></button>
+          </div>
+        </div>
+    </div>
+
+    <!-- Lightbox overlay -->
+    <div *ngIf="imagenSeleccionada" class="lightbox-overlay" (click)="cerrarImagen()">
+
+      <div  >
+        <button style="position: absolute;
+    z-index: 5000;
+    font-size: 40px;
+    right: 24px;
+    top: 36px;
+    color: white;" (click)="cerrarImagen()" type="button" class="close" data-dismiss="modal" aria-label="Close"
+          ><span aria-hidden="true">&times;</span></button>
+        <img style="max-height: 80vh;" [src]="imagenSeleccionada" class="lightbox-img" (click)="$event.stopPropagation()">
+      </div>
+    </div>
+
+    <div class="modal-footer card-footer">
+        <button [disabled]="imagenesTomadas.length === 0" type="button" class="btn btn-outline-primary" (click)="guardarFotos()"><i class="feather icon-save"></i>Guardar</button>
+        <button (click)="cerrarModal(false)" type="button" class="btn btn-outline-danger" ><i class="feather icon-slash"></i>Cerrar</button>
+    </div>
+</form>

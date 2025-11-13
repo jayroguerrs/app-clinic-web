@@ -1,0 +1,340 @@
+<!-- LISTA DE ZONAS -->
+<ng-template #modalZonasLista let-modal let-close="close">
+    <app-zona-corporal-seleccionar
+        (eventoZonasSeleccionadas) = "eventoZonasSeleccionadas($event)"
+        (eventoZonasConcatenadas) = "eventoZonasConcatenadas($event)"
+        (eventoIdsZonasConcatenadas) = "eventoIdsZonasConcatenadas($event)"
+        [zonasSeleccionadas] = "listaZonasSeleccionadas"
+        [idGenero]="idGeneroCliente"
+        [modal]="modalZonasSeleccionRef"
+        [idPromocion]="idPromocion"
+        [idServicio]="idServicio">
+    </app-zona-corporal-seleccionar>
+</ng-template>
+<!-- SPINNER
+<ngx-spinner [template]="rutaImageSpinner">
+    <p style="color: white"> Cargando... </p>
+</ngx-spinner>-->
+<!-- LISTA CLIENTE -->
+<ng-template #modalClienteListado let-modal let-close="close">
+    <app-cliente-listado-modal
+    (eventClienteSeleccionado) = "eventoClienteSeleccionado($event)"
+    [modal]="modalClienteListadoRef">
+    </app-cliente-listado-modal>
+</ng-template>
+<!-- FORMULARIO -->
+<form [formGroup]="frmDocumento" (ngSubmit)="preguntaGenerarDocumento()">
+    <div class="modal-content">
+        <div class="modal-header card-header">
+            <h5 class="modal-title">Emisión de documentos</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="cerrarModal()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body card-body px-4" style="max-height: 60vh; overflow-y: auto;">
+
+            <!-- Cliente-->
+            <div class="mb-4 popins">
+              <div class="bs-input-group bs-input-group-solid mb-5">
+                <span class="bs-input-group-text cursor-pointer" (click)="abrirClienteLista(modalClienteListado)" [placement]="'left'" ngbTooltip="Buscar cliente">
+                  <span class="svg-icon svg-icon-1">
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path opacity="0.3" d="M16.5 9C16.5 13.125 13.125 16.5 9 16.5C4.875 16.5 1.5 13.125 1.5 9C1.5 4.875 4.875 1.5 9 1.5C13.125 1.5 16.5 4.875 16.5 9Z" fill="currentColor"></path>
+                      <path d="M9 16.5C10.95 16.5 12.75 15.75 14.025 14.55C13.425 12.675 11.4 11.25 9 11.25C6.6 11.25 4.57499 12.675 3.97499 14.55C5.24999 15.75 7.05 16.5 9 16.5Z" fill="currentColor"></path>
+                      <rect x="7" y="6" width="4" height="4" rx="2" fill="currentColor"></rect>
+                    </svg>
+                  </span>
+                </span>
+                <input type="text" placeholder="Cliente" class="form-control cursor-pointer" formControlName="cliente" [readonly]="cliente"  (click)="abrirClienteLista(modalClienteListado)" [ngClass]="{ 'bg-color-light-danger': submitted && f.cliente.errors }">
+              </div>
+              <div *ngIf="submitted && f.cliente.errors" class="invalid-feedback d-block">
+                <div *ngIf="f.cliente.errors.required">No ha seleccionado cliente</div>
+              </div>
+            </div>
+
+            <!-- Documento Identidad -->
+            <div class="mb-4 popins">
+              <label class="fw-semibold text-gray-800 required">Documento de Identidad</label>
+              <div class="d-flex">
+                <div class="w-180px mr-2">
+                  <select formControlName="idTipoDocumentoIdentidad" class="form-select form-select-solid w-100" [ngClass]="{ 'bg-color-light-danger': submitted && f.idTipoDocumentoIdentidad.errors }">
+                    <option value="">--Tipo de Documento--</option>
+                    <option *ngFor="let item of colDocumentoTipoIdentidad" [value]="item.descripcion" >{{ item.descripcion }}</option>
+                  </select>
+                </div>
+                <div class="w-100">
+                  <input type="text" formControlName="numeroDocumento" class="form-control form-control-solid" placeholder="N° de documento" [ngClass]="{ 'bg-color-light-danger': submitted && f.numeroDocumento.errors }">
+                </div>
+              </div>
+              <div *ngIf="submitted && f.idTipoDocumentoIdentidad.errors" class="invalid-feedback d-block">
+                <div *ngIf="f.idTipoDocumentoIdentidad.errors.required">Seleccionar tipo documento identidad</div>
+              </div>
+              <div *ngIf="submitted && f.numeroDocumento.errors" class="invalid-feedback d-block">
+                <div *ngIf="f.numeroDocumento.errors.required">Ingresar n° documento de identidad</div>
+              </div>
+            </div>
+
+            <!-- Servicio -->
+            <div class="mb-4 popins">
+              <label class="fw-semibold text-gray-800 required">Servicio</label>
+              <select class="form-select form-select-solid" formControlName="idServicio" [ngClass]="{ 'bg-color-light-danger': submitted && f.idServicio.errors }">
+                <option value="">...Seleccionar...</option>
+                <option *ngFor="let serv of servicios" [value]="serv.id">{{ serv.nombre }}</option>
+              </select>
+              <div *ngIf="submitted && f.idServicio.errors" class="invalid-feedback d-block">
+                <div *ngIf="f.idServicio.errors.required">Seleccionar un servicio</div>
+              </div>
+            </div>
+
+            <!--? Tipo de Documento -->
+            <div class="mb-4 popins">
+              <label class="fw-semibold text-gray-800 required">Tipo de documento</label>
+              <div class="form-floating form-start-icon">
+                <select class="custom-select" id="idDocumentoTipo" formControlName="idDocumentoTipo" (change)="mostrarOpcionPorTipoDocumentoFormato($event.target.value)">
+                  <option value="">...Seleccionar...</option>
+                  <option *ngFor="let tipoDoc of maestroDocumentoTipoNgSelect" [value]="tipoDoc.id">{{ tipoDoc.text }}</option>
+                </select>
+                <label for="idDocumentoTipo">Tipo de documento</label>
+                <span class="icon"><i class="mdi mdi-account-check-outline"></i></span>
+                <div *ngIf="submitted && f.idDocumentoTipo.errors" class="invalid-feedback d-block">
+                  <div *ngIf="f.idDocumentoTipo.errors.required">Seleccionar un tipo de documento</div>
+                </div>
+              </div>
+            </div>
+  
+  
+
+            <!-- fecha -->
+            <div *ngIf="mostrarFecha">
+              <div class="form-floating mb-3">
+                <input  id="fechaDocumento" type="date" maxlength="20" class="form-control" placeholder=" " formControlName="fechaDocumento" [ngClass]="{ 'is-invalid': submitted && f.fechaDocumento.errors }">
+                <label for="fechaDocumento">Fecha</label>
+                <div *ngIf="submitted && f.fechaDocumento.errors" class="invalid-feedback d-block">
+                  <div *ngIf="f.fechaDocumento.errors.required">Fecha</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- DATOS APODERADO -->
+            <div *ngIf="mostrarDatosApoderados" class="mb-3">
+
+
+                <div class="form-floating mb-3">
+                  <input  id="dniApoderado" type="text" maxlength="20" class="form-control" placeholder=" " formControlName="dniApoderado" [ngClass]="{ 'is-invalid': submitted && f.dniApoderado.errors }">
+                  <label for="dniApoderado">DNI / CE del apoderado</label>
+                  <div *ngIf="submitted && f.dniApoderado.errors" class="invalid-feedback d-block">
+                    <div *ngIf="f.dniApoderado.errors.required">Ingresar dni/ce del apoderado</div>
+                  </div>
+                </div>
+
+                <div class="form-floating">
+                  <input  id="nombreApoderado" type="text" maxlength="150" class="form-control" placeholder=" " formControlName="nombreApoderado" [ngClass]="{ 'is-invalid': submitted && f.nombreApoderado.errors }">
+                  <label for="nombreApoderado">Nombre del apoderado</label>
+                  <div *ngIf="submitted && f.nombreApoderado.errors" class="invalid-feedback d-block">
+                    <div *ngIf="f.nombreApoderado.errors.required">Ingresar el nombre del apoderado</div>
+                  </div>
+                </div>
+
+            </div>
+
+
+            <!-- N° SESIONES A RETROCEDER -->
+            <div class="form-group" *ngIf="mostrarOpcionesRetSes">
+              <div class="form-floating">
+                <input  id="numSesionesRetroceder" type="number" min="0" class="form-control" placeholder=" " formControlName="numSesionesRetroceder" [ngClass]="{ 'is-invalid': submitted && f.numSesionesRetroceder.errors }">
+                <label for="numSesionesRetroceder">N° sesiones a retroceder</label>
+                <div *ngIf="submitted && f.numSesionesRetroceder.errors" class="invalid-feedback d-block">
+                  <div *ngIf="f.numSesionesRetroceder.errors.required">Ingresar n° sesiones a retroceder</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- N° SESIONES A SEGUIR -->
+            <div class="form-group" *ngIf="mostrarOpcionesRetSes">
+              <div class="form-floating">
+                <input  id="numSesiones" type="number" min="0" class="form-control" placeholder=" " formControlName="numSesiones" [ngClass]="{ 'is-invalid': submitted && f.numSesiones.errors }">
+                <label for="numSesiones">N° sesiones a seguir</label>
+                <div *ngIf="submitted && f.numSesiones.errors" class="invalid-feedback d-block">
+                  <div *ngIf="f.numSesiones.errors.required">Ingresar n° sesiones a seguir</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- PROMOCION -->
+            <!-- <div *ngIf="mostrarPromocion" class="mb-4 popins">
+              <label class="fw-semibold text-gray-800 required">Promoción</label>
+              <select id="idPromocion" class="form-select form-select-solid" formControlName="idPromocion" (change)="obtenerPromocionDetalle($event)" [ngClass]="{ 'bg-color-light-danger': submitted && f.idPromocion.errors }">
+                <option value="">...Seleccionar...</option>
+                <option *ngFor="let promocion of maestroPromocion" [value]="promocion.idPromocion">{{ promocion.descripcion }}</option>
+              </select> -->
+
+<!--              <ng-select class="w-100"  [items]="maestroPromocion"  [searchable]="true" bindLabel="descripcion" bindValue="idPromocion" placeholder="&#45;&#45;Seleccionar&#45;&#45;"  formControlName="idPromocion" [multiple]="false"></ng-select>-->
+
+              <!-- <div *ngIf="submitted && f.idPromocion.errors" class="invalid-feedback d-block">
+                <div *ngIf="f.idPromocion.errors.required">Seleccionar una promoción</div>
+              </div>
+            </div> -->
+
+            <div *ngIf="mostrarPromocion" class="mb-4 popins">
+              <label class="fw-semibold text-gray-800 required">Promoción</label>
+              <div class="form-floating form-start-icon">
+                <select class="custom-select" id="idPromocion" formControlName="idPromocion" (change)="obtenerPromocionDetalle($event.target.value)">
+                  <option value="">...Seleccionar...</option>
+                  <option *ngFor="let promocion of maestroPromocionNgSelect" [value]="promocion.id">{{ promocion.text }}</option>
+                </select>
+                <label for="idPromocion">Promoción</label>
+                <span class="icon"><i class="mdi mdi-account-check-outline"></i></span>
+                <div *ngIf="submitted && f.idPromocion.errors" class="invalid-feedback d-block">
+                  <div *ngIf="f.idPromocion.errors.required">Seleccionar una promoción</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- DOCTORA -->
+            <div class="form-row d-none" *ngIf="mostrarDoctora">
+                <div class="form-group col-12 col-md-12">
+                    <div class="input-group input-group-sm">
+                        <div class="input-group-prepend"><span class="input-group-text">Doctora</span></div>
+                        <input type="text" class="form-control" formControlName="doctora" [ngClass]="{ 'is-invalid': submitted && f.doctora.errors }">
+                        <div *ngIf="submitted && f.doctora.errors" class="invalid-feedback d-block">
+                            <div *ngIf="f.doctora.errors.required"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Condiciones -->
+            <div class="form-group" *ngIf="mostrarCondiciones">
+              <div class="form-floating">
+                <input id="condiciones" type="text" min="0" class="form-control" placeholder=" " formControlName="condiciones" [ngClass]="{ 'is-invalid': submitted && f.condiciones.errors }">
+                <label for="condiciones">Condiciones <span class="text-danger">*</span></label>
+                <div *ngIf="submitted && f.condiciones.errors" class="invalid-feedback d-block">
+                  <div *ngIf="f.condiciones.errors.required">Ingresar condiciones</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- SESIONES ADICIONALES -->
+            <div class="form-group" *ngIf="mostrarSesionAdicional">
+                <div class="form-floating">
+                  <input id="sesionAdicional" type="number" min="0" class="form-control" placeholder=" " formControlName="sesionAdicional" [ngClass]="{ 'is-invalid': submitted && f.sesionAdicional.errors }">
+                  <label for="sesionAdicional">Sesiones adicionales</label>
+                  <div *ngIf="submitted && f.sesionAdicional.errors" class="invalid-feedback d-block">
+                    <div *ngIf="f.sesionAdicional.errors.required">Ingresar n° sesiones adicionales</div>
+                  </div>
+                </div>
+            </div>
+
+            <!-- INTERVALO -->
+            <div class="form-group" *ngIf="mostrarIntervaloMantenimiento">
+              <div class="form-floating">
+                <select id="intervaloMantenimiento" class="custom-select" formControlName="intervaloMantenimiento" [ngClass]="{ 'is-invalid': submitted && f.intervaloMantenimiento.errors }">
+                  <option *ngFor="let intervalo of intervaloMesesMantenimiento" [value]="intervalo.value">{{intervalo.value}}</option>
+                </select>
+                <label for="intervaloMantenimiento">Intervalo °n meses mantenimiento</label>
+                <div *ngIf="submitted && f.intervaloMantenimiento.errors" class="invalid-feedback d-block">
+                  <div *ngIf="f.intervaloMantenimiento.errors.required">Ingresar intervalo  n° meses mantenimiento</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- CONSULTA EN MESES -->
+            <div class="form-group" *ngIf="mostrarConsultaMantenimientoEn">
+              <div class="form-floating">
+                <input #consultaMantenimientoEn id="consultaMantenimientoEn" type="number" min="0" class="form-control" placeholder=" " formControlName="consultaMantenimientoEn" [ngClass]="{ 'is-invalid': submitted && f.consultaMantenimientoEn.errors }">
+                <label for="consultaMantenimientoEn">Consulta en {{ consultaMantenimientoEn.value ? consultaMantenimientoEn.value : 'n°'}} meses</label>
+                <div *ngIf="submitted && f.consultaMantenimientoEn.errors" class="invalid-feedback d-block">
+                  <div *ngIf="f.consultaMantenimientoEn.errors.required">Ingresar en cuantos n° meses le toca mantenimiento</div>
+                </div>
+              </div>
+            </div>
+
+             <!-- PATOLOGIA -->
+             <div class="form-group" *ngIf="mostrarPatologia">
+               <label>Patologías <span class="text-danger">*</span></label>
+               <select class="form-control" formControlName="idPatologia" multiple [ngClass]="{ 'is-invalid': submitted && f.idPatologia.errors }">
+                 <option *ngFor="let patologia of patologias" [value]="patologia.id">{{ patologia.text }}</option>
+               </select>
+               <div *ngIf="submitted && f.idPatologia.errors" class="invalid-feedback d-block">
+                 <div *ngIf="f.idPatologia.errors.required">Seleccionar una patología</div>
+               </div>
+             </div>
+
+            <!-- DESCRIPCION RETOQUE -->
+            <div class="form-group" *ngIf="mostrarDescripcionComentario">
+              <div class="form-floating">
+                <textarea class="form-control" formControlName="descripcionComentario" id="descripcionComentario" placeholder=" " [ngClass]="{ 'is-invalid': submitted && f.descripcionComentario.errors }"></textarea>
+                <label for="descripcionComentario">Descripción comentario</label>
+              </div>
+              <div *ngIf="submitted && f.descripcionComentario.errors" class="invalid-feedback d-block">
+                <div *ngIf="f.descripcionComentario.errors.required">Ingresar descripción retoque</div>
+              </div>
+            </div>
+
+            <!-- ELECCION DE ZONAS -->
+            <div *ngIf="mostrarZonas" class="form-group popins">
+              <label class="fw-semibold text-gray-800 required">Zonas</label>
+              <div class="bs-input-group bs-input-group-solid">
+               <span class="bs-input-group-text cursor-pointer" [placement]="'left'" ngbTooltip="Listar zonas" (click)="abrirZonaSeleccion(modalZonasLista)">
+                  <span class="svg-icon svg-icon-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" width="18" height="18" fill="none">
+                      <path fill="currentColor" d="M88 256.9L59.43 304.5C50.33 319.6 30.67 324.5 15.52 315.4C.3696 306.3-4.531 286.7 4.573 271.5L62.85 174.6C80.2 145.7 111.4 128 145.1 128H174.9C208.6 128 239.8 145.7 257.2 174.6L315.4 271.5C324.5 286.7 319.6 306.3 304.5 315.4C289.3 324.5 269.7 319.6 260.6 304.5L232 256.9V480C232 497.7 217.7 512 200 512C182.3 512 168 497.7 168 480V352H152V480C152 497.7 137.7 512 120 512C102.3 512 88 497.7 88 480L88 256.9z"/>
+                      <path fill="currentColor" opacity="0.3" d="M208 48C208 74.51 186.5 96 160 96C133.5 96 112 74.51 112 48C112 21.49 133.5 0 160 0C186.5 0 208 21.49 208 48z"/>
+                    </svg>
+                  </span>
+                </span>
+                <textarea class="form-control cursor-pointer" placeholder="Seleccionar zonas" formControlName="zonasSeleccionadas" maxlength="500" (click)="abrirZonaSeleccion(modalZonasLista)" [ngClass]="{ 'bg-color-light-danger': submitted && this.listaZonasSeleccionadas.length == 0 }" [value]="f.zonasSeleccionadas.value" readonly></textarea>
+              </div>
+              <div *ngIf="submitted && this.listaZonasSeleccionadas.length == 0" class="invalid-feedback d-block">
+                <div *ngIf="this.listaZonasSeleccionadas.length == 0">Seleccione al menos una zona</div>
+              </div>
+            </div>
+
+
+            <!-- DESCRIPCION RETOQUE
+            <div class="form-group">
+              <div class="form-floating">
+                <div class="textarea">
+                  <textarea #observacion id="observacion" class="form-control" formControlName="observacion" maxlength="300" placeholder=" " rows="3" ></textarea>
+                  <label for="observacion">Observación / Comentario</label>
+                </div>
+              </div>
+              <div class="text-right">{{observacion.value.length}}/300</div>
+            </div>-->
+            <div class="form-group popins">
+              <label class="fw-semibold text-gray-800">Observación / Comentario</label>
+              <textarea #observacion id="observacion" class="form-control form-control-solid" formControlName="observacion" maxlength="300" placeholder=" " rows="3" ></textarea>
+              <div class="text-right">{{observacion.value.length}}/300</div>
+            </div>
+
+
+            <!-- ENVIAR DOCUMENTO -->
+            <div class="form-group popins d-none">
+              <label class="fw-semibold text-gray-800">Enviar por correo</label>
+              <div>
+                <div class="form-group d-inline mr-4">
+                  <div class="radio radio-primary d-inline">
+                    <input type="radio" formControlName="enviarCorreo" id="correoSi" [value]="1" >
+                    <label for="correoSi" class="cr">Si</label>
+                  </div>
+                </div>
+                <div class="form-group d-inline">
+                  <div class="radio radio-primary d-inline">
+                    <input type="radio" formControlName="enviarCorreo" id="correoNo" [value]="0">
+                    <label for="correoNo" class="cr">No</label>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+        </div>
+        <div class="modal-footer card-footer">
+            <div class="form-row float-right">
+                <button type="button" class="btn btn-outline-secondary" (click)="previsualizarDocumento()" ><i class="mdi mdi-eye-outline"></i>Previsualizar</button>
+                <button type="submit" class="btn btn-outline-primary" ><i class="feather icon-save"></i>Emitir Documento</button>
+                <button type="reset" class="btn btn-outline-danger" (click)="cerrarModal()"><i class="feather icon-slash"></i>Cancelar</button>
+            </div>
+        </div>
+    </div>
+</form>

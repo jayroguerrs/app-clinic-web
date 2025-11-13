@@ -1,0 +1,77 @@
+<div class="row">
+  <div class="col-sm-12 popins">
+    <app-card cardTitle="REPORTE DE CUMPLEAÑOS DE CLIENTES" [options]="false" [hidBlock]="false">
+
+      <form [formGroup]="formGroup">
+        <div class="form-row">
+          <div class="col-12 col-md-6 col-lg-3 mb-3">
+
+            <label class="fw-semibold text-gray-800 required mb-0 ">Fecha Desde</label>
+            <div class="position-relative">
+              <fontawesome-svg class="position-absolute ps-13px pt-2 no-pointer-events" icon="calendar-day" type="light-alt" [width]="24" [height]="24"></fontawesome-svg>
+              <input
+              type="text"
+              mwlFlatpickr
+                [altInput]="true"
+              [convertModelValue]="true"
+              [altFormat]="'d/m/Y'"
+              dateFormat="Y-m-d"
+              class="form-control form-control-solid form-control-sm ps-48px"
+              placeholder="dd/mm/yyyy"
+              formControlName="fechaDesde"
+              readonly
+            />
+            </div>
+
+          </div>
+          <div class="col-12 col-md-6 col-lg-3 mb-3">
+            <label class="fw-semibold text-gray-800 required mb-0">Fecha Hasta</label>
+            <div class="position-relative">
+              <fontawesome-svg class="position-absolute ps-13px pt-2 no-pointer-events" icon="calendar-day" type="light-alt" [width]="24" [height]="24"></fontawesome-svg>
+              <input
+              type="text"
+              mwlFlatpickr
+              [altInput]="true"
+              [convertModelValue]="true"
+              [altFormat]="'d/m/Y'"
+              dateFormat="Y-m-d"
+              class="form-control form-control-solid form-control-sm ps-48px"
+              placeholder="dd/mm/yyyy"
+              formControlName="fechaHasta"
+              readonly
+            />
+            </div>
+
+          </div>
+          <div class="col-12 col-md-6 col-lg-3 mb-3">
+            <label class="fw-semibold text-gray-800 required mb-0">Estado Atendido</label>
+            <select formControlName="idEstadoAtendido" class="form-select form-control-solid">
+              <option *ngFor="let a of estadoAtendidos" [value]="a.id">{{ a.text }}</option>
+            </select>
+          </div>
+        </div>
+      </form>
+
+
+    </app-card>
+  </div>
+
+  <!-- GRILLA -->
+  <div class="col-sm-12">
+    <app-card [options]="false" cardTitle="LISTADO DE MAQUINAS" [hidHeader]="true">
+
+      <div class="table table-sm-responsive">
+        <table datatable [dtOptions]="dtResponsiveOptions" class="table table-sm table-hover table-caja display compact"></table>
+      </div>
+
+    </app-card>
+  </div>
+</div>
+
+<!-- BOTONERA ESCRITORIO -->
+<ul class="botonera-escritorio">
+  <li>
+    <button type="button" class="btn btn-primary btn-icon"   [placement]="'bottom'" ngbTooltip="Buscar" (click)= "search()"><fontawesome-svg class="m-auto" icon="search" type="regular" [width]="24" [height]="24"></fontawesome-svg></button>
+    <button *ngIf="this.accTot || this.accExc" type="button" class="btn btn-primary btn-icon"   [placement]="'bottom'" ngbTooltip="Exportar" (click)= "export()"><fontawesome-svg class="m-auto" icon="file-excel" type="light" [width]="24" [height]="24"></fontawesome-svg></button>
+  </li>
+</ul>

@@ -1,0 +1,309 @@
+<div class="form-row">
+
+  <div class="col-12 mb-3">
+    <app-tabla-cliente-perfil-global #tablaCitas [idCliente]="idCliente" [idServicio]="idServicio" [estadoDeCita]="'Pendiente'" (citaSelectedChange)="abrirModalZona($event)" ></app-tabla-cliente-perfil-global>
+  </div>
+
+  <div class="col-12 mb-3">
+    <app-tabla-cliente-perfil-global #tablaCitas [idCliente]="idCliente" [idServicio]="idServicio" [estadoDeCita]="'Atendida'" (citaSelectedChange)="abrirModalZona($event)" ></app-tabla-cliente-perfil-global>
+  </div>
+  
+
+<div class="col-12 col-lg-6 mb-3">
+  <ng-template #resumenContratosModal let-modal let-close="close" >
+    <button style="text-align: end;
+    margin-bottom: 1rem;
+    padding-right: 1.2rem;
+    padding-top: 1rem;" type="button" class="close basic-close" data-dismiss="modal" aria-label="Close" (click)="modal.close()"><span aria-hidden="true">&times;</span></button>
+
+    <div class="col-12 mb-3">
+      <app-contratos #resumenContratos [IdCliente]="idCliente" [IdServicio]="idServicio" (onShowOptions)="mostrarContratoOpciones(mdlOpcionesContratos,$event)"></app-contratos>
+    </div>
+  </ng-template>
+</div>
+
+    
+  <!-- MOSTRAR OPCIONES contratos -->
+  <!-- <app-ui-modal #mdlOpcionesContratos dialogClass="modal-dialog-centered modal-nuevo" hideFooter="true" >
+    <div class="app-modal-header">
+      <h5 class="modal-title">Opciones resumen de contrato</h5>
+      <button type="button" class="close basic-close" data-dismiss="modal" aria-label="Close" (click)="mdlOpcionesContratos.hide()"><span aria-hidden="true">&times;</span></button>
+    </div>
+    <div class="app-modal-body">
+      <div class="form-row">
+        <div *ngIf="contratoSelected?.idEstado" class="col-4">
+          <button  type="button" class="btn btn-outline-danger w-100 m-0 d-inline-flex justify-content-center"  (click)="anularContrato(); mdlOpcionesContratos.hide()"><i class="mdi mdi-cancel"></i>Anular</button>
+        </div>
+        <div [class.col-4]="contratoSelected?.idEstado" [class.col-6]="!contratoSelected?.idEstado">
+          <button type="button" class="btn btn-outline-primary w-100 m-0 d-inline-flex justify-content-center"  (click)="verContrato(); mdlOpcionesContratos.hide()"><i class="mdi mdi-eye-outline"></i>Ver</button>
+        </div>
+        <div [class.col-4]="contratoSelected?.idEstado" [class.col-6]="!contratoSelected?.idEstado">
+          <button  type="button" class="btn btn-outline-secondary w-100 m-0 d-inline-flex justify-content-center"  (click)="enviarContrato(); mdlOpcionesContratos.hide()"><i class="mdi mdi-email-send-outline"></i>Enviar</button>
+        </div>
+      </div>
+    </div>
+  </app-ui-modal> -->
+
+  <ng-template #mdlOpcionesContratos let-modal let-close="close" let-d="dismiss" class="fadeIn">
+    <div class="modal-header">
+      <h5 class="modal-title">Opciones resumen de contrato</h5>
+      <button type="button" class="close basic-close" data-dismiss="modal" aria-label="Close" (click)="modal.close()"><span aria-hidden="true">&times;</span></button>
+    </div>
+
+    <div class="modal-body">
+      <div class="form-row">
+        <div *ngIf="contratoSelected?.idEstado" class="col-4">
+          <button  type="button" class="btn btn-outline-danger w-100 m-0 d-inline-flex justify-content-center"  (click)="anularContrato(); mdlOpcionesContratos.hide()"><i class="mdi mdi-cancel"></i>Anular</button>
+        </div>
+        <div [class.col-4]="contratoSelected?.idEstado" [class.col-6]="!contratoSelected?.idEstado">
+          <button type="button" class="btn btn-outline-primary w-100 m-0 d-inline-flex justify-content-center"  (click)="verContrato(); mdlOpcionesContratos.hide()"><i class="mdi mdi-eye-outline"></i>Ver</button>
+        </div>
+        <div [class.col-4]="contratoSelected?.idEstado" [class.col-6]="!contratoSelected?.idEstado">
+          <button  type="button" class="btn btn-outline-secondary w-100 m-0 d-inline-flex justify-content-center"  (click)="enviarContrato(); mdlOpcionesContratos.hide()"><i class="mdi mdi-email-send-outline"></i>Enviar</button>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #financiamientoCuotas let-modal let-close="close">
+    <button style="text-align: end;
+    margin-bottom: 1rem;
+    padding-right: 1.2rem;
+    padding-top: 1rem;" type="button" class="close basic-close" data-dismiss="modal" aria-label="Close" (click)="modal.close()"><span aria-hidden="true">&times;</span></button>
+
+    <div class="col-12 mb-3" style="margin:0.2rem 1rem !important;">
+      <app-card cardTitle="FINANCIAMIENTO | CUOTAS" >
+        <app-tbl-cliente-financiamiento [IdCliente]="idCliente"></app-tbl-cliente-financiamiento>
+      </app-card>
+    </div>
+  </ng-template>
+
+    <!-- Historial de seguimiento de cita -->
+    <div class="col-12 col-lg-6  mb-3">
+      <div class="row">
+  
+        <ng-template #historiaClinicaModal let-modal let-close="close">
+          <button style="text-align: end;
+          margin-bottom: 1rem;
+          padding-right: 1.2rem;
+          padding-top: 1rem;" type="button" class="close basic-close" data-dismiss="modal" aria-label="Close" (click)="modal.close()"><span aria-hidden="true">&times;</span></button>
+    
+          <div class="col-12 mb-3">
+            <app-historia-clinica #historiaClinica [IdCliente]="idCliente" (onShowOptions)="mostrarHistoriaClinicaOpciones(mdlOpcionesHistoria,$event)"></app-historia-clinica>
+          </div>
+        </ng-template>
+
+  
+        <ng-template #evTratamientoModal let-modal let-close="close">
+          <button style="text-align: end;
+          margin-bottom: 1rem;
+          padding-right: 1.2rem;
+          padding-top: 1rem;" type="button" class="close basic-close" data-dismiss="modal" aria-label="Close" (click)="modal.close()"><span aria-hidden="true">&times;</span></button>
+    
+          <div class="col-12">
+            <app-evolucion-tratamiento #evTratamiento [IdCliente]="idCliente" (onShowOptions)="mostrarEvolucionTratamientOpciones(mdlOpcionesEvolucion,$event)"></app-evolucion-tratamiento>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  
+    <div class="col-12 col-lg-6 mb-3">
+      <ng-template #documentosEmitidosModal let-modal let-close="close" >
+        <button style="text-align: end;
+        margin-bottom: 1rem;
+        padding-right: 1.2rem;
+        padding-top: 1rem;" type="button" class="close basic-close" data-dismiss="modal" aria-label="Close" (click)="modal.close()"><span aria-hidden="true">&times;</span></button>
+
+
+        <div class="mb-3" style="margin:0.2rem 1rem !important;">
+          <app-documentos-cliente #documentosEmitidos [IdCliente]="idCliente" [IdServicio]="idServicio" (onShowOptions)="visualizarOpciones(mdlOpcionesDocumento,$event)" class="mb-3"></app-documentos-cliente>
+        </div>
+      </ng-template>
+  
+      <ng-template #documentosEmitidosAnuladosModal let-modal let-close="close">
+        <button style="text-align: end;
+        margin-bottom: 1rem;
+        padding-right: 1.2rem;
+        padding-top: 1rem;" type="button" class="close basic-close" data-dismiss="modal" aria-label="Close" (click)="modal.close()"><span aria-hidden="true">&times;</span></button>
+
+        <div style="margin:0.2rem 1rem !important;">
+          <app-documentos-cliente #documentosEmitidosAnulados [Status]="0" [IdCliente]="idCliente" [IdServicio]="idServicio" (onShowOptions)="visualizarOpciones(mdlOpcionesDocumento,$event)"></app-documentos-cliente>
+        </div>
+      </ng-template>
+    </div>
+  
+    <ng-template #historialSeguimientoCitaModal let-modal let-close="close">
+      <button style="text-align: end;
+      margin-bottom: 1rem;
+      padding-right: 1.2rem;
+      padding-top: 1rem;" type="button" class="close basic-close" data-dismiss="modal" aria-label="Close" (click)="modal.close()"><span aria-hidden="true">&times;</span></button>
+
+      <div class="mb-3" style="margin:0.2rem 1rem !important;">
+        <app-card cardTitle="HISTORIAL DE SEGUIMIENTO DE CITA" options="true" collapse="true" [collapseInit]="false">
+    
+          <div *ngIf="!loadingHistorialSeguimiento">
+            <ul class="task-list" *ngFor="let historial of historiales">
+              <li>
+                <i class="task-icon" style="background-color: green !important;"></i>
+                <h6 class="mb-0">Cita : {{ historial.idCitaText }} <span class="float-right text-muted" style="font-size: 12px;">{{ historial.fechaSeguimientoTexto }}</span></h6>
+                <p class="mb-0">{{ historial.descripcion }}: <span [innerHTML]="historial.detalle"></span></p>
+              </li>
+            </ul>
+          </div>
+    
+          <div *ngIf="loadingHistorialSeguimiento">
+            <div class="sk list-item mb-1"></div>
+            <div class="sk list-item mb-1"></div>
+            <div class="sk list-item mb-1"></div>
+            <div class="sk list-item"></div>
+          </div>
+        </app-card>
+      </div>
+    </ng-template>
+  
+  </div>
+  
+  
+  <!-- MOSTRAR OPCIONES CITA -->
+  <app-ui-modal #mdlOpcionesCitas dialogClass="modal-dialog-centered" hideFooter="true">
+    <div class="app-modal-header">
+      <h5 class="modal-title">Opciones de cita</h5>
+      <button type="button" class="close basic-close" data-dismiss="modal" aria-label="Close" (click)="mdlOpcionesCitas.hide()"><span aria-hidden="true">&times;</span></button>
+    </div>
+    <div class="app-modal-body">
+      <div class="form-row">
+        <div [class.col-4]="citaSelected?.estado.nombre !== 'Atendida'"[class.col-12]="citaSelected?.estado.nombre === 'Atendida'">
+          <button id="btnCitaVisualizar" type="button" class="btn btn-outline-primary w-100 m-0" [placement]="'bottom'" ngbTooltip="Ver"           (click)= "citaVisualizar(); mdlOpcionesCitas.hide()">    <i class="fa fa-search"></i>Ver</button>
+        </div>
+        <div *ngIf="citaSelected?.estado.nombre !== 'Atendida'" class="col-4">
+          <button id="btnCitaAtender" type="button" class="btn btn-outline-primary w-100 m-0" [placement]="'bottom'" ngbTooltip="Atender"       (click)= "citaAtender(); mdlOpcionesCitas.hide()">       <i class="far fa-hand-point-up"></i>Atender</button>
+        </div>
+        <div *ngIf="citaSelected?.estado.nombre !== 'Atendida'" class="col-4">
+          <button id="btnCitaEditar" type="button" class="btn btn-outline-primary w-100 m-0" [placement]="'bottom'" ngbTooltip="Editar"   (click)= "citaEditar(); mdlOpcionesCitas.hide()">   <i class="mdi mdi-square-edit-outline"></i>Editar</button>
+        </div>
+      </div>
+    </div>
+  </app-ui-modal>
+  
+  <!-- MOSTRAR OPCIONES HISTORIA CLINICA-->
+  <!-- <app-ui-modal #mdlOpcionesHistoria dialogClass="modal-dialog-centered" hideFooter="true">
+    <div class="app-modal-header">
+      <h5 class="modal-title">Opciones de historia clínica</h5>
+      <button type="button" class="close basic-close" data-dismiss="modal" aria-label="Close" (click)="mdlOpcionesHistoria.hide()"><span aria-hidden="true">&times;</span></button>
+    </div>
+    <div class="app-modal-body">
+      <div class="form-row">
+        <div class="col-6">
+          <button type="button" class="btn btn-outline-primary w-100 m-0 d-inline-flex justify-content-center"  (click)="verHistoriaClinica(); mdlOpcionesHistoria.hide()"><i class="mdi mdi-eye-outline"></i>Ver</button>
+        </div>
+        <div class="col-6">
+          <button type="button" class="btn btn-outline-warning w-100 m-0 d-inline-flex justify-content-center"  (click)="editarFichaClinica(); mdlOpcionesHistoria.hide()"><i class="mdi mdi-pencil"></i>Editar</button>
+        </div>
+      </div>
+    </div>
+  </app-ui-modal> -->
+
+<!-- MOSTRAR OPCIONES HISTORIA CLINICA-->
+<ng-template #mdlOpcionesHistoria let-modal let-close="close" let-d="dismiss" class="fadeIn">
+  <div class="modal-header">
+    <h5 class="modal-title">Opciones de historia clínica</h5>
+    <button type="button" class="close basic-close" data-dismiss="modal" aria-label="Close" (click)="modal.close()"><span aria-hidden="true">&times;</span></button>
+  </div>
+  <div class="modal-body">
+    <div class="form-row">
+      <div class="col-6">
+        <button type="button" class="btn btn-outline-primary w-100 m-0 d-inline-flex justify-content-center"  (click)="verHistoriaClinica(); mdlOpcionesHistoria.hide()"><i class="mdi mdi-eye-outline"></i>Ver</button>
+      </div>
+      <div class="col-6">
+        <button type="button" class="btn btn-outline-warning w-100 m-0 d-inline-flex justify-content-center"  (click)="editarFichaClinica(); mdlOpcionesHistoria.hide()"><i class="mdi mdi-pencil"></i>Editar</button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+
+  
+  <!-- MOSTRAR OPCIONES EVOLUCION DE TRATAMIENTO-->
+  <!-- <app-ui-modal #mdlOpcionesEvolucion dialogClass="modal-dialog-centered" hideFooter="true">
+    <div class="app-modal-header">
+      <h5 class="modal-title">Opciones de evolución de tratamiento</h5>
+      <button type="button" class="close basic-close" data-dismiss="modal" aria-label="Close" (click)="mdlOpcionesEvolucion.hide()"><span aria-hidden="true">&times;</span></button>
+    </div>
+    <div class="app-modal-body">
+      <div class="form-row">
+        <div class="col-4">
+          <button  type="button" class="btn btn-outline-warning w-100 m-0 d-inline-flex justify-content-center" [placement]="'bottom'" ngbTooltip="Editar" (click)="editarEvolucionTratamiento(mdlOpcionesEvolucion); mdlOpcionesEvolucion.hide()"><i class="mdi mdi-square-edit-outline"></i>Editar</button>
+        </div>
+        <div class="col-4">
+          <button type="button" class="btn btn-outline-secondary w-100 m-0 d-inline-flex justify-content-center" [placement]="'bottom'" ngbTooltip="Exportar pdf" (click)="importarEvolucionTratamientoPdf(); mdlOpcionesEvolucion.hide()"><i class="mdi mdi-file-excel-outline"></i>Exportar</button>
+        </div>
+        <div class="col-4">
+          <button  type="button" class="btn btn-outline-primary w-100 m-0 d-inline-flex justify-content-center" [placement]="'bottom'" ngbTooltip="Ver pdf" (click)="importarEvolucionTratamientoPdf(true); mdlOpcionesEvolucion.hide()"><i class="mdi mdi-eye-outline"></i>Ver</button>
+        </div>
+      </div>
+    </div>
+  </app-ui-modal> -->
+
+  <!-- MOSTRAR OPCIONES EVOLUCION DE TRATAMIENTO-->
+  <ng-template #mdlOpcionesEvolucion let-modal let-close="close" let-d="dismiss" class="fadeIn">
+    <div class="modal-header">
+      <h5 class="modal-title">Opciones de evolución de tratamiento</h5>
+      <button type="button" class="close basic-close" data-dismiss="modal" aria-label="Close" (click)="modal.close()"><span aria-hidden="true">&times;</span></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="col-4">
+          <button  type="button" class="btn btn-outline-warning w-100 m-0 d-inline-flex justify-content-center" [placement]="'bottom'" ngbTooltip="Editar" (click)="editarEvolucionTratamiento(mdlOpcionesEvolucion); mdlOpcionesEvolucion.hide()"><i class="mdi mdi-square-edit-outline"></i>Editar</button>
+        </div>
+        <div class="col-4">
+          <button type="button" class="btn btn-outline-secondary w-100 m-0 d-inline-flex justify-content-center" [placement]="'bottom'" ngbTooltip="Exportar pdf" (click)="importarEvolucionTratamientoPdf(); mdlOpcionesEvolucion.hide()"><i class="mdi mdi-file-excel-outline"></i>Exportar</button>
+        </div>
+        <div class="col-4">
+          <button  type="button" class="btn btn-outline-primary w-100 m-0 d-inline-flex justify-content-center" [placement]="'bottom'" ngbTooltip="Ver pdf" (click)="importarEvolucionTratamientoPdf(true); mdlOpcionesEvolucion.hide()"><i class="mdi mdi-eye-outline"></i>Ver</button>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  
+  <!-- MOSTRAR OPCIONES DOCUMENTO -->
+  <ng-template #mdlOpcionesDocumento let-modal let-close="close" let-d="dismiss" class="fadeIn">
+    <div class="modal-header">
+      <h5 class="modal-title">Opciones de documento</h5>
+      <button type="button" class="close basic-close" data-dismiss="modal" aria-label="Close" (click)="modal.close()"><span aria-hidden="true">&times;</span></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="col-12 col-lg-4 mb-3 mb-lg-0" >
+          <button type="button" class="btn btn-outline-primary w-100 m-0 d-inline-flex justify-content-center" [placement]="'bottom'" ngbTooltip="Ver Documento" (click)="visualizarDocumento(); modal.close()"><i class="mdi mdi-eye-outline"></i>Ver</button>
+        </div>
+        <div *ngIf="documentoSelected?.idEstado === 1" class="col-12 col-lg-4 mb-3 mb-lg-0" >
+          <button  type="button" class="btn btn-outline-danger w-100 m-0 d-inline-flex justify-content-center" [placement]="'bottom'" ngbTooltip="Anular Documento" (click)="anularDocumento(modalDocumentoAnular); modal.close()"><i class="mdi mdi-cancel"></i>Anular</button>
+        </div>
+        <div *ngIf="documentoSelected?.idEstado === 0" class="col-12 col-lg-4 mb-3 mb-lg-0" >
+          <button  type="button" class="btn btn-outline-secondary w-100 m-0 d-inline-flex justify-content-center" [placement]="'bottom'" ngbTooltip="Restaurar Documento" (click)="restaurarDocumento(); modal.close()"><i class="mdi mdi-restore"></i>Restaurar</button>
+        </div>
+        <div class="col-12 col-lg-4" >
+          <button  type="button" class="btn btn-outline-secondary w-100 m-0 d-inline-flex justify-content-center" [placement]="'bottom'" ngbTooltip="Enviar Documento" (click)="enviarDocumentoCorreo(); modal.close()"><i class="mdi mdi-email-send-outline"></i>Enviar</button>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  
+  <!-- ANULAR DOCUMENTO -->
+  <ng-template #modalDocumentoAnular let-modal let-close="close">
+    <app-documento-anulacion
+      (eventoDocumentoListar)="null"
+      [modal]="modalDocumentoAnularRef"
+      [documento]="documentoSelected">
+    </app-documento-anulacion>
+  </ng-template>
+  
+    
+<!-- <button type="button" class="btn btn-primary btn-icon" (click)="abrirModales(financiamientoCuotas)" [placement]="'right'" ngbTooltip="Financiamiento | Cuotas"><i class="mdi mdi-cash-multiple"></i></button>
+<button type="button" class="btn btn-primary btn-icon" (click)="abrirModales(historiaClinicaModal)" [placement]="'top'" ngbTooltip="Historia Clínica"><i class="mdi mdi-clipboard-text-outline"></i></button>
+<button type="button" class="btn btn-primary btn-icon" (click)="abrirModales(documentosEmitidosModal)" [placement]="'top'" ngbTooltip="Documentos Emitidos"><i class="mdi mdi-folder-star-outline"></i></button>
+<button type="button" class="btn btn-primary btn-icon" (click)="abrirModales(documentosEmitidosAnuladosModal)" [placement]="'top'" ngbTooltip="Documentos Anulados"><i class="mdi mdi-folder-remove-outline"></i></button>
+<button type="button" class="btn btn-primary btn-icon" (click)="abrirModales(resumenContratosModal)" [placement]="'top'" ngbTooltip="Resumen de Contratos"><i class="mdi mdi-tab "></i></button>
+<button type="button" class="btn btn-primary btn-icon" (click)="abrirModales(evTratamientoModal)" [placement]="'top'" ngbTooltip="Evolución Tratamiento"><i class="mdi mdi-chart-line"></i></button>
+<button type="button" class="btn btn-primary btn-icon" (click)="abrirModales(historialSeguimientoCitaModal)" [placement]="'top'" ngbTooltip="Evolución Tratamiento"><i class="mdi mdi-history"></i></button>
+ -->

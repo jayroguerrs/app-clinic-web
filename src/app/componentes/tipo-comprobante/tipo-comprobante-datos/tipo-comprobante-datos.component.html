@@ -1,0 +1,59 @@
+﻿<!-- SPINNER -->
+<ngx-spinner
+  [template]="rutaImageSpinner">
+  <p style="color: white" > Cargando... </p>
+</ngx-spinner>
+
+<form [formGroup]="frmTipoComprobante">
+       <div class="modal-content">
+          <div class="modal-header card-header">
+              <h5 class="modal-title">{{ accion }} Tipo Comprobante</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="modal.close()">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+         <div class="modal-body card-body">
+              <div class="container-fluid">
+                <div class="row">
+                    <div class="form-group col-12">
+                        <div class="form-floating">
+                          <input type="text" class="form-control dz-uppercase" id="descripcion" placeholder=" " formControlName="descripcion" [ngClass]="{ 'is-invalid': submitted && f.descripcion.errors }" >
+                          <label for="descripcion">Descripción <span class="text-danger">*</span></label>
+                        </div>
+                        <div *ngIf="submitted && f.descripcion.errors" class="invalid-feedback d-block">
+                          <div *ngIf="f.descripcion.errors.required">Ingrese una descripción <span class="text-danger">*</span></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-12">
+                        <div class="form-floating">
+                          <input type="text" class="form-control dz-uppercase" id="abreviatura" placeholder=" " formControlName="abreviatura" [ngClass]="{ 'is-invalid': submitted && f.abreviatura.errors }" >
+                          <label for="abreviatura">Abreviatura <span class="text-danger">*</span></label>
+                        </div>
+                        <div *ngIf="submitted && f.abreviatura.errors" class="invalid-feedback d-block">
+                          <div *ngIf="f.abreviatura.errors.required">Ingrese una abreviatura <span class="text-danger">*</span></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-12">
+                      <div class="form-floating">
+                        <select class="form-select"  id="idEstado" formControlName="idEstado">
+                          <option [value]="1">ACTIVO</option>
+                          <option [value]="0">INACTIVO</option>
+                        </select>
+                        <label for="idEstado">Estado</label>
+                      </div>
+                    </div>
+
+                </div>
+            </div>
+          </div>
+          <div class="modal-footer card-footer">
+              <div class="form-row float-right">
+                  <button type="button" class="btn btn-outline-primary" (click)="tipoComprobanteGrabar()"><i class="feather icon-save"></i>Guardar</button>
+                  <button type="button"  class="btn btn-outline-danger" (click)="cerrarModal()"><i class="feather icon-slash"></i>Cancelar</button>
+              </div>
+          </div>
+
+      </div>
+  </form>

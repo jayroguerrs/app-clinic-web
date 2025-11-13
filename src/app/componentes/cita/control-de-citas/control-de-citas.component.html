@@ -1,0 +1,227 @@
+<!-- BOTONERA ESCRITORIO -->
+<ul class="botonera-escritorio">
+  <li>
+      <button id="btnActualizar1"  type="button" class="btn btn-primary btn-icon"   [placement]="'bottom'" ngbTooltip="Listar"        (click)= "listarBotonFuncion()">                      <i class="mdi mdi-sync"></i>     </button>
+  </li>
+</ul>
+
+<div class="row" >
+  <!-- FILTRO -->
+  <div class="col-sm-12" >
+    <app-card [options]="false" cardTitle="CONTROL DE CITAS" [customHeader]="false">
+      
+    </app-card>
+  </div>
+</div>
+
+<div class="col-sm-12" style="padding: 0 !important;">
+  <app-card [options]="false" [customHeader]="true" [hidHeader]="true">
+    <h1 style="padding-left: 20px; font-size: 1.6rem; padding-top: 16px;">Citas Registradas</h1>
+
+    <div class="contenedor-filtros">
+      <div>
+        <div class="contenedor-filtros-izquierda">
+  
+          <mat-form-field appearance="outline" style="margin-right: 0.5rem;" style="width: 100% !important;">
+            <mat-label>Buscar Cliente</mat-label>
+            <input (keyup)="applyFilterBusqueda($any($event.target).value)" [(ngModel)]="palabraBusqueda"  matInput placeholder="Celular, Nombre..." >
+          </mat-form-field>
+  
+          <mat-form-field (click)="picker.open()" appearance="outline" style="width: 100% !important;">
+            <mat-label>Filtro por Tiempo (Desde)</mat-label>
+            <input [(ngModel)]="fechaFiltro" (dateChange)="mostrarControlDeCitaFechaIncio()" style="cursor: pointer !important;" readonly matDatepickerToggleIcon matInput [matDatepicker]="picker"  />
+            <mat-datepicker-toggle matSuffix [for]="picker">
+              <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+            </mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+  
+          <div ngbTooltip="Primero seleccione la fecha de inicio (desde)" style="width: 100% !important;"  >
+  
+            <mat-form-field *ngIf="!fechaInicio" appearance="outline" style="width: 100% !important;">
+              <mat-label >Filtro por Tiempo (Hasta)</mat-label>
+              <input [(ngModel)]="fechaFiltroFinal" style="cursor: pointer !important;" readonly matDatepickerToggleIcon matInput [matDatepicker]="picker2"  />
+              <mat-datepicker-toggle matSuffix>
+                <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+              </mat-datepicker-toggle>
+              <mat-datepicker #picker2></mat-datepicker>
+            </mat-form-field>
+          </div>
+  
+          <mat-form-field *ngIf="fechaInicio" (click)="picker2.open()" appearance="outline" style="width: 100% !important;">
+            <mat-label>Filtro por Tiempo (Hasta)</mat-label>
+            <input [(ngModel)]="fechaFiltroFinal" (dateChange)="mostrarControlDeCitaFechaFinal()" style="cursor: pointer !important;" readonly matDatepickerToggleIcon matInput [matDatepicker]="picker2"  />
+            <mat-datepicker-toggle matSuffix [for]="picker2">
+              <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+            </mat-datepicker-toggle>
+            <mat-datepicker #picker2></mat-datepicker>
+          </mat-form-field>
+  
+          <mat-form-field appearance="outline" style="width: 100% !important;">
+            <mat-label>Estado</mat-label>
+            <mat-select [(ngModel)]="estadoSeleccionado" (selectionChange)="consultarPorEstado($event)">
+              <mat-option [value]="null">Todos</mat-option>
+              <mat-option *ngFor="let estado of citaEstados" [value]="estado.id">{{ estado.descripcion }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+  
+  
+          <i class="feather icon-filter" style="margin-left: 0.5rem; font-size: 1.3rem; padding-bottom: 1rem;"></i>
+        </div>
+
+        <div style="padding-bottom: 12px;" class="w-100 d-flex align-items-center">
+          <input type="checkbox" class="form-control me-5px check-general" id="ocultarAnulados" (change)="onCheckboxChangeOcultarAnulados($event)"  >
+          <label for="ocultarAnulados" class="label-general">Ocultar Anulados</label>
+        </div>
+      </div>
+
+
+
+
+      <div>
+        <button ngbTooltip="Eliminar los filtros."   (click)="limpiarFiltroBusqueda()" type="button" class="btn btn-light">Limpiar</button>
+        <button (click)="applyFilterButton()" type="button" class="btn btn-primary">Buscar</button>
+        <button (click)="exportarExcel()" ngbTooltip="Descargar archivo Excel" type="button" class="btn btn-excel" style="padding-left: 0.2rem !important; padding-right: 0.1rem !important;"><i class="mdi mdi-download" style="display: flex;margin-left: 0.5rem; font-size: 1.3rem;"></i></button>
+
+        <i class="feather icon-settings" style="margin-left: 0.6rem; font-size: 1.3rem;"></i>
+      </div>
+    </div>
+    
+
+
+    <div>
+      <!-- ?Botones de acción, temporalmente deshabilitado -->
+      <!-- <ul style="display: flex; padding: 0.5rem 24px; gap: 1rem; flex-wrap: wrap;"> 
+        <li class="opcion">NUEVO</li>
+        <li class="opcion">EDITAR</li>
+        <li class="opcion">SUSPENDER</li>
+        <li class="opcion">EXPORTA</li>
+        <mat-divider [vertical]="true"></mat-divider>
+        <li class="opcion">VER DETALLES</li>
+        <li (click)="obtenerDatosDeApi()" class="opcion">VER API</li>
+        <li (click)="mostrarPaginaActual()" class="opcion">VER PAGINA</li>
+      </ul> -->
+    </div>
+
+    <div class="table-container" >
+      <table mat-table matSort  [dataSource]="dataSource">
+        <ng-container matColumnDef="notificar">
+          <th mat-header-cell *matHeaderCellDef> </th>
+          <td mat-cell *matCellDef="let element; let i = index">
+            <a (click)="enviarNotificacion(element.idSede, element.idCita, i)" *ngIf="element.estado && element.precioDePagoFinal === 0 && !element.notificado" ngbTooltip="Notificar pago" href="javascript:"  [ngClass]="nuevaNotificacion ? 'displayChatboxNotificacion' : 'displayChatbox'" >
+              <i [ngClass]="{'campana-activa': nuevaNotificacion}" 
+              class="position-relative fs-20px feather icon icon-bell d-block">
+              </i>
+            </a>
+          </td>
+        </ng-container>
+    
+        <ng-container matColumnDef="idCita">
+          <th mat-header-cell *matHeaderCellDef> 
+            <div style="display: flex; align-items: center; justify-content: center;">
+              Id Cita 
+            </div>
+          </th>
+          <td mat-cell *matCellDef="let data"  class="contenido-tabla" style="display: flex; align-items: center; padding-bottom: 1.5rem !important;" > 
+            <button mat-icon-button 
+                    [style.visibility]="!data.expandable ? 'hidden' : ''"
+                    [style.marginLeft.px]="data.level * 0"
+                    (click)="treeControl.toggle(data)">
+              <mat-icon class="mat-icon-rtl-mirror">
+                {{treeControl.isExpanded(data) ? 'expand_more' : 'chevron_right'}}
+              </mat-icon>
+            </button>
+            <div (click)="mostrarCitaDetalle(data)" class="mostrar-detalle" style="padding-top: 4px; cursor: pointer;">
+              <i *ngIf="!data.children && !data.estado" class="feather icon-corner-down-right"></i>{{data.idCita}}
+      
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="nombre">
+          <th mat-header-cell *matHeaderCellDef> Nombre </th>
+          <td (click)="mostrarClienteDetalle(element.idCliente)" class="contenido-tabla mostrar-detalle" style="cursor: pointer;" mat-cell *matCellDef="let element"> {{element.paciente}} </td>
+        </ng-container>
+    
+        <ng-container matColumnDef="celular">
+          <th mat-header-cell *matHeaderCellDef> Celular </th>
+          <td  class="contenido-tabla" mat-cell *matCellDef="let element"> {{element.celular}} </td>
+        </ng-container>
+    
+        <ng-container matColumnDef="sede">
+          <th mat-header-cell *matHeaderCellDef> Sede </th>
+          <td  class="contenido-tabla" mat-cell *matCellDef="let element"> {{element.nombreSede}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="agendado_por">
+          <th mat-header-cell *matHeaderCellDef> Agendado Por </th>
+          <td  class="contenido-tabla" mat-cell *matCellDef="let element"> {{element.usuarioRegistra}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="nuevo">
+          <th mat-header-cell *matHeaderCellDef> Nuevo </th>
+          <td  class="contenido-tabla" mat-cell *matCellDef="let element">
+            <div style="display: flex; flex-direction: column; gap: 0.2rem;">
+              <span style="padding: 6px 10px; font-size: 12px;" *ngIf="element.clienteNuevo === 'Nuevo'" class="badge badge-pill badge-success">{{element.clienteNuevo}}</span>
+              <span style="padding: 6px 10px; font-size: 12px;" *ngIf="element.clienteNuevo === 'No Nuevo'" class="badge badge-pill badge-danger">{{element.clienteNuevo}}</span>
+              
+              <span style="padding: 6px 10px; font-size: 12px;" class="badge badge-pill badge-success">{{element.tipoCita}}</span>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="origen">
+          <th mat-header-cell *matHeaderCellDef> Origen </th>
+          <td class="contenido-tabla" mat-cell *matCellDef="let element"> {{element.medioDeContacto}} </td>
+        </ng-container>
+        <ng-container matColumnDef="monto">
+          <th mat-header-cell *matHeaderCellDef> Monto Acordado </th>
+          <td class="contenido-tabla" mat-cell *matCellDef="let element"> {{ "S/. " + element.total.toFixed(2)}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="pago_final">
+          <th mat-header-cell *matHeaderCellDef> Pago Final </th>
+          <td class="contenido-tabla" mat-cell *matCellDef="let element"  > <p *ngIf="element.precioDePagoFinal !== null" > {{ "S/. " + element.precioDePagoFinal.toFixed(2)}} </p></td>
+        </ng-container>
+
+        <ng-container matColumnDef="fecha_de_cita">
+          <th mat-header-cell *matHeaderCellDef> Fecha de Cita </th>
+          <td class="contenido-tabla" mat-cell *matCellDef="let element"> {{element.fechaCita}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="estado">
+          <th mat-header-cell *matHeaderCellDef> Estado </th>
+          <td class="contenido-tabla" mat-cell *matCellDef="let element">
+            <!-- <span style="padding: 6px 10px; font-size: 12px; color: white !important;" *ngIf="element.estado === 1" class="badge badge-pill badge-warning">Proceso</span> -->
+            <!-- <span style="padding: 6px 10px; font-size: 12px;" *ngIf="element.estado === 'Atendida'" class="badge badge-pill badge-success">{{element.estado}}</span>
+            <span style="padding: 6px 10px; font-size: 12px; color: white !important;" *ngIf="element.estado !== 'Atendida'" class="badge badge-pill badge-warning">{{element.estado}}</span>
+           -->
+            <div style="display: flex; flex-direction: column; gap: 0.2rem;">
+              <span style="padding: 6px 10px; font-size: 12px;"  [ngStyle]="{'background-color': getColorPorEstadoDeCita(element.estado)}" class="badge badge-pill badge-success">{{ element.estado }}</span>
+              <span style="padding: 6px 10px; font-size: 12px; color: black; background-color: white; font-weight: 500 !important;" class="badge badge-pill badge-success">{{element.estadoCliente}}</span>    
+            </div>
+          </td>
+        </ng-container>
+    
+        <tr mat-header-row *matHeaderRowDef="displayedColumnsControl"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumnsControl;"></tr>
+      </table>
+    
+    </div>
+
+     <mat-paginator
+          [length]="totalControlDecitas"
+          [pageSizeOptions]="[10, 25, 50]"
+          showFirstLastButtons
+          (page)="onPageChange($event)"
+        ></mat-paginator>
+    <mat-divider></mat-divider>
+
+  </app-card>
+
+
+</div>
+
+
+
+<app-citas-cerradas></app-citas-cerradas>

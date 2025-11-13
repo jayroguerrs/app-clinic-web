@@ -1,0 +1,167 @@
+<form [formGroup]="frmOperadores">
+  <div class="modal-content popins">
+
+    <div class="modal-header card-header modal-header-background modal-header-bg ">
+      <h5 class="modal-title f-w-500 pt-5">{{ titulo }}</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="cerrarModal()"><span aria-hidden="true">&times;</span></button>
+    </div>
+
+    <div class="modal-body card-body ">
+<!--      <div class="w-100 position-relative">-->
+<!--        <img style="opacity: .2" class="position-absolute w-100 top-0 left-0 right-0" src="assets/images/bg-images/bg-header-preferentes.png" width="100%" height="auto">-->
+<!--      </div>-->
+<!--      <div class="text-center fw-semibold text-gray-800 popins fs-20px">{{ titulo }}</div>-->
+
+      <!-- SPINNER -->
+<!--      <ngx-spinner-->
+<!--      [template]="rutaImageSpinner">-->
+<!--      <p style="color: white" > Cargando... </p>-->
+<!--      </ngx-spinner>-->
+
+      <!-- FILTROS -->
+      <div class="col-sm-12">
+        <input type="hidden" id="hdIds">
+
+        <div class="card bg-transparent rounded-md">
+          <div class="card-body">
+            <div class="form-row">
+
+              <div class="form-group col-md-4 col-lg-2" >
+                <div class="form-floating form-icon">
+                  <i class="feather icon-calendar" [placement]="'bottom'" ngbTooltip="Fecha Desde"></i>
+                  <input id="fechaDesde" type="date" class="form-control" [class.is-invalid]="submitted && frmOperadores.controls.fechaDesde.invalid" formControlName="fechaDesde" [max]="today | date: 'yyyy-MM-dd'" (change)="obtenerCitas()">
+                  <label for="fechaDesde">Fecha desde</label>
+                </div>
+              </div>
+
+              <div class="form-group col-md-4 col-lg-2" >
+                <div class="form-floating form-icon">
+                  <i class="feather icon-calendar" [placement]="'bottom'" ngbTooltip="FechaHasta"></i>
+                  <input id="fechaFin" type="date" class="form-control" [class.is-invalid]="submitted && frmOperadores.controls.fechaFin.invalid" formControlName="fechaFin" [max]="today | date: 'yyyy-MM-dd'" (change)="obtenerCitas()">
+                  <label for="fechaFin">Fecha Hasta</label>
+                </div>
+              </div>
+
+              <div class="form-group col-md-4 col-lg-2" >
+                <div class="form-floating form-icon">
+                  <i class="feather icon-alert-circle" [placement]="'bottom'" ngbTooltip="Estado"></i>
+                  <select class="form-select" id="filterEstado" formControlName="filterEstado" (change)="obtenerCitas()">
+                    <option [value]="0" selected>Todos</option>
+                    <option *ngFor="let e of estados" [value]="e.id">{{ e.descripcion }}</option>
+                  </select>
+                  <label for="filterEstado">Estado Atención</label>
+                </div>
+              </div>
+
+              <div class="form-group col-md-4 col-lg-2" >
+                <div class="form-floating form-icon">
+                  <i class="feather icon-alert-circle" [placement]="'bottom'" ngbTooltip="Estado Atención"></i>
+                  <select class="form-select" id="filterEstadoAtencion" formControlName="filterEstadoAtencion" (change)="obtenerCitas()">
+                    <option [value]="0" selected>Todos</option>
+                    <option *ngFor="let e of estadosAtencion" [value]="e.id">{{ e.descripcion }}</option>
+                  </select>
+                  <label for="filterEstadoAtencion">Estado Atención</label>
+                </div>
+              </div>
+
+              <button ngbTooltip="Quitar filtro de hora." (click)="volverHora()" style="margin-left: 0.8rem; padding-left: 0.2rem !important; padding-right: 0.1rem !important;" type="button" class="btn btn-light"><i class="mdi mdi-reload" style="display: flex;margin-left: 0.5rem; font-size: 1.3rem;"></i></button>
+
+              <div class="mb-2 col-6 col-lg-2">
+                <div class="form-floating form-start-icon">
+                  <input formControlName="horaDesde" id="horaDesde" type="time" placeholder=" " class="form-control" (change)="obtenerCitas()">
+                  <label for="horaDesde">Hora desde</label>
+                  <span class="icon"><span class="dicon o-clock m-auto"></span></span>
+                </div>
+              </div>
+              <div class="mb-2 col-6 col-lg-2">
+                <div class="form-floating form-start-icon">
+                  <input formControlName="horaHasta" id="horaHasta" type="time" placeholder=" " class="form-control"  (change)="obtenerCitas()"  >
+                  <label for="horaHasta">Hora hasta</label>
+                  <span class="icon"><span class="dicon o-clock m-auto"></span></span>
+                </div>
+              </div>
+
+              <div class="form-group col-md-4 col-lg-2" *ngIf="usuarioActual.idperfil !== tipoPerfil.OPERADOR && usuarioActual.idperfil !== tipoPerfil.ESPECIALISTA">
+                <div class="form-floating form-icon">
+                  <i class="feather icon-share-2" [placement]="'bottom'" ngbTooltip="Contacto"></i>
+                  <select class="form-select" id="filterMedioContacto" formControlName="filterMedioContacto" (change)="obtenerCitas()">
+                    <option value='' selected>Todos</option>
+                    <option *ngFor="let mc of mediosContacto" [value]="mc.id">{{ mc.nombre }}</option>
+                  </select>
+                  <label for="filterMedioContacto">Contacto</label>
+                </div>
+              </div>
+
+              <div *ngIf="[tipoPerfil.SA, tipoPerfil.SISTEMAS, tipoPerfil.SUPERVISOR, tipoPerfil.MARKETING, tipoPerfil.ADMINISTRADOR, tipoPerfil.SUPERVISORVENTAS, tipoPerfil.COMMUNITYMANAGER].includes(usuarioActual.idperfil)" class="form-group col-md-4 col-lg-2">
+                <div class="form-floating form-icon">
+                  <i class="feather icon-alert-circle" [placement]="'bottom'" ngbTooltip="Es Cliente?"></i>
+                  <select class="form-select" id="esCliente" formControlName="esCliente" (change)="obtenerCitas()">
+                    <option [value]='2' selected>Todos</option>
+                    <option [value]='1' selected>Si</option>
+                    <option [value]='0' selected>No</option>
+                  </select>
+                  <label for="filterEstadoAtencion">Es Cliente?</label>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-12 text-center">
+
+          <button type="button" matRipple class="btn sbtn btn-primary mx-auto" (click)="escanearTeleoperador()">Escanear Teleoperadores <i class="feather icon-radio"></i></button>
+
+          <!--                        <div class="input-group input-group-sm">-->
+          <!--                            <div class="input-group-prepend"><label class="input-group-text" for="asignarIdTeleoperadorAsignado">Asignado a:</label></div>-->
+          <!--                            <select class="custom-select" formControlName="asignarIdTeleoperadorAsignado" id="asignarIdTeleoperadorAsignado">-->
+          <!--                                <option select value=''>...Seleccionar...</option>-->
+          <!--                                <option *ngFor="let operador of listaTeleoperadorConfirmado" [value]="operador.idUsuario">{{ operador.nombre }}</option>-->
+          <!--                            </select>-->
+          <!--                            <div class="input-group-prepend"><button type="button" class="btn btn-primary btn-sm" (click)="escanearTeleoperador()"><i class="feather icon-radio"></i></button></div>-->
+          <!--                        </div>-->
+        </div>
+      </div>
+
+      <!-- GRILLAS -->
+      <div class="col-12">
+        <div class="form-row">
+
+          <!-- GRILLA CITA-->
+          <div class="form-group col-sm-12 col-md-12 col-lg-6">
+            <app-card cardTitle="" [hidHeader]="true">
+              <div class="table table-sm-responsive">
+                <table datatable [dtOptions]="dtResponsivePreferentes"  class="table table-sm table-hover table-cita display compact">
+                </table>
+              </div>
+            </app-card>
+          </div>
+
+          <!-- GRILLA USUARIOS-->
+          <div class="form-group col-sm-12 col-md-12 col-lg-6">
+            <app-card cardTitle="" [hidHeader]="true">
+              <div class="table table-sm-responsive">
+                <table datatable [dtOptions]="dtResponsiveOptionsUsuario"  class="table table-sm table-hover table-usuario display compact">
+                </table>
+              </div>
+            </app-card>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <div class="modal-footer card-footer">
+
+      <button type="button" class="btn btn-outline-primary" [placement]="'top'" ngbTooltip="Citas seleccionadas" aria-readonly="true"><i class="fa fa-bolt" ></i>{{numPreferentesSeleccionadas}}</button>
+      <button type="button" class="btn btn-outline-primary" [placement]="'top'" ngbTooltip="Operadas seleccionadas" aria-readonly="true"><i class="fa fa-users"></i>{{numOperadorasSeleccionadas}}</button>
+
+      <button type="button" class="btn btn-outline-primary" (click)="distribuirPreferentes()"><i class="fa fa-cog"></i>Distribuir</button>
+      <button type="button" class="btn btn-outline-danger" [disabled]="!preferenteAsignados.length" (click)="grabarDistribuirPreferentes()"><i class="fa fa-save"></i>Guardar</button>
+
+    </div>
+  </div>
+</form>

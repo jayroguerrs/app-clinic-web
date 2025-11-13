@@ -1,0 +1,136 @@
+ <!-- MODAL SEDE DATOS -->
+<ng-template #modalCitaZona let-modal let-close="close">
+    <app-cita-zona-corporal
+        [modal]="modalCitaZonasRef"
+        [errorHorario]="errorHorario"
+        [datosCita]="datosCita"
+        [maestroZonasCorporales] = "maestroZonasCorporales"
+        [idServicio] = "datosCita.idServicio"
+        [servicio] = "datosCita.servicio"
+        (pintarAgenda)=eventPintarReservando($event)
+        (eventoCalcularTotalNieto)="enviarEventoAlPadreParaCalcularTotal()"
+        (cerrarModalHorarioAlEditar)="cerrarModal()"
+        (ordenarCitaDetallesNieto)="enviarEventoAlPadreParaOrdenar()"
+
+        
+        ></app-cita-zona-corporal>
+</ng-template>
+
+<div class="modal-content">
+    <div class="modal-header card-header">
+        <h5 class="modal-title">HORARIO</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="cerrarModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <div class="modal-body card-body">
+        <div class="form-row">
+          <!-- SELECCION  DE SEDE -->
+          <div class="form-group col-md-4">
+
+            <div class="form-floating form-start-icon">
+              <select class="custom-select text-uppercase" disabled id="idServicio" [(ngModel)]="datosCita.idServicio" (change)="onChangeService();obtenerMaquinasXSedeCallback();obtenerMinutosMaquinas();">
+                <option [value]="0">...SELECCIONAR SERVICIO...</option>
+                <option [value]="serv.id" *ngFor="let serv of servicios" class="text-uppercase">{{serv.nombre}}</option>
+              </select>
+              <label for="sede">Servicio</label>
+              <span class="icon">
+                <span class="dicon machine m-auto"></span>
+              </span>
+            </div>
+
+          </div>
+            <!-- SELECCION DE FECHA -->
+            <div class="form-group col-md-4">
+
+              <div class="form-floating form-start-icon">
+                <input id="inputCalendar"
+                       type="date"
+                       [formControl]="fechaCita"
+                       class="form-control focus bg-white"
+                       autocomplete="off"
+                       (change)="habilitarSede($event);obtenerMinutosMaquinas()">
+                <label for="inputCalendar">Fecha de cita</label>
+                <span class="icon"><span class="dicon calendar m-auto"></span></span>
+              </div>
+
+            </div>
+            <!-- SELECCION  DE SEDE -->
+            <div class="form-group col-md-4">
+
+              <div class="form-floating form-start-icon">
+                <select class="custom-select" id="sede" [(ngModel)]="datosCita.idSede" (change)="obtenerMaquinasXSedeCallback(); obtenerMinutosMaquinas()">
+                  <option [value]="0" selected>...SELECCIONAR SEDE...</option>
+                  <option [value]="sede.idSede" *ngFor="let sede of maestroSedes" >{{sede.nombre}}</option>
+                </select>
+                <label for="sede">Sede</label>
+                <span class="icon">
+                <span class="dicon sede m-auto"></span>
+              </span>
+              </div>
+
+            </div>
+            <!-- MAQUINAS -->
+            <div class="form-group col-12 col-md-12">
+                <button *ngFor="let maqSede of maquinasSedePorSede"
+                    [disabled]="datosCita.accionCita == 1"
+                    type="button"
+                    class="btn text-white hover-opacity-1"
+                    [ngClass]=" (maqSede.idMaquina == datosCita.idMaquina) ? 'selected' : '' "
+                    [class.btn-outline-primary]="maqSede.idMaquina != idMaquina"
+                    [class.btn-primary]="maqSede.idMaquina == idMaquina"
+                    (click)="obtenerHorarioCitas(maqSede);"
+                    [attr.btn-id]="maqSede.idMaquina"
+                    [attr.style]="'border-color:'+ maqSede.color +' !important; background-color:'+ maqSede.color +' !important; opacity:.5'">
+                    <!-- <i class="feather icon-cpu"></i><br> -->
+                    {{ maqSede.descripcion }}<br>
+                    <div class="progress m-t-30 m-b-20" style="height: 6px;">
+                        <div class="progress-bar progress-c-theme" role="progressbar" [style]="'width:'+obtenerPorcentaje(maqSede.id)+'%'" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </button>
+            </div>
+            <!-- HORARIO -->
+            <div class="form-group col-12 col-md-12">
+                    <div class="container-fluid">
+                        <div class="row filas border-top">
+
+                            <div id="agendaCabecera" class="col-1 border-bottom noselect"><span>H</span></div>
+                            <div id="agendaCabecera" class="col-11 border-bottom noselect" style="text-align: center;"><span>minutos</span></div>
+                            <div #divElement *ngFor= "let tiempo of tiempos; let indice = index"
+                                class="col-1 border-bottom noselect con-hover ajuste"
+                                [attr.horaNumero]="tiempo.horaNumero"
+                                [attr.dataidusuario]="0"
+                                (click)="abrirCitaZonaCorporal(modalCitaZona, tiempo.horaNumero)"
+                                 placement="bottom"
+                                 [ngbTooltip]="convertMinutesToTimeFormat(tiempo.horaNumero)"
+                                  (contextmenu)="evtShowMenu($event, divElement)">
+                                <div *ngIf="tiempo.esHoraPunto; else noEsHoraPunto">
+                                    <span class="horaPuntual">{{ tiempo.inicio | date: formatoFechaPuntual }}</span>
+                                </div>
+                                <ng-template #noEsHoraPunto>
+                                    <span class="horaDetalle">{{ tiempo.inicio | date: formatoFechaDetalle }}</span>
+                                </ng-template>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer card-footer">
+<!--      <button type="button" class="btn btn-primary btn-icon" style="float: right;"-->
+<!--              [placement]="'top'" ngbTooltip="Mover Citas"    ><i class="fa-light fa-calendar-arrow-up"></i></button>-->
+      <button id="btnAceptar" type="button" class="btn btn-primary btn-icon ml-auto" style="float: right;"
+              [placement]="'top'" ngbTooltip="Aceptar"    (click)="aceptarCambios()" ><i class="mdi mdi-check"></i></button>
+      <button id="btnZonas"   type="button" class="btn btn-primary btn-icon" style="float: right;" [placement]="'top'" ngbTooltip="Zonas" (click)="cambiarZona(modalCitaZona)"><i class="mdi mdi-swap-horizontal"></i></button>
+    
+    </div>
+</div>
+
+
+<div #dropdown class="dropdown-menu popins rounded-7px fs-14px no-before mt-0 py-3" (clickOutside)="evtCloseMenu()">
+ <div>
+   <a class="dropdown-item py-2 text-secondary dropdown-active-light" (click)="evtMoverCita()"><i class="fa-duotone fa-arrow-right-arrow-left mr-3"></i> <span class="f-w-500">Cambiar Maquina</span></a>
+ </div>
+</div>

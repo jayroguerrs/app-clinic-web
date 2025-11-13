@@ -1,0 +1,479 @@
+﻿
+<form [formGroup]="formGroup" (ngSubmit)="evtOnSubmit()" class="popins mh-100">
+  <div class="scard bg-transparent popins mh-100">
+        <div class="modal-header card-header bg-gradient">
+            <h5 class="card-title text-white f-w-500 m-0">Emitir Comprobante Electrónico</h5>
+            <button type="button" class="btn sbtn btn-sm btn-icon btn-active-color-primary h-auto w-auto p-0" (click)="cerrarModal(false)">
+              <span class="svg-icon svg-icon-1 text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor"></rect>
+                  <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor"></rect>
+                </svg>
+              </span>
+            </button>
+        </div>
+        <div class="card-body bg-white p-0 depilform position-relative d-flex flex-column">
+
+          <loader-circle *ngIf="loading | async"></loader-circle>
+
+          <div class="h-100 mh-100 p-4" [ngClass]="{'overflow-auto': (loading | async) === false, 'overflow-hidden': (loading | async) === true}">
+            <div class="form-row">
+
+              <div class="col-12 col-xl-12">
+                <div class="border rounded p-3 mb-2">
+                  <p class="fs-16px fw-semibold text-dark">Datos del Cliente</p>
+
+                  <div class="form-row">
+                    <div class="mb-2 col-md-12 col-lg-6 col-xl-12">
+                      <label for="nombreCliente" class="form-label mb-0 text-secondary f-w-500">Nombre</label>
+                      <input id="nombreCliente" type="text" placeholder="Nombre del cliente" class="form-indigo form-control form-indigo form-control-sm bg-light-indigo" formControlName="nombreCliente" readonly>
+                    </div>
+                    <div class="col-md-12 col-lg-6 col-xl-12">
+                      <div class="d-flex flex-row">
+                        <div class="w-120px me-10px">
+                          <label for="idTipoDocumentoCliente" class="form-label mb-0 text-secondary f-w-500">T. Documento</label>
+                          <select id="idTipoDocumentoCliente" class="form-indigo form-select form-indigo form-select-sm" formControlName="idTipoDocumentoCliente" [disableControl]="!editarDocumento">
+                            <option value="">--Seleccionar--</option>
+                            <option *ngFor="let td of tiposDocumentoIdentidad" [value]="td.id">{{ td.descripcion }}</option>
+                          </select>
+                        </div>
+                        <div class="w-100">
+                          <label for="numeroDocumentoCliente" class="form-label mb-0 text-secondary f-w-500">N° del Documento</label>
+                          <div class="position-relative">
+                            <input id="numeroDocumentoCliente" type="text" maxlength="20" placeholder="N° del documento" formControlName="documentoCliente" [disableControl]="!editarDocumento" class="form-indigo form-control form-indigo form-control-sm pe-35px" [class.pe-35px]="!editarDocumento" [ngClass]="{'bg-color-light-danger border-danger' : documentoClienteSubmitted && f.documentoCliente.errors}">
+                            <span *ngIf="!editarDocumento" ngbTooltip="Editar" class="w-20px h-20px position-absolute top-0 bottom-0 m-auto end-0 me-10px cursor-pointer" (click)="evtEditarDocumento()"><fontawesome-svg  class="text-indigo" icon="pen" type="light" [width]="20" [height]="20" ></fontawesome-svg></span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div *ngIf="editarDocumento" class="mt-2 col-12 text-right">
+                      <button matRipple type="button" class="btn btn-sm btn-light rounded m-0 mr-2" (click)="evtEditarDocumento()">Cancelar</button>
+                      <button matRipple type="button" class="btn btn-sm btn-indigo rounded m-0" (click)="evtEditarDatosCliente()">Guardar cambios</button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="border rounded p-3 mb-2">
+                  <p class="fs-16px fw-semibold text-dark">Datos de la Cita</p>
+
+                  <div class="form-row">
+                    <div class="mb-2 col-md-2 col-lg-3 col-xl-3">
+                      <label for="numeroCita" class="form-label mb-0 text-secondary f-w-500">N° Cita</label>
+                      <input id="numeroCita" type="text" placeholder="Número de Cita" class="form-indigo form-control form-indigo form-control-sm bg-light-indigo" formControlName="idCita" readonly>
+                    </div>
+
+                    <div class="mb-2 col-md-2 col-lg-3 col-xl-3">
+                      <label for="fechaCita" class="form-label mb-0 text-secondary f-w-500">Fecha Cita</label>
+                      <input id="fechaCita" type="text"  class="form-indigo form-control form-indigo form-control-sm bg-light-indigo" formControlName="fechaCita" readonly>
+                    </div>
+
+                    <div class="mb-2 col-md-4 col-lg-6 col-xl-6">
+                      <label for="atentidoPor" class="form-label mb-0 text-secondary f-w-500">Atendido por:</label>
+                      <input type="hidden" formControlName="idAtendidoPor">
+                      <div class="position-relative">
+                        <input id="atentidoPor" formControlName="atendidoPor" class="form-indigo cursor-pointer form-control form-indigo form-control-sm pe-35px" placeholder="Seleccionar personal" (click)="evtSeleccionarUsuario()" readonly [ngClass]="{'invalid' : submitted && f.idAtendidoPor.errors}">
+                        <fontawesome-svg class="position-absolute top-0 bottom-0 m-auto end-0 me-10px text-muted no-pointer-events" icon="user-vneck" type="light" [width]="20" [height]="20" ></fontawesome-svg>
+                      </div>
+                    </div>
+
+
+                    <div class="mb-2 mb-md-0 col-md-2 col-lg-4 col-xl-4">
+                      <label for="numeroBox" class="form-label mb-0 text-secondary f-w-500">N° Box</label>
+                      <select id="numeroBox" class="form-indigo form-select form-indigo form-select-sm" formControlName="numeroBox" [ngClass]="{'invalid' : submitted && f.numeroBox.errors}">
+                        <option value="" selected>--Seleccionar N° Box--</option>
+                        <option *ngFor="let x of utilsService.counter(30);let i = index" [value]="(i+1)">{{ (i+1).toString().padStart(2,'0') }}</option>
+                      </select>
+                    </div>
+
+                    <div class="mb-2 mb-md-0 col-md-2 col-lg-4 col-xl-4">
+                      <label for="idMaquinaMarca" class="form-label mb-0 text-secondary f-w-500">Maquina</label>
+                      <select id="idMaquinaMarca" class="form-indigo form-select form-indigo form-select-sm" formControlName="idMaquinaMarca" [ngClass]="{'invalid' : submitted && f.idMaquinaMarca.errors}">
+                        <option value="">--Seleccionar maquina--</option>
+                        <option *ngFor="let mm of marcasMaquina" [value]="mm.id">{{ mm.nombre }}</option>
+                      </select>
+                    </div>
+
+
+                    <div class="mb-2 col-md-2 col-lg-4 col-xl-4">
+                      <label class="form-label mb-0 text-secondary f-w-500">Generar siguiente cita?</label>
+                      <div class="form-check form-switch form-check-custom form-check-solid me-10">
+                        <input #siguienteCitaa class="form-check-input w-60px cursor-pointer" type="checkbox" formControlName="siguienteCita" id="siguienteCita"/>
+                        <label class="form-check-label text-indigo" for="siguienteCita">
+                          {{ siguienteCitaa.checked ? 'Si' : 'No' }}
+                        </label>
+                      </div>
+                    </div>
+
+
+                    <div *ngIf="siguienteCita" class="mb-2 mb-md-0 col-12">
+                      <label class="form-label mb-0 text-secondary f-w-500" for="numeroMeses">N° de meses para la siguiente cita</label>
+                      <select id="numeroMeses" class="form-indigo form-select form-indigo form-select-sm" formControlName="numeroMeses" [ngClass]="{'invalid' : submitted && f.numeroMeses.errors}">
+                        <option [value]="0">--Seleccionar número de meses--</option>
+                        <option *ngFor="let m of utilsService.counter(30); let i  = index" [value]="(i + 1)">{{ (i + 1) > 1 ? ((i + 1) + ' Meses') : ((i + 1) + ' Mes') }}</option>
+                      </select>
+                    </div>
+
+                  </div>
+
+                </div>
+              </div>
+
+
+              <div class="col-12 col-xl-12">
+                <div class="border rounded p-3 mb-2">
+                  <p class="fs-16px fw-semibold text-dark">Datos del comprobante</p>
+
+                  <div class="form-row">
+
+                    <div class="mb-2 col-md-6 col-lg-6">
+                      <label for="idTipoComprobante" class="form-label mb-0 text-secondary f-w-500">Tipo de Comprobante</label>
+                      <select id="idTipoComprobante" formControlName="idTipoComprobante" class="form-indigo form-select form-indigo form-select-sm">
+                        <option *ngFor="let tc of tiposComprobantes" [value]="tc.id" >{{ tc.descripcion }}</option>
+                      </select>
+                    </div>
+
+                    <!--- Serie y N° de Factura --->
+                    <div class="mb-2 mb-md-0 mb-lg-2 col-md-6 col-lg-6 col-xl-6">
+                      <div class="d-flex flex-row">
+                        <div class="w-100px me-10px">
+                          <label for="idSerieComprobante" class="form-label mb-0 text-secondary f-w-500">Serie</label>
+                          <select id="idSerieComprobante" class="form-indigo form-select form-indigo form-select-sm" formControlName="idSerieComprobante" [ngClass]="{'invalid' : submitted && f.idSerieComprobante.errors}">
+                            <option *ngFor="let s of seriesComprobante" [value]="s.id">{{ s.serie }}</option>
+                          </select>
+                        </div>
+                        <div class="w-100">
+                          <label for="numeroComprobante" class="form-label mb-0 text-secondary f-w-500">Número</label>
+                          <div class="position-relative">
+                            <input id="numeroComprobante" [showMaskTyped]="true" [shownMaskExpression]="'00000000'" mask="00000000" type="text" placeholder="N° del comprobante" formControlName="numeroComprobante" class="form-indigo form-control form-indigo form-control-sm pe-35px" [ngClass]="{'invalid' : submitted && numeroComprobante == 0, 'bg-light-indigo' : esTicket}" [disableControl]="!editarNumeroComprobante">
+                            <span ngbTooltip="Editar" class="w-20px h-20px position-absolute top-0 bottom-0 m-auto end-0 me-10px cursor-pointer" (click)="evtEditarNumeroComprobante()"><fontawesome-svg  class="text-indigo" icon="pen" type="light" [width]="20" [height]="20" ></fontawesome-svg></span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div *ngIf="!esTicket" class="mb-2 col-md-6 col-lg-6 col-xl-6">
+                      <div class="d-flex flex-row">
+                        <div class="w-100px me-10px ">
+                          <label for="idPorcentajeIgv" class="form-label mb-0 text-secondary f-w-500">IGV %</label>
+                          <select id="idPorcentajeIgv" class="form-indigo form-select form-indigo form-select-sm" formControlName="idPorcentajeIgv">
+                            <option *ngFor="let pigv of porcentajesIgv" [value]="pigv.id">{{ pigv.nombre }} {{ pigv.descripcion ? ( '- ' + pigv.descripcion ) : '' }}</option>
+                          </select>
+                        </div>
+                        <div class="w-100">
+                          <label for="sunatTransaccion" class="form-label mb-0 text-secondary f-w-500">Tipo de Operación</label>
+                          <select id="sunatTransaccion" class="form-indigo form-select form-indigo form-select-sm" formControlName="sunatTransaccion">
+                            <option *ngFor="let t of tiposTransaccion" [value]="t.id">[{{ t.valor }}] {{ t.nombre }}</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div *ngIf="!esTicket" class="mb-2 col-md-6 col-lg-6 col-xl-6">
+                      <div class="d-flex flex-row">
+                        <div class="w-100px me-10px">
+                          <label for="moneda" class="form-label mb-0 text-secondary f-w-500">Moneda</label>
+                          <select id="moneda" class="form-indigo form-select form-indigo form-select-sm" formControlName="idTipoMoneda">
+                            <option *ngFor="let tm of tiposMoneda"  [value]="tm.id">{{ tm.simbolo }} - {{ tm.descripcion }}</option>
+                          </select>
+                        </div>
+                        <div class="w-100">
+                          <div class="depilform">
+                            <label for="tipoCambio" class="form-label mb-0 text-secondary f-w-500">Tipo de Cambio</label>
+                            <input id="tipoCambio" type="text" formControlName="tipoCambio" placeholder="0.000" class="form-indigo form-control form-indigo form-control-sm">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+
+                    <div class="mb-2 col-md-6 col-lg-6">
+                      <label for="idTipoPago" class="form-label mb-0 text-secondary f-w-500">Tipo de Pago</label>
+                      <select #idTipoPago id="idTipoPago" formControlName="idTipoPago" class="form-indigo form-select form-indigo form-select-sm">
+                        <option *ngFor="let tc of tiposPago" [value]="tc.idTipoPago" >{{ tc.descripcion }}</option>
+                      </select>
+                    </div>
+
+                  </div>
+                </div>
+
+              </div>
+
+                <div class="col-12 col-xl-12">
+                  <div class="border rounded p-3 mb-2">
+                    <p class="fs-16px fw-semibold text-dark">Medios de pago</p>
+
+                    <div class="form-row">
+                      <div *ngFor="let mp of mediosPago" class="col-4 mb-3">
+                        <div class="card h-100 bg-light p-3 d-flex flex-row shadow rounded-15px align-items-center mb-0">
+                          <div class="w-40px"><i class="fa-duotone fa-cash-register fs-40px text-indigo"></i></div>
+                          <div class="w-100 pl-3">
+                            <p class="fs-14px mb-2 text-secondary">{{ mp.tipoPago }} <i class="f-w-500">{{ mp.numeroPedido ? '(' + mp.numeroPedido + ')' : '' }}</i></p>
+                            <p *ngIf="mp.entidadTipoPago" class="fs-12px mb-2"><i>{{ mp.entidadTipoPago }}</i></p>
+                            <p class="fs-20px fw-bold text-dark mb-0">S/ {{ mp.importe }}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-row">
+
+                      <div class="mb-2 col-12">
+                        <button matRipple type="button" class="btn btn-block btn-sm sbtn btn-indigo fs-20px shadow-indigo text-uppercase" (click)="evtMostrarMedioPago()">Registrar Pago S/</button>
+                      </div>
+
+                      <div class="mb-2 col-md-6 col-lg-6" [class.d-none]="!verEntidadTipoPago">
+                        <label for="idEntidadTipoPago" class="form-label mb-0 text-secondary f-w-500">Entidad Tipo de Pago</label>
+                        <select id="idEntidadTipoPago" formControlName="idEntidadTipoPago" class="form-indigo form-select form-indigo form-select-sm" [disableControl]="!verEntidadTipoPago" [ngClass]="{'invalid' : submitted && f.idEntidadTipoPago.errors}">
+                          <option value="">--Seleccionar--</option>
+                          <option *ngFor="let tc of entidadesTipoPago" [value]="tc.id" >{{ tc.nombre }}</option>
+                        </select>
+                      </div>
+
+                      <div class="mb-2 col-6" [class.d-none]="!verPagoEfectivo">
+                        <label class="form-label mb-0 text-secondary f-w-500" for="pagoEfectivo">Pago Efectivo</label>
+                        <input id="pagoEfectivo" currencyMask [options]="options" type="text" class="text-right form-indigo form-control form-indigo form-control-sm " formControlName="pagoEfectivo" >
+                      </div>
+
+                      <div class="mb-2 col-6" [class.d-none]="!verPagoTarjeta">
+                        <label class="form-label mb-0 text-secondary f-w-500" for="pagoTarjeta">Pago Tarjeta</label>
+                        <input id="pagoTarjeta" currencyMask [options]="options" type="text" class="text-right form-indigo form-control form-indigo form-control-sm " formControlName="pagoTarjeta" >
+                      </div>
+
+                      <div class="mb-2 col-6" [class.d-none]="!verCodigoOperacion">
+                        <label class="form-label mb-0 text-secondary f-w-500" for="codigoOperacion">N° Operación / N° Pedido</label>
+                        <input id="codigoOperacion" type="text" class="text-right form-indigo form-control form-indigo form-control-sm " formControlName="codigoOperacion" [ngClass]="{'invalid' : submitted && f.codigoOperacion.errors}">
+                      </div>
+
+                    </div>
+                  <div class="form-row">
+
+                    <div class="col-4">
+                      <label class="form-label mb-0 text-secondary f-w-500">Total</label>
+                      <input type="text" class="text-right form-indigo form-control form-indigo form-control-sm bg-light-indigo" [value]="'S/ ' + precioTotal().toFixed(2)" readonly>
+                    </div>
+                    <div class="col-4">
+                      <label class="form-label mb-0 text-secondary f-w-500">Pago Total</label>
+                      <input id="recibido" [disableControl]="false" currencyMask [options]="options" type="text" class="text-right form-indigo form-control form-indigo form-control-sm " formControlName="recibido" [ngClass]="{'invalid' : submitted && errorRecibido}" readonly>
+                    </div>
+                    <div class="col-4">
+                      <label class="form-label mb-0 text-secondary f-w-500">Vuelto</label>
+                      <input id="vuelto" currencyMask [options]="options" type="text" class="text-right form-indigo form-control form-indigo form-control-sm bg-light-indigo" formControlName="vuelto" readonly>
+                    </div>
+
+                  </div>
+
+                </div>
+
+                <div *ngIf="!esTicket" class="border rounded p-3 mb-2" [class.border-danger]="submitted && !this.datoClientePredeterminadoFacturacion">
+                  <p class="fs-16px fw-semibold text-dark">Datos de facturación (Entidad)</p>
+
+                  <div class="form-row">
+
+                    <div class="col-12">
+                      <div *ngIf="!datoClientePredeterminadoFacturacion">
+                        No tiene registrado datos de facturación.
+                      </div>
+                      <div *ngIf="datoClientePredeterminadoFacturacion" class="border rounded border-indigo px-3 py-2 mb-2">
+                        <div class="d-flex flex-row">
+                          <div class="w-100">
+                            <p class="mb-1 fs-14px text-muted text-truncate">{{ datoClientePredeterminadoFacturacion?.tipoDocumentoCliente }} : {{ datoClientePredeterminadoFacturacion?.numeroDocumentoCliente }}</p>
+                            <p class="mb-1 fs-16px f-w-500 text-dark text-truncate">{{ datoClientePredeterminadoFacturacion?.nombreCliente }}</p>
+                            <p class="mb-0 fs-14px text-muted text-truncate">{{ datoClientePredeterminadoFacturacion?.direccion }}</p>
+                          </div>
+                          <div *ngIf="datoClientePredeterminadoFacturacion?.predeterminado">
+                            <span class="rounded px-2 bg-light-indigo text-indigo text-uppercase fs-12px f-w-500">Predeterminado</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-12 text-right">
+                      <button type="button" matRipple ngbTooltip="Agregar nuevos datos" class="btn btn-sm btn-indigo rounded m-0 ml-auto mr-1 fs-14px" (click)="evtAgregarDatoClienteFactura()">Agregar</button>
+                      <button type="button" matRipple ngbTooltip="Ver lista" class="btn btn-sm btn-indigo rounded m-0 ml-auto" (click)="evtVerListaDatoClienteFactura()"><fontawesome-svg icon="list" type="light" [width]="14" [height]="14"></fontawesome-svg></button>
+                    </div>
+
+                  </div>
+                </div>
+
+                <div class="border rounded p-3 mb-2" >
+                  <p class="fs-16px fw-semibold text-dark">Observaciones del comprobante</p>
+                  <div class="form-row">
+                    <div class="col-12">
+
+                      <textarea formControlName="observaciones" class="form-indigo form-control form-indigo form-control-sm h-100px"></textarea>
+
+                    </div>
+                  </div>
+                </div>
+
+                <div class="border rounded p-3">
+                  <p class="fs-16px fw-semibold text-dark">Detalle del comprobante</p>
+                  <div class="d-flex flex-row">
+                    <div class="w-100 mr-2 d-flex align-items-center">
+                      <label class="form-label mb-0 text-secondary f-w-500">ITEM</label>
+                    </div>
+                    <div class="w-85px mr-2 d-flex align-items-center">
+                      <label class="form-label mb-0 text-secondary f-w-500">
+                        <span class="d-block text-center">V/U</span>
+                        <span class="d-block small text-center">(Sin Igv)</span>
+                      </label>
+                    </div>
+                    <div class="w-85px mr-2 d-flex align-items-center">
+                      <label class="form-label mb-0 text-secondary f-w-500">IGV</label>
+                    </div>
+                    <div class="w-85px mr-2 d-flex align-items-center">
+                      <label class="form-label mb-0 text-secondary f-w-500">SUB TOTAL</label>
+                    </div>
+                    <div class="w-85px mr-2 d-flex align-items-center">
+                      <label class="form-label mb-0 text-secondary f-w-500">TOTAL</label>
+                    </div>
+                    <div class="w-38px mr-2"></div>
+                    <div class="w-38px mr-2"></div>
+                    <div class="w-38px"></div>
+                  </div>
+                  <div *ngIf="ldObtenerDataDetalle">
+                    <div *ngFor="let d of utilsService.counter(5); let i = index" class="mb-2">
+                      <div class="d-flex flex-row w-100">
+                        <div class="w-100 mr-2"><span class="sk d-block rounded-md w-100 h-42px"></span></div>
+                        <div class="w-85px mr-2"><span class="sk d-block rounded-md w-100 h-42px"></span></div>
+                        <div class="w-85px mr-2"><span class="sk d-block rounded-md w-100 h-42px"></span></div>
+                        <div class="w-85px mr-2"><span class="sk d-block rounded-md w-100 h-42px"></span></div>
+                        <div class="w-85px mr-2"><span class="sk d-block rounded-md w-100 h-42px"></span></div>
+                        <div class="w-38px mr-2"><span class="sk d-block rounded-md w-100 h-42px"></span></div>
+                        <div class="w-38px"><span class="sk d-block rounded-md w-100 h-42px"></span></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div *ngIf="!ldObtenerDataDetalle" class="form-row ">
+                    <div *ngFor="let dc of dataCitaDetalle; let i = index" class="col-12 d-flex flex-row mb-2" [class.quitarItem]="!dc.selectComprobante">
+                      <!-- descripcion producto / servicio -->
+                      <div class="w-100 mr-2">
+                        <input id="zona" [ngbTooltip]="'[' + dc.unidadMedida + '] ' + dc.zona" type="text" class="form-indigo form-control form-indigo form-control-sm bg-light-indigo" [value]="'[' + dc.unidadMedida + '] ' + dc.zona" [attr.title]="dc.zona" readonly>
+                      </div>
+                      <!-- precio unitario -->
+                      <div class="w-85px mr-2" lang="en-US">
+                        <input id="valorUnitario" type="number" inputmode="decimal" min="0" step="0.01" class="form-indigo form-control form-indigo form-control-sm fw-semibold appearance-textfield text-right bg-light-indigo" [value]="dc.valorUnitario.toFixed(2)" readonly>
+                      </div>
+                      <!-- igv unitario -->
+                      <div class="w-85px mr-2" lang="en-US">
+                        <input id="igvUnitario" type="number" inputmode="decimal" min="0" step="0.01" class="form-indigo form-control form-indigo form-control-sm fw-semibold appearance-textfield text-right bg-light-indigo" [value]="dc.igv.toFixed(2)" readonly>
+                      </div>
+                      <!-- subTotal -->
+                      <div class="w-85px mr-2" lang="en-US">
+                        <input id="subTotal" type="number" inputmode="decimal" min="0" step="0.01" class="form-indigo form-control form-indigo form-control-sm fw-semibold appearance-textfield text-right bg-light-indigo" [value]="dc.subTotal.toFixed(2)" readonly>
+                      </div>
+                      <!-- total -->
+                      <div class="w-85px mr-2" lang="en-US">
+                        <input id="total" type="number" inputmode="decimal" min="0" step="0.01" class="form-indigo form-control form-indigo form-control-sm fw-semibold appearance-textfield text-right bg-light-indigo" [value]="dc.total.toFixed(2)" readonly>
+                      </div>
+                      <div class="w-38px mr-2" ngbTooltip="Editar item">
+                        <button type="button" matRipple class="btn rounded btn-sm m-0 px-2 btn-warning"  (click)="evtEditarItem(dc)">
+                          <fontawesome-svg icon="pen" type="regular" [width]="20" [height]="20"></fontawesome-svg>
+                        </button>
+                      </div>
+                      <div class="w-38px mr-2" [ngbTooltip]=" dc.selectComprobante ? 'Excluir Item' : 'Añadir Item' ">
+                        <button type="button" matRipple class="btn rounded btn-sm m-0 px-2" [ngClass]="{'btn-danger' : dc.selectComprobante, 'btn-indigo' : !dc.selectComprobante}"  (click)="evtQuitarItem(i)">
+                          <fontawesome-svg *ngIf="dc.selectComprobante" icon="eye-slash" type="regular" [width]="20" [height]="20"></fontawesome-svg>
+                          <fontawesome-svg *ngIf="!dc.selectComprobante" icon="eye" type="regular" [width]="20" [height]="20"></fontawesome-svg>
+                        </button>
+                      </div>
+                      <div class="w-38px" [ngbTooltip]="'Eliminar Item'">
+                        <button type="button" matRipple class="btn rounded btn-sm m-0 px-2 btn-danger"  (click)="evtEliminarItem(i)">
+                          <fontawesome-svg icon="trash-can" type="regular" [width]="20" [height]="20"></fontawesome-svg>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="col-12 d-flex flex-row mb-2">
+                      <div class="w-38px ml-auto" ngbTooltip="Añadir Item">
+                        <button matRipple type="button" class="btn rounded btn-sm m-0 px-2 btn-indigo" (click)="evtAgregarNuevoItem()">
+                          <fontawesome-svg icon="plus" type="regular" [width]="20" [height]="20"></fontawesome-svg>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="col-12 d-flex flex-row mb-2" lang="en-US">
+                      <div class="w-100 text-right align-self-center mr-2"><label class="form-label text-dark  mb-0 fs-16px">Subtotal</label></div>
+                      <div class="w-85px align-self-center mr-2 text-right"><label class="form-label text-dark f-w-500 mb-0 fs-16px">S/</label></div>
+                      <div class="w-85px mr-2">
+                        <input type="number" inputmode="decimal" min="0" step="0.01" class="form-indigo form-control form-indigo form-control-sm fw-semibold appearance-textfield text-right bg-light-indigo" [value]="totalSubTotal().toFixed(2)" readonly>
+                      </div>
+                      <div class="w-38px mr-2"></div>
+                      <div class="w-38px mr-2"></div>
+                      <div class="w-38px"></div>
+                    </div>
+                    <div class="col-12 d-flex flex-row mb-2" lang="en-US">
+                      <div class="w-100 text-right align-self-center mr-2"><label class="form-label text-dark  mb-0 fs-16px">IGV ({{porcentajeIgvActual}}%)</label></div>
+                      <div class="w-85px align-self-center mr-2 text-right"><label class="form-label text-dark f-w-500 mb-0 fs-16px">S/</label></div>
+                      <div class="w-85px mr-2">
+                        <input type="number" inputmode="decimal" min="0" step="0.01" class="form-indigo form-control form-indigo form-control-sm fw-semibold appearance-textfield text-right bg-light-indigo" [value]="totalIgv().toFixed(2)" readonly>
+                      </div>
+                      <div class="w-38px mr-2"></div>
+                      <div class="w-38px mr-2"></div>
+                      <div class="w-38px"></div>
+                    </div>
+                    <div class="col-12 d-flex flex-row mb-2" lang="en-US">
+                      <div class="w-100 text-right align-self-center mr-2"><label class="form-label text-dark mb-0 fs-16px">Gratuita </label></div>
+                      <div class="w-85px align-self-center mr-2 text-right"><label class="form-label text-dark f-w-500 mb-0 fs-16px">S/</label></div>
+                      <div class="w-85px mr-2">
+                        <input type="number" inputmode="decimal" min="0" step="0.01" class="form-indigo form-control form-indigo form-control-sm fw-semibold appearance-textfield text-right bg-light-indigo" [value]="totalGratuita().toFixed(2)" readonly>
+                      </div>
+                      <div class="w-38px mr-2"></div>
+                      <div class="w-38px mr-2"></div>
+                      <div class="w-38px"></div>
+                    </div>
+                    <div class="col-12 d-flex flex-row mb-2" lang="en-US">
+                      <div class="w-100 text-right align-self-center mr-2"><label class="form-label text-dark mb-0 fs-16px">Inafecta </label></div>
+                      <div class="w-85px align-self-center mr-2 text-right"><label class="form-label text-dark f-w-500 mb-0 fs-16px">S/</label></div>
+                      <div class="w-85px mr-2">
+                        <input type="number" inputmode="decimal" min="0" step="0.01" class="form-indigo form-control form-indigo form-control-sm fw-semibold appearance-textfield text-right bg-light-indigo" [value]="totalInafecta().toFixed(2)" readonly>
+                      </div>
+                      <div class="w-38px mr-2"></div>
+                      <div class="w-38px mr-2"></div>
+                      <div class="w-38px"></div>
+                    </div>
+                    <div class="col-12 d-flex flex-row mb-2" lang="en-US">
+                      <div class="w-100 text-right align-self-center mr-2"><label class="form-label text-dark mb-0 fs-16px">Exonerada </label></div>
+                      <div class="w-85px align-self-center mr-2 text-right"><label class="form-label text-dark f-w-500 mb-0 fs-16px">S/</label></div>
+                      <div class="w-85px mr-2">
+                        <input type="number" inputmode="decimal" min="0" step="0.01" class="form-indigo form-control form-indigo form-control-sm fw-semibold appearance-textfield text-right bg-light-indigo" [value]="totalExonerada().toFixed(2)" readonly>
+                      </div>
+                      <div class="w-38px mr-2"></div>
+                      <div class="w-38px mr-2"></div>
+                      <div class="w-38px"></div>
+                    </div>
+                    <div class="col-12 d-flex flex-row mb-2" lang="en-US">
+                      <div class="w-100 text-right align-self-center mr-2"><label class="form-label text-dark f-w-500 mb-0 fs-16px">Total</label></div>
+                      <div class="w-85px align-self-center mr-2 text-right"><label class="form-label text-dark f-w-500 mb-0 fs-16px">S/</label></div>
+                      <div class="w-85px mr-2">
+                        <input type="number" inputmode="decimal" min="0" step="0.01" class="form-indigo form-control form-indigo form-control-sm fw-semibold appearance-textfield text-right bg-light-indigo" [value]="precioTotal().toFixed(2)" readonly>
+                      </div>
+                      <div class="w-38px mr-2"></div>
+                      <div class="w-38px mr-2"></div>
+                      <div class="w-38px"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="mt-3">
+              <label for="formato" class="form-label mb-0 text-secondary f-w-500">Formato</label>
+              <select id="formato" class="form-indigo form-select form-indigo form-select-sm" formControlName="formato">
+                <option value="TICKET">TICKET</option>
+                <option value="A4">A4</option>
+                <option value="A5">A5</option>
+              </select>
+            </div>
+          </div>
+
+
+        </div>
+        <div class="modal-footer bg-white py-3">
+            <div class="form-row float-right">
+              <button matRipple type="reset" class="btn sbtn btn-light mr-2" (click)="cerrarModal()">Cancelar</button>
+              <button matRipple type="submit" class="btn sbtn btn-primary shadow btn-shadow-primary" >Emitir</button>
+            </div>
+        </div>
+
+    </div>
+</form>

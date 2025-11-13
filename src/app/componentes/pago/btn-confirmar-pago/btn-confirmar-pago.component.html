@@ -1,0 +1,11 @@
+<div *ngIf="botonTipo === 'desktop'" style="margin-left: 0.6rem; display: flex; flex-direction: column;" (click)="openModalConfirm(element.idCita, element.total, element.precioDePagoFinal, element.idTipoPago)"                    
+    [ngClass]="{'icono-dolar-purple': element.precioDePagoFinal != null && !element.idTipoPago}" [ngStyle]="{ 'color': element.colorTipoPago }"class="mostrar-detalle icono-dolar">
+    <i [ngClass]="{'i-icono-dolar-purple': element.precioDePagoFinal != null && !element.idTipoPago}" [ngStyle]="{ 'border': '2px solid ' + (element.colorTipoPago || '#ff0000'), 'background-color': (element.colorTipoPago || '#ff0000') }" ngbTooltip="Confirmar Pago" class="feather icon-dollar-sign f-30" style="display: flex;font-size: 20px !important; margin-right: 0.2rem; height: 32px; border: 2px solid #ff0000; border-radius: 50%; width: 32px; display: grid; color: white;place-items: center; background-color: #ff0000;"></i>
+
+    <p
+    [innerHTML]="element.precioDePagoFinal != null && !element.idTipoPago ? '&nbsp;Pagado&nbsp;' : (element.idTipoPago | pip_tipodepago)"
+    style="margin-bottom: 0 !important; font-weight: 600; text-align: center; white-space: normal;"
+    ></p>
+</div> 
+
+<i *ngIf="botonTipo === 'mobile'" [ngStyle]="{ 'border': '2px solid ' + (element.colorTipoPago || '#ff0000'), 'background-color': (element.colorTipoPago || '#ff0000') }" (click)="openModalConfirm(element.idCita, element.total, element.precioDePagoFinal)" ngbTooltip="Confirmar Pago" class="feather icon-dollar-sign f-30 btn-pagar-mobile d-grid-c d-flex" [ngClass]="{'i-icono-dolar-purple': element.precioDePagoFinal != null && !element.idTipoPago}"></i>

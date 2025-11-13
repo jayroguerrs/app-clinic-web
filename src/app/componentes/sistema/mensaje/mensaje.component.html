@@ -1,0 +1,55 @@
+<!-- SPINNER -->
+<ngx-spinner
+    [template]="rutaImageSpinner">
+    <p style="color: white" > Cargando... </p>
+</ngx-spinner>
+
+<!-- MODAL TIPO CITA DATOS -->
+<!-- <ng-template #modalTipoCitaDatos let-modal let-close="close">
+  <app-tipo-cita-datos
+    [idTipoCita]="idTipoCita"
+    [modal]="modalTipoCitaDatosRef"
+    (eventCitaTipoListar)="tipoCitaListar()"
+    ></app-tipo-cita-datos>
+</ng-template> -->
+
+<div id="hidden-btn" style="visibility: hidden"></div>
+
+<div class="row">
+  <div class="col-sm-12">
+    <app-card [options]="false" cardTitle="MENSAJE DE SISTEMA" [hidBlock]="false">
+
+      <form  [formGroup]="frmFiltroGrilla">
+        <div class="form-row">
+          <div class="form-group col-md-12">
+            <div class="input-group input-group-sm">
+              <div class="input-group-prepend"><span class="input-group-text">Mensaje para enviar</span></div>
+              <input type="text" class="form-control" formControlName="txtMensaje" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+            </div>
+          </div>
+        </div>
+      </form>
+    </app-card>
+  </div>
+</div>
+
+<!-- <div class="col-sm-12">
+  <app-card [options]="false" [customHeader]="true" [hidHeader]="true">
+
+    <div class="table table-sm-responsive">
+      <table datatable [dtOptions]="dtResponsiveOptions" class="table table-sm table-hover table-zona display compact"></table>
+    </div>
+  </app-card>
+</div> -->
+
+<!-- BOTONERA ESCRITORIO -->
+<ul class="botonera-escritorio">
+  <li>
+    <button id='btnBuscar1'     type="button" class="btn btn-primary btn-icon"    [placement]="'bottom'" ngbTooltip="Enviar mensaje" (click)= "enviarMensajeGeneral()"><i class="mdi mdi-bell-outline"></i></button>
+  </li>
+</ul>
+<!-- BOTONERA MOVIL -->
+<a class="botonera-movil"><i class="fa fa-cog"></i></a>
+<ul class="ul-botonera-movil">
+    <li id="btnBuscar2" (click)= "enviarMensajeGeneral()"><a><i class="fa fa-bell"></i></a></li>
+</ul>

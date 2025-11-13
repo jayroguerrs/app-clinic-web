@@ -1,0 +1,26 @@
+
+<div class="row">
+  <div class="col-sm-12">
+    <app-card cardTitle="LISTADO DE SERIES DE FACTURACIÓN" [options]="false" [hidBlock]="true">
+    </app-card>
+  </div>
+
+  <!-- GRILLA -->
+  <div class="col-sm-12">
+    <app-card [options]="false" cardTitle="LISTADO DE SERIES DE FACTURACIÓN" [hidHeader]="true">
+
+      <tbl-factura-serie #facturaSerie></tbl-factura-serie>
+
+    </app-card>
+  </div>
+</div>
+
+
+<!-- BOTONERA ESCRITORIO -->
+<ul class="botonera-escritorio">
+  <li>
+    <button type="button" class="btn btn-primary btn-icon" [placement]="'bottom'" ngbTooltip="Listar" (click)= "onReload()"><i class="mdi mdi-sync"></i></button>
+    <button type="button" class="btn btn-primary btn-icon" [placement]="'bottom'" ngbTooltip="Nuevo" (click)= "onCreate()"><i class="mdi mdi-plus-circle-outline"></i></button>
+    <button *ngIf="selected" type="button" class="btn btn-warning btn-icon" [placement]="'bottom'" ngbTooltip="Editar" (click)="onEdit()"><i class="mdi mdi-square-edit-outline"></i></button>
+  </li>
+</ul>

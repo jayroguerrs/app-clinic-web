@@ -1,0 +1,28 @@
+.file{
+  appearance: none;
+  position:absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  bottom: 0;
+  opacity: 0 !important;
+}
+.center{
+  z-index: 2;
+}
+.link-active{
+  z-index: 3;
+  position: relative;
+  pointer-events: all;
+}
+.bar{
+  background: rgb(35,194,255);
+  background: -moz-linear-gradient(90deg, rgba(35,194,255,1) 18%, rgba(28,171,226,1) 35%, rgba(23,150,199,1) 51%, rgba(15,104,138,1) 69%, rgba(8,63,84,1) 84%, rgba(0,0,0,1) 100%);
+  background: -webkit-linear-gradient(90deg, rgba(35,194,255,1) 18%, rgba(28,171,226,1) 35%, rgba(23,150,199,1) 51%, rgba(15,104,138,1) 69%, rgba(8,63,84,1) 84%, rgba(0,0,0,1) 100%);
+  background: linear-gradient(90deg, rgba(35,194,255,1) 18%, rgba(28,171,226,1) 35%, rgba(23,150,199,1) 51%, rgba(15,104,138,1) 69%, rgba(8,63,84,1) 84%, rgba(0,0,0,1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#23c2ff",endColorstr="#000000",GradientType=1);
+}
+
+.input-group {
+  background: none;
+}

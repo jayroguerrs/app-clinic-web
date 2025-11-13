@@ -1,0 +1,57 @@
+﻿
+<form [formGroup]="frmGroup" (ngSubmit)="onSubmit()">
+    <div class="modal-content">
+        <div class="modal-header card-header">
+            <h5 class="modal-title">{{ data ? 'Editar' : 'Nuevo' }} Servicio</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="cerrarModal()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body card-body">
+              <div class="form-group">
+                  <div class="form-floating">
+                    <input type="text" maxlength="50" class="form-control dz-uppercase" id="nombre" placeholder=" " formControlName="nombre" [ngClass]="{ 'is-invalid': submitted && f.nombre.errors }" >
+                    <label for="nombre">Nombre <span class="text-danger">*</span></label>
+                  </div>
+                  <div *ngIf="submitted && f.nombre.errors" class="invalid-feedback d-block">
+                    <div *ngIf="f.nombre.errors.required">Ingrese nombre del servicio</div>
+                  </div>
+              </div>
+              <div class="form-group">
+                <div class="form-floating">
+                  <input type="text" maxlength="50" class="form-control dz-uppercase" id="nombreCorto"   placeholder=" " formControlName="nombreCorto" [ngClass]="{ 'is-invalid': submitted && f.nombreCorto.errors }" >
+                  <label for="nombreCorto">Nombre corto <span class="text-danger">*</span></label>
+                </div>
+                <div *ngIf="submitted && f.nombreCorto.errors" class="invalid-feedback d-block">
+                  <div *ngIf="f.nombreCorto.errors.required">Ingrese nombre corto del servicio</div>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="form-floating">
+                  <input type="text" class="form-control focus color" id="color" formControlName="color" [(colorPicker)]="color" [style.background]="color" [cpOKButton]="true" [cpOKButtonText]="'Aceptar'" [cpOKButtonClass]="'btn btn-sm btn-primary'"  [cpCancelButton]="true" [cpCancelButtonText]="'Cancelar'" [cpCancelButtonClass]="'btn btn-sm btn-secondary'" (colorPickerChange)="onChangeColor($event)"  placeholder=" " [ngClass]="{ 'is-invalid': submitted && f.color.errors }" >
+                  <label for="color">Color <span class="text-danger">*</span></label>
+                </div>
+                <div *ngIf="submitted && f.color.errors" class="invalid-feedback d-block">
+                  <div *ngIf="f.color.errors.required">Seleccione un color para el servicio</div>
+                </div>
+              </div>
+              <div class="form-group mb-0">
+                  <div class="form-floating">
+                    <select class="form-select" id="idEstado" formControlName="idEstado">
+                      <option *ngFor="let est of estados" [value]="est.id">{{ est.value }}</option>
+                    </select>
+                    <label for="idEstado">Estado</label>
+                  </div>
+              </div>
+        </div>
+        <div class="modal-footer card-footer">
+            <div class="form-row float-right">
+                <button type="submit" class="btn btn-outline-primary"><i
+                        class="feather icon-save"></i>Guardar</button>
+                <button type="reset" class="btn btn-outline-danger" (click)="cerrarModal()"><i
+                        class="feather icon-slash"></i>Cancelar</button>
+            </div>
+        </div>
+
+    </div>
+</form>

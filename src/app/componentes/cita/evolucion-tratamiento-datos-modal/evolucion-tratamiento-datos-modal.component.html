@@ -1,0 +1,114 @@
+
+  <!-- MODAL SELECCION USUARIO -->
+  <ng-template #modUsuarioSeleccion let-modal let-close="close">
+    <app-usuario-seleccion
+      (eventUsuarioSeleccionado)="eventUsuarioSeleccionado($event)"
+      [modal]="modalUsuarioSeleccionRef"
+      [idPerfil]="idPerfilBuscarUsuario"
+      [idSede]="cita.idSede">
+    </app-usuario-seleccion>
+  </ng-template>
+
+  <div class="modal-content">
+    <div class="modal-header card-header">
+      <h5 class="modal-title">EVOLUCIÓN DEL TRATAMIENTO{{ evolucionTratamiento.id ? ' : EVT-' + evolucionTratamiento.id.toString().padStart(6,'0') : '' }}</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="onClose()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+
+    <div class="modal-body card-body">
+
+      <div class="form-row">
+
+        <!-- N° Cita -->
+        <div class="col-12 col-md-6">
+          <div class="form-group">
+            <div class="form-floating form-start-icon">
+              <input id="cliente1" type="text" placeholder=" " class="form-control" [value]="evolucionTratamiento.idCita" readonly>
+              <label for="cliente1">N° Cita</label>
+              <span class="icon">
+                <span class="dicon file m-auto"></span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Especialista -->
+        <div class="col-12 col-md-6">
+          <div class="form-floating form-start-icon">
+            <input id="atendidoPor" type="text"
+                   class="form-control bg-white"
+                   placeholder=" "
+                   readonly
+                   [formControl]="nombreAtendidoPor"
+                   (click)="edit ? false : abrirSelecionarUsuario(modUsuarioSeleccion)"
+                   [ngClass]="{ 'is-invalid': submitted && atendidoPor.errors?.required }"
+                   [readOnly]=" !!evolucionTratamiento " >
+            <label for="atendidoPor">Atendido por</label>
+            <span class="icon">
+                <span class="dicon user m-auto"></span>
+            </span>
+            <input type="hidden" [formControl]="atendidoPor">
+          </div>
+        </div>
+
+        <div class="col-12">
+
+          <div class="border rounded px-3 py-1 pb-2">
+            <span class="d-block text-muted mb-3">Historial</span>
+            <div *ngIf="collectionCitaDetalle.length > historiasValidas()" class="p-2 border rounded addHistory d-flex flex-column" (click)="addHistory( mdEvolucionTratamientoZonas )">
+              <span class="dicon add-circle w-100"></span>
+              <span class="lead w-100">Agregar historial</span>
+            </div>
+
+            <mat-list>
+              <mat-list-item *ngFor="let evolucionTratamientoZona of Zonas; let i = index" class="border rounded mb-1 hover historia">
+                <mat-icon mat-list-icon>accessibility</mat-icon>
+                <div mat-line class="font-weight-bold">{{ showZone(evolucionTratamientoZona.idCitaDetalle) }}</div>
+                <div mat-line>Sesión {{ evolucionTratamientoZona.sesion }}</div>
+                <div *ngIf="evolucionTratamientoZona.idEstado" class="d-flex actions">
+                  <!--<button class="bg-white border rounded p-1 d-inline-flex mr-1"><span class="dicon eye"></span></button>-->
+                  <button title="Editar" class="bg-white border rounded p-1 d-inline-flex mr-1" (click)="editHistory(mdEvolucionTratamientoZonas, evolucionTratamientoZona, i)"><span class="dicon edit"></span></button>
+                  <button title="Eliminar" class="bg-white border rounded p-1 d-inline-flex" (click)="removeHistory(i, showZone(evolucionTratamientoZona.idCitaDetalle))"><span class="dicon trash"></span></button>
+                </div>
+                <div *ngIf="!evolucionTratamientoZona.idEstado">
+                  <button class="bg-danger border-0 rounded p-1 px-2 d-inline-flex" ><span class="small text-white">Anulado</span></button>
+                </div>
+              </mat-list-item>
+            </mat-list>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="modal-footer card-footer">
+      <div class="form-row float-right">
+        <button type="submit" class="btn btn-outline-primary" (click)="onSubmit()"><i class="feather icon-save"></i>Guardar</button>
+        <button type="reset" class="btn btn-outline-danger" (click)="onClose()"><i class="feather icon-x"></i>Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+  <!-- MODAL LISTA HISTORIAL CLINICO -->
+  <ng-template #mdEvolucionTratamientoZonas let-modal let-close="close">
+    <app-evolucion-tratamiento-detalles
+      [idCita]="idCita"
+      [citaDetalles]="collectionCitaDetalle"
+      [modal]="modalDetalleHistorialClinicoRef"
+      [equiposLaser]="collectionEquipoLaser"
+      [collectionEvolucionTratamientoZona]="dataEvolucionTratamiento.zonas"
+      [evolucionTratamientoZonaSeleccionada]="evolucionTratamientoZonaSeleccionada"
+      [index]="indexHistoriaSeleccionada"
+      [estado]="estado">
+    </app-evolucion-tratamiento-detalles>
+  </ng-template>

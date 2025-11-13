@@ -1,0 +1,13 @@
+<div class="col-12 mb-3">
+    <app-card cardTitle="ZONAS CORPORALES ATENDIDAS" >
+      <div *ngIf="!loadingZonasAtendidas">
+        <span *ngFor="let zona of zonasCorporalesHistorico" class="bg-primary text-white small p-2 d-inline-block mb-1 mr-1 rounded-pill">{{ zona.zonaCorporal }} ({{ zona.numCitasPorZona }})</span>
+      </div>
+      <div *ngIf="loadingZonasAtendidas">
+        <div class="sk pill mb-1 mr-1"></div>
+        <div class="sk pill mb-1 mr-1"></div>
+        <div class="sk pill mb-1 mr-1"></div>
+        <div class="sk pill mb-1 mr-1"></div>
+      </div>
+    </app-card>
+</div>

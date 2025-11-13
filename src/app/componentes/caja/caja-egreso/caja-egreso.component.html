@@ -1,0 +1,98 @@
+<!-- MODAL EGRESO DATOS -->
+<ng-template #modalEgresoDatos let-modal let-close="close">
+    <app-caja-egreso-datos
+        [modal]="modalEgresoDatosRef"
+        [idCaja]="idCaja"
+        (eventoEgresoListar)="egresoListar()"
+    >
+    </app-caja-egreso-datos>
+</ng-template>
+
+<!-- SPINNER -->
+<ngx-spinner
+    [template]="rutaImageSpinner">
+    <p style="color: white" > Cargando... </p>
+</ngx-spinner>
+
+<div class="row">
+  <!-- FILTRO -->
+  <div class="col-sm-12">
+    <app-card [options]="false" cardTitle="LISTADO DE EGRESOS" >
+
+      <form  [formGroup]="frmFiltroGrilla">
+        <div class="form-row">
+          <div class="form-group col-md-4">
+            <div class="form-floating form-start-icon">
+              <input id="filtroFechaInicio" type="date" placeholder=" " class="form-control" formControlName="filtroFechaInicio" (change)="egresoListar()" min="2020-01-01" max="2030-12-31">
+              <label for="filtroFechaInicio">Fecha desde</label>
+              <span class="icon"><span class="dicon calendar m-auto"></span></span>
+            </div>
+          </div>
+
+          <div class="form-group col-md-4">
+            <div class="form-floating form-start-icon">
+              <input id="filtroFechaTermino" type="date" placeholder=" " class="form-control" formControlName="filtroFechaTermino" (change)="egresoListar()">
+              <label for="filtroFechaTermino">Fecha hasta</label>
+              <span class="icon"><span class="dicon calendar m-auto"></span></span>
+            </div>
+          </div>
+
+          <!-- MOSTRAR CAJA SI ES SUPERVISORA O NO  -->
+          <div class="form-group col-md-3" *ngIf="esSupervisora else nosupervisora">
+            <div class="input-group input-group-sm">
+              <div class="input-group-prepend"><label class="input-group-text" for="idCaja" [placement]="'bottom'" ngbTooltip="Caja"><i class="fa fa-archive"></i></label></div>
+              <select class="custom-select" formControlName="idCaja" name="idCaja" (ngModelChange)="egresoListar()">
+                <option value='0'>TODOS</option>
+                <option *ngFor="let caja of maestroCaja" [value]="caja.id">{{ caja.descripcion }}</option>
+              </select>
+            </div>
+          </div>
+          <ng-template #nosupervisora>
+            <div class="form-group col-md-3">
+
+              <div class="form-floating form-start-icon">
+                <select class="custom-select" id="idCaja" formControlName="idCaja" (change)="egresoListar()">
+                  <option *ngFor="let caja of maestroCaja" [value]="caja.id" [selected]="caja.id">{{ caja.descripcion }}</option>
+                </select>
+                <label for="idCaja">Caja</label>
+                <span class="icon"><span class="dicon cash-register m-auto"></span></span>
+              </div>
+
+            </div>
+          </ng-template>
+
+        </div>
+      </form>
+
+      <div class="row">
+      </div>
+    </app-card>
+  </div>
+  <!-- GRILLA -->
+  <div class="col-sm-12">
+    <app-card [options]="false" [hidHeader]="true">
+      <div class="table table-sm-responsive">
+        <table datatable [dtOptions]="dtResponsiveOptions" class="table table-sm table-hover table-egreso display compact">
+        </table>
+      </div>
+    </app-card>
+  </div>
+</div>
+
+
+<!-- BOTONERA ESCRITORIO -->
+<ul class="botonera-escritorio">
+    <li>
+        <button id="btnActualizar1" type="button" class="btn btn-primary btn-icon" [placement]="'bottom'" ngbTooltip="Actualizar" (click)= "egresoListar()">    <i class="mdi mdi-sync"></i></button>
+        <button id="btnRegistrar1"  type="button" class="btn btn-primary btn-icon" [placement]="'bottom'" ngbTooltip="Registrar egreso"  (click)= "egresoRegistrar(modalEgresoDatos)">  <i class="mdi mdi-cash-minus"></i></button>
+        <button id="btnAnular1"     type="button" class="btn btn-danger btn-icon"  [placement]="'bottom'" ngbTooltip="Anular egreso"  (click)= "egresoAnular()">  <i class="mdi mdi-cancel"></i></button>
+    </li>
+</ul>
+<!-- BOTONERA MOVIL -->
+<a class="botonera-movil"><i class="fa fa-cog"></i></a>
+<ul class="ul-botonera-movil">
+    <li id="btnActualizar2"   (click)="egresoListar()"><a>        <i class="mdi mdi-sync"></i></a></li>
+    <li id="btnRegistrar2"    (click)="egresoRegistrar(modalEgresoDatos)"><a>     <i class="fad fa-inbox-out"></i></a></li>
+    <li id="btnAnular2"    (click)="egresoAnular()"><a>     <i class="fas fa-ban"></i></a></li>
+</ul>
+

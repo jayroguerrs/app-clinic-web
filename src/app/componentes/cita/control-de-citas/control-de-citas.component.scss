@@ -1,0 +1,200 @@
+
+.table-container {
+  overflow-x: auto;
+  width: 100%; 
+  padding: 0 12px;
+}
+
+table {
+    width: 100%;
+}
+
+.example-form {
+  min-width: 150px;
+  max-width: 500px;
+  width: 100%;
+}
+
+.example-full-width {
+  width: 100%;
+}
+
+.example-full-width.custom-border {
+  border: 2px solid #3f51b5; 
+  border-radius: 4px; 
+}
+
+::ng-deep .custom-calendar-icon .mat-icon {
+  color: #FF5722;
+}
+
+.opcion{
+  font-weight: 600;
+  list-style-type: none;
+  color: #079ce1;
+  cursor: pointer;
+}
+
+.opcion:hover{
+  color: #0d79ac;
+}
+
+
+.contenido-tabla{
+  padding: 10px !important;
+}
+
+th.mat-sort-header-sorted {
+  color: black;
+}
+
+.contenedor-filtros{
+  display: flex; 
+  justify-content: space-between; 
+  padding: 8px 24px;
+}
+
+.contenedor-filtros-izquierda{
+  display: flex; 
+  align-items: center; 
+  gap: 10px;
+}
+
+th{
+  background-color: #effaff; //#effaff
+}
+
+@media (max-width: 1614px) {
+  .contenedor-filtros{
+    display: block;
+  }
+}
+
+@media (max-width: 1193px) {
+  .contenedor-filtros{
+    flex-direction: column;
+  }
+}
+
+
+
+
+@media (max-width: 1193px) {
+  .contenedor-filtros-izquierda{
+    flex-direction: column;
+  }
+
+  i{
+    display: none;
+  }
+}
+
+::ng-deep .mat-select-panel {
+  position: absolute;
+  top: 100% !important;
+  z-index: 1000 !important;
+}
+
+.mostrar-detalle:hover{
+  color: rgb(0, 140, 255);
+}
+
+
+@media (max-width: 1690px) {
+  .table-container {
+      overflow-x: auto;
+      display: block;
+      white-space: nowrap;
+  }
+
+  .table-container table {
+      min-width: 1400px;
+  }
+}
+
+// -----------------------------------------------------------
+
+.displayChatbox {
+  background: #00000047;
+  display: grid !important;
+  place-content: center;
+  border-radius: 25px !important;
+}
+
+.displayChatboxNotificacion{
+  width: 23px;
+  height: 23px;
+  display: grid !important;
+  place-content: center;
+  border-radius: 25px !important;
+
+  &:after{
+      position: absolute;
+      top: -2px;
+      left: 28px;
+      right: 0;
+      margin: auto;
+      width: 20px;
+      height: 20px;
+      border-radius: 100%;
+      background-color: red !important;
+  }
+}
+
+.total-notificaciones{
+  position: absolute;
+  top: -2px;
+  left: 28px;
+  right: 0;
+  margin: auto;
+  width: 10px;
+  height: 10px;
+  border-radius: 100%;
+  background-color: #0087ab !important;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  color: white;
+}
+
+.campana-activa{
+  color: #225F9C !important;
+  transition: font-size 0.1s ease-in-out; 
+}
+
+.campana-activa:hover{
+  font-size: 23px !important;
+}
+
+
+.anim-ring-activa{
+  &:after{
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: 0;
+      right: 0;
+      margin: auto;
+      width: 6px;
+      height: 6px;
+      border-radius: 100%;
+      background-color: #225F9C !important;
+  }
+}
+
+.check-general{
+  width: 16px !important; 
+  height: 16px; 
+  cursor: pointer;
+}
+
+.label-general{
+  margin-bottom: 0 !important; 
+  font-size: 16px !important;
+}
+
+.btn-excel{
+  background-color: #1E7145 !important;
+  border-color: #1E7145 !important;
+  color: #fff;
+}

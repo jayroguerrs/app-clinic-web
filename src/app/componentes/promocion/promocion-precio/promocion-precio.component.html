@@ -1,0 +1,132 @@
+<!-- SPINNER -->
+<ngx-spinner
+    [template]="rutaImageSpinner">
+    <p style="color: white" > Cargando... </p>
+</ngx-spinner>
+
+<form [formGroup]="frmPromocionPrecio">
+  <div class="modal-header card-header">
+    <h5 class="modal-title">Precios de promoción {{ promocion }}</h5>
+    <button type="button" class="close basic-close" data-dismiss="modal" aria-label="Close"
+        (click)="cerrarModal()"><span aria-hidden="true">&times;</span></button>
+  </div>
+
+  <div class="modal-body card-body">
+    <div class="form-row">
+
+      <div class="form-group col-md-6 col-lg-3">
+        <div class="input-group input-group-sm">
+            <div class="input-group-prepend"><span class="input-group-text" for="idGenero">Genero </span></div>
+            <select class="custom-select" formControlName="idGenero" (change)="onChangeGenero()">
+              <option value='0'>TODOS</option>
+              <option value='2'>MUJER</option>
+              <option value='1'>HOMBRE</option>
+            </select>
+        </div>
+      </div>
+
+      <div class="form-group col-md-6 col-lg-3">
+        <div class="input-group input-group-sm">
+            <div class="input-group-prepend"><span class="input-group-text" for="zonaUsar">Zonas </span></div>
+            <select class="custom-select" formControlName="zonaUsar">
+              <option value=''>...SELECCIONAR...</option>
+              <option [value]="zona.id" data-zonas [attr.data-idgenero]="zona.idGenero" *ngFor="let zona of zonasCorporales">{{ zona.descripcion }}</option>
+            </select>
+        </div>
+      </div>
+
+      <div class="form-group col-md-6 col-lg-3">
+        <div class="input-group input-group-sm">
+            <div class="input-group-prepend"><span class="input-group-text" for="precio">Precio base </span></div>
+            <input type="number" class="form-control" formControlName="precio"/>
+        </div>
+      </div>
+
+      <div class="ml-auto">
+        <button type="button" class="btn btn-primary btn-icon" [placement]="'top'" ngbTooltip="Agregar" (click)="agregarZonaCorporal()">
+          <i class="fa fa-plus-circle"></i>
+        </button>
+      </div>
+
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-md-12">
+        <div class="rTable">
+          <div class="rTableRow">
+            <div class="rTableHead" *ngFor="let promocionBloque of promocionBloques">Sesiones de [{{ promocionBloque.rangoIni }} al {{promocionBloque.rangoFin}}] {{ promocionBloque.descuentoPorcentaje }}%</div>
+          </div>
+          <div class="rTableRow">
+            <div class="rTableCell" [attr.data-precio-index]="indice" *ngFor="let promocionBloque of promocionBloques; let indice = index">
+              <input type="number" [attr.data-idpb]="promocionBloque.id" class="form-control" style="height: 10px !important;" value="0"/>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="form-row">
+
+      <div class="form-group col-md-12">
+        <div class="row">
+          <div class="column">
+            <h5>PRECIO MUJER</h5>
+            <table class="table-hovered">
+              <thead id="zonaMujer">
+                <tr>
+                  <th style="width: 30px !important;"><input type="checkbox" (change)="selectTodoZonaMujer($event)"></th>
+                  <th>ZONA CORPORAL</th>
+                  <th class="precio-base-corto" title="Precio base">PB</th>
+                  <th class="precio-base-largo" title="Precio base">Precio Base</th>
+                  <th *ngFor="let promocionBloque of promocionBloques"><span class="porcentaje">{{ promocionBloque.descuentoPorcentaje }}%</span><br><span class="rango-sesion">{{ promocionBloque.rangoIni }} - {{ promocionBloque.rangoFin }}</span></th>
+                  <th><i class="fas fa-trash-alt" (click)="borrarZonaMujerSeleccionada()" title="Quitar Seleccionados"></i></th>
+                </tr>
+              </thead>
+              <tbody #tbodyMujer>
+                <tr *ngFor="let promoZona of promoZonasMujer; let i = index" [attr.data-idpz]="promoZona.idPromocionZona" [attr.data-idZonaCorporal]="promoZona.idZona" [class.seleccionado]="promoZona.seleccionado">
+                  <td style="width: 30px !important;"><input type="checkbox" (change)="selectZonaMujer($event, i)" [checked]="promoZona.seleccionado"></td>
+                  <td>{{ promoZona.descripcion }}</td>
+                  <td><input type="number" (change)="grabarPromocionPB($event, promoZona.idPromocionZona)" value="{{ promoZona.precioBase }}" min="0" max="99"/></td>
+                  <td *ngFor="let promocionBloque of promocionBloques">
+                    <input type="number" [attr.data-idpz]="promoZona.idPromocionZona" [attr.data-idpb]="promocionBloque.id"
+                          (change)="grabarPromocionPrecioBloque($event, promoZona.idPromocionZona, promocionBloque.id)" value="0" min="0" max="99"/>
+                  </td>
+                  <td><i class="fas fa-trash-alt" (click)="deleteFile(promoZona)" title="Quitar"></i></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="column">
+            <h5>PRECIO HOMBRE</h5>
+            <table class="table-hovered">
+              <thead id="zonaHombre"><tr>
+                <th style="width: 30px !important;"><input type="checkbox" (change)="selectTodoZonaHombre($event)"></th>
+                <th>ZONA CORPORAL</th>
+                <th class="precio-base-corto" title="Precio base">PB</th>
+                <th class="precio-base-largo" title="Precio base">Precio Base</th>
+                <th *ngFor="let promocionBloque of promocionBloques"><span class="porcentaje">{{ promocionBloque.descuentoPorcentaje }}%</span><br><span class="rango-sesion">{{ promocionBloque.rangoIni }} - {{ promocionBloque.rangoFin }}</span></th>
+                <th><i class="fas fa-trash-alt" (click)="borrarZonaHombreSeleccionada()" title="Quitar Seleccionados"></i></th>
+              </tr></thead>
+              <tbody #tbodyHombre>
+                <tr *ngFor="let promoZona of promoZonasHombre; let i = index" [attr.data-idpz]="promoZona.idPromocionZona" [attr.data-idZonaCorporal]="promoZona.idZona" [class.seleccionado]="promoZona.seleccionado">
+                  <td style="width: 30px !important;"><input type="checkbox" (change)="selectZonaHombre($event, i)" [checked]="promoZona.seleccionado"></td>
+                  <td>{{ promoZona.descripcion }}</td>
+                  <td><input type="number" (change)="grabarPromocionPB($event, promoZona.idPromocionZona)" value="{{ promoZona.precioBase }}" min="0" max="99"/></td>
+                  <td *ngFor="let promocionBloque of promocionBloques">
+                    <input type="number"  [attr.data-idpz]="promoZona.idPromocionZona" [attr.data-idpb]="promocionBloque.id"
+                          (change)="grabarPromocionPrecioBloque($event, promoZona.idPromocionZona, promocionBloque.id)" value="0" min="0" max="99"/>
+                  </td>
+                  <td><i class="fas fa-trash-alt" (click)="deleteFile(promoZona)" title="Quitar"></i></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+  </form>

@@ -1,0 +1,36 @@
+<div class="d-flex flex-column">
+  <div class="p-2">
+    <div #scroll [class]="'observacion cita-avisos min-h-'+MaxHeight+'px max-h-'+MaxHeight+'px overflow-auto p-2'">
+
+      <div *ngFor="let o of collection; let i = index" class="d-flex mb-3">
+        <div>
+          <span class="d-flex w-37px h-37px rounded-circle bg-indigo mr-1 position-relative" placement="right" [ngbTooltip]="o.usuarioRegistro"><span class="text-white f-w-500 m-auto">{{utilService.shortName(o.usuarioRegistro)}}</span></span>
+        </div>
+        <div class="d-flex flex-column">
+          <div class="texto position-relative d-flex flex-row">
+            <span class="text-white position-relative p-2 rounded d-inline-flex z-index-2 bg-medium-indigo" >{{o.observacion}}</span>
+          </div>
+          <span class="small fs-10px text-indigo mt-1">{{ o.fechaRegistro | date: 'dd-MM-yyyy hh:mm a' }}
+            <button matRipple class="btn btn-sm sbtn btn-light-danger btn-hover-danger btn-sm p-1 fs-10px" (click)="remove(i)" title="Eliminar">
+              <fontawesome-svg icon="trash-can" [height]="10" [width]="10" type="regular" ></fontawesome-svg>
+            </button>
+          </span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="chat-group">
+    <div class="bg-light p-2" [ngClass]="{'bg-color-light-danger': getSubmitted && hasValue}">
+      <form class="d-flex w-100" [formGroup]="frmGroup" (ngSubmit)="add()">
+        <div class="d-flex w-100 position-relative">
+          <input class="form-control form-control-sm form-control-solid bg-white f-w-light pe-22px" formControlName="observacion" placeholder="Escribe una observación aquí" type="text">
+        </div>
+        <button type="submit" class="btn btn-sm sbtn bgmutd text-secondary" [class.text-danger]="getSubmitted && hasValue">
+          <fontawesome-svg icon="paper-plane-top" type="solid" width="24" height="24"></fontawesome-svg>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

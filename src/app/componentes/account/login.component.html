@@ -1,0 +1,88 @@
+﻿<div class="auth-wrapper">
+  <div class="auth-content">
+    <div class="auth-bg">
+      <span class="r"></span>
+      <span class="r s"></span>
+      <span class="r s"></span>
+      <span class="r"></span>
+    </div>
+    <section class="card rounded-30px">
+      <div class="card-body text-center px-5 py-4">
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+          <div class="mb-4">
+            <div class="w-75 m-auto rounded-circle overflow-hidden">
+              <img
+                src="assets/images/logo.png"
+                class="img-fluid w-100"
+                alt="Responsive image"
+              />
+            </div>
+          </div>
+          <h3>INICIAR SESIÓN</h3>
+          <h6 class="mb-4">V{{ mode }} {{ version }}</h6>
+          <div class="mb-3">
+            <input
+              type="text"
+              formControlName="username"
+              class="form-control border border-2px rounded-10px border-muted text-uppercase"
+              [ngClass]="{ 'is-invalid': submitted && f.username.errors }"
+              placeholder="Usuario"
+            />
+            <div
+              *ngIf="submitted && f.username.errors"
+              class="invalid-feedback"
+            >
+              <div *ngIf="f.username.errors.required">Usuario es requerido</div>
+            </div>
+          </div>
+          <div class="mb-3">
+            <div>
+              <input
+                type="password"
+                formControlName="password"
+                class="form-control border border-2px rounded-10px border-muted"
+                [ngClass]="{ 'is-invalid': submitted && f.password.errors }"
+                placeholder="CONTRASEÑA"
+              />
+            </div>
+            <div
+              *ngIf="submitted && f.password.errors"
+              class="invalid-feedback"
+            >
+              <div *ngIf="f.password.errors.required">
+                Contraseña es requerida
+              </div>
+            </div>
+          </div>
+          <div
+            id="turnstile-container"
+            class="turnstile-container mb-3"
+            [style.display]="mostrarCaptcha ? 'block' : 'none'"
+          ></div>
+
+          <div class="form-group">
+            <button
+              [disabled]="
+                loading || isLockedOut || (mostrarCaptcha && !captchaToken)
+              "
+              class="btn btn-info rounded-10px"
+            >
+              <span
+                *ngIf="loading"
+                class="spinner-border spinner-border-sm mr-1"
+              ></span>
+              INGRESAR
+            </button>
+          </div>
+
+          <div *ngIf="isLockedOut">
+            <p>
+              Demasiados intentos fallidos. Intenta de nuevo en
+              {{ countdown }} s.
+            </p>
+          </div>
+        </form>
+      </div>
+    </section>
+  </div>
+</div>

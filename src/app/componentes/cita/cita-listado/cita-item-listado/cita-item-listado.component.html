@@ -1,0 +1,98 @@
+<app-card [options]="false" [hidHeader]="true" style="margin-top: 0; margin-bottom: 0; padding: 0;">
+    <div 
+        class="form-row div-contenedor"
+        [class]="'cita-item' + cita.idTipoCliente"
+        [style.border-top-color]="cita.colorPagado"
+        [style.border-right-color]="cita.colorTipoCliente"
+        [style.background-color] = "cita.colorTipoCita"
+        (click)="citaSeleccionar(cita)"
+        [attr.cita-id]="cita.idCita"
+        [attr.cliente-id]="cita.idCliente">
+
+        <h1 class="tituloPagado">
+          <span class="text-right">{{ cita.numeroCita }} - {{ cita.textoPagado }} - {{ cita.tipoCita }} </span>
+          <span class="text-left f-w-500">| Ficha: {{ cita.idFichaAdmision ? ('#'+cita.idFichaAdmision.toString().padStart(8,'0')) : 'No tiene' }}</span>
+        </h1>
+
+        <ng-container *ngIf="[4, 7, 9, 16, 6, 8].includes(idPerfil)">
+            <button type="button" class="mytag " [ngClass]="{'pagado': cita.precioDePagoFinal !== null}"
+                (click)="openModalConfirm(cita)">
+                <h6>CONFIRMAR PAGO</h6>
+            </button>  
+            
+        </ng-container>
+        <button *ngIf="!cita.precioDePagoFinal && cita.estado !== 'PAGADO' && (idPerfil === 5)" type="button"
+            class="mytag second" (click)="enviarNotificacionDePago()">
+            <h6>NOTIFICAR <br> PAGO</h6>
+        </button>
+        <div class="vertical-text" [style.color]="cita.colorTextoTipoCita">
+            {{cita.tipoCliente}}
+        </div>
+
+        <div class="form-group div-col col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+            <h6 [ngClass]="['tituloEstado', cita.estado]" [style.background-color]="cita.colorEstado">{{ cita.estado }}</h6>
+
+            <h6 class="titulo">TOTAL S/</h6>
+            <i class="fas fa-circle text-c-green f-10"></i> 
+            <span class="texto1 fs-12px f-w-700">S/. {{ cita.total.toFixed(2) }}</span>
+            
+            <ng-container *ngIf="cita.precioDePagoFinal || cita.precioDePagoFinal == 0">
+              <h6 class="titulo endpay">PAGO FINAL S/</h6>
+              <i class="fas fa-circle text-c-green f-10"></i> 
+              <span class="texto1 fs-12px f-w-700">S/. {{ cita.precioDePagoFinal }}</span>
+            </ng-container>
+            <h6 class="titulo">HORA Y MAQ.</h6> <i class="fas fa-circle text-c-green f-10"></i><span class="texto1">{{ cita.horaCita | date: 'HH:mm' }} - # {{ cita.idMaquina }}</span>
+            <h6 style="color: #000;" class="titulo">{{ cita.sede }}</h6>
+        </div>
+
+        <div class="form-group div-col col-8 col-sm-9 col-md-4 col-lg-4 col-xl-2">
+            <h6 class="titulo">PACIENTE ( {{ cita.codigoPaciente }} ) - HC ( {{ cita.numeroHistoria }} )</h6>
+            <div class="my-profile--card">
+                <figure>
+                    <img class="rounded-circle2" [src]="obtenerImagenPaciente(cita.idGenero)">
+                    <img *ngIf="cita.fiesta" class="rounded-circle"  src="assets/images/avatar/avatar-cumpleaños.png">
+                </figure>
+                <span class="texto1" style="font-weight: bold; font-size: 16px;">
+                    <a (click)="mostrarPerfil(cita.idCliente)" style="cursor: pointer; text-decoration: underline; color: blue;">
+                    {{cita.paciente}}
+                    </a>
+                </span>
+            </div>
+            <i *ngIf="cita.seudonimoPaciente != ''" class="fas fa-circle text-c-green f-10"></i><span *ngIf="cita.seudonimoPaciente != ''" class="texto1" style="background-color: yellow; font-weight: bold; font-size: 16px;">SEUDONIMO: {{ cita.seudonimoPaciente }}</span><br>
+            <i class="fas fa-circle text-c-green f-10"></i><span class="texto1">Telefonos: {{ cita.numerosCelulares }}</span>
+        </div>
+
+        <div class="form-group div-col col-12 col-sm-12 col-md-6 col-lg-6 col-xl-4">
+            <h6 class="titulo">ZONAS</h6>
+            <ol class="card--zonas">
+                <li *ngFor="let zona of cita.zonas">{{zona}}</li>
+            </ol>
+        </div>
+
+        <div class="form-group div-col col-12 col-sm-12 col-md-12 col-lg-12 col-xl-5 hide-mobile">
+
+            <h6 class="titulo">AVISO</h6>
+            <div *ngIf="cita.citaAvisos; else sinavisos">
+                <div *ngFor="let aviso of cita.citaAvisos">
+                    <i class="fas fa-circle text-c-green f-10"></i><span class="texto1">{{ aviso.aviso }}</span><span class="fecha"> {{ aviso.fechaRegistra | date: 'dd-MM-yyyy' }}</span>
+                </div>
+            </div>
+            <ng-template #sinavisos><i class="fas fa-circle text-c-green f-10"></i><span class="texto1">No hay avisos para mostrar.</span></ng-template>
+
+            <h6 class="titulo">DETALLE</h6>
+            <div *ngIf="cita.citaDetalles; else sindetalles">
+                <div *ngFor="let detalle of cita.citaDetalles">
+                    <i class="fas fa-circle text-c-green f-10"></i><span class="texto1">{{ detalle.detalle }}</span><span class="fecha"> {{ detalle.fechaRegistra | date: 'dd-MM-yyyy' }}</span><br>
+                </div>
+            </div>
+            <ng-template #sindetalles>
+                <i class="fas fa-circle text-c-green f-10"></i><span class="texto1">No hay detalles para mostrar.</span></ng-template>
+
+        </div>
+
+        <div class="col-12 border-top text-center text-uppercase small text-white position-relative hide-mobile" [style]="'background-color:'+cita.servicioColor">
+          {{ cita.servicio }}
+          <span class="position-absolute end-0 top-0 bottom-0 small pr-3 text-white lh-28px">REG: {{ cita.usuario }} {{ cita.fechaRegistra | date: 'dd-MM-yyyy HH:mm' }}</span>
+        </div>
+    </div>
+</app-card>

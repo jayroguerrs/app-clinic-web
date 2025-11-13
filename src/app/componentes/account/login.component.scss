@@ -1,0 +1,15 @@
+.turnstile-container {
+  display: flex;
+  justify-content: center;
+  margin: 0 auto 1rem;
+  min-height: 65px;
+  transform: scale(0.9);
+}
+
+/* Para dispositivos móviles */
+@media (max-width: 576px) {
+  .turnstile-container {
+    transform: scale(0.9);
+    transform-origin: center;
+  }
+}

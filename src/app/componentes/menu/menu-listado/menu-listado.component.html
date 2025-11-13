@@ -1,0 +1,65 @@
+<!-- SPINNER -->
+<ngx-spinner
+    [template]="rutaImageSpinner">
+    <p style="color: white" > Cargando... </p>
+</ngx-spinner>
+
+
+<div class="row">
+  <!-- FILTRO -->
+  <div class="col-sm-12">
+    <app-card cardTitle="LISTADO DE MENUS" [options]="false" [hidBlock]="true">
+    </app-card>
+  </div>
+
+  <!-- LISTADO DE MENU -->
+  <div class="col-sm-12">
+    <app-card cardTitle="Menus" [options]="false" id="cardMenu2" [hidHeader]="true">
+      <div class="form-row" *ngIf="maestroMenu.length > 0">
+
+        <div class="cf nestable-lists">
+          <div class="dd" id="nestable">
+
+            <ol class="dd-list">
+              <ng-template #recursiveList let-maestroMenu>
+                <li class="dd-item dd3-item" [attr.data-id]="item.idMenu" *ngFor="let item of maestroMenu" (click)="seleccionar(item)">
+                  <div class="dd-handle dd3-handle" [attr.data-nivel]="item.nivel"></div>
+                  <div class="dd3-content">
+                    {{ item.title }}
+                    <!-- --><button class="btn btn-sm float-right" style="background-color: #8394b4; color: white; margin-top: -4px; padding-top: 0px; width: 40px;" ><i class="mdi mdi-sync"></i></button>
+                    <button class="btn btn-sm float-right" style="background-color: #8394b4; color: white; margin-top: -4px; padding-top: 0px; width: 40px;"><i class="fa fa-plus-circle"></i></button>
+                    <button class="btn btn-sm float-right" style="background-color: #8394b4; color: white; margin-top: -4px; padding-top: 0px; width: 40px;"><i class="mdi mdi-square-edit-outline"></i></button>
+                    <button class="btn btn-sm float-right" style="background-color: #8394b4; color: white; margin-top: -4px; padding-top: 0px; width: 40px;"><i class="fas fa-id-badge"></i></button>
+                  </div>
+                  <ol *ngIf="item.children.length > 0" class="dd-list">
+                    <ng-container *ngTemplateOutlet="recursiveList; context:{ $implicit: item.children }"></ng-container>
+                  </ol>
+
+                </li>
+              </ng-template>
+              <ng-container *ngTemplateOutlet="recursiveList; context:{ $implicit: maestroMenu   }"></ng-container>
+            </ol>
+
+          </div>
+        </div>
+
+      </div>
+    </app-card>
+  </div>
+</div>
+
+
+
+
+
+<!-- BOTONERA ESCRITORIO -->
+<ul class="botonera-escritorio">
+  <li>
+    <button type="button" class="btn btn-primary btn-icon" [placement]="'bottom'" ngbTooltip="Grabar lista menu"  (click)= "grabarMenu()"><i class="fa fa-save"></i></button>
+  </li>
+</ul>
+<!-- BOTONERA MOVIL -->
+<a class="botonera-movil"><i class="fa fa-cog"></i></a>
+<ul class="ul-botonera-movil">
+  <li (click)= "menuListado()"><a><i class="mdi mdi-sync"></i></a></li>
+</ul>

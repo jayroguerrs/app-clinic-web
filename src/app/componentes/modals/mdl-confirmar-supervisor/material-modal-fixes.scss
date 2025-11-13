@@ -1,0 +1,37 @@
+/**
+ * Estilos globales para solucionar problemas de superposición con Angular Material
+ * Estos estilos aseguran que los componentes de Angular Material se muestren 
+ * correctamente por encima de los modales de Bootstrap.
+ */
+
+// Ajustar z-index para contenedores de overlay
+.cdk-overlay-container {
+  z-index: 1100 !important;
+}
+
+.cdk-global-overlay-wrapper {
+  z-index: 1100 !important;
+}
+
+.cdk-overlay-pane {
+  z-index: 1100 !important;
+}
+
+// Estilos específicos para autocompletado en modales
+.autocomplete-modal {
+  .mat-option-text {
+    display: flex;
+    align-items: center;
+  }
+  
+  &.mat-autocomplete-panel {
+    z-index: 1100 !important;
+  }
+}
+
+// Asegurar que los modales no bloqueen la interacción con los elementos de Material
+.modal-open {
+  .mat-autocomplete-panel {
+    pointer-events: auto !important;
+  }
+}

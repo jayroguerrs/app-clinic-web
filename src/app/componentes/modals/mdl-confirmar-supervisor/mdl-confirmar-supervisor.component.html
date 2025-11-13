@@ -1,0 +1,70 @@
+<ng-template #solicitudEnviadaModal let-modal let-close="close">
+  <app-mdl-estado-solicitud-supervisor [estadoDeAprobacion]="estadoAprobacionUsuarioActual" [modal]="modal"></app-mdl-estado-solicitud-supervisor>
+</ng-template>
+
+<form [formGroup]="frmUserDatos" (ngSubmit)="supervisorSubmit()">
+    <div class="modal-content">
+
+        <div class="modal-header card-header">
+            <h5 class="modal-title">Confirmación</h5>
+        </div>
+
+        <div class="modal-body card-body" style="max-height: 820px; overflow-y: auto;">
+            <div class="form-container">
+                <!-- Icono de seguridad en la parte superior -->
+                <div class="form-header text-center mb-4">
+                    <i class="feather icon-shield text-primary security-icon"></i>
+                    <h4 class="text-primary" >Confirmación de Supervisor</h4>
+                    <p class="text-muted">Esta acción requiere aprobación de un supervisor</p>
+                </div>
+
+                <!-- Entrada de texto para Supervisor con autocomplete -->
+                <div class="form-group floating-label">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text bg-primary text-white">
+                                <i class="feather icon-user"></i>
+                            </span>
+                        </div>
+                        <input type="text" 
+                               class="form-control" 
+                               placeholder="Buscar supervisor"
+                               [formControl]="searchControl"
+                               [matAutocomplete]="auto"
+                               (input)="onInputChange($event)"
+                               [ngClass]="{'is-invalid': frmUserDatos.get('idSupervisor')?.invalid && frmUserDatos.get('idSupervisor')?.touched}">
+                        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="seleccionarSupervisor($event.option.value)" class="autocomplete-modal">
+                            <mat-option *ngFor="let supervisor of filteredSupervisores | async" [value]="supervisor">
+                                <span>{{ supervisor.nombre || supervisor.nombreCompleto || supervisor.name || 'Sin nombre' }}</span>
+                                <small class="text-muted ml-2">({{ supervisor.usuario || supervisor.user || supervisor.username || 'Sin usuario' }})</small>
+                            </mat-option>
+                        </mat-autocomplete>
+                        
+                        <!-- Campo oculto para mantener el valor en el formulario -->
+                        <input type="hidden" formControlName="idSupervisor">
+                        
+                        <div *ngIf="frmUserDatos.get('idSupervisor')?.invalid && frmUserDatos.get('idSupervisor')?.touched" class="invalid-feedback">
+                            Debe seleccionar un supervisor
+                        </div>
+
+                    </div>
+                </div>
+                <!-- Contenedor con evento de clic para capturar eventos -->
+
+                
+                <!-- Mensaje de seguridad -->
+                <div class="alert alert-warning mt-3" role="alert">
+                    <i class="feather icon-alert-triangle mr-2"></i>
+                    <small>Esta información es confidencial y será registrada con fines de auditoría.</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer card-footer">
+            <button type="submit" class="btn btn-primary" [disabled]="frmUserDatos.invalid">
+                <i class="feather icon-check mr-1"></i>Confirmar
+            </button>
+        </div>
+
+    </div>
+</form>

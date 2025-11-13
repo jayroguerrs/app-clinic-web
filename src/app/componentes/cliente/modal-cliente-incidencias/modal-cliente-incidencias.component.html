@@ -1,0 +1,20 @@
+<div class="modal-header card-header">
+  <h5 class="modal-title">Listado incidencias</h5>
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="cerrarModal()"><span aria-hidden="true">&times;</span></button>
+</div>
+<div class="modal-body card-body p-0">
+  <mat-progress-bar *ngIf="loadingIncidencias" mode="indeterminate"></mat-progress-bar>
+  <div class="p-3">
+    <div class="table table-sm-responsive">
+      <table datatable [dtOptions]="dtResponsiveOptions" class="table table-sm table-hover display compact">
+      </table>
+    </div>
+  </div>
+
+</div>
+<div class="modal-footer card-footer">
+  <div class="form-row float-right">
+    <button type="reset" class="btn btn-outline-danger" (click)="cerrarModal()"><i class="feather icon-slash"></i>Cerrar</button>
+  </div>
+</div>
+

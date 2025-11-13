@@ -1,0 +1,89 @@
+    <form [formGroup]="frmAsignar">
+
+            <div class="modal-header card-header">
+                <h5 class="modal-title">Reasignación de preferente</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                (click)="cerrarModal()"><span aria-hidden="true">&times;</span></button>
+            </div>
+
+            <div class="modal-body card-body">
+
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        <div class="input-group input-group-sm">
+                            <div class="input-group-prepend"><span class="input-group-text" for="asignarObservacion">Observación</span></div>
+                            <textarea class="form-control" formControlName="asignarObservacion" rows="3"></textarea>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-12 text-center">
+
+                      <button type="button" matRipple class="btn sbtn btn-primary mx-auto" (click)="escanearTeleoperador()">Escanear Teleoperadores <i class="feather icon-radio"></i></button>
+
+<!--                        <div class="input-group input-group-sm">-->
+<!--                            <div class="input-group-prepend"><label class="input-group-text" for="asignarIdTeleoperadorAsignado">Asignado a:</label></div>-->
+<!--                            <select class="custom-select" formControlName="asignarIdTeleoperadorAsignado" id="asignarIdTeleoperadorAsignado">-->
+<!--                                <option select value=''>...Seleccionar...</option>-->
+<!--                                <option *ngFor="let operador of listaTeleoperadorConfirmado" [value]="operador.idUsuario">{{ operador.nombre }}</option>-->
+<!--                            </select>-->
+<!--                            <div class="input-group-prepend"><button type="button" class="btn btn-primary btn-sm" (click)="escanearTeleoperador()"><i class="feather icon-radio"></i></button></div>-->
+<!--                        </div>-->
+                    </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group col-md-12">
+
+                    <div class="bg-light py-2 px-3 mb-3 popins text-secondary">
+                      <p class="mb-0">Seleccionar teleoperador(a):</p>
+                    </div>
+
+                    <div class="mb-3">
+                      <div class="position-relative">
+                        <fontawesome-svg class="position-absolute top-0 bottom-0 no-pointer-events ps-12px m-auto" icon="search" type="regular" [width]="20" [height]="20"></fontawesome-svg>
+                        <input type="text" class="form-control form-control-solid ps-40px" formControlName="asignarBuscar" placeholder="Buscar" (change)="$event">
+                      </div>
+                    </div>
+
+                    <table class="table table-bordered popins">
+                      <thead>
+                        <tr class="bg-light-indigo">
+                          <th class="fs-12px f-w-500">NOMBRE COMPLETOS</th>
+                          <th class="fs-12px f-w-500 w-100px">ASIGNADOS</th>
+                          <th class="fs-12px f-w-500 w-100px">ANTIGÜEDAD</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr class="cursor-pointer bg-hover-light" [class.bg-light]="usuarioIsSelect(operador)" *ngFor="let operador of listaFiltrada" (click)="selectPreferente(operador)">
+                          <td>
+                            <div class="d-flex">
+                              <div class="w-20px d-flex">
+                                <span class="w-20px h-20px my-auto rounded-circle select-radio" [ngClass]="{ 'select' : usuarioIsSelect(operador) }"></span>
+                              </div>
+                              <div class="ms-10px">
+                                <span class="d-block fs-13px f-w-500 mb-1">{{ operador.nombre }}</span>
+                                <span class="d-block fs-11px">Usuario: {{operador.usuario}}</span>
+                              </div>
+                            </div>
+                          </td>
+                          <td class="fs-12px text-center">{{ operador.totalAsignados }}</td>
+                          <td>
+                            <!--                            <span class="px-2 py-1 fs-10px rounded bg-success-light text-success f-w-500 w-100 text-center d-block">ANTIGUO</span>-->
+                            <span *ngIf="antiguedad(operador) > 3" class="px-2 py-1 fs-10px rounded bg-success-light text-success f-w-500 w-100 text-center d-block">ANTIGUO</span>
+                            <span *ngIf="antiguedad(operador) > 0 && antiguedad(operador) < 3" class="px-2 py-1 fs-10px rounded bg-light-warning text-warning f-w-500 w-100 text-center d-block">INTERMEDIO</span>
+                            <span *ngIf="antiguedad(operador) < 1" class="px-2 py-1 fs-10px rounded bg-color-light-danger text-danger f-w-500 w-100 text-center d-block">NUEVO</span>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+            </div>
+
+            <div class="modal-footer card-footer">
+                <button [disabled]="!usuarioAsignado" type="button" class="btn btn-outline-primary" (click)="preferenteAsignar();"><i class="feather icon-save"></i> Asignar</button>
+            </div>
+
+    </form>

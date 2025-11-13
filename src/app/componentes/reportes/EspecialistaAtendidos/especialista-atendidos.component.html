@@ -1,0 +1,87 @@
+﻿<!-- SPINNER -->
+<ngx-spinner
+  [template]="rutaImageSpinner">
+  <p style="color: white" > Cargando... </p>
+</ngx-spinner>
+
+
+<!-- GRILLA -->
+<div class="row">
+
+  <div class="col-12 mb-3 sticky-header" stickyClass="header--sticky">
+    <app-card [options]="false" [customHeader]="false" cardTitle="REPORTE DE CITA ATENDIDAS POR ESPECIALISTA" cardTitle2="Consulta y genera reporte según la sede, el rango de fecha de el número de citas atendidas por cada especialista">
+      <form [formGroup]="formGroup">
+        <div class="form-row">
+
+          <!-- Sede -->
+          <div class="col-12 col-lg-3 mb-3">
+            <div class="form-floating form-start-icon">
+              <select class="custom-select" id="idSede" formControlName="idSede" (change)="obtenerReporte()">
+                <option value="0">{{ loadingSede ? 'Cargando...' : 'Todos' }}</option>
+                <option *ngFor="let sede of collectionSede" [value]="sede.id">{{ sede.nombre }}</option>
+              </select>
+              <label for="idSede">Sede</label>
+              <span class="icon">
+                <span class="dicon sede m-auto"></span>
+              </span>
+            </div>
+          </div>
+          <!-- Fecha desde -->
+          <div class="col-12 col-lg-3 mb-3">
+            <div class="form-floating form-start-icon">
+              <input id="fdesde" type="date" placeholder=" " class="form-control" formControlName="fdesde"  [ngClass]="{ 'is-invalid': submitted && f.fdesde.errors }" (change)="obtenerReporte()">
+              <label for="fdesde">Fecha desde</label>
+              <span class="icon"><span class="dicon calendar m-auto"></span></span>
+            </div>
+          </div>
+          <!-- Fecha hasta -->
+          <div class="col-12 col-lg-3 mb-3">
+            <div class="form-floating form-start-icon">
+              <input id="fhasta" type="date" placeholder=" " class="form-control" formControlName="fhasta"  [ngClass]="{ 'is-invalid': submitted && f.fhasta.errors }" (change)="obtenerReporte()">
+              <label for="fhasta">Fecha hasta</label>
+              <span class="icon"><span class="dicon calendar m-auto"></span></span>
+            </div>
+          </div>
+          <div class="form-group col-12 col-lg-3 mb-3">
+            <div class="form-floating form-start-icon">
+              <select class="custom-select" id="atendidoPor" formControlName="atendidoPor" (change)="obtenerReporte()">
+                <option *ngFor="let usuario of dataUsuarios" [value]="usuario.id">{{ usuario.text }}</option>
+              </select>
+              <label for="atendidoPor">Atendido por</label>
+              <span class="icon"><i class="mdi mdi-account-check-outline"></i></span>
+            </div>
+          </div>
+        </div>
+      </form>
+      <div class="text-dark h6 text-uppercase">
+        Citas atendidas: {{ totalCitasAtendidas() }}
+      </div>
+    </app-card>
+  </div>
+
+  <div class="col-12">
+    <div *ngFor="let especialista of collectionData" class="mb-3">
+      <app-especialista-item [especialista]="especialista" [idSede]="f.idSede.value" class="mb-3"></app-especialista-item>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- BOTONERA ESCRITORIO -->
+<ul class="botonera-escritorio">
+  <li>
+    <button type="button" class="btn btn-primary btn-icon"   [placement]="'bottom'" ngbTooltip="Buscar" (click)= "obtenerReporte()"><i class="mdi mdi-magnify"></i></button>
+    <button *ngIf="this.accTot || this.accExc" type="button" class="btn btn-secondary btn-icon" [disabled]="!collectionData.length"   [placement]="'bottom'" ngbTooltip="Exportar" (click)= "exportarExcel()"><i class="mdi mdi-file-excel-outline"></i></button>
+  </li>
+</ul>
+
+<!-- BOTONERA MOVIL -->
+<app-float-button>
+  <button class="child" mat-fab color="primary"  matTooltip="Buscar" matTooltipPosition="left" (click)="obtenerReporte()">
+    <mat-icon>search</mat-icon>
+  </button>
+  <button class="child" mat-fab color="primary" [disabled]="!collectionData.length"  matTooltip="Exportar" matTooltipPosition="left" (click)="exportarExcel()">
+    <mat-icon>file_download</mat-icon>
+  </button>
+</app-float-button>

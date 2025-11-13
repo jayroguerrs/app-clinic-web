@@ -1,0 +1,39 @@
+.dtr-details{
+  width: 100% !important;
+}
+
+
+/* modal animation */
+.modal-content{
+  animation-name: example;
+  animation-duration: 0.3s;
+}
+
+@keyframes example {
+  0%   {transform: scale(0.5)}
+  75%  {transform: scale(1.1)}
+  100% {transform: scale(1)}
+}
+
+
+::ng-deep .select2-container{
+  z-index: 9999;
+}
+
+
+// Froala Editor
+.page{
+  color: #000;
+}
+p{
+  margin-bottom: 0;
+}
+::ng-deep .fr-box {
+  .fr-second-toolbar{
+    display: none;
+  }
+  .fr-wrapper{
+    border-radius: 0 0 10px 10px;
+    border-bottom-color: #CCCCCC !important;
+  }
+}

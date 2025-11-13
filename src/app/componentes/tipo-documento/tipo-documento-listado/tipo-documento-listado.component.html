@@ -1,0 +1,100 @@
+﻿<!-- SPINNER -->
+<ngx-spinner
+  [template]="rutaImageSpinner">
+  <p style="color: white" > Cargando... </p>
+</ngx-spinner>
+
+
+
+
+
+<!-- MODAL PERFILES -->
+<ng-template #modalPerfilesDatos let-modal let-close="close">
+  <app-tipo-documento-perfiles
+    [model]="documentoSelected"
+    [modal]="modalPerfilesRef"
+    (eventListar)="refreshTable(true)"
+  ></app-tipo-documento-perfiles>
+</ng-template>
+
+
+<div class="row">
+  <!-- BARRA TITULO -->
+  <div class="col-sm-12">
+    <app-card [options]="false" [hidBlock]="true" cardTitle="TIPOS DE DOCUMENTO">
+    </app-card>
+  </div>
+
+  <!-- GRILLA -->
+  <div class="col-sm-12">
+    <app-card [options]="false" [hidHeader]="true">
+
+      <div class="table table-sm-responsive">
+        <table datatable [dtOptions]="dtResponsiveOptions" class="table table-sm table-hover table-tipoComprobante display compact">
+        </table>
+      </div>
+
+    </app-card>
+  </div>
+</div>
+
+
+<!-- BOTONERA ESCRITORIO -->
+<ul class="botonera-escritorio">
+  <li>
+    <button type="button" class="btn btn-primary btn-icon" [placement]="'bottom'" ngbTooltip="Listar" (click)="refreshTable(true)"><i class="mdi mdi-sync"></i></button>
+    <button *ngIf="this.accTot || this.accCrud || this.accCreate" type="button" class="btn btn-primary btn-icon" [placement]="'bottom'" ngbTooltip="Nuevo" (click)="onCreate()"><i class="mdi mdi-plus-circle-outline"></i></button>
+    <button *ngIf="selected && (this.accTot || this.accCrud || this.accUpdate)" type="button" class="btn btn-warning btn-icon" [placement]="'bottom'" ngbTooltip="Editar" (click)="onUpdate()"><i class="mdi mdi-square-edit-outline"></i></button>
+    <button *ngIf="selected" type="button" class="btn btn-secondary btn-icon" [placement]="'bottom'" ngbTooltip="Asignar a perfiles" (click)="onAssignProfile(modalPerfilesDatos)"><i class="mdi mdi-account-group-outline"></i></button>
+  </li>
+</ul>
+
+<section class="my-footer--buttons my-footer--buttons--save">
+  <button mat-fab class="my-color_gradient" (click)="updateDocument()">
+    <mat-icon>save</mat-icon>
+  </button>
+</section>
+
+
+<!-- Menu Movil -->
+<div class="float-menu">
+  <button mat-fab color="primary" class="bg-primary" (click)="verOpciones()">
+    <mat-icon>settings</mat-icon>
+  </button>
+</div>
+<ng-template let-bottomSheetRef="bottomSheetRef" #menuMovil >
+  <div class="_content" >
+    <div class="_header">
+      <div class="px-4 pt-4 text-center">
+        <span class="d-inline-block topline"></span>
+        <p class="text-center text-white _title lead">Opciones</p>
+      </div>
+      <mat-divider class=""></mat-divider>
+    </div>
+
+    <mat-nav-list class="pt-0">
+      <a mat-list-item (click)= "refreshTable(true);cerrarOpciones();">
+        <i class="mat-list-icon mdi mdi-sync"></i>
+        <span class=" opt-title">Actualizar lista</span>
+      </a>
+      <mat-divider></mat-divider>
+      <a mat-list-item (click)="onCreate();cerrarOpciones();">
+        <i class="mat-list-icon mdi mdi-plus-circle-outline"></i>
+        <span class=" opt-title">Nuevo tipo de documento</span>
+      </a>
+      <mat-divider></mat-divider>
+      <a mat-list-item (click)="onUpdate();cerrarOpciones();">
+        <i class="mat-list-icon mdi mdi-square-edit-outline"></i>
+        <span class=" opt-title">Editar tipo de documento</span>
+      </a>
+      <mat-divider></mat-divider>
+      <a mat-list-item (click)="onAssignProfile(modalPerfilesDatos);cerrarOpciones();">
+        <i class="mat-list-icon mdi mdi-account-group-outline"></i>
+        <span class=" opt-title">Asignar perfiles</span>
+      </a>
+    </mat-nav-list>
+  </div>
+</ng-template>
+
+
+

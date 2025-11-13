@@ -1,0 +1,107 @@
+<form class="modal-content" [formGroup]="frmGroup" (ngSubmit)="onSubmit()">
+  <div class="modal-header bg-white">
+    <h2 class="h5 fw-bold">Seleccionar horario</h2>
+    <div class="btn sbtn btn-sm btn-icon btn-active-color-primary h-auto w-auto p-0" (click)="bsModalRef.close()">
+      <span class="svg-icon svg-icon-1">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor"></rect>
+          <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor"></rect>
+        </svg>
+      </span>
+    </div>
+  </div>
+  <div class="modal-body">
+
+    <div class="mx-4 my-4">
+      <div class="form-group popins">
+        <label class="fw-semibold text-gray-800 mb-1 required">Servicio</label>
+        <ng-container [ngSwitch]="ldServicios">
+          <div class="position-relative" *ngSwitchCase="false">
+            <fontawesome-svg [width]="24" [height]="24" [icon]="'person'" [type]="'duotone'" class="position-absolute no-pointer-events h-100 d-flex align-items-center ps-10px" ></fontawesome-svg>
+            <select formControlName="idServicio" class="form-select form-select-solid ps-42px">
+              <option value="">--Seleccionar--</option>
+              <option *ngFor="let s of servicios" [value]="s.id">{{s.nombre}}</option>
+            </select>
+          </div>
+          <div *ngSwitchCase="true" class="sk block rounded h-42px"></div>
+        </ng-container>
+      </div>
+
+      <div class="form-group popins">
+        <label class="fw-semibold text-gray-800 mb-1 required">Zona</label>
+        <ng-container [ngSwitch]="ldZonas">
+          <div class="position-relative" *ngSwitchCase="false">
+            <fontawesome-svg [width]="24" [height]="24" [icon]="'person'" [type]="'duotone'" class="position-absolute no-pointer-events h-100 d-flex align-items-center ps-10px" ></fontawesome-svg>
+            <select formControlName="idZona" class="form-select form-select-solid ps-42px">
+              <option value="">--Seleccionar--</option>
+              <option *ngFor="let z of zonas" [value]="z.id">{{z.nombre}} ({{z.genero}})</option>
+            </select>
+          </div>
+          <div *ngSwitchCase="true" class="sk block rounded h-42px"></div>
+        </ng-container>
+      </div>
+
+      <div class="form-group popins">
+        <label class="fw-semibold text-gray-800 mb-1 required">Tecnología</label>
+        <ng-container [ngSwitch]="ldTecnologias">
+          <div class="position-relative" *ngSwitchCase="false">
+            <fontawesome-svg [width]="24" [height]="24" [icon]="'person'" [type]="'duotone'" class="position-absolute no-pointer-events h-100 d-flex align-items-center ps-10px" ></fontawesome-svg>
+            <select formControlName="idTecnologia" class="form-select form-select-solid ps-42px">
+              <option value="">--Seleccionar--</option>
+              <option *ngFor="let t of tecnologias" [value]="t.id">{{t.nombre}}</option>
+            </select>
+          </div>
+          <div *ngSwitchCase="true" class="sk block rounded h-42px"></div>
+        </ng-container>
+      </div>
+
+
+      <div class="mb-3 border p-3 rounded">
+        <label class="d-flex align-items-center fs-6 fw-semibold mb-2 required">Minutos</label>
+        <div class="mb-3">
+          <app-group-button #groupMinutos column="4" [items]="items" [current]="10" [class]="'btn btn-light-indigo btn-hover-rise'"></app-group-button>
+        </div>
+        <app-input-dialer #minutos class="w-100" [suffix]="' minutos'" [current]="10" [min]="10" [max]="200" [step]="10"></app-input-dialer>
+      </div>
+
+      <div class="border rounded p-3">
+        <label class="d-flex align-items-center fs-6 fw-semibold mb-2 required">Horario</label>
+        <!--    <div class="row mx-0">
+              <div class="col-1">Hora</div>
+              <div class="col-11 text-center">Minutos</div>
+            </div>-->
+        <div #gridMinutos class="row row-minutos mx-0 border-bottom">
+          <div *ngFor="let cas of casilleros" class="col-1 p-0 min border-top border-end position-relative"
+               [ngClass]="{
+             'hover' : cas.hover,
+             'hoverStart': cas.hoverStart,
+             'hoverEnd': cas.hoverEnd,
+             'reserved': cas.reserved,
+             'reservedStart': cas.reservedStart,
+             'reservedEnd': cas.reservedEnd,
+             'selected': cas.selected,
+             'selectedStart': cas.selectedStart,
+             'selectedEnd': cas.selectedEnd,
+             'hoverDanger': cas.hover && cas.reserved,
+             'border-start' : cas.minuto % 60 === 0}"
+               (mouseover)="onHover(cas.minuto)"
+               (mouseleave)="onLeave()"
+               (click)="onSelect(cas.minuto)">
+          <span [ngbTooltip]="util.minutesToShortHour(cas.minuto)"
+                placement="top" tooltipClass="tooltip-indigo"
+                class="d-flex align-items-center px-2 h-100 lh-2 f-w-500" [ngClass]="{ 'fs-3' : cas.minuto % 60 === 0, 'fst-italic': (cas.minuto % 60 !== 0) }" ><span>{{ (cas.minuto % 60 !== 0) ? (cas.minuto % 60).toString().padStart(2,'0') : (cas.minuto / 60).toString().padStart(2,'0')}}</span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="modal-footer">
+    <button type="reset" class="btn sbtn btn-light mr-2" (click)="bsModalRef.close()">Cerrar</button>
+    <button type="submit" class="btn sbtn btn-primary shadow btn-shadow-primary">Registrar</button>
+  </div>
+</form>
+
+<div class="bg-primary">
+
+</div>

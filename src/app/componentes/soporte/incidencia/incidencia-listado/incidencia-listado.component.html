@@ -1,0 +1,49 @@
+<ng-template #modalIncidenciaDatos let-modal let-close="close">
+    <app-incidencia-datos
+      (eventIncidenciaListar)="incidenciaListar()"
+      [modal]="modalIncidenciaDatosRef"
+      [idIncidencia]="idIncidencia">
+    </app-incidencia-datos>
+  </ng-template>
+
+  <!-- FILTRO -->
+  <div class="col-sm-12">
+    <app-card cardTitle="LISTADO DE INCIDENCIA" [options]="false" [hidBlock]="true">
+    </app-card>
+  </div>
+
+  <!-- GRILLA -->
+  <div class="col-sm-12">
+    <app-card [options]="false" cardTitle="LISTADO DE INCIDENCIAS" [hidHeader]="true">
+
+      <div class="table table-sm-responsive">
+        <table datatable [dtOptions]="dtResponsiveOptions" class="table table-sm table-hover table-incidencia display compact">
+        </table>
+      </div>
+
+    </app-card>
+  </div>
+
+
+  <!-- SPINNER -->
+  <ngx-spinner
+      [template]="rutaImageSpinner">
+      <p style="color: white" > Cargando... </p>
+  </ngx-spinner>
+
+
+  <!-- BOTONERA ESCRITORIO -->
+  <ul class="botonera-escritorio">
+    <li>
+      <button type="button" class="btn btn-primary btn-icon" [placement]="'bottom'" ngbTooltip="Listar" (click)= "incidenciaListar()"><i class="mdi mdi-sync"></i></button>
+      <button *ngIf="this.accTot || this.accCrud || this.accCreate" type="button" class="btn btn-primary btn-icon" [placement]="'bottom'" ngbTooltip="Nuevo" (click)= "incidenciaNuevo(modalIncidenciaDatos)"><i class="mdi mdi-plus-circle-outline"></i></button>
+      <button *ngIf="this.accTot || this.accCrud || this.accUpdate" type="button" class="btn btn-warning btn-icon" [placement]="'bottom'" ngbTooltip="Editar" (click)= "incidenciaEditar(modalIncidenciaDatos)"><i class="mdi mdi-square-edit-outline"></i></button>
+    </li>
+  </ul>
+  <!-- BOTONERA MOVIL -->
+  <a class="botonera-movil"><i class="fa fa-cog"></i></a>
+  <ul class="ul-botonera-movil">
+    <li (click)= "incidenciaListar()"><a><i class="mdi mdi-sync"></i></a></li>
+    <li *ngIf="this.accTot || this.accCrud || this.accCreate" (click)= "incidenciaNuevo(modalIncidenciaDatos)"><a><i class="mdi mdi-plus-circle-outline"></i></a></li>
+    <li *ngIf="this.accTot || this.accCrud || this.accUpdate" (click)= "incidenciaEditar(modalIncidenciaDatos)"><a><i class="mdi mdi-square-edit-outline"></i></a></li>
+  </ul>

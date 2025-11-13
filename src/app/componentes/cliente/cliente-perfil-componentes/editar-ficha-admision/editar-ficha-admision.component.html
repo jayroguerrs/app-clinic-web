@@ -1,0 +1,28 @@
+<div class="modal-header">
+  <h4 class="modal-title">Editar Ficha Admisión</h4>
+  <button type="button" data-dismiss="modal" aria-label="Close" class="close basic-close" (click)="close()">
+    <span aria-hidden="true">×</span>
+  </button>
+</div>
+<div class="modal-body">
+
+  <div class="border rounded">
+    <div class="p-3">
+      <span class="mb-2 f-w-500 text-muted">Patologías</span>
+      <div class="overflow-auto pl-3 py-3" style="max-height: 400px;">
+        <div *ngFor="let patologia of patologias">
+          <div class="checkbox checkbox-primary d-inline">
+            <input type="checkbox" [id]="'checkbox'+patologia.id" [checked]="patologia.activo" (change)="activarPatologia($event,patologia.id)">
+            <label [for]="'checkbox'+patologia.id" class="cr">{{ patologia.nombre }}</label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-outline-danger" (click)="close()">Cancelar</button>
+  <button type="button" class="btn btn-primary" (click)="onSubmit()">Guardar</button>
+</div>
+

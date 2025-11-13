@@ -1,0 +1,201 @@
+<app-card #secondDiv [options]="false" [customHeader]="true" [hidHeader]="true">
+
+      
+    <ng-container style="padding-top: 1rem !important;" >
+    <div style="display: flex; align-items: center;">
+      <h1 (click)="verPerfilCliente()" class="titulos nombre-cliente" style="font-size: 1.2rem !important;">{{nombreCliente}} <span>- Cel: {{celularClient}}</span></h1>
+    
+      <button *ngIf="isSmallScreen" ngbTooltip="Reiniciar usuario." style="margin-left: 0.8rem; padding-left: 0.2rem !important; padding-right: 0.1rem !important;" (click)="limpiarFiltroBusquedaIdCita()" type="button" class="btn btn-light"><i class="mdi mdi-reload" style="display: flex;margin-left: 0.5rem; font-size: 1.3rem;"></i></button>
+    </div>
+
+      <div class="table-container" >
+        <table mat-table matSort  [dataSource]="dataSourceControl">
+
+          <ng-container matColumnDef="carta">
+            <th class="es-desktop-none" mat-header-cell *matHeaderCellDef>  </th>
+            <td  class="contenido-tabla-c es-desktop-none" mat-cell *matCellDef="let element"  > 
+              <div [ngClass]="{'cita-selected-m': element.idCita === selectedRow?.idCita}" >
+
+                <div class="header-c-mobile" [ngClass]="{'fondo-cliente-especial-m': element.idTipoCliente === 1, 'fondo-cliente-cortesia-m': element.idTipoCliente === 2}">
+
+                  <i ngbTooltip="Ver Perfil del Cliente"  (click)="verPerfilCliente()" class="mdi mdi-account usericon-c-mobile"></i>
+
+                  <div  (click)="mostrarClienteDetalle(element.idCliente)">
+                    <h3 class="h3-c-mobile text-white">{{element.nombreCliente}}</h3>
+                    
+                    <div class="d-flex">
+                      <span class="text-12px">{{ !element.clienteNuevo ? esNuevoCliente : element.clienteNuevo }} - {{element.idTipoCliente | tiposFiltrosCliente:'tipoCliente':listadoTipoCliente}}</span>
+                      <p class="ml-2 estado-c-mobile">
+                        {{element.precioDePagoFinal != null && !element.idTipoPago ? 'Pagado' : (element.idTipoPago | pip_tipodepago)}}
+                      </p>
+                    </div>
+                  </div>
+
+                  <app-btn-confirmar-pago [botonTipo]="'mobile'" [element]="element" [nombreClienteElegido]="nombreCliente" (pagoFinalSuccess)="cambiarEstadoPagoFinal($event.idCita, $event.result)"></app-btn-confirmar-pago>
+                
+                </div> 
+
+                <div class="general-container-c">
+                  <div class="info-p-2-container-c">
+  
+                    <div class="info-2-container-c">
+                      <h3 class="h3-c-mobile">Servicio:</h3>
+                      <span [ngStyle]="{'background-color': getColorPorServicioDeCita(element.idServicio)}" class="span-c badge badge-pill badge-success">{{element.idServicio | tiposFiltrosCliente:'tipoServicio':listaServicios}} </span>
+                      
+                      <h3 class="h3-c-mobile">Estado:</h3>
+                      <span 
+                        [ngStyle]="{'background-color': getColorPorEstadoDeCita(element.idEstado)}" 
+                        class="span-c badge badge-pill badge-success">
+                        {{element.idEstado | tiposFiltrosCliente:'estadoCita':citaEstados}}
+                      </span>     
+                      
+                      
+                    </div>
+  
+                    <div class="info-2-container-c ps-2  pl-3-c">
+                      <h3 class="h3-c-mobile">Tipo Cita:</h3>
+                      <span class="fs-6 mb-1 fw-bold-c">{{element.idTipoCita | tiposFiltrosCliente:'tipoCita':listadoTipoCita}} </span>
+  
+                      
+                      <h3 class="h3-c-mobile">Sede:</h3>
+                      <span class="fs-6 fw-bold-c" >{{element.idSede | tiposFiltrosCliente:'tipoSede':collectionSede}}</span>
+  
+                      
+                    </div>
+                  </div>
+                  <div class="info-p-container-c">
+                    <div class="info-container-c">
+                        <h3 class="h3-c-mobile mr-02rem">Monto:</h3>
+                        <span class="fs-6 mb-1 fw-bold-c"> {{ "S/. " + element.total.toFixed(2)}} </span>
+                    </div>
+  
+                    <div class="info-container-c">
+                        <h3 class="h3-c-mobile mr-02rem">Pago Final:</h3>
+                        <span class="fs-6 mb-1 fw-bold-c"> {{ element.precioDePagoFinal !== null ? "S/. " + element.precioDePagoFinal.toFixed(2) : "S/. " + 0}}</span>                  
+                    </div>
+                  </div>
+  
+                  <div class="info-p-container-c">
+                    <div class="info-container-c">
+                        <h3 class="h3-c-mobile mr-02rem">Fecha:</h3>
+                        <span class="fs-6 mb-1 fw-bold-c"> {{ element.fechaCita}} </span>
+                    </div>
+  
+                    <div class="info-container-c">
+                        <h3 class="h3-c-mobile mr-02rem">Hora:</h3>
+                        <span class="fs-6 mb-1 -c">{{ element.horaInicio | date: 'HH:mm' }} - {{ element.horaTermino | date: 'HH:mm' }}</span>                  
+                    </div>
+                  </div>
+  
+                </div>
+                <div style="padding: 0px;">
+                  <h3 class="zonas-list-h3">ZONAS:</h3>
+
+                  <ol class="card--zonas zonas-list-c">
+                    <li class="zona-list-li" *ngFor="let zona of element.zonas">{{zona}}</li>
+                  </ol>
+                </div>
+
+              </div>
+
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="id_cita"> 
+            <th class="es-mobile-none" mat-header-cell *matHeaderCellDef></th>
+            <td   class="contenido-tabla-perfil es-mobile-none" mat-cell *matCellDef="let element" > 
+              <div style="display: flex;">
+  
+                <app-btn-confirmar-pago [botonTipo]="'desktop'" [element]="element" [nombreClienteElegido]="nombreCliente" (pagoFinalSuccess)="cambiarEstadoPagoFinal($event.idCita, $event.result)"></app-btn-confirmar-pago>
+
+                <div class="mostrar-detalle" (click)="mostrarCitaDetalle(element); $event.stopPropagation()" style="cursor: pointer; display: flex; margin-left: 0.6rem; padding-top: 0.2rem;">
+                  <i ngbTooltip="Ver Cita"  class="mdi mdi-file-document-outline" style="display: flex;font-size: 36px !important; height: 38px;"></i>
+                  <p style="margin-bottom: 0 !important; font-weight: 600;">CI-{{element.idCita}}</p>
+                </div> 
+
+              </div>
+            </td>
+          </ng-container>
+        
+          <ng-container matColumnDef="id_tipo_cita">
+            <th class="es-mobile-none" mat-header-cell *matHeaderCellDef> 
+              <div>Sede y </div>
+              <div>Tipo de Cita</div>
+            </th>
+            <td class="contenido-tabla es-mobile-none" mat-cell  *matCellDef="let element"> 
+              <div>
+                {{element.idSede | tiposFiltrosCliente:'tipoSede':collectionSede}} 
+              </div>
+              <div class="mt-2">
+                {{element.idTipoCita | tiposFiltrosCliente:'tipoCita':listadoTipoCita}} 
+              </div>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="id_tipo_cliente">
+            <th class="es-mobile-none" mat-header-cell *matHeaderCellDef> Tipo de Cliente </th>
+            <td class="es-mobile-none contenido-tabla-perfil" mat-cell  *matCellDef="let element">
+               <span *ngIf="element.idTipoCliente === 1" style="padding: 6px 10px; font-size: 12px; color: white;" class="badge badge-pill badge-warning">{{element.idTipoCliente | tiposFiltrosCliente:'tipoCliente':listadoTipoCliente}} </span>
+               <p *ngIf="element.idTipoCliente !== 1" style="margin-bottom: 0 !important;">{{element.idTipoCliente | tiposFiltrosCliente:'tipoCliente':listadoTipoCliente}}</p>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="resumen">
+            <th class="es-mobile-none" mat-header-cell *matHeaderCellDef> Resumen </th>
+            <td class="es-mobile-none contenido-tabla-perfil" mat-cell  *matCellDef="let element"> 
+              <ol style="list-style-type: decimal; font-weight: bold;" class="card--zonas">
+                  <li *ngFor="let zona of element.zonas">{{zona}}</li>
+              </ol>
+            </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="fecha_de_cita">
+            <th class="es-mobile-none" mat-header-cell *matHeaderCellDef> Fecha y Hora </th>
+            <td class="es-mobile-none contenido-tabla-perfil" mat-cell   *matCellDef="let element">
+              <div>
+                <h6 style="margin-left: 0.3rem;">{{element.fechaCita}}</h6>
+                <div>
+                  {{ element.horaInicio | date: 'HH:mm' }} - {{ element.horaTermino | date: 'HH:mm' }}
+
+                </div>
+              </div>
+                
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="total">
+            <th class="es-mobile-none" mat-header-cell *matHeaderCellDef> Monto Total </th>
+            <td class="es-mobile-none contenido-tabla-perfil" mat-cell *matCellDef="let element"> {{ "S/. " + element.total.toFixed(2)}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="id_servicio"  >
+            <th class="es-mobile-none" mat-header-cell *matHeaderCellDef> Servicio </th>
+            <td class="es-mobile-none contenido-tabla-perfil" mat-cell *matCellDef="let element">
+              <span [ngStyle]="{'background-color': getColorPorServicioDeCita(element.idServicio)}"  style="padding: 6px 10px; font-size: 12px; color: white;" class="badge badge-pill badge-warning">{{element.idServicio | tiposFiltrosCliente:'tipoServicio':listaServicios}}  </span> 
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="pago_final">
+            <th class="es-mobile-none" mat-header-cell *matHeaderCellDef> Pago Final </th>
+            <td class="es-mobile-none contenido-tabla-perfil" mat-cell *matCellDef="let element"> {{ element.precioDePagoFinal !== null ? "S/. " + element.precioDePagoFinal.toFixed(2) : "S/. " + 0}} </td>
+          </ng-container>          
+        
+          <ng-container matColumnDef="id_estado">
+            <th class="es-mobile-none" mat-header-cell *matHeaderCellDef> Estado de Cita </th>
+            <td class="es-mobile-none contenido-tabla-perfil" mat-cell *matCellDef="let element"  >
+              <span style="padding: 6px 10px; font-size: 12px;"  [ngStyle]="{'background-color': getColorPorEstadoDeCita(element.idEstado)}" class="badge badge-pill badge-success">{{element.idEstado | tiposFiltrosCliente:'estadoCita':citaEstados}}</span>
+            </td>
+          </ng-container>
+        
+          <tr mat-header-row *matHeaderRowDef="displayedColumnsControlCitas"></tr>
+          <tr class="fila-tabla" [ngClass]="{'fondo-cliente-especial': row.idTipoCliente === 1, 'fondo-cliente-cortesia': row.idTipoCliente === 2, 'row-seleccionado': selectedRow === row}" (click)="enviarCitaSeleccionada(row)" mat-row *matRowDef="let row; columns: displayedColumnsControlCitas;"></tr>
+        </table>
+      
+      </div>
+      <mat-divider></mat-divider>
+    </ng-container>
+
+
+
+
+  </app-card>

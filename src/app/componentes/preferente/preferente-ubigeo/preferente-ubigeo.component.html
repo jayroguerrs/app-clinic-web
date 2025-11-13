@@ -1,0 +1,90 @@
+    <form [formGroup]="frmUbigeo">
+        <div class="modal-content">
+            <div class="modal-header card-header">
+                <h5 class="modal-title">Ubigeo</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="cerrarModal()">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body card-body">
+
+                <div class="form-row">
+
+                    <input  formControlName="nomDepartamento" type="hidden" value="">
+                    <input  formControlName="nomProvincia" type="hidden" value="">
+                    <input  formControlName="nomDistrito" type="hidden" value="">
+
+                    <div class="form-group col-md-6">
+                      <div class="form-floating">
+                        <select class="form-select" id="preIdDepartamento" formControlName="preIdDepartamento"
+                                (change)="onSelectDepartamento($event.target.value)"
+                                [class.is-invalid]="submittedUbigeo && fUbigeo.idDepartamento.errors">
+                          <option [value]="0">...Seleccionar...</option>
+                          <option *ngFor="let departamento of listaMaestraDepartamentos" [value]="departamento.idDepartamento">{{ departamento.departamento }}</option>
+                        </select>
+                        <label for="preIdDepartamento">Departamento</label>
+                      </div>
+                      <div *ngIf="submittedUbigeo && fUbigeo.idDepartamento.errors" class="invalid-feedback">
+                        <div *ngIf="fUbigeo.idDepartamento.errors.required">Seleccione Departamento</div>
+                      </div>
+                    </div>
+
+                    <div class="form-group col-md-6">
+                      <div class="form-floating">
+                        <select class="form-select" id="preIdProvincia" formControlName="preIdProvincia"
+                                (change)="onSelectProvincia($event.target.value)"
+                                [class.is-invalid]="submittedUbigeo && fUbigeo.idProvincia.errors">
+                          <option [value]="0">...Seleccionar...</option>
+                          <option *ngFor="let provincia of listaProvincia" [value]="provincia.idCiuda">{{ provincia.ciudad }}</option>
+                        </select>
+                        <label for="preIdProvincia">Provincia</label>
+                      </div>
+                      <div *ngIf="submittedUbigeo && fUbigeo.idProvincia.errors" class="invalid-feedback">
+                        <div *ngIf="fUbigeo.idProvincia.errors.required">Seleccione Provincia</div>
+                      </div>
+                    </div>
+
+                    <div class="form-group col-md-6">
+                      <div class="form-floating">
+                        <select class="form-select" id="preIdDistrito" formControlName="preIdDistrito"
+                                (change)="onSelectDistrito($event.target.value)"
+                                [class.is-invalid]="submittedUbigeo && fUbigeo.idDistrito.errors">
+                          <option [value]="0">...Seleccionar...</option>
+                          <option *ngFor="let distrito of listaDistrito" [value]="distrito.idUbicacion">{{ distrito.distrito }}</option>
+                        </select>
+                        <label for="preIdDistrito">Distrito</label>
+                      </div>
+                      <div *ngIf="submittedUbigeo && fUbigeo.idDistrito.errors" class="invalid-feedback">
+                        <div *ngIf="fUbigeo.idDistrito.errors.required">Seleccione Distrito</div>
+                      </div>
+                    </div>
+
+                    </div>
+
+                <div class="form-row">
+
+                    <div class="form-group col-md-12">
+                      <div class="form-floating">
+                        <textarea  class="form-control" id="direccion" placeholder=" " formControlName="direccion"
+                        [class.is-invalid]="submittedUbigeo && fUbigeo.ubigeoDireccion.errors"></textarea>
+                        <label for="direccion">Dirección</label>
+                      </div>
+                      <div *ngIf="submittedUbigeo && fUbigeo.ubigeoDireccion.errors" class="invalid-feedback">
+                        <div *ngIf="fUbigeo.ubigeoDireccion.errors.required">Por favor ingrese la dirección</div>
+                      </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="modal-footer card-footer">
+
+                <label type="button" class="btn btn-outline-primary" (click)="concatenarDireccion();">
+                    <i class="feather icon-save mr-0"></i>
+                </label>
+
+            </div>
+        </div>
+    </form>

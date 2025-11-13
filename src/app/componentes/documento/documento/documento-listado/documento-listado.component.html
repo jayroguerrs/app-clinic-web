@@ -1,0 +1,104 @@
+<ng-template #modalDocumentoDatos let-modal let-close="close">
+    <app-documento-datos
+      (eventoDocumentoListar)="documentoListar()"
+      [modal]="modalDocumentoDatosRef">
+    </app-documento-datos>
+</ng-template>
+
+<ng-template #modalDocumentoAnular let-modal let-close="close">
+  <app-documento-anulacion
+    (eventoDocumentoListar)="documentoListar()"
+    [modal]="modalDocumentoAnularRef"
+    [documento]="documentSelected">
+  </app-documento-anulacion>
+</ng-template>
+
+
+  <div class="row">
+    <!-- FILTRO -->
+    <div class="col-sm-12">
+      <app-card cardTitle="LISTADO DE DOCUMENTOS" [options]="false" [hidBlock]="true"></app-card>
+    </div>
+
+    <!-- GRILLA -->
+    <div class="col-sm-12">
+      <app-card [options]="false" cardTitle="LISTADO DE DOCUMENTOS" [hidHeader]="true">
+          <table datatable [dtOptions]="dtResponsiveOptions" class="table table-sm table-hover table-documento display compact">
+          </table>
+      </app-card>
+    </div>
+  </div>
+
+
+  <!-- SPINNER -->
+  <ngx-spinner
+      [template]="rutaImageSpinner">
+      <p style="color: white" > Cargando... </p>
+  </ngx-spinner>
+
+
+
+<div #modalVistaPrevia class="md-modal md-modal-sm md-effect-1" cdkDrag [cdkDragFreeDragPosition]="dragPosition">
+  <div class="md-content">
+    <h3 class="theme-bg4" cdkDragHandle><i class="feather icon-file-text icon"></i>Vista Previa <i class="feather icon-x close" title="Cerrar" (click)="closePreviewPdf()"></i></h3>
+    <div class="p-3">
+      <iframe class="w-100" [class.d-none]="!selected" #viewPdf style="height: 500px" src="" allowfullscreen> </iframe>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+<!-- BOTONERA ESCRITORIO -->
+<ul class="botonera-escritorio">
+  <li>
+    <button type="button" class="btn btn-primary btn-icon" [placement]="'bottom'" ngbTooltip="Listar" (click)= "documentoListar()"><i class="mdi mdi-sync"></i></button>
+    <button type="button" class="btn btn-primary btn-icon" [placement]="'bottom'" ngbTooltip="Nuevo" (click)= "documentoNuevo(modalDocumentoDatos)"><i class="mdi mdi-plus-circle-outline"></i></button>
+    <button *ngIf="selected" type="button" class="btn btn-secondary btn-icon md-trigger d-inline-flex" [placement]="'bottom'" ngbTooltip="Ver Documento" (click)="onViewPdf()"><i class="mdi mdi-eye-outline"></i></button>
+    <button *ngIf="documentSelected?.idEstado" type="button" class="btn btn-danger btn-icon d-inline-flex" [placement]="'bottom'" ngbTooltip="Anular Documento" (click)="anularDocumento(modalDocumentoAnular)"><i class="mdi mdi-cancel"></i></button>
+  </li>
+</ul>
+<!-- Menu Movil -->
+<div class="float-menu">
+  <button mat-fab color="primary" class="bg-primary" (click)="verOpciones()">
+    <mat-icon>settings</mat-icon>
+  </button>
+</div>
+<ng-template let-bottomSheetRef="bottomSheetRef" #menuMovil >
+  <div class="_content" >
+    <div class="_header">
+      <div class="px-4 pt-4 text-center">
+        <span class="d-inline-block topline"></span>
+        <p class="text-center text-white _title lead">Opciones</p>
+      </div>
+      <mat-divider class=""></mat-divider>
+    </div>
+
+    <mat-nav-list class="pt-0">
+      <a mat-list-item (click)= "documentoListar();cerrarOpciones();">
+        <i class="mat-list-icon mdi mdi-sync"></i>
+        <span class=" opt-title">Actualizar lista</span>
+      </a>
+      <mat-divider></mat-divider>
+      <a mat-list-item (click)="documentoNuevo(modalDocumentoDatos);cerrarOpciones();">
+        <i class="mat-list-icon mdi mdi-plus-circle-outline"></i>
+        <span class=" opt-title">Nuevo documento</span>
+      </a>
+      <mat-divider></mat-divider>
+      <a mat-list-item (click)="onViewPdf();cerrarOpciones();">
+        <i class="mat-list-icon mdi mdi-eye-outline"></i>
+        <span class=" opt-title">Ver PDF</span>
+      </a>
+      <mat-divider></mat-divider>
+      <a mat-list-item (click)="anularDocumento(modalDocumentoAnular);cerrarOpciones();">
+        <i class="mat-list-icon mdi mdi-cancel"></i>
+        <span class=" opt-title">Anular documento</span>
+      </a>
+    </mat-nav-list>
+  </div>
+</ng-template>
+
+

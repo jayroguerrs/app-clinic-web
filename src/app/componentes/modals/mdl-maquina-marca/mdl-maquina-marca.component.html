@@ -1,0 +1,59 @@
+﻿
+<form [formGroup]="frmGroup" (ngSubmit)="onSubmit()">
+    <div class="modal-content depilform popins">
+        <div class="modal-header card-header bg-gradient">
+          <h5 class="modal-title text-white fw-500">{{ data ? 'Editar' : 'Nuevo' }} Marca de Maquina</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="cerrarModal()">
+            <span aria-hidden="true" class="text-white">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body card-body">
+              <div class="form-group">
+                  <label for="nombre" class="form-label mb-0 text-secondary f-w-500">Nombre</label>
+                  <input type="text" maxlength="150" class="form-control form-control-sm form-indigo dz-uppercase" id="nombre" placeholder=" " formControlName="nombre" [ngClass]="{ 'is-invalid': submitted && f.nombre.errors }" >
+                  <div *ngIf="submitted && f.nombre.errors" class="invalid-feedback d-block">
+                    <div *ngIf="f.nombre.errors.required">Ingrese nombre del servicio</div>
+                  </div>
+              </div>
+              <div class="form-group">
+                <label for="nombreCorto" class="form-label mb-0 text-secondary f-w-500">Nombre Corto</label>
+                <input type="text" maxlength="20" class="form-control form-control-sm dz-uppercase form-indigo" id="nombreCorto"   placeholder=" " formControlName="nombreCorto" [ngClass]="{ 'is-invalid': submitted && f.nombreCorto.errors }" >
+                <div *ngIf="submitted && f.nombreCorto.errors" class="invalid-feedback d-block">
+                  <div *ngIf="f.nombreCorto.errors.required">Ingrese nombre corto del servicio</div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="idServicios" class="form-label mb-0 text-secondary f-w-500">Servicios</label>
+                <ng-select #idServicios id="idServicios" class="w-100" [ngClass]="{'invalid': submitted && this.f.idServicios.errors}" [items]="servicios" [searchable]="true" bindLabel="nombre" bindValue="id" placeholder="--Seleccionar--" formControlName="idServicios" [multiple]="true">
+<!--                  <ng-template ng-header-tmp>-->
+<!--                    <input type="text" class="form-control form-control-sm border rounded text-indigo fs-13px" autofocus (input)="idServicios.filter($event.target.value)"/>-->
+<!--                  </ng-template>-->
+                </ng-select>
+              </div>
+
+<!--              <div class="form-group">
+                <div class="form-floating">
+                  <input type="text" class="form-control focus color" id="color" formControlName="color" [(colorPicker)]="color" [style.background]="color" [cpOKButton]="true" [cpOKButtonText]="'Aceptar'" [cpOKButtonClass]="'btn btn-sm btn-primary'"  [cpCancelButton]="true" [cpCancelButtonText]="'Cancelar'" [cpCancelButtonClass]="'btn btn-sm btn-secondary'" (colorPickerChange)="onChangeColor($event)"  placeholder=" " [ngClass]="{ 'is-invalid': submitted && f.color.errors }" >
+                  <label for="color">Color <span class="text-danger">*</span></label>
+                </div>
+                <div *ngIf="submitted && f.color.errors" class="invalid-feedback d-block">
+                  <div *ngIf="f.color.errors.required">Seleccione un color para el servicio</div>
+                </div>
+              </div>-->
+              <div class="form-group mb-0">
+                    <label for="idEstado" class="form-label mb-0 text-secondary f-w-500">Estado</label>
+                    <select class="form-select form-select-sm form-indigo" id="idEstado" formControlName="idEstado">
+                      <option *ngFor="let est of estados" [value]="est.id">{{ est.value }}</option>
+                    </select>
+              </div>
+        </div>
+        <div class="modal-footer bg-white py-3">
+          <div class="form-row float-right">
+            <button matRipple type="submit" class="btn btn-outline-primary"><i class="feather icon-save"></i>Guardar</button>
+            <button matRipple type="reset" class="btn btn-outline-danger mr-2" (click)="cerrarModal()"><i class="feather icon-slash"></i>Cancelar</button>            
+          </div>
+        </div>
+
+    </div>
+</form>

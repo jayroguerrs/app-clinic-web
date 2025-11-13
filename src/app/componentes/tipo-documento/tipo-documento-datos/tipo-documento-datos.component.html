@@ -1,0 +1,128 @@
+﻿  <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+       <div class="modal-content">
+          <div class="modal-header card-header">
+              <h5 class="modal-title">{{ id ? 'Editar' : 'Nuevo' }} Tipo de Documento</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="cerrarModal()">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+         <div class="modal-body card-body">
+              <div class="container-fluid">
+                <div class="row">
+                    <div class="form-group col-12">
+                        <div class="form-floating">
+                          <input maxlength="100" type="text" class="form-control dz-uppercase" id="nombre" placeholder=" " formControlName="nombre" [ngClass]="{ 'is-invalid': submitted && f.nombre.errors }" >
+                          <label for="nombre">Nombre <span class="text-danger">*</span></label>
+                        </div>
+                        <div *ngIf="submitted && f.nombre.errors" class="invalid-feedback d-block">
+                          <div *ngIf="f.nombre.errors.required">Ingrese un nombre para el documento</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-12">
+                        <div class="form-floating">
+                          <input maxlength="150" type="text" class="form-control dz-uppercase" id="titulo" placeholder=" " formControlName="titulo" [ngClass]="{ 'is-invalid': submitted && f.titulo.errors }" >
+                          <label for="titulo">Título del documento <span class="text-danger">*</span></label>
+                        </div>
+                        <div *ngIf="submitted && f.titulo.errors" class="invalid-feedback d-block">
+                          <div *ngIf="f.titulo.errors.required">Ingrese un título para el documento</div>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                      <div class="form-floating">
+                        <select class="form-control form-select" id="idServicio" formControlName="idServicio" [ngClass]="{ 'is-invalid': submitted && f.idServicio.errors }">
+                          <option value="">--Seleccionar--</option>
+                          <option *ngFor="let serv of servicios" [value]="serv.id">{{ serv.nombre }}</option>
+                        </select>
+                        <label for="idServicio">Servicio</label>
+                      </div>
+                      <div *ngIf="submitted && f.idServicio.errors" class="invalid-feedback d-block">
+                        <div *ngIf="f.idServicio.errors.required">Seleccionar un servicio</div>
+                      </div>
+                    </div>
+
+
+                    <div class="col-12 mt-3">
+                      <div class="border rounded-10px p-3">
+                        <p>Controladores</p>
+
+                        <div class="list-group list-group-flush">
+                          <div class="list-group-item d-flex flex-row align-items-center">
+                            <div>Promoción</div>
+                            <div class="ml-auto">
+                              <label class="cursor-pointer popins form-check form-switch form-check-custom form-switch-indigo form-check-solid mx-0 position-relative">
+                                <input #blpromocion type="checkbox" class="no-pointer-events form-check-input w-50px h-30px" formControlName="blPromocion">
+                                <span class="position-absolute start-0 text-white ml-2 fs-10px " [class.d-none]="!blpromocion.checked">SI</span>
+                                <span class="position-absolute end-0 text-indigo mr-2 fs-10px " [class.d-none]="blpromocion.checked">NO</span>
+                              </label>
+                            </div>
+                          </div>
+                          <div class="list-group-item d-flex flex-row align-items-center">
+                            <div>Zonas</div>
+                            <div class="ml-auto">
+                              <label class="cursor-pointer popins form-check form-switch form-check-custom form-switch-indigo form-check-solid mx-0 position-relative">
+                                <input #blzona type="checkbox" class="no-pointer-events form-check-input w-50px h-30px" formControlName="blZona">
+                                <span class="position-absolute start-0 text-white ml-2 fs-10px " [class.d-none]="!blzona.checked">SI</span>
+                                <span class="position-absolute end-0 text-indigo mr-2 fs-10px " [class.d-none]="blzona.checked">NO</span>
+                              </label>
+                            </div>
+                          </div>
+                          <div class="list-group-item d-flex flex-row align-items-center">
+                            <div>Patología</div>
+                            <div class="ml-auto">
+                              <label class="cursor-pointer popins form-check form-switch form-check-custom form-switch-indigo form-check-solid mx-0 position-relative">
+                                <input #blpatologia type="checkbox" class="no-pointer-events form-check-input w-50px h-30px" formControlName="blPatologia">
+                                <span class="position-absolute start-0 text-white ml-2 fs-10px " [class.d-none]="!blpatologia.checked">SI</span>
+                                <span class="position-absolute end-0 text-indigo mr-2 fs-10px " [class.d-none]="blpatologia.checked">NO</span>
+                              </label>
+                            </div>
+                          </div>
+                          <div class="list-group-item d-flex flex-row align-items-center">
+                            <div>Apoderado</div>
+                            <div class="ml-auto">
+                              <label class="cursor-pointer popins form-check form-switch form-check-custom form-switch-indigo form-check-solid mx-0 position-relative">
+                                <input #blapoderado type="checkbox" class="no-pointer-events form-check-input w-50px h-30px" formControlName="blApoderado">
+                                <span class="position-absolute start-0 text-white ml-2 fs-10px " [class.d-none]="!blapoderado.checked">SI</span>
+                                <span class="position-absolute end-0 text-indigo mr-2 fs-10px " [class.d-none]="blapoderado.checked">NO</span>
+                              </label>
+                            </div>
+                          </div>
+                          <div class="list-group-item d-flex flex-row align-items-center">
+                            <div>Mantenimiento</div>
+                            <div class="ml-auto">
+                              <label class="cursor-pointer popins form-check form-switch form-check-custom form-switch-indigo form-check-solid mx-0 position-relative">
+                                <input #blmantenimiento type="checkbox" class="no-pointer-events form-check-input w-50px h-30px" formControlName="blMantenimiento">
+                                <span class="position-absolute start-0 text-white ml-2 fs-10px " [class.d-none]="!blmantenimiento.checked">SI</span>
+                                <span class="position-absolute end-0 text-indigo mr-2 fs-10px " [class.d-none]="blmantenimiento.checked">NO</span>
+                              </label>
+                            </div>
+                          </div>
+                          <div class="list-group-item d-flex flex-row align-items-center">
+                            <div>Retroceso</div>
+                            <div class="ml-auto">
+                              <label class="cursor-pointer popins form-check form-switch form-check-custom form-switch-indigo form-check-solid mx-0 position-relative">
+                                <input #blretroceso type="checkbox" class="no-pointer-events form-check-input w-50px h-30px" formControlName="blRetroceso">
+                                <span class="position-absolute start-0 text-white ml-2 fs-10px " [class.d-none]="!blretroceso.checked">SI</span>
+                                <span class="position-absolute end-0 text-indigo mr-2 fs-10px " [class.d-none]="blretroceso.checked">NO</span>
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+
+
+
+                      </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+          <div class="modal-footer card-footer">
+              <div class="form-row float-right">
+                  <button type="submit" class="btn btn-outline-primary"><i class="feather icon-save"></i>Guardar</button>
+                  <button type="reset"  class="btn btn-outline-danger" (click)="cerrarModal()"><i class="feather icon-slash"></i>Cancelar</button>
+              </div>
+          </div>
+
+      </div>
+  </form>

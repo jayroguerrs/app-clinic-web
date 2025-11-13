@@ -1,0 +1,61 @@
+<div class="modal-header card-header">
+  <h5 class="modal-title">Registrar incidencia</h5>
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="cerrarModal()"><span aria-hidden="true">&times;</span></button>
+</div>
+<div class="modal-body card-body">
+
+  <form [formGroup]="formGroup">
+    <div class="form-group">
+      <div class="form-floating">
+        <input class="form-control" id="idCliente" (click)="seleccionarCliente()" placeholder=" " [value]="getCLiente()" readonly>
+        <label for="idCliente">Cliente</label>
+      </div>
+    </div>
+
+    <div class="citas border rounded mb-3 p-3" [class.border-danger]="submitted && f.idCita.errors">
+      <p>Páginas atendidas</p>
+
+      <mat-progress-bar *ngIf="loadingCitasAtendidas" mode="indeterminate"></mat-progress-bar>
+      <table class="table table-sm table-hover display compact dataTable no-footer dtr-inline mb-0" >
+        <thead>
+          <tr class="text-white">
+            <td></td>
+            <td>ID</td>
+            <td>Fecha</td>
+            <td>Estado</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let cita of citas">
+            <td><input type="radio" class="cursor-pointer" name="idCita" formControlName="idCita" [value]="cita.id"></td>
+            <td><a [href]="'/Cita/'+cita.id+'/1/'+cliente.value.id+'/0'" target='_blank'>{{ cita.id }}</a></td>
+            <td>{{ cita.fechaCita | date: 'dd-MM-yyyy' }}</td>
+            <td>{{ cita.estado }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div *ngIf="submitted && f.idCita.errors" class="invalid-feedback d-block" >
+        <div *ngIf="f.idCita.errors.required">Seleccione una cita</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="form-floating">
+
+          <textarea #descripcion id="descripcion" maxlength="500" class="form-control"  placeholder=" " formControlName="descripcion" [ngClass]="{ 'is-invalid': submitted && f.descripcion.errors }"></textarea>
+          <label for="descripcion">Descripción</label>
+        <p class="mb-0 text-right small">{{ descripcion.value.length }} / 500</p>
+      </div>
+      <div *ngIf="submitted && f.descripcion.errors" class="invalid-feedback d-block">
+        <div *ngIf="f.descripcion.errors.required">Ingrese la descripción de la incidencia</div>
+      </div>
+    </div>
+  </form>
+
+</div>
+<div class="modal-footer card-footer">
+  <div class="form-row float-right">
+    <button type="submit" class="btn btn-outline-primary" (click)="onSubmit()"><i class="feather icon-save"></i>Guardar</button>
+    <button type="reset" class="btn btn-outline-danger" (click)="cerrarModal()"><i class="feather icon-slash"></i>Cancelar</button>
+  </div>
+</div>

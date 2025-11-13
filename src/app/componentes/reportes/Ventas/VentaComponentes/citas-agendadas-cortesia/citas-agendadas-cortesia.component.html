@@ -1,0 +1,19 @@
+<app-card [options]="false" [customHeader]="false" [options]="true" [collapse]="true" [excel]="true" (excelCallback)="exportarExcel()" cardTitle="Citas agendadas de cortesia por sede">
+  <mat-progress-bar mode="indeterminate" id="progress" *ngIf="loading"></mat-progress-bar>
+
+  <div class="form-row">
+    <!--<div class="table-container col-12 col-md-12 mb-2">
+      <div class="border rounded p-2 h-100">
+        <table id="table10TopZonas" datatable [dtOptions]="dtResponsiveOptions" class="table table-sm table-hover display compact"></table>
+      </div>
+    </div>-->
+    <div class="col-12 col-md-12 mb-2">
+      <div id="chartCitasAgendadasCortesia" class="border rounded"></div>
+    </div>
+    <div class="col-12 col-md-12">
+      <div id="chartCitasAgendadasCortesiaTotal" class="border rounded"></div>
+    </div>
+  </div>
+
+
+</app-card>

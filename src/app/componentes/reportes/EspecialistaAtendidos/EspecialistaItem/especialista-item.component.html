@@ -1,0 +1,20 @@
+﻿<app-card [options]="false" [customHeader]="false" [cardTitle]="especialista?.nombre" [cardTitle2]="'N° citas atendidas: '+ totalCitas ">
+  <table datatable [dtOptions]="dtResponsiveOptions" class="table table-sm table-hover display compact">
+    <thead>
+    <tr>
+      <th>#</th>
+      <th>FECHA</th>
+      <th>Cantidad</th>
+      <th>Acciones</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let reporte of especialista?.citas; let i = index">
+      <td width="50" class="text-center">{{ i + 1 }}</td>
+      <td>{{ date(reporte.fechacita) | date: 'dd-MM-yyyy' }}</td>
+      <td class="text-center">{{ reporte.cantidad }}</td>
+      <td><button class="btn btn-sm btn-info px-4" (click)="verDetalles(especialista.nombre, reporte.idUsuarioAtendio, date(reporte.fechacita) )"><i class="feather icon-eye"></i>Ver detalles</button></td>
+    </tr>
+    </tbody>
+  </table>
+</app-card>

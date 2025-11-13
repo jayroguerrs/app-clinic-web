@@ -1,0 +1,216 @@
+<!--<table class="table">
+  <thead>
+  <tr class="bg-light fw-semibold">
+    <th>Zona</th>
+    <th>Tecnología</th>
+    <th>Promoción</th>
+    <th class="w-110px">Sesión</th>
+    <th class="w-110px">Min</th>
+    <th>Agendado</th>
+    <th class="w-69px"></th>
+  </tr>
+  </thead>
+  <tbody>
+
+    <tr *ngFor="let d of collection; let i = index;">
+      <td class="f-w-500">{{ d.zona }}</td>
+      <td>
+        <select disabled class="form-select form-select-sm form-select-solid" (change)="changeTecnologia(i, $event)" [class.bg-color-light-danger]="submitted && !d.idTecnologia">
+          <option [value]="0" [selected]="0 === d.idTecnologia">&#45;&#45;Seleccionar&#45;&#45;</option>
+          <option *ngFor="let t of tecnologias" [value]="t.id" [selected]="t.id === d.idTecnologia">{{t.nombre}}</option>
+        </select>
+      </td>
+      <td>
+        <ng-container [ngSwitch]="d.loadingPromocionZona">
+          <div class="position-relative" *ngSwitchCase="false">
+            <span class="position-absolute no-pointer-events h-100 d-flex align-items-center ps-10px text-muted"><fontawesome-svg [width]="24" [height]="24" [icon]="'person'" [type]="'duotone'"  ></fontawesome-svg></span>
+            <select class="form-select form-select-sm form-select-solid ps-42px" (change)="changePromocion(i, $event)" [class.bg-color-light-danger]="submitted && !d.idPromocionPrecio">
+              <option value="">&#45;&#45;Seleccionar&#45;&#45;</option>
+              <option *ngFor="let pz of d.promocionZona" [value]="pz.idPromocionPrecio">{{pz.promocion}}</option>
+            </select>
+          </div>
+          <div *ngSwitchCase="true" class="sk block rounded h-41px"></div>
+          <div *ngIf="submitted && !d.idPromocionPrecio" class="invalid-feedback d-block">* Seleccionar una promoción</div>
+        </ng-container>
+      </td>
+      <td>
+        <input #sesion type="number" class="form-control form-control-sm form-control-solid max-w-80px" [class.bg-color-light-danger]="submitted && !d.sesion" step="1" min="1" max="20" [value]="d.sesion" (change)="changeSesion(i, $event)">
+      </td>
+      <td>
+        <input readonly type="number" class="form-control form-control-sm form-control-solid max-w-80px" step="5" min="5" [value]="d.minutos" (change)="changeMinutos(i, $event)">
+      </td>
+      <td class="w-400px">
+        <div *ngIf="d.sesion === 1" class="position-relative" >
+          <span class="position-absolute no-pointer-events h-100 d-flex align-items-center ps-10px text-muted"><fontawesome-svg [width]="24" [height]="24" [icon]="'user'" [type]="'duotone'" ></fontawesome-svg></span>
+          <input #idUsuarioAgendado type="hidden" class="form-control form-control-solid ps-42px" [value]="d.idUsuarioAgendado">
+          <input type="text" class="form-control form-control-sm form-control-solid ps-42px cursor-pointer" placeholder="&#45;&#45;Seleccionar&#45;&#45;" [class.bg-color-light-danger]="submitted && !d.idUsuarioAgendado" readonly [value]="d.usuarioAgendado" (click)="selectUser(d)">
+        </div>
+        <div *ngIf="submitted && !d.idUsuarioAgendado && d.sesion === 1" class="invalid-feedback d-block">* Seleccionar el usuario que agendo</div>
+      </td>
+      <td>
+        <button class="btn btn-sm sbtn btn-light-danger">
+          <fontawesome-svg type="regular" icon="trash-can" [width]="24" [height]="24"></fontawesome-svg>
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>-->
+
+
+<div class="row">
+  <!--{{ parametros.citaAccionActual }}
+  {{ accionCita.VER }}
+  {{ accionCita.ATENDER }}-->
+  <div *ngFor="let d of collection; let i = index" class="col-12 mb-3" >
+    <div class="scard bgi-no-repeat card-xl-stretch bgi-no-repeat h-100" style="background-position: right top; background-size: 30% auto; background-image*: url('https://preview.keenthemes.com/metronic8/demo1/assets/media/svg/shapes/abstract-2.svg')">
+      <div class="card-body">
+
+        <div *ngIf="parametros.citaAccionActual === accionCita.VER || parametros.citaAccionActual === accionCita.ATENDER">
+          <div>
+            <p class="fw-bold text-truncate text-indigo fs-16px mb-0 pe-62px">{{ d.zona }}</p>
+            <button type="button" class="position-absolute btn text-indigo top-7px end-0 m-0" (click)="toggle(i)">
+              <fontawesome-svg *ngIf="d.collapsed" icon="plus" type="light" [width]="20" [height]="20"></fontawesome-svg>
+              <fontawesome-svg *ngIf="!d.collapsed" icon="minus" type="light" [width]="20" [height]="20"></fontawesome-svg>
+            </button>
+          </div>
+          <section class="collapsible" [@collapse]="d.collapsed">
+            <div class="separator my-3"></div>
+            <div class="row">
+              <div class="col-6">
+                <div class="form-group">
+                  <label class="mb-0 fs-10px text-uppercase d-block">Tecnología</label>
+                  <p class="mb-0 fw-bold text-truncate text-uppercase text-dark">{{d.tecnologia}}</p>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="form-group">
+                  <label class="mb-0 fs-10px text-uppercase d-block">Promoción</label>
+                  <p class="mb-0 fw-bold text-truncate text-uppercase text-dark">{{d.promocion}}</p>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="form-group">
+                  <label class="mb-0 fs-10px text-uppercase d-block">N° Sesión</label>
+                  <p class="mb-0 fw-bold text-truncate text-uppercase text-dark">{{d.sesion}}</p>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="form-group">
+                  <label class="mb-0 fs-10px text-uppercase d-block">Duración</label>
+                  <p class="mb-0 fw-bold text-truncate text-uppercase text-dark">{{d.minutos}} minutos</p>
+                </div>
+              </div>
+              <div *ngIf="d.sesion === 1" class="col-6">
+                <div class="form-group">
+                  <label class="mb-0 fs-10px text-uppercase d-block">Agendado</label>
+                  <p class="mb-0 fw-bold text-truncate text-uppercase text-dark" [attr.title]="d.usuarioAgendado">{{d.usuarioAgendado}}</p>
+                </div>
+              </div>
+              <div *ngIf="d.sesion === 1" class="col-6">
+                <div class="form-group">
+                  <label class="mb-0 fs-10px text-uppercase d-block">Origen</label>
+                  <p class="mb-0 fw-bold text-truncate text-uppercase text-dark" [attr.title]="nombreMedioOrigen(d.idMedioContactoOrigen)">{{nombreMedioOrigen(d.idMedioContactoOrigen)}}</p>
+                </div>
+              </div>
+              <!--<div class="col-6">
+                <div class="form-group">
+                  <label class="mb-0 fs-10px text-uppercase d-block">Precio</label>
+                  <p class="mb-0 fw-bold text-truncate text-uppercase text-dark" >S/ {{d.precio.toFixed(2)}}</p>
+                </div>
+              </div>-->
+            </div>
+          </section>
+        </div>
+
+        <div *ngIf="parametros.citaAccionActual === accionCita.NUEVA || parametros.citaAccionActual === accionCita.EDITAR">
+          <div>
+            <p class="fw-bold text-truncate text-indigo fs-16px mb-0 pe-62px">{{ d.zona }}</p>
+            <button type="button" class="position-absolute btn text-indigo top-7px end-0 m-0" (click)="toggle(i)">
+              <fontawesome-svg *ngIf="d.collapsed" icon="plus" type="light" [width]="20" [height]="20"></fontawesome-svg>
+              <fontawesome-svg *ngIf="!d.collapsed" icon="minus" type="light" [width]="20" [height]="20"></fontawesome-svg>
+            </button>
+          </div>
+          <section class="collapsible" [@collapse]="d.collapsed">
+            <div class="separator my-3"></div>
+            <div class="row">
+              <div class="col-12 col-md-6 mb-2">
+                <label [attr.for]="'tecnologia_'+i" class="lh-1 fw-semibold text-gray-800 fs-12px mb-1">Tecnología</label>
+                <div class="form-control-text readonly rounded align-items-center">
+                  <input [attr.id]="'tecnologia_'+i" readonly type="text" class="form-control form-control-xs" [value]="d.tecnologia" >
+                </div>
+              </div>
+              <div class="col-12 col-md-6 mb-2">
+                <ng-container [ngSwitch]="d.loadingPromocionZona">
+                  <div *ngSwitchCase="false">
+                    <label [attr.for]="'promocion_'+i" class="lh-1 fw-semibold text-gray-800 fs-12px mb-1">Promoción</label>
+                    <div class="form-control-text readonly rounded align-items-center">
+                      <select [disabled]="parametros.citaAccionActual === accionCita.VER" class="form-control form-control-xs" (change)="changePromocion(i, $event)" [class.bg-color-light-danger]="submitted && !d.idPromocionPrecio">
+                        <option value="">--Seleccionar--</option>
+                        <option *ngFor="let pz of d.promocionZona" [value]="pz.idPromocionPrecio" [selected]="pz.idPromocionPrecio === d.idPromocionPrecio">{{pz.promocion}}</option>
+                      </select>
+                      <span class="small text-dark fs-11px"></span>
+                    </div>
+                  </div>
+                  <div *ngSwitchCase="true" class="sk block rounded h-33px"></div>
+                  <div *ngIf="submitted && !d.idPromocionPrecio" class="invalid-feedback d-block">* Seleccionar una promoción</div>
+                </ng-container>
+              </div>
+              <div class="col-12 col-md-6 mb-2">
+                <div class="form-row">
+                  <div class="col-6">
+                    <label [attr.for]="'duracion_'+i" class="lh-1 fw-semibold text-gray-800 fs-12px mb-1">N° Sesión</label>
+                    <div class="d-inline-flex form-control-text readonly rounded align-items-center">
+                      <input [attr.id]="'duracion_'+i" #sesion type="number" [disabled]="parametros.citaAccionActual === accionCita.VER" class="form-control form-control-xs text-center" [class.bg-color-light-danger]="submitted && !d.sesion" step="1" min="1" max="20" [value]="d.sesion" (change)="changeSesion(i, $event)">
+                      <span class="small text-dark px-2 fs-11px">Sesión</span>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <label [attr.for]="'duracion_'+i" class="lh-1 fw-semibold text-gray-800 fs-12px mb-1">Duración</label>
+                    <div class="d-inline-flex form-control-text readonly rounded align-items-center">
+                      <input [attr.id]="'duracion_'+i" readonly type="text" class="form-control form-control-xs text-center" [value]="d.minutos" (change)="changeMinutos(i, $event)">
+                      <span class="small text-dark px-2 fs-11px">Minutos</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div *ngIf="d.sesion === 1" class="col-12 col-md-6 mb-2">
+                <label class="fw-semibold text-gray-800 fs-12px mb-1">Agendado</label>
+                <div class="d-inline-flex form-control-text readonly rounded align-items-center">
+                  <input #idUsuarioAgendado type="hidden" class="form-control form-control-solid" [value]="d.idUsuarioAgendado">
+                  <input type="text" class="form-control form-control-xs form-control-solid cursor-pointer" placeholder="--Seleccionar--" [class.bg-color-light-danger]="submitted && !d.idUsuarioAgendado" readonly [value]="d.usuarioAgendado" (click)="selectUser(d)">
+                  <span class="small text-dark px-2 fs-11px">Personal</span>
+                </div>
+                <div *ngIf="submitted && !d.idUsuarioAgendado && d.sesion === 1" class="invalid-feedback d-block">* Seleccionar el usuario que agendo</div>
+              </div>
+              <div *ngIf="d.sesion === 1" class="col-12 col-md-6 mb-2">
+                  <label [attr.for]="'promocion_'+i" class="lh-1 fw-semibold text-gray-800 fs-12px mb-1">Origen</label>
+                  <div class="d-flex  form-control-text readonly rounded align-items-center">
+                    <select [disabled]="parametros.citaAccionActual === accionCita.VER" class="form-control form-control-xs" (change)="changeOrigen(i, $event)" [class.bg-color-light-danger]="submitted && !d.idMedioContactoOrigen && d.sesion === 1">
+                      <option [value]="0">--Seleccionar--</option>
+                      <option *ngFor="let m of medioContacto" [value]="m.id" [selected]="m.id === d.idMedioContactoOrigen ? true : null">{{m.nombre}}</option>
+                    </select>
+                    <span class="small text-dark px-2 fs-11px">Medio Contacto</span>
+                  </div>
+                  <div *ngIf="submitted && !d.idMedioContactoOrigen && d.sesion === 1" class="invalid-feedback d-block">* Seleccionar el origen</div>
+              </div>
+              <!--<div class="col-12 col-md-6 mt-3 mt-md-0 mb-2">
+                <label [attr.for]="'precio_'+i" class="fw-semibold text-gray-800 fs-12px mb-1">Precio</label>
+                <div class="d-inline-flex form-control-text readonly rounded align-items-center">
+                  <input [attr.id]="'precio_'+i" type="text" [disabled]="parametros.citaAccionActual === accionCita.VER" class="form-control form-control-xs text-center" (ngModelChange)="changePrecio(i, $event)" [(ngModel)]="d.precio" [options]="options" currencyMask>
+                  <span class="small text-dark px-2 fs-11px">Soles</span>
+                </div>
+              </div>-->
+            </div>
+          </section>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+

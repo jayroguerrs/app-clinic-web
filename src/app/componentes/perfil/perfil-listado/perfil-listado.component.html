@@ -1,0 +1,85 @@
+<!-- SPINNER -->
+<ngx-spinner
+    [template]="rutaImageSpinner">
+    <p style="color: white" > Cargando... </p>
+</ngx-spinner>
+
+<!-- PERFIL CONFIGURACION -->
+<ng-template #modalPerfilConfiguracion let-modal let-close="close">
+    <app-perfil-configuracion
+      [modal] = "modalPerfilConfiguracionRef"
+      [idPerfil] = "idPerfil">
+    </app-perfil-configuracion>
+  </ng-template>
+
+<div class="row">
+  <!-- FILTRO -->
+  <div class="col-sm-12">
+    <app-card cardTitle="LISTADO DE PERFILES" [options]="false" [hidBlock]="true">
+    </app-card>
+  </div>
+
+  <!-- GRILLA -->
+  <div class="col-sm-12">
+    <app-card [options]="false" [customHeader]="true">
+      <div class="table table-sm-responsive">
+        <table datatable [dtOptions]="dtResponsiveOptions" class="table table-sm table-hover table-perfil display compact">
+        </table>
+      </div>
+    </app-card>
+  </div>
+</div>
+
+
+
+  <!-- BOTONERA ESCRITORIO -->
+  <ul class="botonera-escritorio">
+    <li>
+      <button type="button" class="btn btn-primary btn-icon"    [placement]="'bottom'" ngbTooltip="Listar"  (click)= "perfilListar()"><i class="mdi mdi-sync"></i></button>
+      <button *ngIf="this.accTot || this.accCrud || this.accCreate" type="button" class="btn btn-primary btn-icon"    [placement]="'bottom'" ngbTooltip="Nuevo"   (click)= "perfilNuevo(modalPerfilConfiguracion)"><i class="mdi mdi-plus-circle-outline"></i></button>
+      <button *ngIf="selected && (this.accTot || this.accCrud || this.accUpdate)" type="button" class="btn btn-warning btn-icon"  [placement]="'bottom'" ngbTooltip="Editar"       (click)= "perfilEditar(modalPerfilConfiguracion)"><i class="mdi mdi-square-edit-outline"></i></button>
+    </li>
+  </ul>
+
+
+<!-- Menu Movil -->
+<div class="float-menu">
+  <button mat-fab color="primary" class="bg-primary" (click)="verOpciones()">
+    <mat-icon>settings</mat-icon>
+  </button>
+</div>
+<ng-template let-bottomSheetRef="bottomSheetRef" #menuMovil >
+  <div class="_content" >
+    <div class="_header">
+      <div class="px-4 pt-4 text-center">
+        <span class="d-inline-block topline"></span>
+        <p class="text-center text-white _title lead">Opciones</p>
+      </div>
+      <mat-divider class=""></mat-divider>
+    </div>
+
+    <mat-nav-list class="pt-0">
+      <div>
+        <a mat-list-item (click)= "perfilListar();cerrarOpciones();">
+          <i class="mat-list-icon mdi mdi-sync"></i>
+          <span class=" opt-title">Listar</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+      <div >
+        <a *ngIf="this.accTot || this.accCrud || this.accCreate" mat-list-item (click)= "perfilNuevo(modalPerfilConfiguracion);cerrarOpciones();">
+          <i class="mat-list-icon mdi mdi-plus-circle-outline"></i>
+          <span class=" opt-title">Nuevo</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+      <div *ngIf="selected && (this.accTot || this.accCrud || this.accUpdate)">
+        <a mat-list-item (click)= "perfilEditar(modalPerfilConfiguracion);cerrarOpciones();">
+          <i class="mat-list-icon mdi mdi-plus-circle-outline"></i>
+          <span class=" opt-title">Editar</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+    </mat-nav-list>
+  </div>
+</ng-template>

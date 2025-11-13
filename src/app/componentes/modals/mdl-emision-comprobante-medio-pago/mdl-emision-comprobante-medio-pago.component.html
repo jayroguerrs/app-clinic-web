@@ -1,0 +1,82 @@
+﻿
+        <div class="modal-header card-header bg-gradient">
+            <h5 class="card-title text-white f-w-500 m-0">Completar Medio de Pago</h5>
+            <button type="button" class="btn sbtn btn-sm btn-icon btn-active-color-primary h-auto w-auto p-0" (click)="evtCerrarModal()">
+              <span class="svg-icon svg-icon-1 text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor"></rect>
+                  <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor"></rect>
+                </svg>
+              </span>
+            </button>
+        </div>
+        <div class="card-body bg-white depilform position-relative d-flex flex-column">
+
+          <div *ngFor="let mp of mediosPago; let i = index" class="border rounded mb-3 px-3 py-2">
+            <div class="d-flex">
+              <div class="w-100">
+                <h5 class="text-center my-2">Medio de Pago #{{ i + 1 }}</h5>
+                <div class="form-row mx-0">
+                  <div class="col-6 mb-2">
+                    <label class="form-label mb-0 text-secondary f-w-500">Tipo Pago</label>
+                    <select class="form-indigo form-select form-indigo form-select-sm" (change)="evtSelectTipoPago($event, mp)">
+                      <option value="">-- Seleccionar --</option>
+                      <option *ngFor="let s of tiposPago" [value]="s.idTipoPago" [selected]="mp.idTipoPago === s.idTipoPago">{{ s.descripcion }}</option>
+                    </select>
+                  </div>
+                  <div *ngIf="mp.entidad" class="col-6 mb-2">
+                    <label class="form-label mb-0 text-secondary f-w-500">Entidad Tipo Pago</label>
+                    <select class="form-indigo form-select form-indigo form-select-sm" (change)="evtChangeEntidadTipoPago($event, mp)">
+                      <option value="">-- Seleccionar --</option>
+                      <option *ngFor="let s of entidadTiposPago" [value]="s.id">{{ s.nombre }}</option>
+                    </select>
+                  </div>
+                  <div class="col-6 mb-2">
+                    <label class="form-label mb-0 text-secondary f-w-500">Importe</label>
+                    <input type="text" currencyMask [options]="options" class="form-control form-indigo form-control-sm" [(ngModel)]="mp.importe" (ngModelChange)="evtChangeImporte($event)">
+                  </div>
+                  <div *ngIf="mp.numOperacion" class="col-6 mb-2">
+                    <label class="form-label mb-0 text-secondary f-w-500">N° Operación / N° pedido</label>
+                    <input type="text" class="form-control form-indigo form-control-sm" [value]="mp.numeroPedido" (keyup)="evtKeyUpPedido($event, mp)">
+                  </div>
+                  <div class="col-12 mb-2">
+                    <label class="form-label mb-0 text-secondary f-w-500">Nota</label>
+                    <input type="text" class="form-control form-indigo form-control-sm" [value]="mp.nota" (keyup)="evtKeyUpNota($event, mp)">
+                  </div>
+                </div>
+              </div>
+              <div class="w-50px d-flex">
+                <button [ngbTooltip]="'Quitar'" matRipple class="btn sbtn fs-16px p-2 m-auto btn-light-danger text-danger" (click)="evtQuitar(i)"><i class="fa-light fa-trash-can m-0"></i></button>
+              </div>
+            </div>
+
+          </div>
+
+          <button matRipple class="btn sbtn btn-sm btn-indigo mb-3 shadow-indigo" (click)="evtAgregarMedioPago()">Agregar medio de pago</button>
+
+          <div class="border rounded p-3">
+            <div class="form-row mx-0">
+              <div class="col-4 mb-2">
+                <label for="impTotal" class="form-label mb-0 text-secondary f-w-500">Importe Total</label>
+                <input id="impTotal" currencyMask [options]="options" type="text" class="form-control form-indigo form-control-sm" [value]="importeTotal()" disabled>
+              </div>
+              <div class="col-4 mb-2">
+                <label for="impTotalPagado" class="form-label mb-0 text-secondary f-w-500">Importe Total Pagado</label>
+                <input id="impTotalPagado" currencyMask [options]="options" type="text" class="form-control form-indigo form-control-sm" [(ngModel)]="importePagado" disabled>
+              </div>
+              <div class="col-4 mb-2">
+                <label for="vuelto" class="form-label mb-0 text-secondary f-w-500">Diferencia (vuelto)</label>
+                <input id="vuelto" currencyMask [options]="options" type="text" class="form-control form-indigo form-control-sm" [(ngModel)]="vuelto" disabled>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="modal-footer bg-white py-3">
+            <div class="form-row float-right">
+              <button matRipple type="reset" class="btn sbtn btn-light mr-2" (click)="evtCerrarModal()">Cancelar</button>
+              <button matRipple type="button" class="btn sbtn btn-primary shadow btn-shadow-primary" (click)="evtOnValidate()">Aceptar</button>
+            </div>
+        </div>
+
+

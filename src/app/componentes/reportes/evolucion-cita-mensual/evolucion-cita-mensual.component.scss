@@ -1,0 +1,82 @@
+// body {
+//     display: flex;
+//     font-family: -apple-system;
+//     font-size: 90%;
+//     color: #333;
+//     justify-content: center;
+//   }
+  
+//   .table-wrapper {
+//     max-width: 700px;
+//     overflow: scroll;
+//   }
+
+
+table {
+    border: 1px solid #ddd;
+    border-collapse: collapse;
+    background-color: white;
+  }
+  
+  td, th {
+    white-space: nowrap;
+    border-right: 1px solid rgb(255, 255, 255);
+    padding: 10px;
+  }
+
+  // The heading of our table
+th {
+    background-color: #6d82a7;
+    border-right: 1px solid rgb(255, 255, 255);
+    position: sticky;
+    top: -1px;
+    z-index: 2;
+    color: white;
+    
+    // The first cell that lives in the top left of our spreadsheet
+    &:first-of-type {
+      left: 0;
+      z-index: 3;
+    }
+  }
+  
+  // The first column that we want to stick to the left
+  tbody tr td:first-of-type {
+    background-color: #6d82a7;
+    color: white;
+    border-right: 1px solid rgb(255, 255, 255);
+    position: sticky;
+    left: -1px;
+    z-index: 1;
+  }
+
+  .ajuste {
+    text-align: center; 
+    // border: 1px solid black; 
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  .datos {
+    font-weight: normal; 
+    color:rgb(94, 93, 93)
+  }
+
+  tbody> tr>:nth-child(2) { 
+    color: black;
+    font-weight: bold;
+  }
+
+  thead> tr>:nth-child(0) {
+    background-color: #3f4d67;
+  }
+
+  .disable-select {
+    user-select: none; /* supported by Chrome and Opera */
+   -webkit-user-select: none; /* Safari */
+   -khtml-user-select: none; /* Konqueror HTML */
+   -moz-user-select: none; /* Firefox */
+   -ms-user-select: none; /* Internet Explorer/Edge */
+}

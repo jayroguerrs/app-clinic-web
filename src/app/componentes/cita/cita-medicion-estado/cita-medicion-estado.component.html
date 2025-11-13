@@ -1,0 +1,45 @@
+    <div class="modal-content">
+        <div class="modal-header card-header">
+            <h5 class="modal-title">{{ tipoMedicion == 1 ? 'Satisfacción del cliente' : 'Efectividad del tratamiento' }}</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="modal.close(false)">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+        <div class="modal-body card-body">
+          <form [formGroup]="formGroup">
+            <div *ngIf="citaMedicion && !loadingAlternativas">
+              <div class="form-group">
+                <div class="radio d-inline">
+                  <input type="radio" [id]="citaMedicion.idAlternativaMedicion" [value]="citaMedicion.idAlternativaMedicion" formControlName="alternativa" name="alternativa"  checked>
+                  <label [for]="'radio-'+citaMedicion.idAlternativaMedicion" class="cr">{{ findAlternativa(citaMedicion.idAlternativaMedicion).nombre }}</label>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="!citaMedicion" class="container-fluid">
+              <div class="row">
+                  <div class="col-12 text-center mb-3 lead font-weight-bold">{{ tipoMedicion == 1 ? '¿Que te pareció nuestra atención brindada?' : '¿Como calificaria la efectividad del tratamiento?' }}</div>
+                  <p *ngIf="tipoMedicion === 2" class="text-center w-100">En una escala del 1 al 5, donde 5 es el máximo puntaje.</p>
+              </div>
+
+              <div *ngFor="let alternativa of alternativas; let i = index" class="form-group">
+                <div class="radio d-inline">
+                  <input type="radio" [id]="'radio-'+alternativa.id" [value]="alternativa.id" formControlName="alternativa" name="alternativa"  >
+                  <label [for]="'radio-'+alternativa.id" class="cr">{{ alternativa.nombre }}</label>
+                </div>
+              </div>
+
+            </div>
+          </form>
+        </div>
+        <div  class="modal-footer card-footer">
+            <div *ngIf="citaMedicion" class="w-100">
+              <p class="mb-0"><b>Registrado por:</b> {{citaMedicion.usuarioRegistro}}</p>
+              <p class="mb-0"><b>Fecha:</b> {{utilsService.formato_FechaString(citaMedicion.fechaRegistro)}}</p>
+            </div>
+            <div *ngIf="!citaMedicion" class="form-row float-right">
+                <button type="button" (click)="guardarAlternativa()" class="btn btn-primary"><i class="mdi mdi-content-save-outline"></i><span>Guardar</span></button>
+                <button type="button" (click)="cerrarModal()" class="btn btn-danger" ><i class="feather icon-slash"></i>No</button>
+            </div>
+        </div>
+   </div>

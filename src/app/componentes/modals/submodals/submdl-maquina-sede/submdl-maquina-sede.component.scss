@@ -1,0 +1,17 @@
+:host{
+  height: 100%;
+}
+:host{
+  .item{
+    &:hover{
+      //-webkit-transform: scale(1.01);
+      //-moz-transform: scale(1.01);
+      //-ms-transform: scale(1.01);
+      //-o-transform: scale(1.01);
+      //transform: scale(1.01);
+      -webkit-box-shadow: 0 3px 7px #3e52b166 !important;
+      -moz-box-shadow: 0 3px 7px #3e52b166 !important;
+      box-shadow: 0 3px 7px #3e52b166 !important;
+    }
+  }
+}

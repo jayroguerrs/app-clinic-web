@@ -1,0 +1,153 @@
+<div class="modal-header card-header bg-gradient border-bottom-0">
+  <h2 class="d-flex align-middle">
+    <div class="my-auto mr-3">
+        <fontawesome-svg icon="clock-rotate-left" [width]="22" [height]="22" type="duotone" class="text-white"></fontawesome-svg>
+    </div>
+    <div class="my-auto">
+      <h2 class="mb-0 fs-18px f-w-500 text-white" >Historial</h2>
+    </div>
+  </h2>
+  <button class="btn sbtn btn-sm btn-icon btn-active-color-primary h-auto w-auto p-0" (click)="modal.close(false)">
+    <span class="svg-icon svg-icon-1 text-white">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor"></rect>
+        <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor"></rect>
+      </svg>
+    </span>
+  </button>
+</div>
+
+<div class="modal-body card-body p-4">
+  <div class="d-flex flex-column h-100">
+    <ng-container [ngSwitch]="ldCollection">
+      <div *ngSwitchCase="true">
+        <div *ngFor="let i of utilsService.counter(5)" class="sk block h-100px w-100" [class.mb-3]="i < 5"></div>
+      </div>
+      <div *ngSwitchCase="false">
+         <div *ngFor="let m of collection; let i = index" class="item d-flex flex-row align-items-center p-3 bg-hover-light position-relative border rounded-15px mb-3"  >
+
+           <ng-container [ngSwitch]="m.idEstado">
+
+             <div *ngSwitchCase="enumEstadoPreferenteHistorial.Asignado" class="d-flex flex-column">
+               <p class="text-dark fs-12px f-w-500 mb-2 position-absolute top-min-10px left-0 rounded-10px px-3 py-1 border bg-white">{{ m.estado }}</p>
+
+               <table class="table-sm">
+                 <tr class="fs-12px">
+                   <td class="text-gray-800">Asignado Por:</td>
+                   <td class="ps-2">{{ m.usuarioRegistro }}</td>
+                 </tr>
+                 <tr class="fs-12px">
+                   <td class="text-gray-800">Fecha:</td>
+                   <td class="ps-2">{{ utilsService.firstLetterUpperCase( m.fechaRegistro | date: 'MMMM d, y  h:mm:ss a': '' : 'es-PE') }}</td>
+                 </tr>
+                 <tr class="fs-12px">
+                   <td class="text-gray-800">Asignado A:</td>
+                   <td class="ps-2">{{ m.teleoperador }}</td>
+                 </tr>
+                 <tr class="fs-12px" *ngIf="m.observacion.length">
+                   <td class="text-gray-800" valign="top">Observación: </td>
+                   <td class="ps-2">
+                     <ul class="pl-0">
+                       <li *ngFor="let o of m.observacion">{{ o }}</li>
+                     </ul>
+                   </td>
+                 </tr>
+
+                 <tr class="fs-12px" *ngIf="m.datosModificados.length > 0">
+                  <td class="text-gray-800">Datos Modificados:</td>
+                  <td class="ps-2">{{ m.datosModificados }}</td>
+                </tr>
+               </table>
+
+             </div>
+
+             <div *ngSwitchCase="enumEstadoPreferenteHistorial.Reasignado" class="d-flex flex-column">
+               <p class="text-dark fs-12px f-w-500 mb-2 position-absolute top-min-10px left-0 rounded-10px px-3 py-1 border bg-white">{{ m.estado }}</p>
+               <table class="table-sm">
+                 <tr class="fs-12px">
+                   <td class="text-gray-800">Asignado Por:</td>
+                   <td class="ps-2">{{ m.usuarioRegistro }}</td>
+                 </tr>
+                 <tr class="fs-12px">
+                   <td class="text-gray-800">Fecha:</td>
+                   <td class="ps-2">{{ utilsService.firstLetterUpperCase( m.fechaRegistro | date: 'MMMM d, y  h:mm:ss a': '' : 'es-PE') }}</td>
+                 </tr>
+                 <tr class="fs-12px">
+                   <td class="text-gray-800">Asignado A:</td>
+                   <td class="ps-2">{{ m.teleoperador }}</td>
+                 </tr>
+                 <tr class="fs-12px" *ngIf="m.observacion.length">
+                   <td class="text-gray-800" valign="top">Observación: </td>
+                   <td class="ps-2">
+                     <ul class="pl-2">
+                       <li *ngFor="let o of m.observacion">{{ o }}</li>
+                     </ul>
+                   </td>
+                 </tr>
+
+                 <tr class="fs-12px" *ngIf="m.datosModificados.length > 0">
+                  <td class="text-gray-800">Datos Modificados:</td>
+                  <td class="ps-2">{{ m.datosModificados }}</td>
+                </tr>
+               </table>
+             </div>
+
+             <div *ngSwitchCase="enumEstadoPreferenteHistorial.Trabajado" class="d-flex flex-column">
+               <p class="text-dark fs-12px f-w-500 mb-2 position-absolute top-min-10px left-0 rounded-10px px-3 py-1 border bg-white">{{ m.estado }}</p>
+
+               <table class="table-sm">
+                 <tr class="fs-12px">
+                   <td class="text-gray-800">Trabajado Por:</td>
+                   <td class="ps-2">{{ m.usuarioRegistro }}</td>
+                 </tr>
+                 <tr class="fs-12px">
+                   <td class="text-gray-800">Fecha:</td>
+                   <td class="ps-2">{{ utilsService.firstLetterUpperCase( m.fechaRegistro | date: 'MMMM d, y  h:mm:ss a': '' : 'es-PE') }}</td>
+                 </tr>
+                 <tr class="fs-12px">
+                   <td class="text-gray-800">Estado:</td>
+                   <td class="ps-2">{{ m.estadoAtencion }}</td>
+                 </tr>
+                 <tr class="fs-12px">
+                   <td class="text-gray-800">Comentario:</td>
+                   <td class="ps-2">{{ m.comentarioAtencion }}</td>
+                 </tr>
+
+                 <tr class="fs-12px" *ngIf="m.datosModificados.length > 0">
+                  <td class="text-gray-800">Datos Modificados:</td>
+                  <td class="ps-2">{{ m.datosModificados }}</td>
+                </tr>
+               </table>
+             </div>
+
+             <div *ngSwitchCase="enumEstadoPreferenteHistorial.Agendo" class="d-flex flex-column">
+               <p class="text-dark fs-12px f-w-500 mb-2 position-absolute top-min-10px left-0 rounded-10px px-3 py-1 border bg-white">{{ m.estado }}</p>
+
+               <table class="table-sm">
+                 <tr class="fs-12px">
+                   <td class="text-gray-800">Trabajado Por:</td>
+                   <td class="ps-2">{{ m.usuarioRegistro }}</td>
+                 </tr>
+                 <tr class="fs-12px">
+                   <td class="text-gray-800">Fecha:</td>
+                   <td class="ps-2">{{ utilsService.firstLetterUpperCase( m.fechaRegistro | date: 'MMMM d, y  h:mm:ss a': '' : 'es-PE') }}</td>
+                 </tr>
+                <tr class="fs-12px" *ngIf="m.datosModificados.length > 0">
+                  <td class="text-gray-800">Datos Modificados:</td>
+                  <td class="ps-2">{{ m.datosModificados }}</td>
+                </tr>
+               </table>
+             </div>
+
+           </ng-container>
+
+
+         </div>
+       </div>
+    </ng-container>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <button type="reset" class="btn sbtn btn-light mr-2" (click)="cerrarModal()">Cerrar</button>
+</div>

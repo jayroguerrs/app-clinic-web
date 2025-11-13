@@ -1,0 +1,131 @@
+  <form class="modal-content" >
+    <div  class="modal-header py-3 bg-gradient">
+      <h2 class="d-flex align-middle">
+        <div class="my-auto mr-3">
+          <button type="button" matRipple class="btn sbtn p-2 d-block text-white" (click)="bsModalRef.dismiss()">
+            <fontawesome-svg icon="arrow-left" [width]="22" [height]="22" type="duotone"></fontawesome-svg>
+          </button>
+        </div>
+        <div class="my-auto">
+          <h2 class="mb-0 fs-18px f-w-500 text-white">Listado de maquinas</h2>
+<!--          <h3 class="mb-0 fs-14px" [ngClass]="textHeader">Acción: {{subtitle}}</h3>-->
+        </div>
+      </h2>
+<!--
+      <div ngbDropdown>
+        <button type="button" matRipple class="btn sbtn btn-sm btn-icon bg-white-10 h-auto w-auto px-2 no-after position-relative align-items-center justify-content-center" [ngClass]="textHeader" ngbDropdownToggle>
+          <fontawesome-svg icon="ellipsis-vertical" [width]="22" [height]="22" type="duotone"></fontawesome-svg>
+          <span class="pulse-ring pulse-white"></span>
+        </button>
+        <div ngbDropdownMenu class="menu popins">
+          <button type="button" *ngIf="parametros?.citaAccionActual === accionCita.VER" matRipple ngbDropdownItem class="f-w-500 rounded-0 list-group-item list-group-item-action border-0 d-flex align-items-center text-warning btn-hover-warning trs" (click)="evtEditar()">
+            <fontawesome-svg icon="pen" [width]="22" [height]="22" type="light" class="mr-3"></fontawesome-svg>
+            <span class="fs-16px">Editar</span>
+          </button>
+          <button type="button" *ngIf="parametros?.citaAccionActual !== accionCita.NUEVA" matRipple ngbDropdownItem class="f-w-500 rounded-0 list-group-item list-group-item-action border-0 d-flex align-items-center text-muted btn-hover-muted trs" (click)="evtHistorial()">
+            <fontawesome-svg icon="clock-rotate-left" [width]="22" [height]="22" type="light" class="mr-3"></fontawesome-svg>
+            <span class="fs-16px">Ver Historial</span>
+          </button>
+          <button type="button" *ngIf="parametros.citaAccionActual === accionCita.NUEVA || parametros.citaAccionActual === accionCita.EDITAR" matRipple ngbDropdownItem class="f-w-500 rounded-0 list-group-item list-group-item-action border-0 d-flex align-items-center text-indigo btn-hover-indigo trs" (click)="evtHorario()">
+            <fontawesome-svg icon="calendar-clock" [width]="22" [height]="22" type="light" class="mr-3"></fontawesome-svg>
+            <span class="fs-16px">Horario</span>
+          </button>
+          <div *ngIf="parametros?.citaAccionActual !== accionCita.NUEVA" class="dropdown-divider"></div>
+          <button type="button" *ngIf="parametros?.citaAccionActual === accionCita.ATENDER" matRipple ngbDropdownItem class="f-w-500 rounded-0 list-group-item list-group-item-action border-0 d-flex align-items-center text-success btn-hover-success trs" (click)="evtAtender()">
+            <fontawesome-svg icon="hand-pointer" [width]="22" [height]="22" type="light" class="mr-3"></fontawesome-svg>
+            <span class="fs-16px">Marcar Atendida</span>
+          </button>
+          <button type="button" *ngIf="parametros?.citaAccionActual === accionCita.VER" matRipple ngbDropdownItem class="f-w-500 rounded-0 list-group-item list-group-item-action border-0 d-flex align-items-center text-success-light btn-hover-success-light trs" (click)="evtEstado(citaEstado.CONFIRMADA)">
+            <fontawesome-svg icon="calendar-check" [width]="22" [height]="22" type="light" class="mr-3"></fontawesome-svg>
+            <span class="fs-16px">Confirmar</span>
+          </button>
+          <button type="button" *ngIf="parametros?.citaAccionActual === accionCita.VER" matRipple ngbDropdownItem class="f-w-500 rounded-0 list-group-item list-group-item-action border-0 d-flex align-items-center text-black btn-hover-black trs" (click)="evtEstado(citaEstado.CANCELADA)">
+            <fontawesome-svg icon="ban" [width]="22" [height]="22" type="light" class="mr-3"></fontawesome-svg>
+            <span class="fs-16px">Cancelar</span>
+          </button>
+          <button type="button" *ngIf="parametros?.citaAccionActual === accionCita.VER" matRipple ngbDropdownItem class="f-w-500 rounded-0 list-group-item list-group-item-action border-0 d-flex align-items-center text-danger btn-hover-danger trs"  (click)="evtEstado(citaEstado.ANULADA)">
+            <fontawesome-svg icon="calendar-xmark" [width]="22" [height]="22" type="light" class="mr-3"></fontawesome-svg>
+            <span class="fs-16px">Anular</span>
+          </button>
+          <button type="button" *ngIf="parametros?.citaAccionActual === accionCita.VER" matRipple ngbDropdownItem class="f-w-500 rounded-0 list-group-item list-group-item-action border-0 d-flex align-items-center text-purple btn-hover-purple trs" (click)="evtEstado(citaEstado.PENDIENTE)">
+            <fontawesome-svg icon="calendar-exclamation" [width]="22" [height]="22" type="light" class="mr-3"></fontawesome-svg>
+            <span class="fs-16px">Pendiente</span>
+          </button>
+        </div>
+      </div>
+
+-->
+
+    </div>
+    <div class="modal-body p-0">
+      <div class="p-4">
+        <div class="form-row">
+          <div class="col-4">
+            <div class="rounded-md border border-2px border-indigo py-2 px-3 text-indigo d-flex flex-column">
+              <label class="mb-0 fs-10px">FECHA</label>
+              <p class="mb-0 fw-bold text-truncate">{{ util.firstLetterUpperCase(Fecha | date: 'EE  dd, ' : '': 'ES-pe') + util.firstLetterUpperCase(Fecha | date: 'MMM yyyy' : '': 'ES-pe') }}</p>
+            </div>
+          </div>
+          <div class="col-4">
+            <ng-component [ngSwitch]="ldSede">
+              <div *ngSwitchCase="true" class="sk block w-100 h-51px rounded-md"></div>
+              <div *ngSwitchCase="false" class="rounded-md border border-2px border-indigo py-2 px-3 text-indigo d-flex flex-column">
+                <label class="mb-0 fs-10px">SEDE</label>
+                <p class="mb-0 fw-bold text-truncate text-uppercase">{{ sede ? sede.nombre : '---' }}</p>
+              </div>
+            </ng-component>
+          </div>
+          <div class="col-4">
+            <ng-component [ngSwitch]="ldServicio">
+              <div *ngSwitchCase="true" class="sk block w-100 h-51px rounded-md"></div>
+              <div *ngSwitchCase="false" class="rounded-md border border-2px border-indigo py-2 px-3 text-indigo d-flex flex-column">
+                <label class="mb-0 fs-10px">SERVICIO</label>
+                <p class="mb-0 fw-bold text-truncate text-uppercase">{{ servicio ? servicio.nombre : '---' }}</p>
+              </div>
+            </ng-component>
+          </div>
+        </div>
+      </div>
+      <div class="h-100-99px position-relative overflow-auto">
+        <span class="position-sticky top-0 pl-4 z-index-1 d-flex w-100 bg-white start-0 text-indigo fw-bold">* Seleccionar</span>
+        <div class="p-4">
+          <div class="h-100">
+            <ng-component [ngSwitch]="ldMaquinas">
+              <ng-component *ngSwitchCase="true">
+                <div  *ngFor="let i of util.counter(8)">
+                  <div class="sk block w-100 h-75px mb-3 rounded-md"></div>
+                </div>
+              </ng-component>
+              <ng-component *ngSwitchCase="false">
+                <div *ngFor="let m of maquinas; let i = index" [@slideFromBottom]="{value: '* <=> *',params : { delay: (i+1) * 50 }}">
+                  <div matRipple class="item cursor-pointer mb-3 bg-light-indigo rounded-md shadow-sm shadow-light p-3 d-flex align-items-center" (click)="seleccionarMaquina(m)">
+                    <div class="d-flex">
+                      <fontawesome-svg icon="door-closed" type="duotone" [width]="35" [height]="35" class="text-indigo mr-3"></fontawesome-svg>
+                    </div>
+                    <div class="d-flex flex-column w-100">
+                        <p class="mb-0 text-indigo fw-bold">{{ m.maquina.substring(3, 10).replace('AQ', '') }}</p>
+                        <span class="d-block text-center overflow-hidden shadow-indigo mx-auto mt-auto mb-0 fs-14px bg-gradient text-white py-1 w-100 rounded-md position-relative">
+                          <span class="position-absolute end-0 bottom-0 top-0 bg-white-50 w-100"></span>
+                          <span class="position-absolute start-0 bottom-0 top-0 bg-gradient rounded-md shadow-indigo" [attr.style]="'width:'+ m.porcentaje +'%'"></span>
+                          <span class="position-relative">% {{ m.porcentaje}}</span>
+                        </span>
+                        <div class="">
+                          <span *ngFor="let t of m.tecnologias; let i = index" class="bg-indigo small text-white px-2 rounded" [class.mr-1]="i < m.tecnologias.length -1">{{ t.nombreCorto }}</span>
+                        </div>
+                    </div>
+
+                  </div>
+                </div>
+              </ng-component>
+            </ng-component>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <button matRipple type="reset" class="btn sbtn btn-light" (click)="onClose()">Cerrar</button>
+    </div>
+  </form>
+
+

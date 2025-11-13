@@ -1,0 +1,304 @@
+<form [formGroup]="frmUserDatos" (ngSubmit)="updateSubmit()">
+    <div class="modal-content">
+
+        <div class="modal-header card-header">
+            <h5 class="modal-title">Actualizar Datos</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="cerrarModal()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+        <div class="modal-body card-body" style="max-height: 820px; overflow-y: auto;"> 
+            <div *ngIf="actualizarDatos" class="border rounded legend p-3 mb-3">
+                <label class="text-uppercase font-weight-bold">Datos</label>
+
+                <div class="form-group col-md-12" style="display: flex;">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="usrDni" formControlName="usrDni" placeholder=" " 
+                               [ngClass]="{'is-invalid': f.usrDni.touched && f.usrDni.errors}"
+                               (blur)="!esExtranjero && buscarDNI()"
+                               (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()">
+                        <label for="usrDni">{{documento}}</label>
+                        <div *ngIf="f.usrDni.touched && f.usrDni.errors" class="invalid-feedback">
+                            Por favor, ingrese su {{esExtranjero ? 'documento' : 'DNI'}}
+                        </div>
+                    </div>
+    
+                    <button style="margin-left: 1rem;" [disabled]="bnotfoundDNI" type="button" class="btn btn-primary" (click)="buscarDNI()" ><i class="mdi mdi-magnify m-0" ></i></button>
+                    
+                    <!-- Switch personalizado más compatible -->
+                    <div style="margin-left: 0.4rem !important;" class="extranjero-switch-container d-flex flex-column align-items-center">
+                        <label class="switch-text mb-2" style="font-size: 0.9rem; white-space: nowrap; font-weight: 500; color: #6c757d;">
+                            Extranjero
+                        </label>
+                        <div class="toggle-switch">
+                            <input 
+                                type="checkbox" 
+                                id="switchExtranjero"
+                                name="esExtranjero"
+                                [(ngModel)]="esExtranjero"
+                                (change)="onExtranjeroChange($event)">
+                            <label for="switchExtranjero" class="toggle-slider"></label>
+                        </div>
+                    </div>
+
+                </div>
+    
+                <div class="form-row" style="padding: 0 15px;">
+                    <div class="form-group col-md-6">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="usrNombres" formControlName="usrNombres" placeholder=" " 
+                                   [ngClass]="{'is-invalid': f.usrNombres.touched && f.usrNombres.errors}">
+                            <label for="usrNombres">Nombres</label>
+                            <div *ngIf="f.usrNombres.touched && f.usrNombres.errors" class="invalid-feedback">
+                                Por favor, ingrese sus nombres
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="form-group col-md-6">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="usrApellidos" formControlName="usrApellidos" placeholder=" " 
+                                   [ngClass]="{'is-invalid': f.usrApellidos.touched && f.usrApellidos.errors}">
+                            <label for="usrApellidos">Apellidos</label>
+                            <div *ngIf="f.usrApellidos.touched && f.usrApellidos.errors" class="invalid-feedback">
+                                Por favor, ingrese sus apellidos
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+    
+                <div class="form-row" style="padding: 0 15px;">
+                    <div class="form-group col-sm-12 col-md-6">
+                        <div class="form-floating">
+                            <input [max]="fechaMaxima" type="date" class="form-control" id="usrFechaNacimiento" placeholder=" " 
+                                   formControlName="usrFechaNacimiento" [ngClass]="{'is-invalid': f.usrFechaNacimiento.touched && f.usrFechaNacimiento.errors}">
+                            <label for="usrFechaNacimiento">Nacimiento</label>
+                            <div *ngIf="f.usrFechaNacimiento.touched && f.usrFechaNacimiento.errors" class="invalid-feedback">
+                                <span *ngIf="f.usrFechaNacimiento.errors.menorDeEdad">
+                                    Debes ser mayor de 18 años. Edad actual: {{ f.usrFechaNacimiento.errors.menorDeEdad.edadActual }} años
+                                </span>
+                                <span *ngIf="f.usrFechaNacimiento.errors.custom">
+                                    Por favor, ingrese su fecha de nacimiento
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <div class="form-floating">
+                            <input type="text" class="form-control dz-uppercase text" formControlName="usrCelular" [pais]="51" 
+                                   id="usrCelular" appCellMask [ngClass]="{'is-invalid': f.usrCelular.touched && f.usrCelular.errors}">
+                            <label for="usrCelular">Número de Contacto</label>
+                            <div *ngIf="f.usrCelular.touched && f.usrCelular.errors" class="invalid-feedback">
+                                <span *ngIf="f.usrCelular.errors.custom">Número de celular incorrecto!</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+    
+                <div class="form-group col-sm-12 col-md-12">
+                  <div class="form-floating">
+                    <input type="email" class="form-control" id="usrCorreo" placeholder=" " formControlName="usrCorreo" 
+                           pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$" 
+                           [ngClass]="{'is-invalid': f.usrCorreo.touched && f.usrCorreo.errors}">
+                    <label for="usrCorreo">Correo Electrónico</label>
+                    <div *ngIf="f.usrCorreo.touched && f.usrCorreo.errors" class="invalid-feedback">
+                        <span *ngIf="f.usrCorreo.errors.pattern || f.usrCorreo.errors.email">El formato del correo electrónico es incorrecto</span>
+                        <span *ngIf="f.usrCorreo.errors.custom">Por favor, ingrese su correo electrónico</span>
+                    </div>
+                  </div>
+                </div>
+    
+                <div class="form-group col-md-12">
+                    <div class="form-floating position-relative">
+                        <input 
+                            [type]="mostrarClaveActual ? 'text' : 'password'" 
+                            class="form-control" 
+                            id="usrClaveActual" 
+                            formControlName="usrClaveActual" 
+                            disabled
+                            placeholder=" "
+                            autocomplete="new-password"
+                            style="padding-right: 3rem;border: 2px solid #eee; border-radius: 10px;">
+                        <label for="usrClaveActual">Contraseña Actual</label>
+                        
+                        <button 
+                            type="button" 
+                            class="btn-link position-absolute" 
+                            style="right: 12px; top: 55%; transform: translateY(-50%); z-index: 5; padding: 0; border: none; background: none;"
+                            (click)="toggleMostrarClaveActual()">
+                            <i [class]="mostrarClaveActual ? 'feather icon-eye-off' : 'feather icon-eye'" 
+                            style="font-size: 1.2rem; color: #6c757d;"></i>
+                        </button>
+                    </div>
+                </div>
+    
+                <div class="form-group col-md-12">
+                    <div class="form-floating position-relative">
+                        <input 
+                            [type]="mostrarClaveNueva ? 'text' : 'password'" 
+                            class="form-control" 
+                            id="usrClaveNueva" 
+                            formControlName="usrClaveNueva" 
+                            placeholder=" "
+                            autocomplete="new-password"
+                            [ngClass]="{'is-invalid': f.usrClaveNueva.touched && f.usrClaveNueva.errors }"
+                            style="padding-right: 3rem; border: 2px solid #eee; border-radius: 10px;">
+                        <label for="usrClaveNueva">Contraseña Nueva</label>
+                        
+                        <button 
+                            type="button" 
+                            class="btn-link position-absolute" 
+                            style="right: 12px; top: 55%; transform: translateY(-50%); z-index: 5; padding: 0; border: none; background: none;"
+                            (click)="toggleMostrarClaveNueva()">
+                            <i [class]="mostrarClaveNueva ? 'feather icon-eye-off' : 'feather icon-eye'" 
+                            style="font-size: 1.2rem; color: #6c757d;"></i>
+                        </button>
+                    </div>
+    
+                    <div class="password-strength" *ngIf="f.usrClaveNueva.value">
+                        <div class="strength-meter">
+                            <div class="strength-meter-fill" [ngClass]="getPasswordStrength()"></div>
+                        </div>
+                        <small [ngClass]="getPasswordStrengthTextClass()">{{ getPasswordStrengthText() }}</small>
+                    </div>
+    
+                    <!-- Mensajes de validación -->
+                    <div *ngIf="f.usrClaveNueva.touched && f.usrClaveNueva.errors" class="invalid-feedback">
+                        <div *ngIf="f.usrClaveNueva.errors.minlength">
+                            La contraseña debe tener al menos 8 caracteres
+                        </div>
+                        <div *ngIf="f.usrClaveNueva.errors.pattern">
+                            La contraseña debe contener: mayúscula, minúscula, número y símbolo (@$!%*?&)
+                        </div>
+                        <div *ngIf="f.usrClaveNueva.errors.custom">
+                            Por favor, ingrese una contraseña válida
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border rounded legend p-3 mb-3">
+                <label class="text-uppercase font-weight-bold">Personalizar (Opcional)</label>
+                
+                <div class="form-group col-md-12">
+                    <div class="d-flex justify-content-between">
+                        <label class="label p-0 mb-1">COLORES DE SIDEBAR:</label>
+    
+                        <button style="height: fit-content; padding: 6px 14px !important;"
+                            class="btn btn-outline-primary mb-2"
+                            type="button" 
+                            (click)="resetearEstilos()"
+                            >
+                            <i class="feather icon-rotate-ccw" style="margin-right: 6px;"></i> Resetear
+                        </button>
+                    </div>
+
+                    <div class="row">
+                        <!-- Color de fondo -->
+                        <div class="col-md-6">
+                            <div class="color-picker-container">
+                                <div class="color-input-wrapper">
+                                    <input type="color" 
+                                        class="color-input" 
+                                        [(ngModel)]="colorSeleccionado"
+                                        (change)="onColorChange($event)"
+                                        [value]="colorSeleccionado">
+                                </div>
+                                <div class="color-info">
+                                    <span class="color-title">Color de fondo</span>
+                                    <span class="color-value">{{ colorSeleccionado || '#000000' }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Color de texto -->
+                        <div class="col-md-6">
+                            <div class="color-picker-container">
+                                <div class="color-input-wrapper">
+                                    <input type="color" 
+                                        class="color-input" 
+                                        [(ngModel)]="colorTextoSeleccionado"
+                                        (change)="onColorTextoChange($event)"
+                                        [value]="colorTextoSeleccionado">
+                                </div>
+                                <div class="color-info">
+                                    <span class="color-title">Color de texto</span>
+                                    <span class="color-value">{{ colorTextoSeleccionado || '#FFFFFF' }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group col-md-12">
+    <label class="label p-0 mb-3">FONDO DE PANTALLA:</label>
+
+
+    <!-- Contenido según el tab seleccionado -->
+    <div class="tab-content">
+        <!-- Tab URL -->
+        <div [hidden]="tipoFondo !== 'url'" class="background-input-section">
+            <div class="input-group mb-3" style="background: none; gap: 1rem;">
+                <div class="flex-grow-1">
+                    <label for="backgroundUrl" class="form-label">URL de la imagen</label>
+                    <input 
+                        type="url" 
+                        class="form-control" 
+                        id="backgroundUrl" 
+                        formControlName="backgroundUrl" 
+                        placeholder="https://ejemplo.com/imagen.jpg"
+                        (blur)="validarUrl()"
+                        [ngClass]="{ 'is-invalid': f.backgroundUrl.touched && (urlInvalida || f.backgroundUrl.errors), 'is-valid': urlValida }">
+                    <div *ngIf="f.backgroundUrl.touched && (urlInvalida || f.backgroundUrl.errors)" class="invalid-feedback">
+                        <span *ngIf="urlInvalida">URL de imagen inválida</span>
+                        <span *ngIf="f.backgroundUrl.errors?.custom">Por favor, ingrese una URL válida</span>
+                    </div>
+                </div>
+                <button style="height: fit-content; margin-top: 1.8rem"
+                    class="btn btn-outline-primary" 
+                    type="button" 
+                    (click)="probarUrl()"
+                    [disabled]="!f.backgroundUrl.value">
+                    <i class="feather icon-eye"></i> Probar
+                </button>
+            </div>
+            <small class="text-muted">
+                <i class="feather icon-info"></i> 
+                Formatos soportados: JPG, PNG, WebP. Recomendado: 1920x1080px
+            </small>
+        </div>
+
+        <!-- Tab Upload -->
+    </div>
+
+    <!-- Preview del fondo -->
+    <div class="background-preview mt-3" *ngIf="fondoPreview">
+        <label class="label-small mb-2">Vista previa:</label>
+        <div 
+            class="preview-container"
+            [style.background-image]="'url(' + fondoPreview + ')'"
+            [style.background-size]="'cover'"
+            [style.background-position]="'center'">
+            <div class="preview-overlay">
+                <span class="preview-text">Fondo de Pantalla</span>
+            </div>
+        </div>
+    </div>
+</div>
+            </div>
+
+        </div>
+
+        <div class="modal-footer card-footer">
+            <div class="form-row float-right">
+                <button type="submit" class="btn btn-outline-primary" ><i class="feather icon-save"></i>Actualizar</button>
+            </div>
+        </div>
+
+    </div>
+</form>

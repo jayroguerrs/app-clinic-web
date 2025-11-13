@@ -1,0 +1,12 @@
+@keyframes palpitar {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+}
+
+.palpitar {
+  animation: palpitar 0.6s ease-in-out infinite;
+}

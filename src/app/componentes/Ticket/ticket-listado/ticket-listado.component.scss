@@ -1,0 +1,26 @@
+.resumen {
+    width: 100%;
+    border: 1px solid #495057;
+    margin: 0;
+    padding: 0;
+}
+.resumen tbody tr td {
+    border: 1px solid #495057;
+}
+.center tbody tr td {
+   text-align: center;
+}
+.center tbody tr:nth-child(odd) {
+    font-weight: bold;
+    background-color: #04a9f5;
+    color: white;
+}
+.center tbody tr:nth-child(even) {
+    color: black;
+}
+
+:host{
+  ::ng-deep .cell-white{
+    white-space: normal !important;
+  }
+}

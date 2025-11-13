@@ -1,0 +1,21 @@
+.contenedor-secciones{
+    display: flex;
+}
+
+@media (max-width: 1127px) {
+    .contenedor-secciones{
+        flex-direction: column !important;
+    }
+}
+
+@media (max-width: 421px) {
+    .contenedor-busqueda-nombre-cita{
+        width: 50% !important;
+    }
+}
+
+@media (max-width: 482px) {
+    .contenedor-busqueda{
+        width: 250% !important;
+    }
+}

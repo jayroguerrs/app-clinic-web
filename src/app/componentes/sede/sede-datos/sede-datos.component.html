@@ -1,0 +1,127 @@
+<!-- SPINNER -->
+<ngx-spinner
+    [template]="rutaImageSpinner">
+    <p style="color: white" > Cargando... </p>
+</ngx-spinner>
+
+<form [formGroup]="frmSedeDatos" (ngSubmit)="sedeGrabar()">
+    <div class="modal-header card-header">
+        <h5 class="modal-title">{{ accion === 'Editar' ? 'Editar sede' : 'Registrar nueva sede' }}</h5>
+        <button type="button" class="close basic-close" data-dismiss="modal" aria-label="Close"
+            (click)="cerrarModal()"><span aria-hidden="true">&times;</span></button>
+    </div>
+
+  <div class="modal-body card-body">
+
+    <div class="form-row">
+        <div class="form-group col-md-12">
+            <div class="form-floating">
+              <input type="text" class="form-control dz-uppercase" id="sede" placeholder=" " formControlName="sede" [ngClass]="{ 'is-invalid': submitted && f.sede.errors }" >
+              <label for="sede">Nombre de la sede <span class="text-danger">*</span></label>
+            </div>
+            <div *ngIf="submitted && f.sede.errors" class="invalid-feedback d-block">
+              <div *ngIf="f.sede.errors.required">Ingrese nombre de la sede</div>
+            </div>
+        </div>
+
+        <div class="col-12 mb-3">
+          <div class="border rounded p-3 legend">
+            <label class="mb-3 text-muted">Ubicación</label>
+            <div class="form-row">
+
+              <div class="form-group col-md-6">
+                <div class="form-floating">
+                  <select class="custom-select dz-uppercase" id="departamento" formControlName="departamento" (change)="onchangeDepart($event.target)" [ngClass]="{ 'is-invalid': submitted && f.departamento.errors }">
+                    <option select value=''>...Seleccionar...</option>
+                    <option *ngFor="let item of departamento" [value]="item.idDepartamento">{{ item.departamento }}</option>
+                  </select>
+                  <label for="departamento">Departamento <span class="text-danger">*</span></label>
+                </div>
+                <div *ngIf="submitted && f.departamento.errors" class="invalid-feedback d-block">
+                  <div *ngIf="f.departamento.errors.required">Seleccione un departamento</div>
+                </div>
+              </div>
+
+              <div class="form-group col-md-6 ">
+                <div class="form-floating">
+                  <select class="custom-select dz-uppercase" id="provincia" formControlName="provincia" (change)="onchangeProv($event.target)" [ngClass]="{ 'is-invalid': submitted && f.provincia.errors }">
+                    <option select value=''>...Seleccionar...</option>
+                    <option *ngFor="let item of ciudad" [value]="item.idCiuda">{{ item.ciudad }}</option>
+                  </select>
+                  <label for="provincia">Provincia <span class="text-danger">*</span></label>
+                </div>
+                <div *ngIf="submitted && f.provincia.errors" class="invalid-feedback d-block">
+                  <div *ngIf="f.provincia.errors.required">Seleccione una provincia</div>
+                </div>
+              </div>
+
+              <div class="col-md-6 mb-3 mb-md-0">
+                <div class="form-floating">
+                  <select class="custom-select dz-uppercase" id="distrito" formControlName="distrito" [ngClass]="{ 'is-invalid': submitted && f.distrito.errors }">
+                    <option select value=''>...Seleccionar...</option>
+                    <option *ngFor="let item of distrito" [value]="item.idUbicacion">{{ item.distrito }}</option>
+                  </select>
+                  <label for="distrito">Distrito <span class="text-danger">*</span></label>
+                </div>
+                <div *ngIf="submitted && f.distrito.errors" class="invalid-feedback d-block">
+                  <div *ngIf="f.distrito.errors.required">Seleccione un distrito</div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="form-floating">
+                  <input type="text" class="form-control dz-uppercase" id="direccion" placeholder=" " formControlName="direccion" [ngClass]="{ 'is-invalid': submitted && f.direccion.errors }" >
+                  <label for="direccion">Dirección <span class="text-danger">*</span></label>
+                </div>
+                <div *ngIf="submitted && f.direccion.errors" class="invalid-feedback d-block">
+                  <div *ngIf="f.direccion.errors.required">Ingrese una dirección</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 mb-3">
+          <div class="border rounded p-3 legend">
+            <label class="mb-3 text-muted">Horario de atención</label>
+            <div class="form-row">
+              <div class="col-md-6 mb-3 mb-md-0">
+                <div class="form-floating">
+                  <input type="time" class="form-control dz-uppercase" id="horaInicio" placeholder=" " formControlName="horaInicio" [ngClass]="{ 'is-invalid': submitted && f.horaInicio.errors }" >
+                  <label for="horaInicio">Hora Inicio <span class="text-danger">*</span></label>
+                </div>
+                <div *ngIf="submitted && f.horaInicio.errors" class="invalid-feedback d-block">
+                  <div *ngIf="f.horaInicio.errors.required">Ingrese una hora de inicio</div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-floating">
+                  <input type="time" class="form-control dz-uppercase" id="horaFin" placeholder=" " formControlName="horaFin" [ngClass]="{ 'is-invalid': submitted && f.horaFin.errors }" >
+                  <label for="horaFin">Hora Fin<span class="text-danger">*</span></label>
+                </div>
+                <div *ngIf="submitted && f.horaFin.errors" class="invalid-feedback d-block">
+                  <div *ngIf="f.horaFin.errors.required">Ingrese una hora fin</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group col-md-6">
+          <div class="form-floating">
+            <select class="custom-select dz-uppercase" id="estado" formControlName="estado" >
+              <option value='1'>ACTIVO</option>
+              <option value='2'>INACTIVO</option>
+            </select>
+            <label for="estado">Estado <span class="text-danger">*</span></label>
+          </div>
+        </div>
+    </div>
+  </div>
+
+  <div class="modal-footer card-footer">
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <button type="reset" class="btn btn-secondary" (click)="cerrarModal()">Cerrar</button>
+  </div>
+
+</form>

@@ -1,0 +1,31 @@
+<form [formGroup]="frmClienteListadoModal">
+    <div class="modal-content">
+
+        <div class="modal-body card-body">
+          <div class="app-card-header">
+
+            <div class="row">
+                <div class="col-sm">Listado de clientes</div>
+                <div class="float-right opc-botones">
+                    <button type="button" class="btn btn-primary btn-icon" [placement]="'top'" ngbTooltip="Seleccionar"  (click)= "clienteSeleccionar()"><i class="fa fa-check"></i></button>
+                    <button type="button" class="btn btn-primary btn-icon" [placement]="'top'" ngbTooltip="Cerrar"  (click)= "cerrarModal()"><i class="fa fa-times"></i></button>
+                </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group col-md-auto">
+                <div class="input-group input-group-sm">
+                  <div class="input-group-prepend"><span class="input-group-text">Cliente o Celular </span></div>
+                  <input type="text" class="form-control" formControlName="filterCliente" (keypress)="clienteListar($event)" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+                </div>
+                <span>Se encontrarón {{ numClientes }} cliente(s)</span>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="table table-sm-responsive"><table datatable [dtOptions]="dtResponsiveOptions" class="table table-sm table-hover table-cliente display compact"></table>
+          </div>
+        </div>
+ </div>
+</form>

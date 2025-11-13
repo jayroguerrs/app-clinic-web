@@ -1,0 +1,312 @@
+<div class="row mt-3 justify-content-center">
+    <div class="col-md-5">
+        <app-card cardTitle="{{nameMonth}}" [options]="false" [hidBlock]="true"></app-card>
+    </div>
+</div>
+
+<div class="row mt-3 justify-content-center">
+    <div class="col-md-5">
+        <div *ngIf="this.accTot || this.accFrmV" form [formGroup]="filter">
+            <!-- Filtro -->
+            <div class="card mb-3" style="padding: 5px;">
+                <div class="card-body">
+                    <div class="row pb-2">
+                        <div class="col-6 col-lg-6">
+                            <div class="form-floating form-icon">
+                                <i class="feather icon-calendar" [placement]="'bottom'" ngbTooltip="Fecha desde"></i>
+                                <input type="date" class="form-control" id="fechaDesde" formControlName="fechaDesde"
+                                    placeholder=" ">
+                                <label for="fechaDesde">Desde</label>
+                            </div>
+                        </div>
+                        <div class="col-6 col-lg-6">
+                            <div class="form-floating form-icon">
+                                <i class="feather icon-calendar" [placement]="'bottom'" ngbTooltip="Fecha hasta"></i>
+                                <input type="date" class="form-control" id="fechaHasta" formControlName="fechaHasta"
+                                    placeholder=" ">
+                                <label for="fechaHasta">Hasta</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row pb-2">
+                        <div class="col-6 col-lg-6">
+                            <ng-select 
+                                id="sede" 
+                                class="w-100 ng-select-custom" 
+                                [items]="listSedes" 
+                                bindLabel="nombre"
+                                bindValue="id" 
+                                formControlName="idSede" 
+                                [multiple]="false" 
+                                [searchable]="true"
+                                placeholder="--Seleccionar Sede--"
+                                [class.ng-select-disabled]="flagFilTel">
+                            </ng-select>
+                        </div>
+                        <div class="col-6 col-lg-6">                            
+                            <ng-select 
+                                #selectPreferente 
+                                id="idPerfiles" 
+                                class="w-100 ng-select-custom"
+                                [items]="listaMaestra.teleoperadores" bindLabel="nombre" bindValue="idUsuario"
+                                formControlName="idTeleoperadora" 
+                                [multiple]="false" 
+                                [searchable]="true"
+                                placeholder="--Seleccionar Teleoperadora--"
+                                [class.ng-select-disabled]="flagFilTel">
+                                
+                                <ng-template ng-label-tmp let-item="item">
+                                    <div class="d-flex flex-column">
+                                        <div>{{ item.nombre }}</div>
+                                        <div class="fs-10px fw-semibold text-muted">{{item.usuario}} ({{item.sede}})
+                                        </div>
+                                    </div>
+                                </ng-template>
+                                <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                                    <div class="d-flex flex-column">
+                                        <div>{{ item.nombre }}</div>
+                                        <div class="fs-10px fw-semibold text-muted">{{item.usuario}} ({{item.sede}})
+                                        </div>
+                                    </div>
+                                </ng-template>
+                            </ng-select>
+                        </div>
+                    </div>
+                    <div class="row justify-content-end">
+                        <div class="col-3 col-lg-3">
+                            <button 
+                                *ngIf="this.accTot || this.accFrmV"
+                                type="submit" 
+                                class="btn btn-secondary btn-block  btn-sm"
+                                [disabled]="filter.invalid" 
+                                (click)="onDescarga()">
+                                <i class="mdi mdi-file-excel-outline fa-2x"></i>Descargar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div form [formGroup]="formulario">
+            <!-- Teleoperadora -->
+            <div class="card mb-3" style="padding: 20px;">
+                <div class="card-body">
+                    <label for="teleoperadoraSelect" class="font-weight-bold">Teleoperadora <span
+                            class="text-danger">*</span></label>
+                    <ng-select 
+                        #selectPreferente 
+                        id="idPerfiles"
+                        class="w-100 ng-select-custom"
+                        [items]="listaMaestra.teleoperadores" 
+                        bindLabel="nombre" 
+                        bindValue="idUsuario"
+                        formControlName="idTeleoperadora" 
+                        [multiple]="false" 
+                        [searchable]="true"
+                        placeholder="--Seleccionar Teleoperadora--"
+                        [class.ng-select-disabled]="flagFilTel">
+                        <ng-template ng-label-tmp let-item="item">
+                            <div class="d-flex flex-column">
+                                <div>{{ item.nombre }}</div>
+                                <div class="fs-10px fw-semibold text-muted">{{item.usuario}} ({{item.sede}})</div>
+                            </div>
+                        </ng-template>
+                        <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                            <div class="d-flex flex-column">
+                                <div>{{ item.nombre }}</div>
+                                <div class="fs-10px fw-semibold text-muted">{{item.usuario}} ({{item.sede}})</div>
+                            </div>
+                        </ng-template>
+                    </ng-select>
+                    <div *ngIf="formulario.get('idTeleoperadora').touched && formulario.get('idTeleoperadora').invalid"
+                        class="text-danger">
+                        Selecciona una teleoperadora.
+                    </div>
+                </div>
+            </div>
+
+            <!-- N° de Cliente -->
+            <div class="card mb-3" style="padding: 20px;">
+                <div class="card-body">
+                    <label for="nombreCliente" class="font-weight-bold">Tipo de Documento <span
+                            class="text-danger">*</span></label>&nbsp;&nbsp;
+                    <div class="form-group d-inline">
+                        <div class="radio radio-primary d-inline">
+                            <input type="radio" formControlName="tipDoc" id="DNI" value="1" (change)="onTipDocChange()">
+                            <label for="DNI" class="cr">DNI</label>
+                        </div>
+                    </div>
+                    <div class="form-group d-inline">
+                        <div class="radio radio-primary d-inline">
+                            <input type="radio" formControlName="tipDoc" id="RUC" value="2" (change)="onTipDocChange()">
+                            <label for="RUC" class="cr">RUC</label>
+                        </div>
+                    </div>
+                    <br>
+                    <label for="docCliente" class="font-weight-bold">N° de Documento <span
+                            class="text-danger">*</span></label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="docCliente" formControlName="docCliente"
+                            [maxlength]="numDocMax" (keypress)="restrictInput($event)" required>
+                        <button *ngIf="!this.isLoading" class="btn btn-outline-secondary" type="button"
+                            id="button-addon1" (click)="onBuscarCliente()"
+                            [disabled]="this.formulario.get('tipDoc').value === '0'">
+                            <span class="mdi mdi-home-search-outline"></span>
+                        </button>
+                        <button *ngIf="this.isLoading" class="btn btn-primary" type="button" disabled>
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            Buscando ...
+                        </button>
+                    </div>
+                    <div *ngIf="formulario.get('docCliente').touched && formulario.get('docCliente').invalid"
+                        class="text-danger">
+                        El número de cliente es obligatorio.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nombre de Cliente -->
+            <div class="card mb-3" style="padding: 20px;">
+                <div class="card-body">
+                    <label for="nombreCliente" class="font-weight-bold">Nombre de Cliente <span
+                            class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="nombreCliente" formControlName="nombreCliente" required>
+                    <div *ngIf="formulario.get('nombreCliente').touched && formulario.get('nombreCliente').invalid"
+                        class="text-danger">
+                        El nombre del cliente es obligatorio.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fecha de Citas -->
+            <div class="card mb-3" style="padding: 20px;">
+                <div class="card-body">
+                    <label for="fechaCita" class="font-weight-bold">Fecha de Citas <span
+                            class="text-danger">*</span></label>
+                    <input type="date" class="form-control" id="fechaCita" formControlName="fechaCita" required>
+                    <div *ngIf="formulario.get('fechaCita').touched && formulario.get('fechaCita').invalid"
+                        class="text-danger">
+                        La fecha de cita es obligatoria.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tipo de Cliente -->
+            <div class="card mb-3" style="padding: 20px;">
+                <div class="card-body">
+                    <label for="tipoClienteSelect" class="font-weight-bold">Tipo de Cliente <span
+                            class="text-danger">*</span></label>
+                    <ng-select id="tipoClienteSelect" class="w-100 ng-select-custom" [items]="listTipoCliente"
+                        bindLabel="tipoCliente" bindValue="id" formControlName="idTipoCliente" [multiple]="false"
+                        [searchable]="true" placeholder="--Seleccionar Tipo de Cliente--">
+                    </ng-select>
+                    <div *ngIf="formulario.get('idTipoCliente').touched && formulario.get('idTipoCliente').invalid"
+                        class="text-danger">
+                        Selecciona un tipo de cliente.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Origen -->
+            <div class="card mb-3" style="padding: 20px;">
+                <div class="card-body">
+                    <label for="origenSelect" class="font-weight-bold">Origen <span class="text-danger">*</span></label>
+                    <ng-select id="origenSelect" class="w-100 ng-select-custom" [items]="listaMaestra.mediosContactos"
+                        bindLabel="nombre" bindValue="id" formControlName="idOrigen" [multiple]="false"
+                        [searchable]="true" placeholder="--Seleccionar Origen--">
+                        <ng-template ng-label-tmp let-item="item">
+                            <div class="d-flex flex-column">
+                                <div>{{ item.nombre }}</div>
+                            </div>
+                        </ng-template>
+                    </ng-select>
+                    <div *ngIf="formulario.get('idOrigen').touched && formulario.get('idOrigen').invalid"
+                        class="text-danger">
+                        Selecciona un origen.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Promociones -->
+            <div class="card mb-3" style="padding: 20px;">
+                <div class="card-body">
+                    <label class="font-weight-bold">Promociones</label>
+                    <ng-select id="promocionesSelect" class="w-100 ng-select-custom" [items]="listPromociones"
+                        (change)="onPromocionChange($event)" bindLabel="descripcion" bindValue="idPromocion"
+                        formControlName="idPromocion" [multiple]="false" [searchable]="true"
+                        placeholder="--Seleccionar Promoción--">
+                    </ng-select>
+                    <div *ngIf="formulario.get('idPromocion').touched && formulario.get('idPromocion').invalid"
+                        class="text-danger">
+                        Selecciona una promoción.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Servicio -->
+            <div class="card mb-3" style="padding: 20px;" *ngIf="listServiciosPorPromocion.length > 0">
+                <div class="card-body">
+                    <label for="servicioSelect" class="font-weight-bold">Servicio <span
+                            class="text-danger">*</span></label>
+                    <ng-select id="servicioSelect" class="w-100 ng-select-custom" [items]="listServiciosPorPromocion"
+                        bindLabel="descripcion" bindValue="id" formControlName="idServiciosPorPromocion"
+                        [multiple]="false" [searchable]="true" placeholder="--Seleccionar Servicio--">
+                    </ng-select>
+                    <div *ngIf="formulario.get('idServiciosPorPromocion').touched && formulario.get('idServiciosPorPromocion').invalid"
+                        class="text-danger">
+                        Selecciona un servicio.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sede -->
+            <div class="card mb-3" style="padding: 20px;">
+                <div class="card-body">
+                    <label for="sede" class="font-weight-bold">Sede <span class="text-danger">*</span></label>
+                    <ng-select 
+                        id="sede" 
+                        class="w-100 ng-select-custom" 
+                        [items]="listSedes" 
+                        bindLabel="nombre"
+                        bindValue="id" 
+                        formControlName="idSede" 
+                        [multiple]="false" 
+                        [searchable]="true"
+                        placeholder="--Seleccionar Sede--"
+                        [class.ng-select-disabled]="flagFilTel">
+                    </ng-select>
+                    <div *ngIf="formulario.get('idSede').touched && formulario.get('idSede').invalid"
+                        class="text-danger">
+                        Selecciona una sede.
+                    </div>
+                </div>
+            </div>
+
+            <!-- N° de Origen -->
+            <div class="card mb-3" style="padding: 20px;">
+                <div class="card-body">
+                    <label for="numeroOrigen" class="w-100 font-weight-bold">N° de Origen <span
+                            class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="numeroOrigen" formControlName="numeroOrigen">
+                    <div *ngIf="formulario.get('numeroOrigen').touched && formulario.get('numeroOrigen').invalid"
+                        class="text-danger">
+                        El número de origen es obligatorio.
+                    </div>
+                </div>
+            </div>
+
+            <!-- OBSERVACIONES -->
+            <div class="card mb-3" style="padding: 20px;">
+                <div class="card-body">
+                    <label for="observaciones" class="font-weight-bold">OBSERVACIONES</label>
+                    <textarea rows="4" class="form-control" id="observaciones" formControlName="observaciones">
+                </textarea>
+                    <br>
+                    <button type="submit" class="btn btn-secondary btn-block" [disabled]="formulario.invalid"
+                        (click)="onRegistrar()">REGISTRAR</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

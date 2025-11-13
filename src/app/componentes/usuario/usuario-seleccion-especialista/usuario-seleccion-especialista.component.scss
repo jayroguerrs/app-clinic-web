@@ -1,0 +1,36 @@
+.rounded-circle2 {
+  width:50px;
+  height:50px;
+  object-fit:cover;
+  border-radius: 50%;
+}
+
+#usuario-lista:hover {
+  background-color: #00bfff;
+}
+
+#usuario-lista.selected {
+  background-color: #0077ff8a;
+}
+
+//ESTILO DE BOTONES (MAQUINA)
+.selected,
+.selected:hover{
+    font-weight: bold;
+    background-color: #71cffd !important;
+}
+
+.imgNulled{
+  width: 50px;
+  height: 50px;
+  border-radius: 100%;
+  background-color: #666;
+  color: white;
+  display: flex;
+  i{
+    display: block;
+    margin: auto;
+    font-size: 1.7rem;
+    opacity: .5;
+  }
+}

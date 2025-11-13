@@ -1,0 +1,38 @@
+#? Login to Azure Container Registry
+#* az acr login --name clialphav
+
+version: "3.8"
+
+# Build and run the Angular/Nginx image for QA and Production
+# Set IMAGE_TAG in your .env (defaults to latest). Login to ACR before pushing.
+# Example:
+#   printf '%s' "$ACR_PASSWORD" | docker login ${ACR_LOGIN_SERVER:-clialphav.azurecr.io} -u ${ACR_USERNAME:-clialphav} --password-stdin
+#   IMAGE_TAG=prod-3.5.0 docker compose build --no-cache clinic-prod
+#   IMAGE_TAG=prod-3.5.0 docker compose push clinic-prod
+
+
+
+services:
+  clinic-qa:
+    image: ${ACR_LOGIN_SERVER:-clialphav.azurecr.io}/clinic:${IMAGE_TAG:-latest}-qa
+    build:
+      context: .
+      dockerfile: dockerfile
+      args:
+        BUILD_CONFIG: qa
+    ports:
+      - "3002:80"  # local test: http://localhost:3002
+
+  clinic-prod:
+    image: ${ACR_LOGIN_SERVER:-clialphav.azurecr.io}/clinic:${IMAGE_TAG:-latest}-prod
+    build:
+      context: .
+      dockerfile: dockerfile
+      args:
+        BUILD_CONFIG: production
+    ports:
+      - "3003:80"  # local test: http://localhost:3003
+
+# Notes:
+# - Do NOT commit real passwords. Use .env (ignored) or docker login with --password-stdin.
+# - You can override IMAGE_TAG, ACR_LOGIN_SERVER, ACR_USERNAME via environment or .env file.

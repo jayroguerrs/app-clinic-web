@@ -1,0 +1,241 @@
+.contenedor-busqueda{
+    background-color: rgb(255, 255, 255);  
+    width: 100%; 
+    position: absolute; 
+    top: 55px; 
+    border: 1px solid #e8e4e4; 
+    border-radius: 0 0 10px 10px; 
+    z-index: 1000;
+
+    
+
+}
+
+.contenido-tabla-perfil{
+    padding: 4px !important;
+}
+.contendor-cliente{
+    cursor: pointer;
+    border-bottom: 1px solid #e8e4e4;
+    padding: 12px 8px 8px 14px;
+}
+
+.contendor-cliente:hover{
+    background-color: #ededed;
+}
+
+.icon-c-purple{
+    color: red;
+}
+
+.btn-c-purple{
+    background-color: #ff49d8;
+    color: white;
+}
+
+.nombre-cliente{
+    color: rgba(0, 0, 0, 0.54); 
+    font-size: 16px; 
+    font-weight: 500;
+}
+
+.titulos{
+    font-size: 1.6rem !important;
+}
+
+@media (max-width: 740px) {
+    .contenedor-busqueda{
+        width: 150% !important;
+    }
+}
+
+@media (max-width: 545px) {
+    .titulos{
+        font-size: 0.9rem !important;
+        font-weight: 500;
+    }
+
+    .contenedor-filtros{
+        display: flex !important;
+        flex-direction: row !important;
+        //background-color: red;
+    }
+    .contenedor-filtros-dos{
+        flex-direction: column !important;
+    }
+    .contenedor-busqueda{
+        width: 180% !important;
+    }
+    .table-container table {
+        min-width: 1000px !important;
+    }
+}
+
+@media (max-width: 1614px) {
+    .contenedor-filtros{
+        display: flex !important;
+    }
+
+    .contenedor-busqueda-nombre{
+        flex-direction: row !important;
+    }
+    .contenedor-busqueda-nombre-cliente{
+        flex-direction: row !important;
+    }
+}
+
+@media (max-width: 1316px) {
+    .contenedor-filtros-dos{
+        // display: block !important;
+    }
+}
+
+@media (max-width: 1193px) {
+    .limpiar-filtros-button{
+        width: -webkit-fill-available
+    }
+
+    .form-field{
+        width: 100% !important;
+    }
+}
+
+@media (max-width: 421px) {
+    .contenedor-busqueda-nombre{
+        width: 60% !important;
+    }
+
+    .contenedor-busqueda-nombre-cliente{
+        width: 50% !important;
+    }
+}
+
+@media (max-width: 482px) {
+    .contenedor-busqueda-nombre-cliente{
+        width: 50% !important;
+    }
+    .contenedor-busqueda{
+        width: 250% !important;
+    }
+}
+
+.mostrar-detalle{
+    flex-direction: column; 
+    align-items: center;
+    // height: 0;
+}
+
+.icono-dolar{
+    cursor: pointer; 
+    padding-top: 0.6rem; 
+    display: flex; 
+    // color: #efb325;
+    color: black;
+    justify-content: center;
+    align-items: center;
+    width: 74px;
+}
+
+.icono-dolar-purple{
+    color: #ff49d8 !important;
+}
+
+.i-icono-dolar-purple{
+    border: 2px solid #ff49d8 !important;
+    background-color: #ff49d8 !important;
+}
+
+.form-field{
+    height: 60px;
+}
+
+.hora-deshabilitada{
+    pointer-events: none;
+}
+
+.btn-outline-todos:hover{
+    background-color: black;
+    color: white;
+}
+
+.btn-outline-relizadas{
+    color: #28a745;
+    border-color: #28a745;
+}
+
+.btn-outline-relizadas:hover{
+    background-color: #28a745;
+    color: white;
+}
+
+.titulo-cliente-ccvox{
+    padding-left: 10px; 
+    color: #575757; 
+    font-size: 1.2rem !important; 
+    margin-top: 1rem; 
+    // max-width: 200px; 
+    word-wrap: break-word;
+    cursor: pointer;
+}
+
+.titulo-cliente-ccvox:hover{
+    color: #116ef8;
+}
+
+.titulo-cliente-ccvox-active{
+    color: #116ef8;
+}
+
+ngb-accordion ::ng-deep .card-header {
+    // background-color: rgba(49, 177, 49, 0.267);
+    // padding: 1px;
+    // margin: 1px;
+    border: none;
+    // border-radius: 20px !important;
+}
+
+ngb-accordion ::ng-deep .card-body {
+    // background-color: rgba(49, 177, 49, 0.267);
+    // padding: 5px;
+    // margin: 1px;
+    border: none;
+    // border-radius: 20px !important;
+}
+
+
+ngb-accordion ::ng-deep .card-header button {
+    width: 100%;
+    text-decoration: none;
+    text-align: left;
+    // background-color: rgba(49, 177, 49, 0.267);
+    margin: 0;
+    padding: 0;
+    box-shadow: none;
+    font-size: 1.4rem;
+    color: #575757;
+}
+ngb-accordion ::ng-deep .card-header button:focus {
+    box-shadow: none;
+}
+textarea{
+    margin: 0;
+}
+
+ngb-accordion ::ng-deep .card {
+    border-radius: 12px !important;
+    overflow: hidden;
+}
+
+.fila-tabla:hover{
+    background-color: #f5f5f5 !important;
+}
+
+@media (max-width: 992px) {
+    .table-container{
+        min-width: 0 !important;
+    }
+
+    .table-container table {
+      min-width: 0 !important;
+  }
+}

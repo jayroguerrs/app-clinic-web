@@ -1,0 +1,26 @@
+.ifotoadd{
+  width: 100%;
+  border-style: dashed !important;
+  border-width: 3px !important;
+  height: 160px !important;
+  position: relative;
+  span{
+    background-size: 80px !important;
+    width: 80px !important;
+    height: 80px !important;
+    opacity: .1;
+  }
+  &:before{
+    content: "Agregar Fotos (Opcional)";
+    position: absolute;
+    bottom: 26px;
+    left: 0;
+    right: 0;
+    text-align: center;
+  }
+  &.loading{
+    &:before{
+      content: "Cargando imagen..." !important;
+    }
+  }
+}

@@ -1,0 +1,434 @@
+// En mdl-actualizar-datos-user.component.scss
+
+.password-strength {
+  margin-top: 10px;
+}
+
+.strength-meter {
+  width: 100%;
+  height: 8px;
+  background-color: #e9ecef;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 5px;
+}
+
+.strength-meter-fill {
+  height: 100%;
+  transition: all 0.3s ease;
+  border-radius: 4px;
+  
+  &.weak {
+    width: 33%;
+    background: linear-gradient(90deg, #dc3545, #e74c3c);
+    animation: pulse-weak 1.5s infinite;
+  }
+  
+  &.medium {
+    width: 66%;
+    background: linear-gradient(90deg, #ffc107, #f39c12);
+    animation: pulse-medium 1.5s infinite;
+  }
+  
+  &.strong {
+    width: 100%;
+    background: linear-gradient(90deg, #28a745, #20c997);
+    animation: pulse-strong 1.5s infinite;
+  }
+}
+
+// Animaciones de pulso para cada nivel
+@keyframes pulse-weak {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+@keyframes pulse-medium {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+@keyframes pulse-strong {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.9; }
+}
+
+// Estilos para el texto
+.password-strength small {
+  font-weight: 500;
+  font-size: 0.875rem;
+  
+  &.text-danger {
+    color: #dc3545 !important;
+  }
+  
+  &.text-warning {
+    color: #ffc107 !important;
+  }
+  
+  &.text-success {
+    color: #28a745 !important;
+  }
+}
+
+.ifotoadd{
+  width: 100%;
+  border-style: dashed !important;
+  border-width: 3px !important;
+  height: 160px !important;
+  position: relative;
+  span{
+    background-size: 80px !important;
+    width: 80px !important;
+    height: 80px !important;
+    opacity: .1;
+  }
+  &:before{
+    content: "Agregar Fondo Por Link (Opcional)";
+    position: absolute;
+    bottom: 26px;
+    left: 0;
+    right: 0;
+    text-align: center;
+  }
+  &.loading{
+    &:before{
+      content: "Cargando imagen..." !important;
+    }
+  }
+}
+
+
+// Añadir al archivo mdl-actualizar-datos-user.component.scss
+
+.color-picker-container {
+    display: flex;
+    align-items: center;
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    padding: 12px 16px;
+    background-color: #fff;
+    transition: all 0.3s ease;
+    
+    &:hover {
+        border-color: #007bff;
+        box-shadow: 0 2px 8px rgba(0, 123, 255, 0.15);
+    }
+}
+
+.color-input-wrapper {
+    margin-right: 16px;
+    
+    .color-input {
+        width: 50px;
+        height: 50px;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        outline: none;
+        padding: 0;
+        background: none;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        
+        &:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        &::-webkit-color-swatch-wrapper {
+            padding: 0;
+            border: none;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+        
+        &::-webkit-color-swatch {
+            border: 3px solid white;
+            border-radius: 50%;
+            box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+        }
+        
+        // Firefox
+        &::-moz-color-swatch {
+            border: 3px solid white;
+            border-radius: 50%;
+        }
+    }
+}
+
+.color-info {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    
+    .color-title {
+        font-weight: 600;
+        font-size: 14px;
+        color: #495057;
+        margin-bottom: 4px;
+    }
+    
+    .color-value {
+        font-size: 13px;
+        color: #6c757d;
+        font-family: 'Monaco', 'Menlo', monospace;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+}
+
+// ================================IMAGEN DE FONDO=======================
+
+// Añadir al archivo SCSS
+
+.background-input-section {
+    min-height: 80px;
+}
+
+// Estilos para los tabs
+.nav-pills {
+    .nav-link {
+        border-radius: 8px;
+        border: 1px solid #e9ecef;
+        color: #6c757d;
+        background: white;
+        margin-right: 8px;
+        transition: all 0.3s ease;
+        
+        &:hover {
+            background: #f8f9fa;
+            border-color: #007bff;
+            color: #007bff;
+        }
+        
+        &.active {
+            background: #007bff;
+            border-color: #007bff;
+            color: white;
+        }
+        
+        i {
+            font-size: 14px;
+        }
+    }
+}
+
+// Área de upload mejorada
+.upload-area {
+    border: 2px dashed #cbd5e0;
+    border-radius: 12px;
+    padding: 40px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #fafbfc;
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    &:hover {
+        border-color: #007bff;
+        background: #f0f8ff;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 123, 255, 0.1);
+    }
+    
+    &.dragover {
+        border-color: #28a745;
+        background: #f0fff4;
+        transform: scale(1.02);
+    }
+    
+    &.loading {
+        border-color: #007bff;
+        background: #f0f8ff;
+        cursor: wait;
+    }
+}
+
+.upload-content {
+    h5 {
+        color: #495057;
+        font-weight: 600;
+    }
+    
+    .preview-image {
+        max-width: 150px;
+        max-height: 100px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+}
+
+// Preview del fondo
+.background-preview {
+    .label-small {
+        font-size: 12px;
+        color: #6c757d;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+}
+
+.preview-container {
+    width: 100%;
+    height: 120px;
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+    border: 2px solid #e9ecef;
+    
+    .preview-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.4);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        
+        .preview-text {
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+    }
+}
+
+// Responsive
+@media (max-width: 768px) {
+    .upload-area {
+        padding: 30px 15px;
+        min-height: 180px;
+    }
+    
+    .nav-pills .nav-link {
+        font-size: 14px;
+        padding: 8px 12px;
+    }
+}
+
+// En mdl-actualizar-datos-user.component.scss
+.text-danger {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  
+  i {
+    font-size: 1rem;
+  }
+}
+
+.form-control.is-invalid {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+// nuevo
+
+// En mdl-actualizar-datos-user.component.scss
+
+// Opción 1: Mejorar el switch nativo de Bootstrap 4
+.custom-switch-container {
+  .custom-control-label {
+    cursor: pointer;
+    
+    &::before {
+      border-radius: 1rem;
+      transition: all 0.3s ease;
+    }
+    
+    &::after {
+      border-radius: 50%;
+      transition: all 0.3s ease;
+    }
+  }
+  
+  .custom-control-input:checked ~ .custom-control-label::before {
+    background-color: #007bff;
+    border-color: #007bff;
+  }
+}
+
+// Opción 2: Switch completamente personalizado
+.extranjero-switch-container {
+  .toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 25px;
+    
+    input[type="checkbox"] {
+      opacity: 0;
+      width: 0;
+      height: 0;
+      
+      &:checked + .toggle-slider {
+        background-color: #007bff;
+        
+        &::before {
+          transform: translateX(25px);
+        }
+      }
+      
+      &:focus + .toggle-slider {
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+      }
+      
+      &:disabled + .toggle-slider {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+    }
+    
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: all 0.3s ease;
+      border-radius: 25px;
+      
+      &::before {
+        position: absolute;
+        content: "";
+        height: 19px;
+        width: 19px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        transition: all 0.3s ease;
+        border-radius: 50%;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+      
+      &:hover {
+        background-color: #b3b3b3;
+        
+        input:checked + & {
+          background-color: #0056b3;
+        }
+      }
+    }
+  }
+}
+
+// Estilos adicionales para mejor integración
+.form-group {
+  .extranjero-switch-container,
+  .custom-switch-container {
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+}

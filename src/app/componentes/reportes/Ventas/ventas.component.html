@@ -1,0 +1,88 @@
+<div class="row">
+  <div class="col-12 mb-3 sticky-header" stickyClass="header--sticky">
+    <app-card [options]="false" [customHeader]="false" cardTitle="REPORTE DE VENTAS" cardTitle2="Consulta y genera reporte según la sede, el rango de fecha de las ventas realizadas">
+
+      <form [formGroup]="formGroup">
+        <div class="form-row">
+
+          <!-- Sede -->
+          <div class="col-12 col-lg-3 mb-3">
+            <div class="form-floating form-start-icon">
+              <select class="custom-select" id="idSede" formControlName="idSede" (change)="obtenerReporte()">
+                <option [value]="0">{{ loadingSede ? 'Cargando...' : 'Todos' }}</option>
+                <option *ngFor="let sede of collectionSede" [value]="sede.id">{{ sede.nombre }}</option>
+              </select>
+              <label for="idSede">Sede</label>
+              <span class="icon">
+                <span class="dicon sede m-auto"></span>
+              </span>
+            </div>
+          </div>
+
+          <!-- Genero -->
+          <div class="col-12 col-lg-3 mb-3">
+            <div class="form-floating form-start-icon">
+              <select class="custom-select" id="idGenero" formControlName="idGenero" (change)="obtenerReporte()">
+                <option [value]="0">{{ loadingGenero ? 'Cargando...' : 'Todos' }}</option>
+                <option *ngFor="let g of generos" [value]="g.id">{{ g.descripcion }}</option>
+              </select>
+              <label for="idSede">Genero</label>
+              <span class="icon">
+                <span class="dicon sede m-auto"></span>
+              </span>
+            </div>
+          </div>
+          <!-- Fecha desde -->
+          <div class="col-12 col-sm-6 col-lg-3 mb-3">
+            <div class="form-floating form-start-icon">
+              <input id="fdesde" type="date" placeholder=" " class="form-control" formControlName="fdesde" (change)="obtenerReporte()" [ngClass]="{ 'is-invalid': submitted && f.fdesde.errors }">
+              <label for="fdesde">Fecha desde</label>
+              <span class="icon"><span class="dicon calendar m-auto"></span></span>
+            </div>
+          </div>
+          <!-- Fecha hasta -->
+          <div class="col-12 col-sm-6 col-lg-3 mb-3">
+            <div class="form-floating form-start-icon">
+              <input id="fhasta" type="date" placeholder=" " class="form-control" formControlName="fhasta" (change)="obtenerReporte()" [ngClass]="{ 'is-invalid': submitted && f.fhasta.errors }">
+              <label for="fhasta">Fecha hasta</label>
+              <span class="icon"><span class="dicon calendar m-auto"></span></span>
+            </div>
+          </div>
+
+        </div>
+      </form>
+
+    </app-card>
+  </div>
+
+  <div class="col-12 col-lg-8">
+
+    <div class="row">
+      <div class="col-12">
+        <app-ventas-rango [TitleChart]="''" [FechaInicio]="f.fdesde.value" [FechaFin]="f.fhasta.value" [IdSede]="f.idSede.value" [IdGenero]="f.idGenero.value" [Genero]="generoDescripcion" [Sede]="sede"></app-ventas-rango>
+      </div>
+      <div class="col-12 col-lg-6">
+        <app-citas-agendadas [TitleChart]="''" [FechaInicio]="f.fdesde.value" [FechaFin]="f.fhasta.value" [IdSede]="f.idSede.value" [IdGenero]="f.idGenero.value" [Genero]="generoDescripcion"></app-citas-agendadas>
+      </div>
+      <div class="col-12 col-lg-6">
+        <app-citas-atendidas [TitleChart]="''" [FechaInicio]="f.fdesde.value" [FechaFin]="f.fhasta.value" [IdSede]="f.idSede.value" [IdGenero]="f.idGenero.value" [Genero]="generoDescripcion"></app-citas-atendidas>
+      </div>
+      <div class="col-12 col-lg-6">
+        <app-citas-agendadas-cortesia [TitleChart]="''" [FechaInicio]="f.fdesde.value" [FechaFin]="f.fhasta.value" [IdSede]="f.idSede.value" [IdGenero]="f.idGenero.value" [Genero]="generoDescripcion"></app-citas-agendadas-cortesia>
+      </div>
+    </div>
+
+  </div>
+  <div class="col-12 col-lg-4">
+    <div>
+      <app-zonas-atendidas [TitleChart]="''" [FechaInicio]="f.fdesde.value" [FechaFin]="f.fhasta.value" [IdSede]="f.idSede.value" [IdGenero]="f.idGenero.value"  [Genero]="generoDescripcion" [Sede]="sede"></app-zonas-atendidas></div>
+    <div>
+    <div>
+      <app-top10-zonas-atendidas [TitleChart]="''" [FechaInicio]="f.fdesde.value" [FechaFin]="f.fhasta.value" [IdSede]="f.idSede.value" [IdGenero]="f.idGenero.value" [Genero]="generoDescripcion" [Sede]="sede"></app-top10-zonas-atendidas></div>
+    <div>
+      <app-top10-zonas-pack-atendidas [TitleChart]="''" [FechaInicio]="f.fdesde.value" [FechaFin]="f.fhasta.value" [IdSede]="f.idSede.value" [IdGenero]="f.idGenero.value" [Genero]="generoDescripcion" [Sede]="sede"></app-top10-zonas-pack-atendidas>
+    </div>
+
+  </div>
+
+</div>

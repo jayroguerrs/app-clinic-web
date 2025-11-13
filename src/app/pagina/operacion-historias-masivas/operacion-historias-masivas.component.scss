@@ -1,0 +1,17 @@
+.file{
+  appearance: none;
+  position:absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  bottom: 0;
+  opacity: 0 !important;
+}
+.center{
+  z-index: 2;
+}
+.link-active{
+  z-index: 3;
+  position: relative;
+  pointer-events: all;
+}

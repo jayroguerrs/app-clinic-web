@@ -1,0 +1,91 @@
+<!-- SPINNER -->
+<ngx-spinner 
+    [template]="rutaImageSpinner">
+    <p style="color: white" > Cargando... </p>
+</ngx-spinner>
+
+<!-- FORMULARIO -->
+<form [formGroup]="frmEgresoDatos">
+    <div class="modal-content">
+        <div class="modal-header card-header">
+            <h5 class="modal-title">{{ accion }} Egreso</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="cerrarModal()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+        <div class="modal-body card-body">
+
+
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    <div class="input-group input-group-sm">
+                        <div class="input-group-prepend"><span class="input-group-text">Caja</span></div>
+                        <input type="text" class="form-control" formControlName="cajaEgreso" aria-span="Default" aria-describedby="inputGroup-sizing-default" disabled>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    <div class="input-group input-group-sm">
+                        <div class="input-group-prepend"><span class="input-group-text">Fecha Egreso </span></div>
+                        <input type="date" class="form-control" formControlName="fechaEgreso" aria-span="Default" aria-describedby="inputGroup-sizing-default" disabled>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    <div class="input-group input-group-sm">
+                        <div class="input-group-prepend"><span class="input-group-text">Monto</span></div>
+                        <input type="text" class="form-control dz-uppercase" id="txtMonto"
+                        currencyMask [options]="options" style="text-align:right;"
+                        formControlName="montoEgreso">
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    <div class="input-group input-group-sm">
+                        <div class="input-group-prepend"><span class="input-group-text">Beneficiario</span></div>
+                        <input type="text" class="form-control dz-uppercase" id="txtBeneficiario" 
+                        formControlName="beneficiarioEgreso" aria-span="Default" aria-describedby="inputGroup-sizing-default" maxlength="50">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    <div class="input-group input-group-sm">
+                        <div class="input-group-prepend"><span class="input-group-text">Concepto</span></div>
+                        <input type="text" class="form-control dz-uppercase" id="txtConcepto"
+                        formControlName="conceptoEgreso" aria-span="Default" aria-describedby="inputGroup-sizing-default" maxlength="50">
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    <div class="input-group input-group-sm">
+                        <div class="input-group-prepend"><span class="input-group-text">Observación</span></div>
+                        <textarea class="form-control dz-uppercase" id="txtObservacion" formControlName="observacionEgreso" rows="5" maxlength="200"></textarea>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="modal-footer card-footer">
+            <div class="form-row float-right">
+                <button id="btnGrabar" type="button" class="btn btn-outline-primary" (click)="egresoGrabar()"><i class="feather icon-save"></i>Guardar</button>
+                <button id="btnImprimir" type="button" class="btn btn-outline-primary" (click)="imprimirEgreso()"><i class="feather icon-save"></i>Imprimir</button>
+                <button id="btnSalir" type="button"  class="btn btn-outline-danger" (click)="cerrarModal()"><i class="feather icon-slash"></i>Salir</button>
+            </div>
+        </div>
+    </div> 
+</form>

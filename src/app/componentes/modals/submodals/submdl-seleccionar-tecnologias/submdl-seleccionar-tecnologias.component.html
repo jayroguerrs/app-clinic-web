@@ -1,0 +1,123 @@
+<div class="modal-content">
+  <div class="modal-header bg-gradient py-3">
+    <h2 class="d-flex align-middle">
+      <div class="my-auto mr-3">
+        <button type="button" matRipple class="btn sbtn p-2 d-block text-white" (click)="onClose()">
+          <fontawesome-svg icon="arrow-left" [width]="22" [height]="22" type="duotone"></fontawesome-svg>
+        </button>
+      </div>
+      <div class="my-auto">
+        <h2 class="mb-0 fs-18px f-w-500 text-white">Seleccionar Tecnologías</h2>
+      </div>
+    </h2>
+    <!--<div class="btn sbtn btn-sm btn-icon btn-active-color-primary h-auto w-auto p-0" (click)="onClose()">
+      <span class="svg-icon svg-icon-1">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor"></rect>
+          <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor"></rect>
+        </svg>
+      </span>
+    </div>-->
+  </div>
+  <div class="modal-body">
+    <div class="p-4 h-100">
+
+      <div class="form-row h-100 position-relative pt-82px">
+
+          <div class="col-12 position-absolute top-0 start-0 end-0">
+            <ng-component [ngSwitch]="ldServicio">
+              <div *ngSwitchCase="true" class="sk block w-100 h-51px rounded-md"></div>
+              <div *ngSwitchCase="false" class="rounded-md border border-2px border-indigo py-2 px-3 text-indigo d-flex flex-column">
+                <label class="mb-0 fs-10px">SERVICIO</label>
+                <p class="mb-0 fw-bold text-truncate text-uppercase">{{ servicio ? servicio.nombre : '---' }}</p>
+              </div>
+            </ng-component>
+          </div>
+
+          <div class="col-12 col-md-6 max-h-md-100 max-h-lg-100 max-h-xl-100">
+            <div class="border border-secondary position-relative p-3 rounded min-h-200 h-100 pt-100px">
+
+              <div class="position-absolute m-3 top-0 start-0 end-0">
+                <label class="fw-semibold text-gray-800 mb-1">Lista</label>
+                <div class="d-flex align-items-center">
+                <span class="svg-icon svg-icon-1 position-absolute ms-4 ps-10px no-pointer-events">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <rect  opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2" rx="1" transform="rotate(45 17.0365 15.1223)" fill="currentColor"></rect>
+                    <path  d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z" fill="currentColor"></path>
+                  </svg>
+                </span>
+                  <input type="text" data-kt-filter="search" placeholder="Filtrar"  class="form-control form-control-solid ps-42px">
+                </div>
+              </div>
+
+              <div class="overflow-auto h-100">
+                <div
+                  cdkDropList
+                  #cdkTecnologias="cdkDropList"
+                  [cdkDropListConnectedTo]="[cdkTecnologiasSeleccionadas]"
+                  [cdkDropListData]="tecnologias"
+                  class="example-list rounded-md p-2 bg-color-light min-h-100 position-relative"
+                  (cdkDropListDropped)="drop($event)">
+                  <div class="example-box rounded-md h-60px" *ngFor="let item of tecnologias" cdkDrag>
+                    <span>{{item.nombre}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-6 max-h-md-100 max-h-lg-100 max-h-xl-100">
+            <div class="border border-secondary p-3 position-relative rounded min-h-200 h-100 pt-100px">
+
+              <div class="position-absolute m-3 top-0 start-0 end-0">
+                <label class="fw-semibold text-gray-800 mb-1">Seleccionados</label>
+                <div class="d-flex align-items-center">
+                <span class="svg-icon svg-icon-1 position-absolute ms-4 ps-10px no-pointer-events">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <rect  opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2" rx="1" transform="rotate(45 17.0365 15.1223)" fill="currentColor"></rect>
+                    <path  d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z" fill="currentColor"></path>
+                  </svg>
+                </span>
+                  <input type="text" data-kt-filter="search" placeholder="Filtrar"  class="form-control form-control-solid ps-42px">
+                </div>
+              </div>
+
+              <div class="overflow-auto h-100">
+                  <div
+                    cdkDropList
+                    #cdkTecnologiasSeleccionadas="cdkDropList"
+                    [cdkDropListConnectedTo]="[cdkTecnologias]"
+                    [cdkDropListData]="tecnologiasSelected"
+                    class="example-list rounded-md p-2 min-h-100 position-relative"
+                    [ngClass]="{'bg-light-indigo': tecnologiasSelected.length, 'bg-color-light': !submitted && !tecnologiasSelected.length, 'bg-color-light-danger': submitted && !tecnologiasSelected.length}"
+                    (cdkDropListDropped)="dropSeleccionadas($event)">
+                    <div *ngIf="!tecnologiasSelected.length" class="position-absolute text-center text-muted p-5 d-flex top-0 bottom-0 start-0 end-0">
+                      <span class="d-flex flex-column m-auto text-center" [ngClass]="{'text-danger': submitted && !tecnologiasSelected.length}">
+                        <fontawesome-svg icon="up-down-left-right" [width]="30" [height]="30" type="light" class="mx-auto"></fontawesome-svg>
+                        Arrastrar un item hacia aquí
+                      </span>
+                    </div>
+                    <div class="example-box rounded-md bg-indigo" *ngFor="let item of tecnologiasSelected; let i = index" cdkDrag>
+                      <div class="d-flex w-100 align-items-center">
+                        <div class="d-flex w-100 pe-10px text-white">
+                          {{item.nombre}}
+                        </div>
+                        <div class="d-flex flex-column w-70px">
+                          <span class="fs-10px text-center text-white">Minutos</span>
+                          <input type="number" pattern="[0-9]*" class="form-control form-control-sm form-control-solid" step="5" min="0" [value]="item.minutos" (change)="onChangeMinutos(i, $event)" [ngClass]="{'bg-color-light-danger text-danger': submitted && !item.minutos}">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn sbtn btn-light mr-2" (click)="onClose()">Cancelar</button>
+    <button type="submit" class="btn sbtn btn-primary shadow btn-shadow-primary" (click)="onSubmit()">Aceptar</button>
+  </div>
+</div>
+

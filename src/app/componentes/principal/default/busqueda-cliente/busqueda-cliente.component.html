@@ -1,0 +1,382 @@
+
+
+<div #secondDiv class="col-sm-12" style="padding: 0 !important; margin-bottom: 4rem;">
+    <app-card [options]="false" [customHeader]="true" [hidHeader]="true">
+      <div style="display: flex; align-items: center; gap: 0.5rem;">
+        <h1 (click)="verTotales()" class="titulos" style="padding-left: 20px; padding-top: 16px;" >Buscar Cliente (DNI, Nombre, Celular) </h1>
+        <!-- <button *ngIf="isSmallScreen" (click)="obtenerTodasLasCitasPorHoy()" ngbTooltip="Traer todas las citas." type="button" class="btn btn-primary" style="margin-top: 0.6rem ;padding-left: 0.2rem !important; padding-right: 0.1rem !important;"><i class="mdi mdi-earth" style="display: flex;margin-left: 0.5rem; font-size: 1.3rem;"></i></button> -->
+
+      </div>
+
+      <div class="contenedor-filtros contenedor-busqueda-nombre-cliente" id="complex-search">
+
+        <mat-form-field (click)="picker.open()" appearance="outline"  class="form-field atoms-input_datepicker">
+          <mat-label>Filtro por Fecha</mat-label>
+          <input [(ngModel)]="fechaFiltro" (dateChange)="obtenerCitasPaginadoPorFecha()" style="cursor: pointer !important;" readonly matDatepickerToggleIcon matInput [matDatepicker]="picker"  />
+          <mat-datepicker-toggle matSuffix [for]="picker">
+            <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+          </mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+
+        <div class="organisms-input_and_filters">
+          <section class="contenedor-filtros-izquierda">
+            <mat-form-field appearance="outline" style="margin-right: 0.5rem; padding-bottom: 0 !important; width: 100% !important;" >
+              <mat-label>Buscar Cliente</mat-label>
+              <input (paste)="onPaste($event)" (keyup)="performSearchDos(palabraBusqueda)" name="palabraBusqueda" [(ngModel)]="palabraBusqueda"  matInput placeholder="DNI, Nombre, Celular..." >
+  
+            </mat-form-field>
+            <ng-container *ngIf="clientesEncontrados.length > 0"  >
+              <div class="contenedor-busqueda" >
+                <div (click)="elegirCliente(cliente)" class="contendor-cliente" *ngFor="let cliente of clientesEncontrados" style="width: 100%; height: 50px; display: flex; align-items: center;">
+                  <h3 class="nombre-cliente">{{cliente.cliente}}</h3>
+                </div>
+              </div>
+            </ng-container>
+          </section>
+          <section class="molecules-buttons">
+            <button *ngIf="!isSmallScreen"  ngbTooltip="Reiniciar usuario." (click)="limpiarTodo()" type="button" class="btn btn-light">Reiniciar</button>
+            <button *ngIf="isSmallScreen" ngbTooltip="Reiniciar usuario."  (click)="limpiarTodo()" type="button" class="btn btn-light"><i class="mdi mdi-reload" ></i></button>
+            <button *ngIf="!isSmallScreen" type="button" class="btn btn-primary" (click)="performSearchDos(palabraBusqueda)">Buscar</button>
+            <button *ngIf="isSmallScreen" type="button" class="btn btn-primary" ><i class="mdi mdi-magnify" ></i></button>
+            <button *ngIf="!isSmallScreen"  ngbTooltip="Traer todas las citas." type="button" class=" custom-black-btn btn btn-primary" (click)="obtenerTodasLasCitasPorHoy()">Todos</button>
+            <button *ngIf="isSmallScreen" (click)="obtenerTodasLasCitasPorHoy()" ngbTooltip="Traer todas las citas." type="button" class=" custom-black-btn btn btn-primary"> <i class="mdi mdi-earth custom-black-btn"></i></button>
+          </section>
+        </div>
+      </div>
+      
+      <ng-container *ngIf="idClienteElegido" >
+      <div style="display: flex; align-items: center;">
+        <h1 class="titulos" style="padding-left: 20px; padding-top: 0; color: #575757;">Filtros</h1>
+        <button *ngIf="isSmallScreen && !mostrarFiltros" type="button" (click)="mostrarFiltrosMobile()" class="btn btn-primary" style="margin-left: 0.5rem ;padding-left: 0rem !important; padding-right: 0rem !important; padding-top: 0.5rem !important; padding-bottom: 0.3rem !important;"><i class="mdi mdi-arrow-right" style="display: flex;margin-left: 0.5rem; font-size: 1.3rem;"></i></button>
+        <button *ngIf="isSmallScreen && mostrarFiltros" type="button" (click)="mostrarFiltrosMobile()" class="btn btn-primary" style="margin-left: 0.5rem ;padding-left: 0rem !important; padding-right: 0rem !important; padding-top: 0.5rem !important; padding-bottom: 0.3rem !important;"><i class="mdi mdi-arrow-down" style="display: flex;margin-left: 0.5rem; font-size: 1.3rem;"></i></button>
+        <i class="feather icon-filter" style="margin-left: 0.5rem; font-size: 1.3rem; padding-bottom: 0.5rem;"></i>
+      </div>
+
+        <div class="contenedor-filtros contenedor-filtros-dos" style="justify-content: normal; margin-bottom: 0.8rem;" *ngIf="mostrarFiltros">
+          <div class="contenedor-filtros-izquierda" style="flex-wrap: wrap !important;">
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Sede</mat-label>
+              <mat-select [disabled]="!idClienteElegido" [(ngModel)]="sedeSeleccionada" (selectionChange)="applyFilter()">
+                <mat-option [value]="0">Todos</mat-option>
+                <mat-option *ngFor="let sede of collectionSede" [value]="sede.id">{{ sede.nombre }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+            
+  
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Tipo de Cliente</mat-label>
+              <mat-select [disabled]="!idClienteElegido"  [(ngModel)]="clienteSeleccionado" (selectionChange)="applyFilter()">
+                <mat-option [value]="0">Todos</mat-option>
+                <mat-option *ngFor="let tipoCliente of listadoTipoCliente" [value]="tipoCliente.idTipoCliente">{{ tipoCliente.tipoCliente }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+  
+            <mat-form-field appearance="outline"  class="form-field">
+              <mat-label>Tipo de Cita</mat-label>
+              <mat-select [disabled]="!idClienteElegido"  [(ngModel)]="tipoCitaSeleccionada" (selectionChange)="applyFilter()">
+                <mat-option [value]="0">Todos</mat-option>
+                <mat-option *ngFor="let tipoCita of listadoTipoCita" [value]="tipoCita.id">{{ tipoCita.nombre }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+            
+            <mat-form-field appearance="outline"  class="form-field">
+              <mat-label>Estado de Cita</mat-label>
+              <mat-select [disabled]="!idClienteElegido"  [(ngModel)]="estadoSeleccionado" (selectionChange)="applyFilter()">
+                <mat-option [value]="0">Todos</mat-option>
+                <mat-option *ngFor="let estado of citaEstados" [value]="estado.id">{{ estado.descripcion }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+    
+            <mat-form-field appearance="outline"  class="form-field">
+              <mat-label>Servicio</mat-label>
+              <mat-select [disabled]="!idClienteElegido"  [(ngModel)]="servicioSeleccionado" (selectionChange)="applyFilter()">
+                <mat-option [value]="0">Todos</mat-option>
+                <mat-option *ngFor="let servicio of listaServicios" [value]="servicio.id">{{ servicio.nombre }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <div style="display: flex; gap: 1.2rem; padding-top: 0.5rem;" class="form-field">
+              <div class="mb-2" style="width: 100%;" >
+                <div class="form-floating form-start-icon">
+                  <input id="horaDesde" type="time" placeholder=" "  [(ngModel)]="horaDesde" class="form-control" (change)="applyFilter()" >
+                  <label for="horaDesde">Hora desde</label>
+                  <span class="icon"><span class="dicon o-clock m-auto"></span></span>
+                </div>
+              </div>
+              <div class="mb-2" style="width: 100%;" [ngClass]="{'hora-deshabilitada': !horaDesde}">
+                <div class="form-floating form-start-icon">
+                  <input id="horaHasta" type="time" placeholder=" " [(ngModel)]="horaHasta" class="form-control" (change)="applyFilter()" >
+                  <label for="horaHasta">Hora hasta</label>
+                  <span class="icon"><span class="dicon o-clock m-auto"></span></span>
+                </div>
+              </div>
+            </div>
+
+            </div>
+
+          <button style="margin-left: 0.8rem; height: 46px;" ngbTooltip="Eliminar los filtros." (click)="limpiarFiltros()" type="button" class="btn btn-light limpiar-filtros-button">Limpiar</button>
+          <div>
+  
+          </div>
+        </div>
+        
+        <div style="display: flex; flex-wrap: wrap; padding-left: 18px;">
+
+          <h1  [ngClass]="{'titulo-cliente-ccvox-active': idClienteElegido === clienteCcvox.id}" (click)="obtenerCitasPorClienteCcvox(clienteCcvox.id)" *ngFor="let clienteCcvox of listadoClientesCcvox; let i = index" 
+              class="titulos titulo-cliente-ccvox" 
+>                     <ng-container *ngIf="i > 0"> /</ng-container>
+            {{ clienteCcvox.nombreCliente }}
+
+          </h1>
+        </div>
+        
+
+        <div style="padding: 0 20px;" class="d-flex justify-content-between">
+          <h1 class="titulos" style="color: #575757; font-size: 1.2rem !important; margin-top: 1.8rem;">Ultimas Citas 
+            <span  style="margin-right: 0.2rem;" *ngIf="nombreClienteElegido.length > 0 && !isSmallScreen">{{'(' + nombreClienteElegido+ ')'}}</span> 
+            <span style="padding: 6px 10px; font-size: 12px;" *ngIf="esNuevoCliente === 'Nuevo'" class="badge badge-pill badge-success">{{esNuevoCliente}}</span>
+            <span style="padding: 6px 10px; font-size: 12px; background-color: #0036ff;" *ngIf="esNuevoCliente === 'No Nuevo'" class="badge badge-pill badge-danger">{{esNuevoCliente}}</span>
+            
+            <span style="padding: 6px 10px; font-size: 12px; background-color: #0036ff;" *ngIf="esListadoGlobal" class="badge badge-pill badge-danger">{{totalDeCitasGlobales + ' citas'}}</span>
+          </h1>
+
+          <button style="height: fit-content;" *ngIf="nombreClienteElegido.length > 0 && !isSmallScreen" (click)="citaNueva()" type="button" class="btn btn-primary">Nueva Cita</button>
+          <button style="height: fit-content; margin-top: 1.2rem; margin-right: 0 !important;" *ngIf="nombreClienteElegido.length > 0 && isSmallScreen" (click)="citaNueva()" type="button" class="btn btn-primary"><i style="display: block; margin-right: 0 !important;" class="mdi mdi-plus" ></i></button>
+        </div>
+
+          <div class="position-relative d-flex mb-2">
+            <button matRipple class="d-inline-flex text-dark border rounded-pill px-3 py-1 mx-auto z-index-2 cursor-pointer shadow-sm position-relative bg-white" (click)="toggle()"> <span class="mr-2">Ver total</span><fontawesome-svg icon="chevron-down" type="regular" [width]="20" [height]="20" [class.fa-rotate-180]="!collapsed"></fontawesome-svg></button>
+            <span class="bg-light h-2px w-100 position-absolute top-0 bottom-0 m-auto left-0"></span>
+          </div>
+
+          <div class="form-row collapsible overflow-hidden" id="resumenes" [@collapse]="collapsed" >
+            <ng-container *ngFor="let item of totales" style="display: flex;">
+              <div class="mb-2 col-6 col-xs-6 col-sm-6 col-md-4 col-lg-3">
+                <div [ngStyle]="{'background-color': getColorPorEstadoDeCita(item.idEstado)}" class="label text-white tag"><span>{{item.idEstado | tiposFiltrosCliente:'estadoCita':citaEstados}}</span><span class="ml-auto">{{item.cantidad}}</span></div>
+              </div>
+            </ng-container>
+          </div>
+
+
+        <div class="table-container" >
+          <table mat-table matSort  [dataSource]="dataSourceControl">
+  
+  
+            <ng-container matColumnDef="id_cita"> 
+              <th class="es-mobile-none" mat-header-cell *matHeaderCellDef></th>
+              <td   class="contenido-tabla es-mobile-none" mat-cell *matCellDef="let element" style="padding-left: 36px; width: 11rem !important;" > 
+                <div style="display: flex;">
+                  
+                  <div class="mostrar-detalle" style="cursor: pointer; display: flex; flex-direction: column;">
+                    <i ngbTooltip="Ver Perfil del Cliente"  (click)="mostrarClienteDetalle(element.idCliente)" class="mdi mdi-account" style="display: flex;font-size: 36px !important; margin-right: 0.2rem; height: 38px;"></i>
+                    <p style="margin-bottom: 0 !important; font-weight: 600;">Cliente</p>
+                    <p style="white-space: normal; text-align: center;" >{{element.idTipoCliente | tiposFiltrosCliente:'tipoCliente':listadoTipoCliente}}</p>
+                  </div> 
+
+                  <app-btn-confirmar-pago [botonTipo]="'desktop'" [element]="element" [nombreClienteElegido]="nombreClienteElegido" (pagoFinalSuccess)="cambiarEstadoPagoFinal($event.idCita, $event.result)"></app-btn-confirmar-pago>
+
+                  <div class="mostrar-detalle" style="cursor: pointer; display: flex; margin-left: 0.6rem;">
+                    <i ngbTooltip="Ver Cita"  (click)="mostrarCitaDetalle(element)" class="mdi mdi-file-document-outline" style="display: flex;font-size: 36px !important; height: 38px;"></i>
+                    <p style="margin-bottom: 0 !important; font-weight: 600;">Cita</p>
+                  </div> 
+  
+                </div>
+              </td>
+            </ng-container>
+          
+            <ng-container matColumnDef="carta">
+              <th class="es-desktop-none" mat-header-cell *matHeaderCellDef>  </th>
+              <td  class="contenido-tabla-c es-desktop-none" mat-cell *matCellDef="let element"  > 
+                <div [ngClass]="{'cita-selected-m': element.idCita === selectedRow?.idCita}" >
+
+                  <div class="header-c-mobile"  [ngClass]="{'fondo-cliente-especial-m': element.idTipoCliente === 1, 'fondo-cliente-cortesia-m': element.idTipoCliente === 2}">
+
+                    <i ngbTooltip="Ver Perfil del Cliente"  (click)="mostrarClienteDetalle(element.idCliente)" class="mdi mdi-account usericon-c-mobile"></i>
+  
+                    <div  (click)="mostrarClienteDetalle(element.idCliente)">
+                      <h3 class="h3-c-mobile text-white">{{element.nombreCliente}}</h3>
+                      
+                      <div class="d-flex">
+                        <span class="text-12px">{{ !element.clienteNuevo ? esNuevoCliente : element.clienteNuevo }} - {{element.idTipoCliente | tiposFiltrosCliente:'tipoCliente':listadoTipoCliente}}</span>
+                        <p class="ml-2 estado-c-mobile">
+                          {{element.precioDePagoFinal != null && !element.idTipoPago ? 'Pagado' : (element.idTipoPago | pip_tipodepago)}}
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <app-btn-confirmar-pago [botonTipo]="'mobile'" [element]="element" [nombreClienteElegido]="nombreClienteElegido" (pagoFinalSuccess)="cambiarEstadoPagoFinal($event.idCita, $event.result)"></app-btn-confirmar-pago>
+
+                  </div> 
+  
+                  <div class="general-container-c">
+                    <div class="info-p-2-container-c">
+    
+                      <div class="info-2-container-c">
+                        <h3 class="h3-c-mobile">Servicio:</h3>
+                        <span [ngStyle]="{'background-color': getColorPorServicioDeCita(element.idServicio)}" class="span-c badge badge-pill badge-success">{{element.idServicio | tiposFiltrosCliente:'tipoServicio':listaServicios}} </span>
+                        
+                        <h3 class="h3-c-mobile">Estado:</h3>
+                        <span 
+                          [ngStyle]="{'background-color': getColorPorEstadoDeCita(element.idEstado)}" 
+                          class="span-c badge badge-pill badge-success">
+                          {{element.idEstado | tiposFiltrosCliente:'estadoCita':citaEstados}}
+                        </span>     
+                        
+                        
+                      </div>
+    
+                      <div class="info-2-container-c ps-2  pl-3-c">
+                        <h3 class="h3-c-mobile">Tipo Cita:</h3>
+                        <span class="fs-6 mb-1 fw-bold-c">{{element.idTipoCita | tiposFiltrosCliente:'tipoCita':listadoTipoCita}} </span>
+    
+                        
+                        <h3 class="h3-c-mobile">Sede:</h3>
+                        <span class="fs-6 fw-bold-c" >{{element.idSede | tiposFiltrosCliente:'tipoSede':collectionSede}}</span>
+    
+                        
+                      </div>
+                    </div>
+                    <div class="info-p-container-c">
+                      <div class="info-container-c">
+                          <h3 class="h3-c-mobile mr-02rem">Monto:</h3>
+                          <span class="fs-6 mb-1 fw-bold-c"> {{ "S/. " + element.total.toFixed(2)}} </span>
+                      </div>
+    
+                      <div class="info-container-c">
+                          <h3 class="h3-c-mobile mr-02rem">Pago Final:</h3>
+                          <span class="fs-6 mb-1 fw-bold-c"> {{ element.precioDePagoFinal !== null ? "S/. " + element.precioDePagoFinal.toFixed(2) : "S/. " + 0}}</span>                  
+                      </div>
+                    </div>
+    
+                    <div class="info-p-container-c">
+                      <div class="info-container-c">
+                          <h3 class="h3-c-mobile mr-02rem">Fecha:</h3>
+                          <span class="fs-6 mb-1 fw-bold-c"> {{ element.fechaCita}} </span>
+                      </div>
+    
+                      <div class="info-container-c">
+                          <h3 class="h3-c-mobile mr-02rem">Hora:</h3>
+                          <span class="fs-6 mb-1 -c">{{ element.horaInicio | date: 'HH:mm' }} - {{ element.horaTermino | date: 'HH:mm' }}</span>                  
+                      </div>
+                    </div>
+    
+                  </div>
+                  <div style="padding: 0px;">
+                    <h3 class="zonas-list-h3">ZONAS:</h3>
+  
+                    <ol class="card--zonas zonas-list-c">
+                      <li class="zona-list-li" *ngFor="let zona of element.zonas">{{zona}}</li>
+                    </ol>
+                  </div>
+
+                </div>
+
+              </td>
+            </ng-container>
+  
+            <ng-container matColumnDef="id_tipo_cita">
+              <th class="es-mobile-none" mat-header-cell *matHeaderCellDef> 
+                <div>Sede y </div>
+                <div>Tipo de Cita</div>
+              </th>
+              <td class="contenido-tabla es-mobile-none" mat-cell  *matCellDef="let element"> 
+                <div>
+                  {{element.idSede | tiposFiltrosCliente:'tipoSede':collectionSede}} 
+                </div>
+                <div class="mt-2">
+                  {{element.idTipoCita | tiposFiltrosCliente:'tipoCita':listadoTipoCita}} 
+                </div>
+              </td>
+            </ng-container>
+    
+            <ng-container matColumnDef="fecha_de_cita">
+              <th mat-header-cell *matHeaderCellDef class="es-mobile-none"> Fecha y Hora </th>
+              <td class="contenido-tabla es-mobile-none" mat-cell   *matCellDef="let element">
+                <div>
+                  <h6 style="margin-left: 0.3rem;">{{element.fechaCita}}</h6>
+                  <div>
+                    {{ element.horaInicio | date: 'HH:mm' }} - {{ element.horaTermino | date: 'HH:mm' }}
+
+                  </div>
+                </div>
+                  
+              </td>
+            </ng-container>
+  
+            <ng-container matColumnDef="total">
+              <th class="es-mobile-none" mat-header-cell *matHeaderCellDef> Monto Total </th>
+              <td class="contenido-tabla es-mobile-none" mat-cell *matCellDef="let element"> {{ "S/. " + element.total.toFixed(2)}} </td>
+            </ng-container>
+  
+            <ng-container matColumnDef="id_servicio">
+              <th class="es-mobile-none" mat-header-cell *matHeaderCellDef> Servicio y Estado </th>
+              <td class="contenido-tabla es-mobile-none" mat-cell *matCellDef="let element">
+                <div style="display: flex; flex-direction: column; gap: 0.2rem;">
+                  <!-- <span style="width: fit-content; padding: 6px 10px; font-size: 12px; color: white; background-color: #252525 !important;" class="badge badge-pill badge-warning">{{element.idServicio | tiposFiltrosCliente:'tipoServicio':listaServicios}}  </span> 
+                  <span style="width: fit-content; padding: 6px 10px; font-size: 12px;" class="badge badge-pill badge-success">{{element.idEstado | tiposFiltrosCliente:'estadoCita':citaEstados}}</span> -->
+
+                  <span [ngStyle]="{'background-color': getColorPorServicioDeCita(element.idServicio)}" style="width: fit-content; padding: 6px 10px; font-size: 12px;" class="badge badge-pill badge-success">{{element.idServicio | tiposFiltrosCliente:'tipoServicio':listaServicios}} </span>
+                  <span [ngStyle]="{'background-color': getColorPorEstadoDeCita(element.idEstado)}" style="width: fit-content; padding: 6px 10px; font-size: 12px;" class="badge badge-pill badge-success">{{element.idEstado | tiposFiltrosCliente:'estadoCita':citaEstados}}</span>
+                </div>
+              </td>
+            </ng-container>
+
+            
+            <ng-container matColumnDef="resumen">
+              <th class="es-mobile-none" mat-header-cell *matHeaderCellDef> Resumen </th>
+              <td class="contenido-tabla-perfil es-mobile-none" mat-cell  *matCellDef="let element"> 
+                <ol style="list-style-type: decimal; font-weight: bold;" class="card--zonas">
+                    <li *ngFor="let zona of element.zonas">{{zona}}</li>
+                </ol>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="pago_final">
+              <th class="es-mobile-none" mat-header-cell *matHeaderCellDef> Pago Final </th>
+              <td class="contenido-tabla es-mobile-none" mat-cell *matCellDef="let element"> {{ element.precioDePagoFinal !== null ? "S/. " + element.precioDePagoFinal.toFixed(2) : "S/. " + 0}} </td>
+            </ng-container>
+  
+            <ng-container matColumnDef="acciones">
+              <th class="es-mobile-none" mat-header-cell *matHeaderCellDef> Acciones </th>
+              <td class="contenido-tabla es-mobile-none" mat-cell *matCellDef="let element" style="width: 200px !important;">
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="clienteNuevo">
+              <th class="es-mobile-none" mat-header-cell *matHeaderCellDef > {{esListadoGlobal ? 'Nuevo' : ''}} </th>
+              <td class="contenido-tabla es-mobile-none" mat-cell *matCellDef="let element"> {{esListadoGlobal ? element.clienteNuevo : ''}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="nombre_cliente">
+              <th class="es-mobile-none" mat-header-cell *matHeaderCellDef > {{esListadoGlobal ? 'Nombre' : ''}} </th>
+              <td class="contenido-tabla es-mobile-none" mat-cell *matCellDef="let element"> {{esListadoGlobal ? element.nombreCliente : ''}} </td>
+            </ng-container>
+            
+          
+            <ng-container matColumnDef="id_estado">
+              <th class="es-mobile-none" mat-header-cell *matHeaderCellDef></th>
+              <td class="contenido-tabla es-mobile-none" mat-cell *matCellDef="let element"  >
+                <!-- <span style="padding: 6px 10px; font-size: 12px;" class="badge badge-pill badge-success">{{element.idEstado | tiposFiltrosCliente:'estadoCita':citaEstados}}</span> -->
+              </td>
+            </ng-container>
+          
+            <tr mat-header-row *matHeaderRowDef="displayedColumnsControlCitas"></tr>
+            <tr class="fila-tabla" [ngClass]="{'fondo-cliente-especial': row.idTipoCliente === 1, 'fondo-cliente-cortesia': row.idTipoCliente === 2, 'row-seleccionado': selectedRow === row}" (click)="enviarCitaSeleccionada(row)" mat-row *matRowDef="let row; columns: displayedColumnsControlCitas;"></tr>
+          </table>
+        
+        </div>
+        <mat-paginator [length]="totalDeCitasGlobales" [pageSizeOptions]="[5, 25, 50]" (page)="onPageChanged($event)" showFirstLastButtons></mat-paginator>
+        <mat-divider></mat-divider>
+      </ng-container>
+
+
+  
+  
+    </app-card>
+  
+  
+  </div>
+  
+  
+  

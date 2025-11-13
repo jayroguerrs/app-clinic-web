@@ -1,0 +1,6 @@
+<!-- Citas Pendientes -->
+<app-card [ngClass]="{ 'card-success': estadoDeCita === 'Atendida', 'card-alert': estadoDeCita === 'Pendiente' }" [cardTitle]="'RESUMEN DE CITAS: ' + estadoDeCita" >
+
+  <table id="tblCitasPendientes" [dtTrigger]="dtTrigger" datatable [dtOptions]="dtOptionsTableCitasPendientes" class="table table-sm table-hover display compact"></table>
+
+</app-card>

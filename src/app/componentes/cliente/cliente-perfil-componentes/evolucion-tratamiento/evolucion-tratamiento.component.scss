@@ -1,0 +1,20 @@
+::ng-deep .table-child{
+  tbody{
+    td{
+      white-space: normal !important;
+    }
+  }
+}
+
+::ng-deep .cita-view{
+  border-color: rgb(41, 150, 204) !important;
+  padding: .2rem .4rem;
+  span{
+    font-size: 16px;
+    margin-right: .4rem;
+  }
+  &:hover{
+    background-color: rgb(41, 150, 204);
+    color: white;
+  }
+}

@@ -1,0 +1,103 @@
+<!-- MODAL CITA HISTORIAL -->
+<ng-template #modalCitaComisionDetalle let-modal let-close="close">
+    <app-cita-comision-detalle [operador]="operador" [fechaInicio]="f.filtroFechaInicio.value" [fechaTermino]="f.filtroFechaTermino.value" [idUsuario]="idUsuarioOperador" [modal]="modalCitaComisionDetalleRef"></app-cita-comision-detalle>
+  </ng-template>
+
+
+  <!-- BOTONERA ESCRITORIO -->
+  <ul class="botonera-escritorio">
+    <li>
+        <button type="button" class="btn btn-primary btn-icon"      [placement]="'bottom'" ngbTooltip="Buscar"  (click)="obtenerResumenComisiones()"><i class="mdi mdi-magnify"></i></button>
+        <button *ngIf="this.accTot || this.accExc" type="button" class="btn btn-primary btn-icon"      [placement]="'bottom'" ngbTooltip="Excel" (click)="exportarExcel()"><i class="mdi mdi-file-excel-outline"></i></button>
+        <button *ngIf="selected" type="button" class="btn btn-secondary btn-icon"      [placement]="'bottom'" ngbTooltip="Ver detalle" (click)="mostrarDetalle(modalCitaComisionDetalle)" ><i class="mdi mdi-format-list-checkbox"></i></button>
+    </li>
+</ul>
+
+<div class="row">
+  <!-- FILTRO -->
+  <div class="col-sm-12 sticky-header" stickyClass="header--sticky">
+    <app-card [options]="false" cardTitle="COMISIÓN DE CITAS" [customHeader]="false">
+
+      <form  [formGroup]="frmFiltroGrilla">
+        <div class="form-row">
+          <div class="form-group col-md-4">
+            <div class="form-floating form-icon" >
+              <i class="feather icon-calendar" [placement]="'bottom'" ngbTooltip="Fecha Inicio"></i>
+              <input type="date" class="form-control" id="filtroFechaInicio" formControlName="filtroFechaInicio" placeholder=" " (change)="obtenerResumenComisiones()" min="2020-01-01" max="2030-12-31">
+              <label for="filtroFechaInicio">Fecha Inicio</label>
+            </div>
+          </div>
+          <div class="form-group col-md-4">
+            <div class="form-floating form-icon" >
+              <i class="feather icon-calendar" [placement]="'bottom'" ngbTooltip="Fecha Termino"></i>
+              <input type="date" class="form-control" id="filtroFechaTermino" formControlName="filtroFechaTermino" placeholder=" " (change)="obtenerResumenComisiones()" >
+              <label for="filtroFechaTermino">Fecha Termino</label>
+            </div>
+          </div>
+          <div class="form-group col-md-4">
+            <div class="form-floating form-icon">
+              <i class="feather icon-user" [placement]="'bottom'" ngbTooltip="Teleoperadora"></i>
+              <select class="form-select" id="filtroIdUsuarioOperador" formControlName="filtroIdUsuarioOperador" (change)="obtenerResumenComisiones()">
+                <option value='0'>TODOS</option>
+                <option *ngFor="let operadora of maestroOperadoras" [value]="operadora.idUsuario">{{ operadora.nombre }}</option>
+              </select>
+              <label for="filtroIdUsuarioOperador">Teleoperadora</label>
+            </div>
+          </div>
+        </div>
+      </form>
+    </app-card>
+  </div>
+
+  <!-- GRILLA -->
+  <div class="col-sm-12">
+    <app-card [options]="false" [hidHeader]="true">
+      <div class="table table-sm-responsive"><table datatable [dtOptions]="dtResponsiveOptions" class="table table-sm table-hover table-comision display compact"></table></div>
+    </app-card>
+
+  </div>
+</div>
+
+
+<!-- Menu Movil -->
+<div class="float-menu">
+  <button mat-fab color="primary" class="bg-primary" (click)="verOpciones()">
+    <mat-icon>settings</mat-icon>
+  </button>
+</div>
+
+<ng-template let-bottomSheetRef="bottomSheetRef" #menuMovil >
+  <div class="_content" >
+    <div class="_header">
+      <div class="px-4 pt-4 text-center">
+        <span class="d-inline-block topline"></span>
+        <p class="text-center _title lead">Opciones</p>
+      </div>
+      <mat-divider class=""></mat-divider>
+    </div>
+    <mat-nav-list class="pt-0">
+      <div>
+        <a mat-list-item (click)="obtenerResumenComisiones();cerrarOpciones();">
+          <i class="mat-list-icon mdi mdi-magnify"></i>
+          <span class=" opt-title">Buscar</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+      <div *ngIf="selected">
+        <a mat-list-item (click)="mostrarDetalle(modalCitaComisionDetalle);cerrarOpciones();">
+          <i class="mat-list-icon mdi mdi-format-list-checkbox"></i>
+          <span class=" opt-title">Ver detalle</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+      <div>
+        <a mat-list-item (click)="exportarExcel();cerrarOpciones();">
+          <i class="mat-list-icon mdi mdi-file-excel-outline"></i>
+          <span class=" opt-title">Exportar</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+    </mat-nav-list>
+  </div>
+</ng-template>
+

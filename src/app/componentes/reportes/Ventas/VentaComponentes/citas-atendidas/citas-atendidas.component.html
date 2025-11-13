@@ -1,0 +1,14 @@
+<app-card [options]="false" [customHeader]="false" [options]="true" [collapse]="true" [excel]="true" (excelCallback)="exportarExcel()" cardTitle="Citas atendidas por sede">
+  <mat-progress-bar mode="indeterminate" id="progress" *ngIf="loading"></mat-progress-bar>
+
+  <div class="form-row">
+    <div class="col-12 col-md-12 mb-2">
+      <div id="chartCitasAtendidas" class="border rounded"></div>
+    </div>
+    <div class="col-12 col-md-12">
+      <div id="chartCitasAtendidasTotal" class="border rounded"></div>
+    </div>
+  </div>
+
+
+</app-card>

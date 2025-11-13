@@ -1,0 +1,51 @@
+<form>
+    <div class="modal-header card-header">
+      <h5 class="modal-title">Ayuda</h5>
+      <button type="button" class="close basic-close" data-dismiss="modal" aria-label="Close" 
+          (click)="cerrarModal()"><span aria-hidden="true">&times;</span></button>
+    </div>
+
+    <div class="modal-body card-body">
+        <div class="form-row"><h5>Variables para crear plantilla</h5>
+        </div>
+    
+        <div class="form-row">
+          
+          <div class="form-group col-md-6">
+            <div><span class="input-group-text" (click)="copyToClipboard($event.target)">{{varFechaInicio}}</span></div>
+          </div>
+
+          <div class="form-group col-md-6">
+            <div><span class="input-group-text" (click)="copyToClipboard($event.target)">{{varFechaTermino}}</span></div>
+          </div>
+
+          <div class="form-group col-md-6">
+            <div><span class="input-group-text" (click)="copyToClipboard($event.target)">{{varNombrePromocion}}</span></div>
+          </div>
+
+          <div class="form-group col-md-6">
+            <div><span class="input-group-text" (click)="copyToClipboard($event.target)">{{varNombreZona}}</span></div>
+          </div>
+
+          <div class="form-group col-md-6">
+            <div><span class="input-group-text" (click)="copyToClipboard($event.target)">{{varDetalleZona}}</span></div>
+          </div>
+
+          <div class="form-group col-md-6">
+            <div><span class="input-group-text" (click)="copyToClipboard($event.target)">{{varPrecioBase}}</span></div>
+          </div>
+
+          <div class="form-group col-md-6">
+            <div><span class="input-group-text" (click)="copyToClipboard($event.target)">{{varPrecioDescuento}}</span></div>
+          </div>         
+
+
+
+
+        </div>
+      </div>
+    
+      <div class="modal-footer card-footer">
+        <button type="button" class="btn btn-secondary" (click)="cerrarModal()">Cerrar</button>
+      </div>
+</form>

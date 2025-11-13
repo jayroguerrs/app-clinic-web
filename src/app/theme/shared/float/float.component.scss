@@ -1,0 +1,62 @@
+::ng-deep .float-button-containter{
+  visibility: hidden;
+  position: fixed;
+  right: 2rem;
+  bottom: 2rem;
+
+  button{
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    background-color: #04a9f5 !important;
+    -webkit-transition: .2s;
+    -moz-transition: .2s;
+    -ms-transition: .2s;
+    -o-transition: .2s;
+    transition: .2s;
+    &.parent{
+      z-index: 10;
+    }
+    &.child{
+      z-index: 9;
+      opacity: 0;
+    }
+  }
+
+  &.open{
+    button{
+      &.parent{
+        background-color: #748892 !important;
+      }
+      &.child{
+        &:nth-child(2){
+          bottom: 4rem;
+        }
+        &:nth-child(3){
+          bottom: 8rem;
+        }
+        &:nth-child(4){
+          bottom: 12rem;
+        }
+        &:nth-child(5){
+          bottom: 16rem;
+        }
+        opacity: 1;
+        &.secondary{
+          background-color: #748892 !important;
+        }
+      }
+    }
+  }
+
+}
+
+@media screen and (max-width: 991px){
+  ::ng-deep .float-button-containter{
+    visibility: visible;
+  }
+}
+@keyframes gire {
+  0%{ transform: rotate(0deg); }
+  100%{ transform: rotate(360deg); }
+}

@@ -1,0 +1,117 @@
+.paginationx {
+  position: sticky;
+  bottom: 0px;
+  padding: 12px;
+  gap: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  z-index: 2;
+  .btn-top, .btn-bottom, .btn-end {
+    gap: 12px;
+    button {
+      border: none;
+      width: fit-content;
+      padding: 0 15px;
+      max-width: 92px;
+      font-weight: 400;
+      box-shadow: 0px 0px 2px -1px black;
+    }
+  }
+}
+
+.paginationx .btn-end button {
+  max-width: none !important;
+}
+
+#resumenes {
+    font-family: Consolas;
+}
+
+@media screen and (min-width: 991px){
+  .sticky-header{
+    position: sticky;
+    top: -1px ;
+    z-index: 7;
+    -webkit-transition: .2s ease-in-out;
+    -moz-transition: .2s ease-in-out;
+    -ms-transition: .2s ease-in-out;
+    -o-transition: .2s ease-in-out;
+    transition: .2s ease-in-out;
+    &.header--sticky{
+      padding-left: 0;
+      padding-right: 0;
+      margin-left: -30px;
+      margin-right: -30px;
+      max-width: calc(100% + 60px) !important;
+      width: calc(100% + 60px);
+      ::ng-deep .card{
+        border-radius: 0 0 10px 10px !important;
+        opacity: 1;
+        box-shadow: 0 0 17px rgba(0,0,0,0.5);
+        .card-block{
+          padding-top: 2.5rem;
+        }
+      }
+    }
+  }
+}
+
+.tag{
+  display: flex;
+  width: 100%;
+  border-radius: 5px;
+  cursor: pointer;
+  &.registrado{
+    background-color: #04a9f5;
+  }
+  &.pendiente{
+    background-color: #b734f8;
+  }
+  &.confirmada{
+    background-color: #1de9b6;
+  }
+  &.asistenciaConfirmada{
+    background-color: #0069d9;
+  }
+  &.reprogramada{
+    background-color: #ffc107;
+  }
+  &.atendida{
+    background-color: #28a745;
+  }
+  &.cancelada{
+    background-color: #343a40;
+  }
+  &.anulada{
+    background-color: #dc3545;
+  }
+  &.generado{
+    background-color: #FF97E8;
+  }
+  &.total{
+    background-color: #dc3545;
+  }
+  & > span:nth-child(1){
+    margin-top: auto;
+    margin-bottom: auto;
+  }
+  & > span:nth-child(2){
+    font-weight: bold;
+    font-size: 1rem;
+  }
+  &:hover{
+    -webkit-box-shadow:0 0 8px rgba(0,0,0,0.5);
+    -moz-box-shadow: 0 0 8px rgba(0,0,0,0.5);
+    box-shadow: 0 0 8px rgba(0,0,0,0.5);
+  }
+}
+
+.custom-dialog-container{
+  z-index: 100000 !important;
+}
+
+
+.fondo{
+  background-color: red !important;
+}

@@ -1,0 +1,197 @@
+  <form class="modal-content" [formGroup]="frmGroup" (ngSubmit)="onSubmit()">
+    <div class="modal-header bg-white">
+      <h2 class="h5 fw-bold">Nueva Cita</h2>
+      <div class="btn sbtn btn-sm btn-icon btn-active-color-primary h-auto w-auto p-0" (click)="bsModalRef.close()">
+      <span class="svg-icon svg-icon-1">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor"></rect>
+          <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor"></rect>
+        </svg>
+      </span>
+      </div>
+    </div>
+    <div class="modal-body">
+
+      <div class="mx-4 my-4">
+
+        <div class="form-row">
+          <div class="col-12 col-md-4 col-lg-3">
+            <div class="form-group popins">
+              <label class="fw-semibold text-gray-800 mb-1">Fecha</label>
+              <ng-container [ngSwitch]="ldServicios">
+                <div class="position-relative" *ngSwitchCase="false">
+                  <span class="position-absolute no-pointer-events h-100 d-flex align-items-center ps-10px text-indigo"><fontawesome-svg [width]="24" [height]="24" [icon]="'calendar-day'" [type]="'duotone'" ></fontawesome-svg></span>
+                  <input type="text" formControlName="fecha" readonly class="form-control form-control-sm form-control-solid ps-42px bg-light-indigo text-indigo fw-500">
+                </div>
+                <div *ngSwitchCase="true" class="sk block rounded h-41px"></div>
+              </ng-container>
+            </div>
+          </div>
+          <div class="col-12 col-md-4 col-lg-3">
+            <div class="form-group popins">
+              <label class="fw-semibold text-gray-800 mb-1">Sede</label>
+              <div class="position-relative">
+                <span class="position-absolute no-pointer-events h-100 d-flex align-items-center ps-10px text-indigo"><fontawesome-svg [width]="24" [height]="24" [icon]="'building'" [type]="'duotone'"  ></fontawesome-svg></span>
+                <select [disabled] formControlName="idSede" class="form-select form-select-sm form-select-solid ps-42px bg-light-indigo text-indigo">
+                  <option value="">--Seleccionar--</option>
+                  <option *ngFor="let s of Sedes" [value]="s.idSede">{{ s.nombre }}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-md-4 col-lg-3">
+            <div class="form-group popins">
+              <label class="fw-semibold text-gray-800 mb-1">Servicio</label>
+              <ng-container [ngSwitch]="ldServicios">
+                <div class="position-relative" *ngSwitchCase="false">
+                  <span class="position-absolute no-pointer-events h-100 d-flex align-items-center ps-10px text-indigo"><fontawesome-svg [width]="24" [height]="24" [icon]="'person'" [type]="'duotone'" ></fontawesome-svg></span>
+                  <select formControlName="idServicio" class="form-select form-select-sm form-select-solid ps-42px bg-light-indigo text-indigo">
+                    <option value="">--Seleccionar--</option>
+                    <option *ngFor="let s of servicios" [value]="s.id">{{s.nombre}}</option>
+                  </select>
+                </div>
+                <div *ngSwitchCase="true" class="sk block rounded h-41px"></div>
+              </ng-container>
+            </div>
+          </div>
+         <!-- <div class="col-12 col-md-4 col-lg-3">
+            <div class="form-group popins">
+              <label class="fw-semibold text-gray-800 mb-1 required">Tecnologia</label>
+              <ng-container [ngSwitch]="ldTecnologias">
+                <div class="position-relative" *ngSwitchCase="false">
+                  <span class="position-absolute no-pointer-events h-100 d-flex align-items-center ps-10px" ><fontawesome-svg [width]="24" [height]="24" [icon]="'person'" [type]="'duotone'"></fontawesome-svg></span>
+                  <select formControlName="idTecnologia" class="form-select form-select-sm form-select-solid ps-42px" [ngClass]="{'bg-color-light-danger': submitted && this.f.idTecnologia.errors}">
+                    <option value="">&#45;&#45;Seleccionar&#45;&#45;</option>
+                    <option *ngFor="let t of tecnologias" [value]="t.id">{{t.nombre}}</option>
+                  </select>
+                </div>
+                <div *ngSwitchCase="true" class="sk block rounded h-41px"></div>
+              </ng-container>
+              <div *ngIf="submitted && this.f.idTecnologia.errors?.required" class="invalid-feedback d-block">* Seleccionar la tecnología a utilizar</div>
+            </div>
+          </div>-->
+        </div>
+
+        <div class="form-row">
+          <div class="col-12 col-md-4 col-lg-3">
+            <div class="form-group popins">
+              <label class="fw-semibold text-gray-800 mb-1 required">Tipo Cita</label>
+              <ng-container [ngSwitch]="ldTiposCita">
+                <div class="position-relative" *ngSwitchCase="false">
+                  <span class="position-absolute no-pointer-events h-100 d-flex align-items-center ps-10px"><fontawesome-svg [width]="24" [height]="24" [icon]="'person'" [type]="'duotone'"  ></fontawesome-svg></span>
+                  <select formControlName="idTipoCita" class="form-select form-select-sm form-select-solid ps-42px" [ngClass]="{'bg-color-light-danger': submitted && this.f.idTipoCita.errors}">
+                    <option value="">--Seleccionar--</option>
+                    <option *ngFor="let t of tiposCita" [value]="t.id">{{t.nombre}}</option>
+                  </select>
+                </div>
+                <div *ngSwitchCase="true" class="sk block rounded h-41px"></div>
+              </ng-container>
+              <div *ngIf="submitted && this.f.idTipoCita.errors?.required" class="invalid-feedback d-block">* Seleccionar un tipo de cita</div>
+            </div>
+          </div>
+          <div class="col-12 col-md-4 col-lg-3">
+            <div class="form-group popins">
+                <label class="fw-semibold text-gray-800 mb-1">Maquina</label>
+                <div class="position-relative">
+                  <span class="position-absolute no-pointer-events h-100 d-flex align-items-center ps-10px"><fontawesome-svg [width]="24" [height]="24" [icon]="'door-closed'" [type]="'duotone'"  ></fontawesome-svg></span>
+                  <input type="hidden" formControlName="idMaquina" disabled class="form-control form-control-solid ps-42px">
+                  <input readonly type="text" formControlName="maquina" class="form-control form-control-sm form-control-solid ps-42px" [ngClass]="{'bg-color-light-danger': submitted && this.f.idMaquina.errors}">
+                </div>
+              <div *ngIf="submitted && this.f.idMaquina.errors?.required" class="invalid-feedback d-block">* Seleccionar la maquina al seleccionar la hora</div>
+            </div>
+          </div>
+          <div class="col-12 col-md-4 col-lg-3">
+            <div class="form-group popins">
+              <label class="fw-semibold text-gray-800 mb-1 required">Hora Inicio</label>
+              <div class="position-relative">
+                <span class="position-absolute no-pointer-events h-100 d-flex align-items-center ps-10px"><fontawesome-svg [width]="24" [height]="24" [icon]="'clock'" [type]="'duotone'" ></fontawesome-svg></span>
+                <input type="hidden" formControlName="horaInicio">
+                <input type="text" [value]="horaInicio" class="form-control form-control-sm form-control-solid ps-42px cursor-pointer" placeholder="Seleccionar hora" (click)="verHorario()" readonly [ngClass]="{'bg-color-light-danger': submitted && this.f.horaInicio.errors}">
+              </div>
+              <div *ngIf="submitted && this.f.horaInicio.errors?.required" class="invalid-feedback d-block">* Seleccionar la hora</div>
+            </div>
+          </div>
+          <div class="col-12 col-md-4 col-lg-3">
+            <div class="form-group popins">
+              <label class="fw-semibold text-gray-800 mb-1 required">Hora Termino</label>
+              <div class="position-relative" >
+                <span class="position-absolute no-pointer-events h-100 d-flex align-items-center ps-10px"><fontawesome-svg [width]="24" [height]="24" [icon]="'clock'" [type]="'duotone'" ></fontawesome-svg></span>
+                <input type="hidden" formControlName="horaTermino">
+                <input type="text" [value]="horaTermino" class="form-control form-control-sm form-control-solid ps-42px cursor-pointer" placeholder="Seleccionar hora" (click)="verHorario()" readonly [ngClass]="{'bg-color-light-danger': submitted && this.f.horaTermino.errors}">
+              </div>
+              <div *ngIf="submitted && this.f.horaTermino.errors?.required" class="invalid-feedback d-block">* Seleccionar la hora</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="col-4 col-md-12 col-lg-4 mb-3">
+            <div class="scard mb-xl-10 popins border">
+              <div class="card-header min-h-45px">
+                <div class="card-title m-0">
+                  <h3 class="fw-semibold text-gray-800 m-0">Historia notas</h3>
+                </div>
+                <button type="button" *ngIf="citaMensajeNota.collection.length" [disabled]="!citaMensajeNota.collection.length" matRipple class="sbtn btn btn-sm btn-light-danger btn-hover-danger align-self-center m-0" (click)="clearCitaMensajeNota()">Limpiar</button>
+              </div>
+              <div class="card-body overflow-hidden p-0 bg-history">
+                <app-cita-mensaje-nota #citaMensajeNota [MaxHeight]="200" [IdCliente]="IdCliente" [IdCita]="IdCita"></app-cita-mensaje-nota>
+              </div>
+            </div>
+            <div *ngIf="submitted && citaMensajeNota.hasValue" class="invalid-feedback d-block">* Tienes una nota pendiente de confirmar</div>
+          </div>
+          <div class="col-4 col-md-12 col-lg-4 mb-3">
+            <div class="scard mb-xl-10 popins border">
+              <div class="card-header min-h-45px">
+                <div class="card-title m-0">
+                  <h3 class="fw-semibold text-gray-800 m-0">Historia avisos</h3>
+                </div>
+                <button type="button" *ngIf="citaMensajeAviso.collection.length" [disabled]="!citaMensajeAviso.collection.length" matRipple class="sbtn btn btn-sm btn-light-danger btn-hover-danger align-self-center m-0" (click)="clearCitaMensajeAviso()">Limpiar</button>
+              </div>
+              <div class="card-body p-0 overflow-hidden bg-history">
+                <app-cita-mensaje-aviso #citaMensajeAviso [MaxHeight]="200" [IdCita]="IdCita"></app-cita-mensaje-aviso>
+              </div>
+            </div>
+            <div *ngIf="submitted && citaMensajeAviso.hasValue" class="invalid-feedback d-block">* Tienes un aviso pendiente de confirmar</div>
+          </div>
+          <div class="col-4 col-md-12 col-lg-4 mb-3">
+            <div class="scard mb-xl-10 popins border">
+              <div class="card-header min-h-45px">
+                <div class="card-title m-0">
+                  <h3 class="fw-semibold text-gray-800 m-0">Historia detalles</h3>
+                </div>
+                <button type="button" *ngIf="citaMensajeDetalle.collection.length" [disabled]="!citaMensajeDetalle.collection.length" matRipple class="sbtn btn btn-sm btn-light-danger btn-hover-danger align-self-center m-0" (click)="clearCitaMensajeDetalle()">Limpiar</button>
+              </div>
+              <div class="card-body p-0 overflow-hidden bg-history">
+                <app-cita-mensaje-detalle #citaMensajeDetalle [MaxHeight]="200" [IdCita]="IdCita"></app-cita-mensaje-detalle>
+              </div>
+            </div>
+            <div *ngIf="submitted && citaMensajeDetalle.hasValue" class="invalid-feedback d-block">* Tienes un detalle pendiente de confirmar</div>
+          </div>
+        </div>
+
+
+        <div class="form-row">
+          <div class="col-12">
+            <div class="scard mb-5 mb-xl-10 popins border">
+              <div class="card-header">
+                <div class="card-title m-0">
+                  <h3 class="fw-bold m-0">Zonas seleccionadas</h3>
+                </div>
+              </div>
+              <div class="card-body p-0">
+                <app-tbl-cita-detalle-corporal360 #tabla [IdServicio]="IdServicio" [Detalles]="Detalles" [Tecnologias]="tecnologias" class="popins"></app-tbl-cita-detalle-corporal360>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <button type="reset" class="btn sbtn btn-light mr-2" (click)="onClose()">Cerrar</button>
+      <button type="submit" class="btn sbtn btn-primary shadow btn-shadow-primary" >Registrar</button>
+    </div>
+  </form>
+
+

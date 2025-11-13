@@ -1,0 +1,65 @@
+.theme-bg4{
+  background-color: #00bfff;
+}
+.md-modal{
+  box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+  0 2px 2px 0 rgba(0, 0, 0, 0.14),
+  0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}
+.md-modal:active{
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+  0 8px 10px 1px rgba(0, 0, 0, 0.14),
+  0 3px 14px 2px rgba(0, 0, 0, 0.12);
+}
+
+.md-modal{
+    top: auto;
+  left: auto;
+  right: 0;
+  bottom: 0;
+  transform: none;
+  margin: auto;
+  h3{
+    cursor: move;
+    position: relative;
+    font-size: 1rem;
+    text-transform: uppercase;
+    padding: .9rem 3rem;
+    .icon{
+      position: absolute;
+      left: 1rem;
+      top: 0;
+      bottom: 0;
+      display: flex;
+      &:before{
+        display: block;
+        margin: auto;
+      }
+    }
+    .close{
+      cursor: pointer;
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      display: flex;
+      padding: 0 1rem;
+      color: #fff;
+      &:before{
+        display: block;
+        margin: auto;
+      }
+      &:hover{
+        opacity: 1;
+      }
+    }
+  }
+  &.md-modal-sm{
+    max-width: 465px;
+  }
+}
+::ng-deep .estado{
+  width: 75px;
+  display: inline-block;
+  text-align: center;
+}

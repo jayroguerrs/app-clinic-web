@@ -1,0 +1,115 @@
+﻿
+<div class="row">
+  <!-- GRILLA -->
+  <div class="col-sm-12">
+    <app-card [options]="false" [customHeader]="true">
+
+      <div class="app-card-header">
+        <div class="row">
+          <div class="col-sm-6">
+            <app-card [options]="false" cardTitle="CITAS" [customHeader]="true">
+
+              <div class="app-card-header">
+                <div class="row">
+                  <div class="col-sm"><span style="font-size: 18px; color:blue; font-weight: bold;">REPORTE DE ZONAS MENOS ATENDIDAS</span></div>
+                  <div class="float-right opc-botones">
+                    <button type="button" [placement]="'top'" ngbTooltip="Imprimir Datos" printSectionId = "htmlData2" ngxPrint class="btn btn-primary btn-icon">
+                      <i class="fa fa-print"></i>
+                    </button>
+                    <button *ngIf="this.accTot || this.accExf" type="button" class="btn btn-primary btn-icon" [placement]="'top'" ngbTooltip="Exportar datos a PDF" (click)= "downloadPDF()">
+                      <i class="feather icon-download"></i>
+                    </button>
+                    <!-- <button type="button" class="btn btn-primary btn-icon" [placement]="'top'" ngbTooltip="Enviar Documento" (click)= "documentoreenviar()">
+                        <i class="fa fa-paper-plane"></i>
+                    </button>                         -->
+                    <button *ngIf="this.accTot || this.accExc" id='export-excel1' type="button" class="btn btn-primary btn-icon" [placement]="'top'" ngbTooltip="Excel">
+                      <i class="fa fa-file-excel"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <form  [formGroup]="frmFiltroGrilla">
+                <div class="form-row">
+                  <div class="form-group col-md-6">
+                    <div class="input-group input-group-sm">
+                      <div class="input-group-prepend"><span class="input-group-text">Fecha Inicio </span></div>
+                      <input type="date" class="form-control" formControlName="filtroFechaInicio" aria-span="Default" aria-describedby="inputGroup-sizing-default" (change)="documentoListar()" min="2020-01-01" max="2030-12-31">
+                    </div>
+                  </div>
+                  <div class="form-group col-md-6">
+                    <div class="input-group input-group-sm">
+                      <div class="input-group-prepend"><span class="input-group-text">Fecha Termino </span></div>
+                      <input type="date" class="form-control" formControlName="filtroFechaTermino" aria-span="Default" aria-describedby="inputGroup-sizing-default" (change)="documentoListar()">
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </app-card>
+          </div>
+        </div>
+      </div>
+
+      <div class="table table-sm-responsive">
+        <div id="htmlData2">
+          <table datatable [dtOptions]="dtResponsiveOptions" class="table table-sm table-hover table-clienterecurrente">
+          </table>
+        </div>
+      </div>
+
+    </app-card>
+    <div id="htmlData">
+      <div class="row">
+        <div class="col-xl-12">
+          <app-card cardTitle="Grafico de Zonas menos Atendidas" [options]="false">
+            <div id="morris-bar-basic-chart" mk-morris-js [options]="barBasicMorrisOption" [data]="barBasicMorrisData" type="Bar" [style.height]="'324px'" [style.width]="'100%'" [style.-webkit-tap-highlight-color]="'rgba(0, 0, 0, 0)'"></div>
+          </app-card>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-2">
+        <button printSectionId = "htmlData" ngxPrint class="btn btn-primary d-flex align-items-center justify-content-center" [placement]="'top'" ngbTooltip="Imprimir Grafico">
+          <i class="fas fa-print"></i>
+        </button>
+      </div>
+      <div class="col-2">
+        <!-- <button  type="button" class="btn btn-primary d-flex align-items-center justify-content-center" [placement]="'top'" ngbTooltip="Exportar Grafico a PDF" (click)= "downloadPDFGrafico()">
+          <i class="material-icons">  </i><span>Exportar Grafico a PDF</span>
+        </button> -->
+        <button *ngIf="this.accTot || this.accExf" printSectionId = "htmlData" ngxPrint class="btn btn-primary d-flex align-items-center justify-content-center" [placement]="'top'" ngbTooltip="Exportar datos a PDF">
+          <i class="fas fa-file-pdf">  </i>
+        </button>
+      </div>
+    </div>
+    <div class="hidden">
+      <div class="col-xl-6 col-md-6">
+        <app-card cardTitle="Grafico de Cliente Recurrentes" [options]="false">
+          <div #barBasicChart>
+            <chart id="bar_basic_chart" [type]="'bar'" [data]="barBasicChartData" [options]="barBasicChartOption"></chart>
+          </div>
+        </app-card>
+      </div>
+      <div class="col-xl-6 col-md-6">
+        <app-card cardTitle="Grafico de Cliente Recurrentes" [options]="false">
+          <div #barHorizontalChart>
+            <chart id="bar_horizontal_chart" [type]="'horizontalBar'" [data]="barBasicChartData" [options]="barBasicChartOption"></chart>
+          </div>
+        </app-card>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- BOTONERA MOVIL -->
+<a class="botonera-movil">
+  <i class="fa fa-cog"></i>
+</a>
+<ul class="ul-botonera-movil">
+  <li (click)= "documentoListar()"><a><i class="fa fa-search"></i></a></li>
+  <li ngbTooltip="Imprimir Datos" printSectionId = "htmlData2" ngxPrint><a><i class="fas fa-print"></i></a></li>
+  <li (click)= "graficos()"><a><i class="fas fa-chart-bar"></i></a></li>
+  <li (click)= "downloadPDF()"><a><i class="fas fa-file-pdf"></i></a></li>
+  <li id='export-excel'><a><i class="fa fa-file-excel"></i></a></li>
+</ul>

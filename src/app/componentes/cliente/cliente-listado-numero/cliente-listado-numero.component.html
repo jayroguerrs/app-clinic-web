@@ -1,0 +1,21 @@
+﻿<!-- SPINNER -->
+<ngx-spinner
+    [template]="rutaImageSpinner">
+    <p style="color: white" > Cargando... </p>
+</ngx-spinner>
+
+<!-- BARRA TITULO -->
+<div class="col-sm-12">
+  <app-card cardTitle="CONSULTA POR NÚMERO CELULAR" [options]="false" [hidBlock]="true">
+  </app-card>
+</div>
+
+<!-- GRILLA -->
+<div class="col-sm-12">
+  <app-card [options]="false" [hidHeader]="true">
+    <div class="table table-sm-responsive">
+      <table datatable [dtOptions]="dtResponsiveOptions" class="table table-sm table-hover table-cliente display compact">
+      </table>
+    </div>
+  </app-card>
+</div>

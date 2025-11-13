@@ -1,0 +1,17 @@
+.tres{
+  max-height: 400px;
+  table{
+    thead{
+        position: sticky;
+        top: 0;
+        box-shadow: 0 0 3px #222;
+        background-color: #fff;
+    }
+    tfoot{
+        position: sticky;
+        bottom: 0;
+        box-shadow: 0 0px 1px 0 #222;
+        background-color: #fff;
+    }
+  }
+}

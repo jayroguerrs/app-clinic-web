@@ -1,0 +1,37 @@
+<app-card [options]="false" [customHeader]="false" [options]="true" [collapse]="true" [excel]="true" (excelCallback)="exportarExcel()" cardTitle="Total venta por sede">
+  <mat-progress-bar mode="indeterminate" id="progress" *ngIf="loading"></mat-progress-bar>
+
+  <div class="form-row">
+
+    <div class="form-floating mb-2 col-12 ">
+      <select class="custom-select" id="numSesionZonaAtendida" [formControl]="numeroSesion" (change)="reloadTable()">
+        <option [value]="0" selected>Todos</option>
+        <option [value]="1">1</option>
+        <option [value]="2">2</option>
+        <option [value]="3">3</option>
+        <option [value]="4">4</option>
+        <option [value]="5">5</option>
+        <option [value]="6">6</option>
+        <option [value]="7">7</option>
+        <option [value]="8">8</option>
+        <option [value]="9">9</option>
+        <option [value]="10">10</option>
+      </select>
+      <label for="numSesionZonaAtendida">Número de sesión</label>
+    </div>
+
+    <div class="table-container col-12 col-md-12 col-lg-8 mb-2">
+      <div class="border rounded p-2 h-100">
+        <table id="table10TopZonas" datatable [dtOptions]="dtResponsiveOptions" class="table table-sm table-hover display compact"></table>
+      </div>
+    </div>
+    <div class="col-12 col-md-12 col-lg-4 mb-2">
+      <div id="chartVentaTotalSede" class="border rounded"></div>
+    </div>
+    <div class="col-12 col-md-12">
+      <div id="chartVentaTotal" class="border rounded"></div>
+    </div>
+  </div>
+
+
+</app-card>

@@ -1,0 +1,28 @@
+<div>
+  <h1 style="font-size: 1.6rem; padding-top: 16px; font-weight: 600; color: #7f7f7f">{{titulo}}</h1>
+  
+  
+  <div style="display: flex; margin-top: 1.2rem; gap: 1.8rem; padding-right: 1rem;">
+      <div style="display: flex; align-items: center; width: 240px; justify-content: space-between; border-bottom: 3px solid rgb(235 235 235);">
+  
+          <h3 style="padding-top: 0.6rem; color: #3f3f3f; font-weight: 500; font-size: 18px !important;">{{porcentaje === 0 ? 'Total General: ' : 'Total: ' }}</h3>
+          <p style="padding-top: 0.6rem; font-size: 18px !important; margin-bottom: 0.5rem !important;">S/. {{montoTotal.toFixed(2)}}</p>
+  
+      </div>
+    </div>
+  
+    <div *ngIf="porcentaje > 0" style="display: flex; margin-top: 0.2rem; gap: 1.8rem; padding-right: 1rem;">
+      <div style="display: flex; align-items: center; width: 240px; justify-content: space-between; border-bottom: 3px solid rgb(235 235 235);">
+        <h3 style="padding-top: 0.6rem; color: #3f3f3f; font-weight: 500; font-size: 18px !important;">Porcentaje: </h3>
+        <p style="padding-top: 0.6rem; font-size: 18px !important; margin-bottom: 0.5rem !important;">{{porcentaje}} %</p>
+      </div>
+    </div>
+  
+    <div style="display: flex; margin-top: 0.2rem; margin-bottom: 1.8rem; gap: 1.8rem; padding-right: 1rem;">
+      <div style="display: flex; align-items: center; width: 240px; justify-content: space-between;">
+        <h3 style="padding-top: 0.6rem; color: #3f3f3f; font-weight: 500; font-size: 18px !important;">{{porcentaje === 0 ? 'Comisión Final: ' : 'Comisión: ' }}</h3>
+        <p style="font-weight: 700; color: #3f3f3f; padding-top: 0.6rem; font-size: 18px !important; margin-bottom: 0.5rem !important;">S/. {{porcentajeSobreMontoTotal.toFixed(2)}}</p>
+      </div>
+  </div>
+
+</div>

@@ -1,0 +1,37 @@
+ <h1 mat-dialog-title class="text-center m-0">
+      CONFIRMAR {{ titulo ?  titulo : 'PAGO' }} DE CITA
+    </h1>
+    <h6 class="custom-text">
+      {{ data.paciente }} : Código de Cita {{ data.cita.idCita }}
+    </h6>
+
+    <span class="mySubtitle mb-3">
+      <h6>Monto inical de {{ titulo ?  titulo : 'PAGO' }} del Contrato</h6>
+    </span>
+
+    <mat-dialog-content class="mat-typography">
+      <section class="content-dialog m-0">
+        
+        <mat-form-field appearance="fill" style="width: 74% !important;">
+          <mat-label>Monto Final S/.</mat-label>
+          <input [disabled]="!enabled" matInput [(ngModel)]="montoFinal" />
+          <mat-hint align="start">¿Desea cambiar el monto final? </mat-hint>
+        </mat-form-field>
+      </section>
+      <div class="botones-tipo-pago justify-content-center mt-3">
+        <button type="button" class="btn-tipo-pago btn btn-primary" (click)="elegirTipopago(1)">Adelanto</button>
+        <button type="button" class="btn-tipo-pago btn btn-success" (click)="elegirTipopago(2)">Pago Total</button>
+        <button type="button" class="btn-tipo-pago btn btn-warning" (click)="elegirTipopago(3)">Pagará en Sede</button>
+      </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions class="mt-2 mb-1" align="end">
+      <button
+        class="bg-primary w-100 text-white"
+        mat-button
+        cdkFocusInitial
+        (click)="confirmarPago()"
+      >
+        <i class="mdi mdi-content-save-outline"></i>Guardar Monto Final
+      </button>
+    </mat-dialog-actions>

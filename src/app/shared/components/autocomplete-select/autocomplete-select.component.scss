@@ -1,0 +1,155 @@
+.autocomplete-select-container {
+  display: block;
+  width: 100%;
+}
+
+.chips-container {
+  .chips-label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.6);
+    margin-bottom: 0.5rem;
+  }
+
+  // Eliminar padding-bottom del wrapper del campo
+  mat-form-field {
+    ::ng-deep .mat-mdc-form-field-wrapper, 
+    ::ng-deep .mat-form-field-wrapper {
+      padding-bottom: 0 !important;
+    }
+  }
+
+  mat-chip-set {
+    mat-chip {
+      margin: 2px;
+      
+      mat-icon {
+        font-size: 16px;
+        width: 16px;
+        height: 16px;
+      }
+    }
+  }
+}
+
+.mat-mdc-form-field {
+  width: 100%;
+  
+  .mat-mdc-form-field-subscript-wrapper {
+    margin-top: 0.5rem;
+  }
+}
+
+.mat-autocomplete-panel {
+  max-height: 300px;
+  min-width: 400px !important; // Ancho mínimo para que se vean las opciones completas
+  max-width: 600px !important; // Ancho máximo
+  width: auto !important; // Permitir que se ajuste automáticamente
+  z-index: 2000 !important; // Asegurar que esté por encima de los modales
+  
+  &.mat-autocomplete-multiple {
+    .mat-option {
+      padding-right: 48px; // Espacio para el icono de check
+    }
+  }
+  
+  // Estilos para las opciones
+  .mat-option {
+    white-space: nowrap !important; // Evitar que el texto se corte en múltiples líneas
+    overflow: visible !important; // Mostrar todo el texto
+    text-overflow: initial !important; // No cortar el texto con puntos suspensivos
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    min-height: 48px !important; // Altura mínima para cada opción
+    line-height: 1.2 !important;
+    
+    // Ajustar el contenido de la opción
+    span {
+      display: inline-block;
+      max-width: none !important;
+      white-space: nowrap !important;
+    }
+  }
+}
+
+// Forzar la visibilidad del overlay
+::ng-deep .cdk-overlay-container {
+  z-index: 2000 !important; // Asegurar que esté por encima de modales
+  pointer-events: auto !important;
+}
+
+// Estilos específicos para el panel de autocomplete
+::ng-deep .mat-autocomplete-panel {
+  min-width: 400px !important;
+  max-width: 600px !important;
+  width: auto !important;
+  
+  .mat-option {
+    white-space: nowrap !important;
+    overflow: visible !important;
+    text-overflow: initial !important;
+    
+    .mat-option-text {
+      white-space: nowrap !important;
+      overflow: visible !important;
+    }
+  }
+}
+
+// Específico para el overlay de autocomplete
+::ng-deep .cdk-overlay-pane {
+  .mat-autocomplete-panel {
+    min-width: 400px !important;
+    max-width: 600px !important;
+    width: auto !important;
+  }
+}
+
+// Compatibilidad con diferentes temas
+.autocomplete-select-container {
+  &.compact {
+    .mat-mdc-form-field {
+      .mat-mdc-form-field-infix {
+        min-height: 40px;
+      }
+    }
+  }
+  
+  &.large {
+    .mat-mdc-form-field {
+      .mat-mdc-form-field-infix {
+        min-height: 60px;
+      }
+    }
+  }
+}
+
+// Estilos para iconos
+.me-1 { margin-right: 0.25rem; }
+.me-2 { margin-right: 0.5rem; }
+.ms-auto { margin-left: auto; }
+.mb-2 { margin-bottom: 0.5rem; }
+
+// Estados disabled
+.autocomplete-select-container[disabled] {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+// Estilos específicos para las opciones de ancho completo
+.autocomplete-option-full {
+  white-space: nowrap !important;
+  overflow: visible !important;
+  text-overflow: initial !important;
+  min-width: 400px !important;
+  
+  .option-text-full {
+    display: inline-block !important;
+    white-space: nowrap !important;
+    overflow: visible !important;
+    text-overflow: initial !important;
+    max-width: none !important;
+    width: auto !important;
+  }
+}

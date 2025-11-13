@@ -1,0 +1,203 @@
+<form [formGroup]="frmOperadores">
+  <div class="modal-content popins">
+
+    <div class="modal-header card-header modal-header-background modal-header-bg-01">
+      <h5 class="modal-title f-w-500 pt-5 z-index-2">Reasignación de clientes <br>Asignados a: {{ usuario }}</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="cerrarModal()"><span aria-hidden="true">&times;</span></button>
+    </div>
+
+    <div class="modal-body card-body ">
+<!--      <div class="w-100 position-relative">-->
+<!--        <img style="opacity: .2" class="position-absolute w-100 top-0 left-0 right-0" src="assets/images/bg-images/bg-header-preferentes.png" width="100%" height="auto">-->
+<!--      </div>-->
+<!--      <div class="text-center fw-semibold text-gray-800 popins fs-20px">{{ titulo }}</div>-->
+
+      <!-- SPINNER -->
+<!--      <ngx-spinner-->
+<!--      [template]="rutaImageSpinner">-->
+<!--      <p style="color: white" > Cargando... </p>-->
+<!--      </ngx-spinner>-->
+
+      <!-- FILTROS -->
+<!--      <div class="col-sm-12">-->
+<!--        <input type="hidden" id="hdIds">-->
+
+        <div class="card bg-transparent rounded-md">
+          <div class="card-body p-2">
+
+            <div class="form-row">
+
+<!--              <div class="form-group mb-3 mb-md-0 col-md-4 col-lg-2" >-->
+<!--                <div class="form-floating form-start-icon">-->
+<!--                  <select class="custom-select" id="tipoCliente" formControlName="tipoCliente" (change)="obtenerCitas()">-->
+<!--                    <option [value]="2">Todos</option>-->
+<!--                    <option [value]="1">Cliente Nuevo</option>-->
+<!--                    <option [value]="0">Cliente Antiguo</option>-->
+<!--                  </select>-->
+<!--                  <label for="tipoCliente">Tipo Cliente</label>-->
+<!--                  <span class="icon"><i class="mdi mdi-account-question-outline"></i></span>-->
+<!--                </div>-->
+<!--              </div>-->
+
+<!--              <div class="form-group mb-3 mb-md-0 col-md-4 col-lg-2" >-->
+<!--                <div class="form-floating form-start-icon">-->
+<!--                  <select class="custom-select" id="idSede" formControlName="idSede" (change)="obtenerCitas()">-->
+<!--                    <option [value]="0" >{{ ldSedes ? 'Cargando...' : 'Todos' }}</option>-->
+<!--                    <option *ngFor="let s of maestroSede" [value]="s.idSede">{{ s.nombre }}</option>-->
+<!--                  </select>-->
+<!--                  <label for="idSede">Sede</label>-->
+<!--                  <span class="icon"><i class="dicon sede m-auto"></i></span>-->
+<!--                </div>-->
+<!--              </div>-->
+
+<!--              <div class="form-group mb-3 mb-md-0 col-md-4 col-lg-2" >-->
+<!--                <div class="form-floating form-start-icon">-->
+<!--                  <input id="fechaCita" type="date" placeholder=" " class="form-control" formControlName="fechaCita" (change)="obtenerCitas()">-->
+<!--                  <label  for="fechaCita">Fecha Cita</label>-->
+<!--                  <span class="icon "><span class="dicon calendar m-auto ng-tns-c332-2"></span></span>-->
+<!--                </div>-->
+<!--              </div>-->
+
+<!--              <div class="form-group mb-3 mb-md-0 col-md-4 col-lg-2" >-->
+<!--                <div class="form-floating form-start-icon">-->
+<!--                  <select class="custom-select" id="asignado" formControlName="asignado" (change)="obtenerCitas()">-->
+<!--                    <option *ngFor= "let a of selectAsignado"  [value]="a.id">{{ a.descripcion}}</option>-->
+<!--                  </select>-->
+<!--                  <label for="asignado">Asignado</label>-->
+<!--                  <span class="icon"><i class="mdi mdi-account-check-outline"></i></span>-->
+<!--                </div>-->
+<!--              </div>-->
+
+              <div class="form-group mb-3 mb-md-0 col-md-4 col-lg-2" >
+                <div class="form-floating form-start-icon">
+                  <input id="fechaLlamada" type="date" placeholder=" " class="form-control" formControlName="fechaConfirmacion" >
+                  <label  for="fechaLlamada">Confirmar el</label>
+                  <span class="icon "><span class="dicon calendar m-auto ng-tns-c332-2"></span></span>
+                </div>
+              </div>
+
+              <div class="form-group mb-3 mb-md-0 col-md-4 col-lg-2" >
+                <div class="form-floating form-start-icon">
+                  <select class="custom-select" id="idModo" formControlName="idModo">
+                    <option *ngFor= "let m of modoAsignacion"  [value]="m.id">{{ m.descripcion}}</option>
+                  </select>
+                  <label for="idModo">Modo</label>
+                  <span class="icon"><i class="mdi mdi-calendar-arrow-right"></i></span>
+                </div>
+              </div>
+
+<!--            </div>-->
+
+
+<!--&lt;!&ndash;            <div class="form-row">&ndash;&gt;-->
+
+<!--&lt;!&ndash;              <div class="form-group col-md-4 col-lg-2" >&ndash;&gt;-->
+<!--&lt;!&ndash;                <div class="form-floating form-icon">&ndash;&gt;-->
+<!--&lt;!&ndash;                  <i class="feather icon-calendar" [placement]="'bottom'" ngbTooltip="Fecha Desde"></i>&ndash;&gt;-->
+<!--&lt;!&ndash;                  <input id="fechaDesde" type="date" class="form-control" [class.is-invalid]="submitted && frmOperadores.controls.fechaDesde.invalid" formControlName="fechaDesde" [max]="today | date: 'yyyy-MM-dd'" (change)="obtenerCitas()">&ndash;&gt;-->
+<!--&lt;!&ndash;                  <label for="fechaDesde">Fecha desde</label>&ndash;&gt;-->
+<!--&lt;!&ndash;                </div>&ndash;&gt;-->
+<!--&lt;!&ndash;              </div>&ndash;&gt;-->
+
+<!--&lt;!&ndash;              <div class="form-group col-md-4 col-lg-2" >&ndash;&gt;-->
+<!--&lt;!&ndash;                <div class="form-floating form-icon">&ndash;&gt;-->
+<!--&lt;!&ndash;                  <i class="feather icon-calendar" [placement]="'bottom'" ngbTooltip="FechaHasta"></i>&ndash;&gt;-->
+<!--&lt;!&ndash;                  <input id="fechaFin" type="date" class="form-control" [class.is-invalid]="submitted && frmOperadores.controls.fechaFin.invalid" formControlName="fechaFin" [max]="today | date: 'yyyy-MM-dd'" (change)="obtenerCitas()">&ndash;&gt;-->
+<!--&lt;!&ndash;                  <label for="fechaFin">Fecha Hasta</label>&ndash;&gt;-->
+<!--&lt;!&ndash;                </div>&ndash;&gt;-->
+<!--&lt;!&ndash;              </div>&ndash;&gt;-->
+
+<!--&lt;!&ndash;              <div class="form-group col-md-4 col-lg-2" >&ndash;&gt;-->
+<!--&lt;!&ndash;                <div class="form-floating form-icon">&ndash;&gt;-->
+<!--&lt;!&ndash;                  <i class="feather icon-alert-circle" [placement]="'bottom'" ngbTooltip="Estado"></i>&ndash;&gt;-->
+<!--&lt;!&ndash;                  <select class="form-select" id="filterEstado" formControlName="filterEstado" (change)="obtenerCitas()">&ndash;&gt;-->
+<!--&lt;!&ndash;                    <option [value]="0" selected>Todos</option>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <option *ngFor="let e of estados" [value]="e.id">{{ e.descripcion }}</option>&ndash;&gt;-->
+<!--&lt;!&ndash;                  </select>&ndash;&gt;-->
+<!--&lt;!&ndash;                  <label for="filterEstado">Estado Atención</label>&ndash;&gt;-->
+<!--&lt;!&ndash;                </div>&ndash;&gt;-->
+<!--&lt;!&ndash;              </div>&ndash;&gt;-->
+
+<!--&lt;!&ndash;              <div class="form-group col-md-4 col-lg-2" >&ndash;&gt;-->
+<!--&lt;!&ndash;                <div class="form-floating form-icon">&ndash;&gt;-->
+<!--&lt;!&ndash;                  <i class="feather icon-alert-circle" [placement]="'bottom'" ngbTooltip="Estado Atención"></i>&ndash;&gt;-->
+<!--&lt;!&ndash;                  <select class="form-select" id="filterEstadoAtencion" formControlName="filterEstadoAtencion" (change)="obtenerCitas()">&ndash;&gt;-->
+<!--&lt;!&ndash;                    <option [value]="0" selected>Todos</option>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <option *ngFor="let e of estadosAtencion" [value]="e.id">{{ e.descripcion }}</option>&ndash;&gt;-->
+<!--&lt;!&ndash;                  </select>&ndash;&gt;-->
+<!--&lt;!&ndash;                  <label for="filterEstadoAtencion">Estado Atención</label>&ndash;&gt;-->
+<!--&lt;!&ndash;                </div>&ndash;&gt;-->
+<!--&lt;!&ndash;              </div>&ndash;&gt;-->
+
+<!--&lt;!&ndash;              <div class="form-group col-md-4 col-lg-2" *ngIf="usuarioActual.idperfil !== tipoPerfil.OPERADOR && usuarioActual.idperfil !== tipoPerfil.ESPECIALISTA">&ndash;&gt;-->
+<!--&lt;!&ndash;                <div class="form-floating form-icon">&ndash;&gt;-->
+<!--&lt;!&ndash;                  <i class="feather icon-share-2" [placement]="'bottom'" ngbTooltip="Contacto"></i>&ndash;&gt;-->
+<!--&lt;!&ndash;                  <select class="form-select" id="filterMedioContacto" formControlName="filterMedioContacto" (change)="obtenerCitas()">&ndash;&gt;-->
+<!--&lt;!&ndash;                    <option value='' selected>Todos</option>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <option *ngFor="let mc of mediosContacto" [value]="mc.id">{{ mc.nombre }}</option>&ndash;&gt;-->
+<!--&lt;!&ndash;                  </select>&ndash;&gt;-->
+<!--&lt;!&ndash;                  <label for="filterMedioContacto">Contacto</label>&ndash;&gt;-->
+<!--&lt;!&ndash;                </div>&ndash;&gt;-->
+<!--&lt;!&ndash;              </div>&ndash;&gt;-->
+
+<!--&lt;!&ndash;              <div *ngIf="[tipoPerfil.SA, tipoPerfil.SISTEMAS, tipoPerfil.SUPERVISOR, tipoPerfil.MARKETING, tipoPerfil.ADMINISTRADOR, tipoPerfil.SUPERVISORVENTAS, tipoPerfil.COMMUNITYMANAGER].includes(usuarioActual.idperfil)" class="form-group col-md-4 col-lg-2">&ndash;&gt;-->
+<!--&lt;!&ndash;                <div class="form-floating form-icon">&ndash;&gt;-->
+<!--&lt;!&ndash;                  <i class="feather icon-alert-circle" [placement]="'bottom'" ngbTooltip="Es Cliente?"></i>&ndash;&gt;-->
+<!--&lt;!&ndash;                  <select class="form-select" id="esCliente" formControlName="esCliente" (change)="obtenerCitas()">&ndash;&gt;-->
+<!--&lt;!&ndash;                    <option [value]='2' selected>Todos</option>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <option [value]='1' selected>Si</option>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <option [value]='0' selected>No</option>&ndash;&gt;-->
+<!--&lt;!&ndash;                  </select>&ndash;&gt;-->
+<!--&lt;!&ndash;                  <label for="filterEstadoAtencion">Es Cliente?</label>&ndash;&gt;-->
+<!--&lt;!&ndash;                </div>&ndash;&gt;-->
+<!--&lt;!&ndash;              </div>&ndash;&gt;-->
+
+<!--&lt;!&ndash;            </div>&ndash;&gt;-->
+          </div>
+        </div>
+      </div>
+
+      <!-- GRILLAS -->
+      <div class="col-12">
+        <div class="form-row">
+
+          <!-- GRILLA CITA-->
+          <div class="form-group col-sm-12 col-md-12 col-lg-6">
+            <div class="card rounded-md mb-0">
+              <div class="card-body p-0">
+                <div class="table table-sm-responsive mb-0">
+                  <table datatable [dtOptions]="dtResponsivePreferentes"  class="table table-sm table-hover table-cita display compact">
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- GRILLA USUARIOS-->
+          <div class="form-group col-sm-12 col-md-12 col-lg-6">
+            <div class="card rounded-md mb-0">
+              <div class="card-body p-0">
+                <div class="table table-sm-responsive mb-0">
+                  <table datatable [dtOptions]="dtResponsiveOptionsUsuario"  class="table table-sm table-hover table-usuario display compact">
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <div class="modal-footer card-footer">
+
+      <button type="button" class="btn btn-outline-primary" [placement]="'top'" ngbTooltip="Citas seleccionadas" aria-readonly="true"><i class="fa fa-bolt" ></i>{{_clientesSeleccionados.length}}</button>
+      <button type="button" class="btn btn-outline-primary" [placement]="'top'" ngbTooltip="Operadas seleccionadas" aria-readonly="true"><i class="fa fa-users"></i>{{numOperadorasSeleccionadas}}</button>
+
+      <button type="button" class="btn btn-outline-primary" (click)="distribuir()"><i class="fa fa-cog"></i>Distribuir</button>
+      <button type="button" class="btn btn-outline-danger" [disabled]="!clienteAsignados.length" (click)="grabarDistribuirClientes()"><i class="fa fa-save"></i>Guardar</button>
+
+    </div>
+  </div>
+</form>

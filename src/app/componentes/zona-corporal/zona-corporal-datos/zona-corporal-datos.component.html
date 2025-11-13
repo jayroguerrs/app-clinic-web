@@ -1,0 +1,213 @@
+<!-- SPINNER -->
+<ngx-spinner
+    [template]="rutaImageSpinner">
+    <p style="color: white" > Cargando... </p>
+</ngx-spinner>
+
+<ng-template #modalZonaCorporalHijoDatos let-modal let-close="close">
+    <app-zona-corporal-hijo>
+    </app-zona-corporal-hijo>
+</ng-template>
+
+    <form [formGroup]="frmZonaCorporalDatos" (ngSubmit)="zonaCorporalGrabar()">
+        <div class="modal-content">
+            <div class="modal-header card-header">
+                <h5 class="modal-title">{{ accion }} Zona corporal</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="modal.close()"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body card-body">
+                <div class="form-row">
+                    <div class="form-group col-12">
+                      <input class="input-file" type="file" #imagen accept="image/*" formControlName="imagen"
+                             (change)="mostrarImagen($event.target.files)">
+                      <div class="border rounded border-2 img-select" (click)="imagen.click()">
+                        <span class="m-auto h-100 d-block">
+                          <i *ngIf="!rutaImagen" class="m-auto">Seleccionar Imagen</i>
+                          <img *ngIf="rutaImagen" [src]="rutaImagen" >
+                        </span>
+                      </div>
+                    </div>
+
+                    <div class="form-group col-md-12 col-lg-6">
+                        <div class="form-floating">
+                          <input maxlength="100" type="text" class="form-control dz-uppercase" id="zonaDescripcion" placeholder=" " formControlName="zonaDescripcion" [ngClass]="{ 'is-invalid': submitted && f.zonaDescripcion.errors }" >
+                          <label for="zonaDescripcion">Nombre <span class="text-danger">*</span></label>
+                        </div>
+                        <div *ngIf="submitted && f.zonaDescripcion.errors" class="invalid-feedback d-block">
+                          <div *ngIf="f.zonaDescripcion.errors.required">Ingrese un nombre para la zona</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12 col-lg-6">
+                        <div class="form-floating">
+                          <select class="custom-select" id="zonaIdGenero" formControlName="zonaIdGenero" [ngClass]="{ 'is-invalid': submitted && f.zonaIdGenero.errors }">
+                            <option selected="" value=''>...Seleccionar...</option>
+                            <option *ngFor="let genero of maestroGeneros" [value]="genero.id">{{ genero.descripcion }}</option>
+                          </select>
+                          <label for="zonaIdGenero">Genero <span class="text-danger">*</span></label>
+                        </div>
+                        <div *ngIf="submitted && f.zonaIdGenero.errors" class="invalid-feedback d-block">
+                          <div *ngIf="f.zonaIdGenero.errors.required">Seleccione un genero</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-12 col-lg-12">
+                        <div class="form-floating">
+                          <input maxlength="200" type="text" class="form-control" id="zonaDescripcionLarga" placeholder=" " formControlName="zonaDescripcionLarga">
+                          <label for="zonaDescripcionLarga">Descripción larga</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-12 col-lg-12">
+                      <div class="form-floating">
+                        <select class="custom-select" id="idServicio" formControlName="idServicio" [ngClass]="{ 'is-invalid': submitted && f.idServicio.errors }">
+                          <option selected="" value=''>...Seleccionar...</option>
+                          <option *ngFor="let serv of servicios" [value]="serv.id">{{ serv.nombre }}</option>
+                        </select>
+                        <label for="idServicio">Servicio <span class="text-danger">*</span></label>
+                      </div>
+                      <div *ngIf="submitted && f.idServicio.errors" class="invalid-feedback d-block">
+                        <div *ngIf="f.idServicio.errors.required">Seleccione un servicio</div>
+                      </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <div class="form-floating">
+                          <input type="number" min="0" class="form-control dz-uppercase" id="zonaDuracion" placeholder=" " formControlName="zonaDuracion" [ngClass]="{ 'is-invalid': submitted && f.zonaDuracion.errors }" >
+                          <label for="zonaDuracion">Duración (minutos) <span class="text-danger">*</span></label>
+                        </div>
+                        <div *ngIf="submitted && f.zonaDuracion.errors" class="invalid-feedback d-block">
+                          <div *ngIf="f.zonaDuracion.errors.required">Ingrese una duración</div>
+                        </div>
+                    </div>
+
+                  <div class="form-group col-md-12 col-lg-6">
+
+                    <div class="form-floating">
+                      <select class="form-select" id="idTipo" formControlName="idTipo">
+                        <option *ngFor="let tipo of zonaTipos" [value]="tipo.id">{{ tipo.nombre }}</option>
+                      </select>
+                      <label for="idTipo">Tipo</label>
+                    </div>
+
+                  </div>
+
+
+
+                    <!-- <div class="form-group col-md-6">
+                        <div class="input-group input-group-sm">
+                            <div class="input-group-prepend"><span class="input-group-text" for="zonaIGV">IGV</span></div>
+                            <input type="number" class="form-control dz-uppercase" formControlName="zonaIGV"/>
+
+                        </div>
+                    </div> -->
+
+                  <div class="form-group col-md-12">
+
+                    <div class="form-floating">
+                      <input type="text" class="form-control" id="urlWeb" placeholder=" " formControlName="urlWeb">
+                      <label for="urlWeb">Url Web</label>
+                    </div>
+
+                  </div>
+
+                  <div class="form-group col-md-6">
+                    <div class="form-floating">
+                      <input type="number" step=".1" min="0"  class="form-control dz-uppercase" id="zonaPrecioBase" placeholder=" " formControlName="zonaPrecioBase" [ngClass]="{ 'is-invalid': submitted && f.zonaPrecioBase.errors }" >
+                      <label for="zonaPrecioBase">Precio base (S/) <span class="text-danger">*</span></label>
+                    </div>
+                    <div *ngIf="submitted && f.zonaPrecioBase.errors" class="invalid-feedback d-block">
+                      <div *ngIf="f.zonaPrecioBase.errors.required">Ingrese un precio</div>
+                    </div>
+                  </div>
+
+                  <div class="form-group col-md-6">
+                    <div class="form-floating">
+                      <input type="number" step=".1" min="0"  class="form-control dz-uppercase" id="zonaPrecioDescuento" placeholder=" " formControlName="zonaPrecioDescuento" [ngClass]="{ 'is-invalid': submitted && f.zonaPrecioDescuento.errors }" >
+                      <label for="zonaPrecioDescuento">Precio descuento (S/) <span class="text-danger">*</span></label>
+                    </div>
+                    <div *ngIf="submitted && f.zonaPrecioDescuento.errors" class="invalid-feedback d-block">
+                      <div *ngIf="f.zonaPrecioDescuento.errors.required">Ingrese un precio</div>
+                    </div>
+                  </div>
+
+                  <div class="form-group col-12">
+                    <div class="form-floating">
+                      <label class="form-label mb-2">Zonas relacionadas</label>
+                      
+                      <!-- Chips para zonas seleccionadas -->
+                      <mat-chip-set class="mb-3" *ngIf="zonasSeleccionadas.length > 0">
+                        <mat-chip 
+                          *ngFor="let zona of zonasSeleccionadas" 
+                          (removed)="removerZona(zona)"
+                          [removable]="true">
+                          {{ zona.text }}
+                          <mat-icon matChipRemove>cancel</mat-icon>
+                        </mat-chip>
+                      </mat-chip-set>
+
+                      <!-- Campo de autocomplete -->
+                      <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Buscar y seleccionar zonas...</mat-label>
+                        <input 
+                          type="text"
+                          matInput
+                          [formControl]="zonaSearchControl"
+                          [matAutocomplete]="autoZonas"
+                          placeholder="Escriba para buscar zonas...">
+                        <mat-autocomplete 
+                          #autoZonas="matAutocomplete"
+                          (optionSelected)="seleccionarZona($event)">
+                          <mat-option 
+                            *ngFor="let zona of zonasFiltradasObservable | async" 
+                            [value]="zona">
+                            {{ zona.text }}
+                          </mat-option>
+                        </mat-autocomplete>
+                      </mat-form-field>
+                      
+                      <small class="text-muted">
+                        {{ zonasSeleccionadas.length }} zona(s) seleccionada(s)
+                      </small>
+                    </div>
+                  </div>
+
+                  <div class="col-12">
+                    <hr class="separator">
+                    <h5 class="f-w-500 text-dark"> Datos para comprobante electrónico</h5>
+                    <div class="form-floating">
+                        <select class="form-select" id="idUnidadMedida" formControlName="idUnidadMedida">
+                          <option value="">--Seleccionar--</option>
+                          <option *ngFor="let um of unidadesMedida" [value]="um.id">[{{ um.nombre }}] {{ um.descripcion }}</option>
+                        </select>
+                        <label for="idTipo">Unidad Medida</label>
+                      </div>
+                    <hr class="separator">
+                  </div>
+
+                  <div class="form-group col-md-12 col-lg-6">
+
+                    <div class="form-floating">
+                      <select class="form-select" id="idEstado" formControlName="idEstado">
+                        <option value="1">ACTIVO</option>
+                        <option value="2">INACTIVO</option>
+                      </select>
+                      <label for="idEstado">Estado</label>
+                    </div>
+
+                  </div>
+
+                </div>
+            </div>
+            <div class="modal-footer card-footer">
+                <div class="form-row float-right">
+                    <button type="submit" class="btn btn-outline-primary" ><i class="feather icon-save"></i>Guardar</button>
+                    <button type="reset"  class="btn btn-outline-danger" (click)="cerrarModal()"><i class="feather icon-slash"></i>Cancelar</button>
+                </div>
+            </div>
+
+        </div>
+    </form>

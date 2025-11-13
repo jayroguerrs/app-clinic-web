@@ -1,0 +1,149 @@
+﻿<ng-template #modalPromocionDatos let-modal let-close="close">
+  <app-promocion-datos [modal]="modalPromocionDatosRef" [idPromocion]="idPromocion"></app-promocion-datos>
+</ng-template>
+
+<ng-template #modalPromocionPlantilla let-modal let-close="close">
+  <app-promocion-plantilla [modal]="modalPromocionPlantillaRef" [idPromocion]="idPromocion" [promocion]="promocion"></app-promocion-plantilla>
+</ng-template>
+
+<ng-template #modalPromocionPrecio let-modal let-close="close">
+  <app-promocion-precio
+    [modal]="modalPromocionPrecioRef"
+    [idPromocion]="idPromocion"
+    [idServicio]="idServicio"
+    [promocion]="promocion"></app-promocion-precio>
+</ng-template>
+
+<ngx-spinner
+  [template]="rutaImageSpinner">
+  <p style="color: white" > Cargando... </p>
+</ngx-spinner>
+
+<!-- FILTRO GRILLA -->
+<div class="row">
+  <div class="col-12">
+    <app-card cardTitle="PROMOCIÓN" [options]="false" [customHeader]="false">
+      <form [formGroup]="frmFiltroGrilla">
+        <div class="form-row">
+          <div class="form-group col-md-auto">
+            <div class="form-floating">
+              <input type="text" class="form-control search" id="filterNombre" placeholder=" " formControlName="filterNombre">
+              <label for="filterNombre">Nombre promoción</label>
+            </div>
+          </div>
+        </div>
+      </form>
+    </app-card>
+  </div>
+
+  <div class="col-sm-12">
+    <app-card  [options]="false" [customHeader]="true" [hidHeader]= "true">
+
+      <div class="table table-sm-responsive">
+        <table datatable [dtOptions]="dtResponsiveOptions"  class="table table-sm table-hover table-promocion display compact"></table>
+      </div>
+
+    </app-card>
+  </div>
+</div>
+
+
+<!-- BOTONERA ESCRITORIO -->
+<ul class="botonera-escritorio">
+  <li>
+    <button type="button" class="btn btn-primary btn-icon" [placement]="'bottom'" ngbTooltip="Listar" (click)= "promocionListar()"><i class="mdi mdi-sync"></i></button>
+    <button *ngIf="this.accTot || this.accCrud || this.accCreate" type="button" class="btn btn-primary btn-icon" [placement]="'bottom'" ngbTooltip="Nuevo" (click)= "nuevoPromocionDatos(modalPromocionDatos)"><i class="mdi mdi-plus-circle-outline"></i></button>
+    <button *ngIf="selected && (this.accTot || this.accCrud || this.accUpdate)" type="button" class="btn btn-warning btn-icon" [placement]="'bottom'" ngbTooltip="Editar" (click)= "editarPromocionDatos(modalPromocionDatos)"><i class="mdi mdi-square-edit-outline"></i></button>
+    <button *ngIf="selected" type="button" class="btn btn-secondary btn-icon" [placement]="'bottom'" ngbTooltip="Plantilla" (click)= "editarPromocionPlantilla(modalPromocionPlantilla)"><i class="mdi mdi-file-document-outline"></i></button>
+    <button *ngIf="selected" type="button" class="btn btn-secondary btn-icon" [placement]="'bottom'" ngbTooltip="Precios" (click)= "editarPromocionPrecio(modalPromocionPrecio)"><i class="mdi mdi-cash"></i></button>
+    <button *ngIf="selected" type="button" class="btn btn-secondary btn-icon" [placement]="'bottom'" ngbTooltip="Duplicar" (click)= "evtClone()"><i class="fa-regular fa-clone"></i></button>
+    <button *ngIf="this.accTot || this.accExc" type="button" class="btn btn-primary btn-icon" [placement]="'bottom'" ngbTooltip="Excel" (click)="exportarTabla()"><i class="mdi mdi-file-excel-outline"></i></button>
+  </li>
+</ul>
+
+<section class="my-footer--buttons my-footer--buttons--save" >
+  <button mat-fab class="my-color_gradient" (click)="updatePromotion()">
+    <mat-icon>save</mat-icon>
+  </button>
+</section>
+
+
+<!-- Menu Movil -->
+<div class="float-menu">
+  <button mat-fab color="primary" class="bg-primary" (click)="verOpciones()">
+    <mat-icon>settings</mat-icon>
+  </button>
+</div>
+
+
+<ng-template let-bottomSheetRef="bottomSheetRef" #menuMovil >
+  <div class="_content" >
+    <div class="_header">
+      <div class="px-4 pt-4 text-center">
+        <span class="d-inline-block topline"></span>
+        <p class="text-center text-white _title lead">Opciones</p>
+      </div>
+      <mat-divider class=""></mat-divider>
+    </div>
+
+    <mat-nav-list class="pt-0">
+
+      <div>
+        <a mat-list-item (click)= "promocionListar();cerrarOpciones();">
+          <i class="mat-list-icon mdi mdi-sync"></i>
+          <span class=" opt-title">Actualizar lista</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+
+      <div>
+        <a mat-list-item (click)="nuevoPromocionDatos(modalPromocionDatos);cerrarOpciones();">
+          <i class="mat-list-icon mdi mdi-plus-circle-outline"></i>
+          <span class=" opt-title">Nueva promoción</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+
+      <div *ngIf="selected">
+        <a mat-list-item (click)="editarPromocionDatos(modalPromocionDatos);cerrarOpciones();">
+          <i class="mat-list-icon mdi mdi-square-edit-outline"></i>
+          <span class=" opt-title">Editar promoción</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+
+      <div *ngIf="selected">
+        <a mat-list-item (click)="editarPromocionPlantilla(modalPromocionPlantilla);cerrarOpciones();">
+          <i class="mat-list-icon mdi mdi-file-document-outline"></i>
+          <span class=" opt-title">Plantilla</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+
+      <div *ngIf="selected">
+        <a mat-list-item (click)="editarPromocionPrecio(modalPromocionPrecio);cerrarOpciones();">
+          <i class="mat-list-icon mdi mdi-cash"></i>
+          <span class=" opt-title">Precios</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+
+      <div>
+        <a mat-list-item (click)="exportarTabla();cerrarOpciones();">
+          <i class="mat-list-icon mdi mdi-file-excel-outline"></i>
+          <span class=" opt-title">Exportar excel</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+
+    </mat-nav-list>
+  </div>
+</ng-template>
+
+
+
+
+
+
+
+

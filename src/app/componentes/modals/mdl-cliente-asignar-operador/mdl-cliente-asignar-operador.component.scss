@@ -1,0 +1,40 @@
+
+  //STILO DE SCROLL VERTICAL
+  /* Let's get this party started */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background: #04a9f5;
+    box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+  }
+  ::-webkit-scrollbar-thumb:window-inactive {
+    background: #04a9f5;
+  }
+
+  .checkbox input[type=checkbox]:not(:checked) + .cr:before {
+    border: 2px solid #04a9f5 !important;
+}
+th { font-size: 8px; }
+td { font-size: 7px; }
+
+::ng-deep .sm-status{
+  display: inline-block;
+  -webkit-transform: scale(.7);
+  -moz-transform: scale(.7);
+  -ms-transform: scale(.7);
+  -o-transform: scale(.7);
+  transform: scale(.7);
+  margin:  0 !important;
+}

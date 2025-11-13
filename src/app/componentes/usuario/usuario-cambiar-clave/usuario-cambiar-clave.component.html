@@ -1,0 +1,128 @@
+<!-- SPINNER -->
+<ngx-spinner [template]="rutaImageSpinner">
+    <p style="color: white"> Cargando... </p>
+</ngx-spinner>
+
+<!-- FILTRO -->
+<div class="col-sm-12">
+    <app-card cardTitle="CAMBIAR CLAVE" [options]="false" [hidBlock]="false">
+
+        <form [formGroup]="frmCambiarClave">
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <div class="input-group input-group-sm position-relative">
+                        <div class="input-group-prepend"><span class="input-group-text">Clave actual</span></div>
+                        <input [type]="mostrarClaveActual ? 'text' : 'password'" class="form-control" formControlName="claveActual" [ngClass]="{ 'is-invalid': submitted && f.claveActual.errors }" maxlength="20">
+                        <div class="input-group-append">
+                            <button type="button" class="btn btn-outline-secondary" (click)="toggleMostrarClaveActual()">
+                                <i class="fa" [ngClass]="mostrarClaveActual ? 'fa-eye-slash' : 'fa-eye'"></i>
+                            </button>
+                        </div>
+                        <div *ngIf="submitted && f.claveActual.errors" class="invalid-feedback">
+                            <div *ngIf="f.claveActual.errors.required">Ingrese la clave actual</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <div class="input-group input-group-sm position-relative">
+                        <div class="input-group-prepend"><span class="input-group-text">Nueva clave</span></div>
+                        <input [type]="mostrarClaveNueva ? 'text' : 'password'" class="form-control" formControlName="claveNueva" [ngClass]="{ 'is-invalid': submitted && f.claveNueva.errors }" maxlength="20">
+                        <div class="input-group-append">
+                            <button type="button" class="btn btn-outline-secondary" (click)="toggleMostrarClaveNueva()">
+                                <i class="fa" [ngClass]="mostrarClaveNueva ? 'fa-eye-slash' : 'fa-eye'"></i>
+                            </button>
+                        </div>
+                        <div *ngIf="submitted && f.claveNueva.errors" class="invalid-feedback">
+                            <div *ngIf="f.claveNueva.errors.required">Ingrese la nueva clave</div>
+                            <div *ngIf="f.claveNueva.errors.minlength">Clave mínimo 8 caracteres</div>
+                            <div *ngIf="f.claveNueva.errors.pattern">La clave debe contener al menos una mayúscula, una minúscula, un número y un carácter especial</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Requisitos de contraseña -->
+                    <div class="password-requirements mt-2">
+                        <small class="d-block mb-1 text-info">
+                            <i class="fa fa-info-circle"></i> La contraseña debe contener:
+                        </small>
+                        <ul class="pl-4 mb-2 requirements-list">
+                            <li>
+                                <small [ngClass]="hasMinLength() ? 'text-success' : 'text-muted'">
+                                    <i class="fa" [ngClass]="hasMinLength() ? 'fa-check-circle' : 'fa-circle'"></i>
+                                    Al menos 8 caracteres
+                                </small>
+                            </li>
+                            <li>
+                                <small [ngClass]="hasUpperCase() ? 'text-success' : 'text-muted'">
+                                    <i class="fa" [ngClass]="hasUpperCase() ? 'fa-check-circle' : 'fa-circle'"></i>
+                                    Al menos una letra mayúscula
+                                </small>
+                            </li>
+                            <li>
+                                <small [ngClass]="hasLowerCase() ? 'text-success' : 'text-muted'">
+                                    <i class="fa" [ngClass]="hasLowerCase() ? 'fa-check-circle' : 'fa-circle'"></i>
+                                    Al menos una letra minúscula
+                                </small>
+                            </li>
+                            <li>
+                                <small [ngClass]="hasDigit() ? 'text-success' : 'text-muted'">
+                                    <i class="fa" [ngClass]="hasDigit() ? 'fa-check-circle' : 'fa-circle'"></i>
+                                    Al menos un número
+                                </small>
+                            </li>
+                            <li>
+                                <small [ngClass]="hasSpecialChar() ? 'text-success' : 'text-muted'">
+                                    <i class="fa" [ngClass]="hasSpecialChar() ? 'fa-check-circle' : 'fa-circle'"></i>
+                                    Al menos un carácter especial (@$!%*?&)
+                                </small>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Indicador de fortaleza de contraseña -->
+                    <div class="password-strength mt-2" *ngIf="f.claveNueva.value">
+                        <div class="strength-meter">
+                            <div class="strength-meter-fill" [ngClass]="getPasswordStrength()"></div>
+                        </div>
+                        <small [ngClass]="getPasswordStrengthTextClass()">
+                            Seguridad: {{getPasswordStrengthText()}}
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <div class="input-group input-group-sm position-relative">
+                        <div class="input-group-prepend"><span class="input-group-text">Confirmar clave</span></div>
+                        <input [type]="mostrarConfirmarClave ? 'text' : 'password'" class="form-control" formControlName="confirmarClave" [ngClass]="{ 'is-invalid': submitted && f.confirmarClave.errors }" maxlength="20">
+                        <div class="input-group-append">
+                            <button type="button" class="btn btn-outline-secondary" (click)="toggleMostrarConfirmarClave()">
+                                <i class="fa" [ngClass]="mostrarConfirmarClave ? 'fa-eye-slash' : 'fa-eye'"></i>
+                            </button>
+                        </div>
+                        <div *ngIf="submitted && f.confirmarClave.errors" class="invalid-feedback">
+                            <div *ngIf="f.confirmarClave.errors.required">Confirme la clave nueva</div>
+                            <div *ngIf="f.confirmarClave.errors.mustMatch">Las claves no coinciden</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </app-card>
+</div>
+
+<!-- BOTONERA ESCRITORIO -->
+<ul class="botonera-escritorio">
+    <li>
+        <button type="button" class="btn btn-primary btn-icon" [placement]="'bottom'" ngbTooltip="Grabar" (click)="btnCambiarClave()"
+            id="btnGrabar1"><i class="fa fa-save"></i></button>
+    </li>
+</ul>
+<!-- BOTONERA MOVIL -->
+<a class="botonera-movil"><i class="fa fa-cog"></i></a>
+<ul class="ul-botonera-movil">
+    <li id="btnGrabar2" (click)="btnCambiarClave()"><a><i class="fa fa-save"></i></a></li>
+</ul>

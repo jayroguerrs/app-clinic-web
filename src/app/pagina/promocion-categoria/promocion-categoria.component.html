@@ -1,0 +1,90 @@
+﻿<div class="row">
+  <!-- FILTRO -->
+  <div class="col-sm-12">
+    <app-card cardTitle="PROMOCIÓN - LISTADO DE CATEGORIAS" [options]="false" [hidBlock]="true">
+    </app-card>
+  </div>
+
+  <!-- GRILLA -->
+  <div class="col-sm-12">
+    <app-card [options]="false" cardTitle="LISTADO DE CATEGORIAS" [hidHeader]="true">
+
+      <div class="table table-sm-responsive">
+        <table datatable [dtOptions]="dtResponsiveOptions" class="table table-sm table-hover table-sm table-maquina display compact">
+        </table>
+      </div>
+
+    </app-card>
+  </div>
+</div>
+
+<!-- SPINNER -->
+<ngx-spinner
+    [template]="rutaImageSpinner">
+    <p style="color: white" > Cargando... </p>
+</ngx-spinner>
+
+
+<!-- BOTONERA ESCRITORIO -->
+<ul class="botonera-escritorio">
+  <li>
+    <button type="button" class="btn btn-primary btn-icon" [placement]="'bottom'" ngbTooltip="Actualizar" (click)= "showList()"><i class="mdi mdi-sync"></i></button>
+    <button *ngIf="this.accTot || this.accCrud || this.accCreate" type="button" class="btn btn-primary btn-icon" [placement]="'bottom'" ngbTooltip="Nuevo" (click)= "onCreate()"><i class="mdi mdi-plus-circle-outline"></i></button>
+    <button *ngIf="selected && (this.accTot || this.accCrud || this.accUpdate)" type="button" class="btn btn-warning btn-icon" [placement]="'bottom'" ngbTooltip="Editar" (click)= "onEdit()" ><i class="mdi mdi-square-edit-outline"></i></button>
+    <button *ngIf="this.accTot ||  this.accExc" type="button" class="btn btn-secondary btn-icon" [placement]="'bottom'" ngbTooltip="Excel" (click)="exportarExcel()"><i class="mdi mdi-file-excel-outline"></i></button>
+  </li>
+</ul>
+
+<!-- Menu Movil -->
+<div class="float-menu">
+  <button mat-fab color="primary" class="bg-primary" (click)="verOpciones()">
+    <mat-icon>settings</mat-icon>
+  </button>
+</div>
+<ng-template let-bottomSheetRef="bottomSheetRef" #menuMovil >
+  <div class="_content" >
+    <div class="_header">
+      <div class="px-4 pt-4 text-center">
+        <span class="d-inline-block topline"></span>
+        <p class="text-center text-white _title lead">Opciones</p>
+      </div>
+      <mat-divider class=""></mat-divider>
+    </div>
+
+    <mat-nav-list class="pt-0">
+
+      <div>
+        <a mat-list-item (click)="showList();cerrarOpciones();">
+          <i class="mat-list-icon mdi mdi-sync"></i>
+          <span class=" opt-title">Actualizar lista</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+
+      <div>
+        <a mat-list-item (click)="onCreate();cerrarOpciones();">
+          <i class="mat-list-icon mdi mdi-plus-circle-outline"></i>
+          <span class=" opt-title">Agregar maquina</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+
+      <div *ngIf="selected">
+        <a mat-list-item (click)="onEdit();cerrarOpciones();">
+          <i class="mat-list-icon mdi mdi-square-edit-outline"></i>
+          <span class=" opt-title">Editar maquina</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+
+      <div>
+        <a mat-list-item (click)="exportarExcel();cerrarOpciones();">
+          <i class="mat-list-icon mdi mdi-file-excel-outline"></i>
+          <span class=" opt-title">Exportar excel</span>
+        </a>
+      </div>
+
+    </mat-nav-list>
+  </div>
+</ng-template>
+

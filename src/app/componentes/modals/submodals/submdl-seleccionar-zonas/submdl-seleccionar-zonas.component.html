@@ -1,0 +1,114 @@
+<div class="modal-content">
+  <div class="modal-header bg-white">
+    <h2 class="h5 fw-bold">Seleccionar zonas</h2>
+    <div class="btn sbtn btn-sm btn-icon btn-active-color-primary h-auto w-auto p-0" (click)="onClose()">
+      <span class="svg-icon svg-icon-1">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor"></rect>
+          <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor"></rect>
+        </svg>
+      </span>
+    </div>
+  </div>
+  <div class="modal-body">
+    <div class="p-4 h-100">
+
+        <div class="form-row max-h-100">
+
+          <div class="col-12">
+            <div class="form-group popins">
+              <label class="fw-semibold text-gray-800 mb-1">Servicio</label>
+                <div class="position-relative" >
+                  <span class="position-absolute no-pointer-events h-100 d-flex align-items-center ps-10px text-indigo"><fontawesome-svg [width]="24" [height]="24" [icon]="'person'" [type]="'duotone'" ></fontawesome-svg></span>
+                  <select [formControl]="idServicio" class="form-select form-select-sm form-select-solid ps-42px bg-light-indigo text-indigo">
+                    <option value="">--Seleccionar--</option>
+                    <option *ngFor="let s of servicios" [value]="s.id">{{s.nombre}}</option>
+                  </select>
+                </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-6">
+            <button type="button" [disabled]="!zonasSelected.length" matRipple class="btn sbtn btn-indigo mb-3 w-100 d-flex" (click)="add()">
+              <span>Añadir</span>
+              <span class="ml-auto"><fontawesome-svg [width]="24" [height]="24" icon="arrow-right" type="duotone"></fontawesome-svg></span>
+            </button>
+            <div class="border border-secondary rounded p-3 max-h-600px d-flex flex-column">
+              <div class="d-flex align-items-center position-relative mb-3">
+                <span class="svg-icon svg-icon-1 position-absolute ms-4 ps-10px ">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <rect  opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2" rx="1" transform="rotate(45 17.0365 15.1223)" fill="currentColor"></rect>
+                    <path  d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z" fill="currentColor"></path>
+                  </svg>
+                </span>
+                <input type="text" data-kt-filter="search" placeholder="Filtrar" class="form-control form-control-solid ps-42px">
+              </div>
+              <div class="overflow-auto h-100">
+                <ng-component *ngFor="let zona of zonas; let i = index;">
+                  <label *ngIf="!isDimissed(zona)" class="d-flex flex-stack mb-5 cursor-pointer" (click)="$event.preventDefault();select(zona)">
+                    <span class="d-flex align-items-center me-2">
+                      <span class="symbol symbol-50px me-6">
+                        <span class="symbol-label bg-light-primary">
+                          <span class="svg-icon svg-icon-1 svg-icon-primary">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <path opacity="0.3" d="M18.4 5.59998C21.9 9.09998 21.9 14.8 18.4 18.3C14.9 21.8 9.2 21.8 5.7 18.3L18.4 5.59998Z" fill="currentColor"></path>
+                              <path d="M12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2ZM19.9 11H13V8.8999C14.9 8.6999 16.7 8.00005 18.1 6.80005C19.1 8.00005 19.7 9.4 19.9 11ZM11 19.8999C9.7 19.6999 8.39999 19.2 7.39999 18.5C8.49999 17.7 9.7 17.2001 11 17.1001V19.8999ZM5.89999 6.90002C7.39999 8.10002 9.2 8.8 11 9V11.1001H4.10001C4.30001 9.4001 4.89999 8.00002 5.89999 6.90002ZM7.39999 5.5C8.49999 4.7 9.7 4.19998 11 4.09998V7C9.7 6.8 8.39999 6.3 7.39999 5.5ZM13 17.1001C14.3 17.3001 15.6 17.8 16.6 18.5C15.5 19.3 14.3 19.7999 13 19.8999V17.1001ZM13 4.09998C14.3 4.29998 15.6 4.8 16.6 5.5C15.5 6.3 14.3 6.80002 13 6.90002V4.09998ZM4.10001 13H11V15.1001C9.1 15.3001 7.29999 16 5.89999 17.2C4.89999 16 4.30001 14.6 4.10001 13ZM18.1 17.1001C16.6 15.9001 14.8 15.2 13 15V12.8999H19.9C19.7 14.5999 19.1 16.0001 18.1 17.1001Z" fill="currentColor"></path>
+                            </svg>
+                          </span>
+                        </span>
+                      </span>
+                      <span class="d-flex flex-column">
+                        <span class="fw-bold fs-6">{{ zona.descripcion }}</span>
+                      </span>
+                    </span>
+                        <span class="form-check form-check-custom form-check-solid ms-auto">
+                      <input class="form-check-input no-pointer-events" type="checkbox" [checked]="isSelect(zona)">
+                    </span>
+                  </label>
+                </ng-component>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-md-6">
+            <button type="button" [disabled]="!citaDetallesSelected.length" matRipple class="btn sbtn btn-danger mb-3 w-100 d-flex" (click)="remove()">
+              <span class="mr-auto"><fontawesome-svg [width]="24" [height]="24" icon="arrow-left" type="duotone"></fontawesome-svg></span>
+              <span>Eliminar</span>
+            </button>
+            <div class="border border-secondary p-3 rounded h-100 max-h-600px">
+
+              <div class="d-flex align-items-center position-relative mb-3">
+                <span class="svg-icon svg-icon-1 position-absolute ms-4 ps-10px no-pointer-events">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <rect  opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2" rx="1" transform="rotate(45 17.0365 15.1223)" fill="currentColor"></rect>
+                    <path  d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z" fill="currentColor"></path>
+                  </svg>
+                </span>
+                <input type="text" data-kt-filter="search" placeholder="Filtrar"  class="form-control form-control-solid ps-42px">
+              </div>
+
+              <div class="overflow-auto h-100">
+                <label *ngFor="let detalle of citaDetalles; let i = index;" class="d-flex flex-stack mb-5 cursor-pointer" (click)="$event.preventDefault();selectDetail(detalle)">
+                  <span class="d-flex align-items-center me-2">
+                    <div class="symbol symbol-45px me-5">
+                      <img *ngIf="detalle.idServicio === 1" src="./assets/media/services/depilacion-laser.jpg" alt="">
+                      <img *ngIf="detalle.idServicio === 2" src="./assets/media/services/criolipolisis.jpg" alt="">
+                    </div>
+                    <span class="d-flex flex-column">
+                      <span class="fw-bold fs-6">{{ detalle.zona }}</span>
+                      <span class="text-muted">{{ detalle.servicio }}</span>
+                    </span>
+                  </span>
+                  <span class="form-check form-check-custom form-check-solid ms-auto"><input class="form-check-input no-pointer-events" type="checkbox" [checked]="detailtIsSelect(detalle)"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="reset" class="btn sbtn btn-light mr-2" (click)="onClose()">Cerrar</button>
+    <button type="submit" class="btn sbtn btn-primary shadow btn-shadow-primary">Aceptar</button>
+  </div>
+</div>
+

@@ -1,0 +1,443 @@
+// Variables
+$primary-color: #3f51b5;
+$secondary-color: #f0f2f5;
+$success-color: #4caf50;
+$danger-color: #f44336;
+$warning-color: #ff9800;
+$border-color: #ddd;
+$text-color: #333;
+$text-muted: #6c757d;
+
+.card {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  border: none;
+  margin-bottom: 2rem;
+
+  .card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #edf2f9;
+    padding: 1rem 1.5rem;
+    
+    @media (max-width: 576px) {
+      padding: 0.75rem 1rem;
+      
+      h5 {
+        font-size: 1.1rem;
+      }
+      
+      span {
+        font-size: 0.85rem;
+      }
+    }
+  }
+
+  .card-body {
+    padding: 1.5rem;
+    
+    @media (max-width: 576px) {
+      padding: 1rem;
+    }
+  }
+}
+
+// Estilos de la tabla
+.campaign-table-container {
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 20px;
+  max-height: calc(100vh - 300px);
+  min-height: 350px;
+
+  .campaign-table-mat {
+    width: 100%;
+    
+    .mat-header-row {
+      background-color: #f7f9fc;
+    }
+    
+    .mat-header-cell {
+      font-weight: 500;
+      color: #495057;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .mat-row {
+      transition: all 0.25s ease;
+      cursor: pointer;
+      
+      &:hover {
+        background-color: #f7f9fc;
+        transform: translateY(-1px);
+        box-shadow: 0 3px 5px rgba(0, 0, 0, 0.05);
+      }
+      
+      &.selected-row {
+        background-color: #f7f9fc;
+        border-left: 3px solid #6c7580;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      }
+    }
+    
+    .mat-cell {
+      padding: 0.75rem 1rem;
+    }
+    
+    .selected-cell {
+      font-weight: 500;
+    }
+    
+    .campaign-tag {
+      display: flex;
+      align-items: center;
+      max-width: 180px;
+      i {
+        margin-right: 8px;
+        color: #6c7580;
+        flex-shrink: 0;
+      }
+      span {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+}
+
+// Source badges
+.source-badge {
+  display: inline-flex;
+  align-items: center;
+  background-color: #f7f9fc;
+  border: 1px solid #eaedf2;
+  border-radius: 6px;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #495057;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  text-transform: lowercase;
+  max-width: 120px;
+  
+  span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  &:hover {
+    background-color: #f0f3f8;
+    transform: translateY(-1px);
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.08);
+  }
+  
+  &:before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #6c7580;
+    margin-right: 8px;
+  }
+}
+
+// Status indicator
+.status-indicator {
+  display: flex;
+  align-items: center;
+  
+  .status-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 8px;
+    
+    &.status-active {
+      background-color: #36b37e;
+      box-shadow: 0 0 0 2px rgba(54, 179, 126, 0.2);
+    }
+    
+    &.status-inactive {
+      background-color: #adb5bd;
+      box-shadow: 0 0 0 2px rgba(173, 181, 189, 0.2);
+    }
+  }
+  
+  .status-text {
+    font-size: 0.85rem;
+    color: #6c7580;
+  }
+}
+
+// Campaign form
+.campaign-form {
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  
+  &:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  h6 {
+    font-weight: 600;
+  }
+  
+  .form-label {
+    font-weight: 500;
+  }
+  
+  .form-control, .form-select {
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    border: 1px solid #ced4da;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+
+    &:focus {
+      border-color: #80bdff;
+      outline: 0;
+      box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+  }
+  
+  .form-actions {
+    margin-top: 1rem;
+  }
+  
+  .campaign-preview {
+    padding: 10px;
+    background-color: #f7f9fc;
+    border-radius: 6px;
+    
+    .source-badge-preview {
+      margin-top: 0.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+  }
+  
+  .select-container {
+    position: relative;
+    
+    .select-icon {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: $text-muted;
+    }
+    
+    select {
+      padding-right: 30px;
+      appearance: none !important;
+      -webkit-appearance: none !important;
+      -moz-appearance: none !important;
+      background-image: none !important; /* Esto evita que se muestre la flecha nativa */
+    }
+    
+    /* Para IE y Edge */
+    select::-ms-expand {
+      display: none;
+    }
+    
+    /* Para Firefox */
+    select {
+      text-indent: 1px;
+      text-overflow: '';
+    }
+    
+    /* Para Safari */
+    select {
+      background: transparent !important;
+    }
+  }
+}
+
+// Animación de reset del formulario
+.form-reset-animation {
+  animation: formReset 0.5s ease;
+}
+
+@keyframes formReset {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(5px); }
+  50% { transform: translateX(-5px); }
+  75% { transform: translateX(2px); }
+  100% { transform: translateX(0); }
+}
+
+/* Estilos para el buscador */
+.campaign-search {
+  width: 250px;
+  
+  .input-group {
+    .form-control {
+      border-right: none;
+      
+      &:focus {
+        box-shadow: none;
+        border-color: #ced4da;
+      }
+    }
+    
+    .input-group-text {
+      background-color: #fff;
+      border-left: none;
+    }
+  }
+}
+
+/* Animaciones */
+.selected-row {
+  animation: highlight 0.5s ease;
+}
+
+@keyframes highlight {
+  0% {
+    background-color: transparent;
+  }
+  50% {
+    background-color: #e8f4ff;
+  }
+  100% {
+    background-color: #e8f4ff;
+  }
+}
+
+/* Responsive */
+@media (max-width: 767.98px) {
+  .campaign-list-header {
+    flex-direction: column;
+    align-items: flex-start !important;
+    
+    .campaign-search {
+      width: 100%;
+      max-width: 100%;
+    }
+  }
+  
+  .campaign-table-container {
+    max-height: calc(100vh - 500px);
+    min-height: 250px;
+  }
+}
+
+/* Notificaciones */
+.notification {
+  &.notification-success {
+    background-color: #36b37e;
+    color: white;
+  }
+  
+  &.notification-error {
+    background-color: #ff5630;
+    color: white;
+  }
+  
+  &.notification-info {
+    background-color: #0065ff;
+    color: white;
+  }
+}
+
+// Botones de acción
+.btn-edit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f7f9fc;
+  border: none;
+  color: #6c7580;
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  padding: 0;
+  
+  i {
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+  }
+  
+  &:hover {
+    background-color: #f0f3f8;
+    color: #495057;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+    
+    i {
+      transform: scale(1.1);
+    }
+  }
+  
+  &:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+}
+
+// Switch personalizado
+.custom-switch {
+  padding-left: 2.25rem;
+  
+  .custom-control-input {
+    &:checked ~ .custom-control-label::before {
+      background-color: #28a745;
+      border-color: #28a745;
+    }
+    
+    &:focus ~ .custom-control-label::before {
+      box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+    }
+    
+    &:not(:disabled):active ~ .custom-control-label::before {
+      background-color: #a3d7af;
+      border-color: #a3d7af;
+    }
+  }
+  
+  .custom-control-label {
+    cursor: pointer;
+    user-select: none;
+    
+    &::before {
+      left: -2.25rem;
+      width: 1.75rem;
+      height: 1rem;
+    }
+    
+    &::after {
+      top: calc(0.25rem + 2px);
+      left: calc(-2.25rem + 2px);
+      width: calc(1rem - 4px);
+      height: calc(1rem - 4px);
+      transition: transform 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+  }
+}
+
+/* Estilos para el paginador */
+.mat-paginator {
+  background-color: #f7f9fc;
+  border-top: 1px solid #eaedf2;
+}
+
+/* Eliminar flecha nativa de los selects en diferentes navegadores */
+select::-ms-expand {
+  display: none;
+}
+
+/* Asegurar compatibilidad con Safari */
+select {
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+}

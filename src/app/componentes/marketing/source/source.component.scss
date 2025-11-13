@@ -1,0 +1,454 @@
+.card {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  border: none;
+  margin-bottom: 2rem;
+
+  .card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #edf2f9;
+    padding: 1rem 1.5rem;
+    
+    @media (max-width: 576px) {
+      padding: 0.75rem 1rem;
+      
+      h5 {
+        font-size: 1.1rem;
+      }
+      
+      span {
+        font-size: 0.85rem;
+      }
+    }
+  }
+
+  .card-body {
+    padding: 1.5rem;
+    
+    @media (max-width: 576px) {
+      padding: 1rem;
+    }
+  }
+}
+
+/* Estilos para Angular Material */
+.source-table-mat {
+  width: 100%;
+  
+  .mat-header-row {
+    background-color: #f7f9fc;
+  }
+  
+  .mat-header-cell {
+    font-weight: 500;
+    color: #495057;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .mat-row {
+    transition: all 0.25s ease;
+    cursor: pointer;
+    
+    &:hover {
+      background-color: #f7f9fc;
+      transform: translateY(-1px);
+      box-shadow: 0 3px 5px rgba(0, 0, 0, 0.05);
+    }
+    
+    &.selected-row {
+      background-color: #f7f9fc;
+      border-left: 3px solid #6c7580;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+  }
+
+  .mat-cell {
+    padding: 0.75rem 1rem;
+    
+    /* Botón de editar moderno - solo icono */
+    .btn-edit {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #f7f9fc;
+      border: none;
+      color: #6c7580;
+      width: 32px;
+      height: 32px;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      padding: 0;
+      
+      i {
+        font-size: 0.9rem;
+        transition: all 0.2s ease;
+      }
+      
+      &:hover {
+        background-color: #f0f3f8;
+        color: #495057;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+        
+        i {
+          transform: scale(1.1);
+        }
+      }
+      
+      &:active {
+        transform: translateY(0);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+      }
+    }
+  }
+}
+
+/* Estilos para el paginador */
+.mat-paginator {
+  background-color: #f7f9fc;
+  border-top: 1px solid #eaedf2;
+}
+
+/* Estilos para la tabla de sources */
+.source-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+  
+  thead {
+    background-color: #f7f9fc;
+    
+    th {
+      font-weight: 500;
+      color: #495057;
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid #eaedf2;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+  }
+  
+  tbody {
+    tr {
+      transition: all 0.25s ease;
+      cursor: pointer;
+      border-bottom: 1px solid #eaedf2;
+      
+      &:hover {
+        background-color: #f7f9fc;
+        transform: translateY(-1px);
+        box-shadow: 0 3px 5px rgba(0, 0, 0, 0.05);
+      }
+      
+      &.selected-row {
+        background-color: #f7f9fc;
+        border-left: 3px solid #6c7580;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      }
+      
+      td {
+        padding: 0.75rem 1rem;
+        vertical-align: middle;
+        border-bottom: 1px solid #e9ecef;
+        
+        /* Botón de editar moderno - solo icono */
+        .btn-edit {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background-color: #f7f9fc;
+          border: none;
+          color: #6c7580;
+          width: 32px;
+          height: 32px;
+          border-radius: 4px;
+          transition: all 0.2s ease;
+          cursor: pointer;
+          padding: 0;
+          
+          i {
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+          }
+          
+          &:hover {
+            background-color: #f0f3f8;
+            color: #495057;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+            
+            i {
+              transform: scale(1.1);
+            }
+          }
+          
+          &:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+          }
+        }
+        
+        /* Indicador de estado moderno */
+        .status-indicator {
+          display: flex;
+          align-items: center;
+          
+          .status-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 8px;
+            
+            &.status-active {
+              background-color: #36b37e;
+              box-shadow: 0 0 0 2px rgba(54, 179, 126, 0.2);
+            }
+            
+            &.status-inactive {
+              background-color: #adb5bd;
+              box-shadow: 0 0 0 2px rgba(173, 181, 189, 0.2);
+            }
+          }
+          
+          .status-text {
+            font-size: 0.85rem;
+            color: #6c7580;
+          }
+        }
+      }
+    }
+  }
+}
+
+/* Estilos para las insignias de source */
+.source-badge {
+  display: inline-flex;
+  align-items: center;
+  background-color: #f7f9fc;
+  border: 1px solid #eaedf2;
+  border-radius: 6px;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #495057;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  
+  &:hover {
+    background-color: #f0f3f8;
+    transform: translateY(-1px);
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.08);
+  }
+  
+  &:before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #6c7580;
+    margin-right: 8px;
+  }
+  
+  &.custom-source {
+    background-color: #f7f9fc;
+    color: #495057;
+    font-style: italic;
+  }
+}
+
+/* Estilos para el formulario */
+.source-form {
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  
+  &:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .form-label {
+    font-weight: 500;
+  }
+  
+  .form-control, .form-select {
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    border: 1px solid #ced4da;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+
+    &:focus {
+      border-color: #80bdff;
+      outline: 0;
+      box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+  }
+  
+  /* Estilos para el switch de Bootstrap 4 */
+  .custom-switch {
+    padding-left: 2.25rem;
+    
+    .custom-control-input {
+      &:checked ~ .custom-control-label::before {
+        background-color: #28a745;
+        border-color: #28a745;
+      }
+      
+      &:focus ~ .custom-control-label::before {
+        box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+      }
+      
+      &:not(:disabled):active ~ .custom-control-label::before {
+        background-color: #a3d7af;
+        border-color: #a3d7af;
+      }
+    }
+    
+    .custom-control-label {
+      cursor: pointer;
+      user-select: none;
+      
+      &::before {
+        left: -2.25rem;
+        width: 1.75rem;
+        height: 1rem;
+      }
+      
+      &::after {
+        top: calc(0.25rem + 2px);
+        left: calc(-2.25rem + 2px);
+        width: calc(1rem - 4px);
+        height: calc(1rem - 4px);
+        transition: transform 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+      }
+    }
+  }
+  
+  .source-badge-preview {
+    margin-top: 0.5rem;
+  }
+}
+
+/* Estilos para el buscador */
+.source-search {
+  width: 250px;
+  
+  .input-group {
+    .form-control {
+      border-right: none;
+      
+      &:focus {
+        box-shadow: none;
+        border-color: #ced4da;
+      }
+    }
+    
+    .input-group-text {
+      background-color: #fff;
+      border-left: none;
+    }
+  }
+}
+
+/* Animaciones */
+.selected-row {
+  animation: highlight 0.5s ease;
+}
+
+@keyframes highlight {
+  0% {
+    background-color: transparent;
+  }
+  50% {
+    background-color: #e8f4ff;
+  }
+  100% {
+    background-color: #e8f4ff;
+  }
+}
+
+/* Responsive */
+@media (max-width: 767.98px) {
+  .source-list-header {
+    flex-direction: column;
+    align-items: flex-start !important;
+    
+    .source-search {
+      width: 100%;
+      margin-top: 1rem;
+    }
+  }
+  
+  .source-table {
+    font-size: 0.9rem;
+    
+    th, td {
+      padding: 0.5rem;
+    }
+  }
+  
+  .source-form {
+    margin-top: 1.5rem;
+    
+    /* Mejorar la visualización de los botones en móviles */
+    .form-actions {
+      button {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+      }
+    }
+  }
+  
+  /* Ajustes responsivos para Angular Material */
+  .source-table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 0 -1rem;
+    padding: 0 1rem;
+  }
+  
+  .source-table-mat {
+    min-width: 650px; /* Ancho mínimo para evitar compresión excesiva */
+    
+    /* Ajustar el ancho de las columnas para móviles */
+    .mat-column-name {
+      min-width: 120px;
+      max-width: 25%;
+    }
+    
+    .mat-column-createdAt {
+      min-width: 100px;
+    }
+    
+    .mat-column-active {
+      min-width: 80px;
+    }
+    
+    .mat-column-actions {
+      max-width: 60px;
+      width: 60px;
+    }
+    
+    /* Ajustar el espaciado */
+    .mat-header-cell, .mat-cell {
+      padding: 0.5rem;
+    }
+    
+    /* Hacer que el texto se ajuste mejor */
+    .mat-cell {
+      font-size: 0.85rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+  
+  /* Ajustar el paginador en dispositivos móviles */
+  .mat-paginator {
+    font-size: 0.85rem;
+  }
+}

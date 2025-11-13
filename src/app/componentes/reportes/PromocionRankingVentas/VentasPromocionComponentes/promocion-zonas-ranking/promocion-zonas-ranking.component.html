@@ -1,0 +1,14 @@
+<app-card class="h-100" [customHeader]="false" [options]="true" [collapse]="true" [excel]="true" (excelCallback)="exportarExcel()" cardTitle="Zonas agendadas">
+  <mat-progress-bar mode="indeterminate" id="progress" *ngIf="loading"></mat-progress-bar>
+
+  <div class="">
+    <!--<p class="text-center">{{ TitleChart }}</p>-->
+    <div class="table-container">
+      <div class="border rounded p-2">
+        <table id="tableZonas" datatable [dtOptions]="dtResponsiveOptions" class="table table-sm table-hover display compact"></table>
+      </div>
+    </div>
+
+    <div id="chartGeneralZonas" class="border rounded mt-2"></div>
+  </div>
+</app-card>

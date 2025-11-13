@@ -1,0 +1,76 @@
+<div class="container-fluid d-flex align-items-stretch justify-content-between popins sticky-top shadow" id="NavBarTop">
+  <div class="d-flex align-items-stretch justify-content-between flex-grow-1 overflow-auto" >
+    <div *ngIf="navbarOption?.start" class="d-flex align-middle">
+      <div *ngIf="navbarOption?.icon" class="my-auto mr-1">
+        <span [ngSwitch]="checkType(navbarOption.icon)">
+          <fontawesome-svg *ngSwitchCase="'string'" [icon]="navbarOption.icon" [width]="30" [height]="30" type="duotone"></fontawesome-svg>
+          <fontawesome-svg *ngSwitchCase="'object'" [icon]="navbarOption.icon.icon" [width]="navbarOption.icon.width" [height]="navbarOption.icon.height" [type]="navbarOption.icon.type" [class]="navbarOption.icon.iconClass"></fontawesome-svg>
+        </span>
+      </div>
+      <div class="my-auto d-flex flex-column">
+        <h2 class="mb-0 fs-18px f-w-500" [ngSwitch]="checkType(navbarOption.title)" [class]="navbarOption.title.textClass">
+          <span *ngSwitchCase="'string'">{{ navbarOption.title }}</span>
+          <span *ngSwitchCase="'object'">{{ navbarOption.title.text }}</span>
+        </h2>
+        <h3 class="mb-0 fs-14px" [ngSwitch]="checkType(navbarOption.subtitle)" [class]="navbarOption.subtitle.textClass">
+          <span *ngSwitchCase="'string'">{{ navbarOption.subtitle }}</span>
+          <span *ngSwitchCase="'object'">{{ navbarOption.subtitle.text }}</span>
+        </h3>
+      </div>
+    </div>
+    <div class="ml-auto align-middle d-flex">
+      <div *ngFor="let m of navbarOption?.menu" class="my-auto">
+        <container-element [ngSwitch]="m.type">
+          <ng-container *ngSwitchCase="'button'">
+            <button *ngIf="m.visible" matRipple [class]="m.class" (click)="m.onClick()">
+              <fontawesome-svg *ngIf="m.icon" width="24" height="24" [icon]="m.icon" [type]="m.iconType" class="mr-2"></fontawesome-svg>
+              {{ m.text }}
+            </button>
+          </ng-container>
+          <ng-container *ngSwitchCase="'dropdown'">
+            <div ngbDropdown class="d-inline-block menu position-relative" container="body" display="dynamic" >
+              <button *ngIf="m.visible" matRipple [class]="m.class" (click)="m.onClick()" ngbDropdownToggle placement="end-bottom">
+                <fontawesome-svg *ngIf="m.icon" width="24" height="24" [icon]="m.icon" [type]="m.iconType"></fontawesome-svg>
+                {{ m.text }}
+                <span *ngIf="m.pulse" class="pulse-ring pulse-primary"></span>
+              </button>
+              <div ngbDropdownMenu class="menu popins w-250px">
+<!--                <button *ngFor="let i of m.items" ngbDropdownItem>{{ i.text }}</button>-->
+                <button *ngFor="let i of m.items" type="button"  matRipple ngbDropdownItem [class]="i.class" (click)="i.onClick()">
+                  <fontawesome-svg [icon]="i.icon" [width]="22" [height]="22" [type]="i.iconType" class="mr-3"></fontawesome-svg>
+                  <span class="fs-16px">{{ i.text }}</span>
+                </button>
+              </div>
+            </div>
+          </ng-container>
+        </container-element>
+      </div>
+
+      <!--<div ngbDropdown container="body" class="my-auto">
+        <button type="button" matRipple class="btn sbtn btn-sm btn-icon text-primary bg-primary-light h-auto w-auto px-2 my-auto no-after position-relative align-items-center justify-content-center" ngbDropdownToggle>
+          <fontawesome-svg icon="ellipsis-vertical" [width]="22" [height]="22" type="duotone"></fontawesome-svg>
+          <span class="pulse-ring pulse-primary"></span>
+        </button>
+        <div ngbDropdownMenu class="menu popins w-250px">
+          <button type="button"  matRipple ngbDropdownItem class="f-w-500 rounded-0 list-group-item list-group-item-action border-0 d-flex align-items-center text-primary btn-hover-primary trs" >
+            <fontawesome-svg icon="pen" [width]="22" [height]="22" type="light" class="mr-3"></fontawesome-svg>
+            <span class="fs-16px">Ver</span>
+          </button>
+          <button type="button"  matRipple ngbDropdownItem class="f-w-500 rounded-0 list-group-item list-group-item-action border-0 d-flex align-items-center text-warning btn-hover-warning trs" >
+            <fontawesome-svg icon="pen" [width]="22" [height]="22" type="light" class="mr-3"></fontawesome-svg>
+            <span class="fs-16px">Editar</span>
+          </button>
+          <button type="button"  matRipple ngbDropdownItem class="f-w-500 rounded-0 list-group-item list-group-item-action border-0 d-flex align-items-center text-primary btn-hover-primary trs" >
+            <fontawesome-svg icon="hand-pointer" [width]="20" [height]="24" type="light" class="mr-3"></fontawesome-svg>
+            <span class="fs-16px">Asignar Citas</span>
+          </button>
+          <button type="button"  matRipple ngbDropdownItem class="f-w-500 rounded-0 list-group-item list-group-item-action border-0 d-flex align-items-center text-secondary bg-hover-light trs" >
+            <fontawesome-svg icon="reload" [width]="20" [height]="24" type="light" class="mr-3"></fontawesome-svg>
+            <span class="fs-16px">Actualizar</span>
+          </button>
+        </div>
+      </div>-->
+
+    </div>
+  </div>
+</div>

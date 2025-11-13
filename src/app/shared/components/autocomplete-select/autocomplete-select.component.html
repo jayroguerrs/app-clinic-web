@@ -1,0 +1,118 @@
+<div class="autocomplete-select-container" [ngClass]="config.customClasses">
+  <!-- Modo Simple y Multiple sin chips -->
+  <mat-form-field 
+    *ngIf="!config.useChips" 
+    [appearance]="config.appearance || 'outline'" 
+    [style.width]="config.width || '100%'"
+    class="w-100">
+    
+    <mat-label>{{ config.label }}</mat-label>
+    <!-- Icono prefijo -->
+    <mat-icon *ngIf="config.prefixIcon" matPrefix>{{ config.prefixIcon }}</mat-icon>
+
+    <!-- Input principal -->
+    <input 
+    type="text"
+    matInput
+    #inputField
+    (focus)="abrirOpciones()"
+    #trigger="matAutocompleteTrigger"
+    [formControl]="searchControl"
+    [matAutocomplete]="autocomplete"
+    [placeholder]="config.placeholder || ''"
+    [readonly]="!config.searchable">
+    
+    <!-- Icono sufijo / Botón limpiar -->
+    <button 
+      *ngIf="config.clearable && hasSelection() && config.searchable" 
+      matSuffix 
+      mat-icon-button 
+      (click)="clearSelection(); $event.preventDefault(); $event.stopPropagation()"
+      type="button">
+      <mat-icon>close</mat-icon>
+    </button>
+    <mat-icon *ngIf="config.suffixIcon && (!config.clearable || !hasSelection())" matSuffix>{{ config.suffixIcon }}</mat-icon>
+    
+    <!-- Autocomplete dropdown -->
+    <mat-autocomplete 
+      #autocomplete="matAutocomplete"
+      (optionSelected)="onOptionSelected($event)"
+      [displayWith]="displayOption.bind(this)"
+      [class]="'mat-autocomplete-' + (config.multiple ? 'multiple' : 'single')"
+      panelWidth="auto">
+
+      <mat-option 
+        *ngFor="let option of filteredOptions | async" 
+        [value]="option"
+        [disabled]="option.disabled"
+        class="autocomplete-option-full">
+        <mat-icon *ngIf="option.icon" class="me-2">{{ option.icon }}</mat-icon>
+        <span class="option-text-full">{{ option.text }}</span>
+        <mat-icon *ngIf="config.multiple && isSelected(option)" class="ms-auto text-primary">check</mat-icon>
+      </mat-option>
+      
+      <mat-option *ngIf="(filteredOptions | async)?.length === 0" disabled>
+        {{ config.emptyMessage || 'No hay opciones disponibles' }}
+      </mat-option>
+    </mat-autocomplete>
+    
+    <!-- Mensajes de error -->
+    <mat-error *ngIf="control?.invalid && control?.touched">
+      <span *ngIf="control?.errors?.required">{{ config.label || 'Este campo' }} es requerido</span>
+    </mat-error>
+  </mat-form-field>
+  
+  <!-- Modo Multiple con chips -->
+  <div *ngIf="config.useChips" class="chips-container">
+    <mat-label class="chips-label">{{ config.label }}</mat-label>
+    
+    <!-- Campo de búsqueda para agregar más -->
+    <mat-form-field style="padding-bottom: 0 !important;" [appearance]="config.appearance || 'outline'" class="w-100">
+      <mat-label>{{ config.placeholder || 'Buscar y agregar...' }}</mat-label>
+      <mat-icon *ngIf="config.prefixIcon" matPrefix>{{ config.prefixIcon }}</mat-icon>
+      
+      <input 
+        type="text"
+        matInput
+        (focus)="abrirOpciones()"
+        #trigger="matAutocompleteTrigger"
+        [formControl]="searchControl"
+        [matAutocomplete]="autocompleteChips">
+
+        
+      
+      <mat-autocomplete
+        #autocompleteChips="matAutocomplete"
+        (optionSelected)="onOptionSelected($event)"
+        panelWidth="auto">
+        <mat-option 
+          *ngFor="let option of availableOptions | async" 
+          [value]="option"
+          [disabled]="option.disabled"
+          class="autocomplete-option-full">
+          <mat-icon *ngIf="option.icon" class="me-2">{{ option.icon }}</mat-icon>
+          <span class="option-text-full">{{ option.text }}</span>
+        </mat-option>
+        <mat-option *ngIf="(availableOptions | async)?.length === 0" disabled>
+          {{ config.emptyMessage || 'No hay más opciones disponibles' }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+    
+    <!-- Chips de elementos seleccionados -->
+    <mat-chip-set *ngIf="selectedOptions.length > 0" class="mb-2" #step2 tabindex="0">
+      <mat-chip 
+        *ngFor="let option of selectedOptions" 
+        (removed)="removeOption(option)"
+        [removable]="!config.disabled">
+        <mat-icon *ngIf="option.icon" class="me-1">{{ option.icon }}</mat-icon>
+        {{ option.text }}
+        <mat-icon *ngIf="!config.disabled" matChipRemove>cancel</mat-icon>
+      </mat-chip>
+    </mat-chip-set>
+
+    <small (click)="testConsola()" class="text-muted">
+      {{ selectedOptions.length }} elemento(s) seleccionado(s)
+    </small>
+  </div>
+</div>

@@ -1,0 +1,77 @@
+<ion-app>
+  <router-outlet>
+  </router-outlet>
+</ion-app>
+<!-- SPINNER -->
+<ngx-spinner
+  [template]="rutaImageSpinner">
+  <p style="color: white" > Cargando... </p>
+</ngx-spinner>
+
+<!-- LISTA DE USUARIOS -->
+<div *ngIf="visibleListaUsuario" class="globo-chat-contacto" id="listaUsuario">
+  <span class="chat-contacto-cabecera">
+    <i class="fa fa-comments" style="float: left; padding-top: 0; margin-top: 5px; margin-left: 5px;"></i>
+    <span style="font-size: 20px;">USUARIOS</span>
+    <span class="badge badge-light" style="float: right; margin-right: 10px; margin-top: 4px;" (click)="mostrarListaUsuarios(false)">X</span>
+  </span>
+  <br>
+  <div class="col-md-12">
+    <div class="h-list-header m-b-5">
+      <div class="input-group">
+        <input type="text" id="msg-friends" class="form-control" placeholder="Buscar usuario...">
+        <div class="input-group-append"><span class="input-group-text"><i class='feather icon-search'></i></span></div>
+      </div>
+    </div>
+    <div class="h-list-body">
+      <div class="msg-user-list scroll-div">
+        <div class="main-friend-list">
+          <perfect-scrollbar ngClass="datta-scroll" [style.max-width]="'100%'" [style.max-height]="'390px'" [usePSClass]="'datta'" [disabled]="null" [autoPropagation] ="true">
+            <div *ngFor="let usuario of usuarios; let i = index" (click)="abrirChat(usuario.usuario, usuario.idUsuario)" class="media userlist-box"
+                [attr.data-id]="usuario.idUsuario" [attr.data-status]="{'online': usuario.estado, 'offline': !usuario.estado}" [attr.data-username]="usuario.usuario">
+              <a class="media-left" href="javascript:">
+                <img class="media-object rounded-circle2" [src]="usuario.foto" alt="{{ usuario.usuario }}">
+                <div class="live-status" *ngIf="usuario.mensajeSinLeer">{{usuario.mensajeSinLeer}}</div></a>
+              <div class="media-body">
+                <h6 class="chat-header">{{usuario.usuario}}
+                    <small class="d-block" *ngIf="usuario.ultimaConexion" [ngClass]="{'text-c-green': usuario.estado, 'text-c-red': !usuario.estado}">{{usuario.ultimaConexion}}</small>
+                </h6>
+              </div>
+            </div>
+          </perfect-scrollbar>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- CHAT CON EL USUARIO -->
+<div *ngIf="visibleChatUsuario" class="globo-chat-contacto" id="chatUsuario">
+  <span class="chat-contacto-cabecera">
+    <i class="fa fa-comments" style="float: left; padding-top: 0; margin-top: 5px; margin-left: 5px;"></i>
+    <span style="font-size: 20px;">{{ nombreUsuarioChat }}</span>
+    <span class="badge badge-light" style="float: right; margin-right: 10px; margin-top: 4px;"  (click)="mostrarChatUsuario(false)">X</span>
+  </span><br>
+  <div class="col-md-12">
+    <div class="h-list-body">
+      <div class="msg-user-list scroll-div">
+        <div class="main-friend-list">
+            <div class="scroll" id="texto-chat" >
+              <div *ngFor="let chat of chats" [ngClass]="(chat.idDeUsuario == idUsuarioChat) ? 'message-blue' : 'message-orange'">
+                <p  class="message-content">{{ chat.texto }}</p>
+                <div [ngClass]=" (chat.idDeUsuario == idUsuarioChat) ? 'message-timestamp-left' : 'message-timestamp-right' ">{{ chat.fechaHora}}</div>
+                <br>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+    <div class="h-list-header m-b-5">
+      <div class="input-group">
+        <input type="text" id="msg" class="form-control" placeholder="Mensaje..." (keyup.enter)="enviarMensaje()">
+        <div class="input-group-append">
+          <span class="input-group-text" (click)="enviarMensaje()"><i class='feather icon-play'></i></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

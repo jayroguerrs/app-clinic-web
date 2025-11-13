@@ -1,0 +1,48 @@
+<form>
+
+    <div class="modal-header card-header">
+        <h5 class="modal-title">REGISTRO PARAMETRO</h5>
+        <button (click)="cerrarModal(false)" type="button" class="close" data-dismiss="modal" aria-label="Close"
+          ><span aria-hidden="true">&times;</span></button>
+    </div>
+
+    <div class="modal-body card-body overflow-y-auto" style="">
+        <div class="form-group col-md-2" style="padding: 0 !important;">
+          <div class="form-floating form-start-icon">
+            <select class="custom-select" id="idMaquinaMarca" name="idMaquinaMarca">
+
+            <!-- <select class="custom-select" id="idMaquinaMarca" [(ngModel)]="cita.idMaquinaMarca"  name="idMaquinaMarca" [disabled]="cita.accionCita == 1"> -->
+              <option [value]="0" selected>--Seleccionar--</option>
+              <option *ngFor="let m of maquinaMarcas" [value]="m.id" >{{ m.nombre }}</option>
+            </select>
+            <label for="idServicio">Nombre Maquina</label>
+            <span class="icon"><span class="dicon machine m-auto"></span></span>
+          </div>
+        </div>
+        
+        <div (click)="agregarFoto()" class="ifotoadd border rounded d-flex" [class.loading]="false">
+            <i class="feather icon-camera m-auto" style="font-size: 58px;"></i>
+        </div>
+
+    </div>
+
+    <!-- Lightbox overlay -->
+    <div *ngIf="imagenSeleccionada" class="lightbox-overlay" (click)="cerrarImagen()">
+
+      <div  >
+        <button style="position: absolute;
+    z-index: 5000;
+    font-size: 40px;
+    right: 24px;
+    top: 36px;
+    color: white;" (click)="cerrarImagen()" type="button" class="close" data-dismiss="modal" aria-label="Close"
+          ><span aria-hidden="true">&times;</span></button>
+        <img style="max-height: 80vh;" [src]="imagenSeleccionada" class="lightbox-img" (click)="$event.stopPropagation()">
+      </div>
+    </div>
+
+    <div class="modal-footer card-footer">
+        <button type="button" class="btn btn-outline-primary"><i class="feather icon-save"></i>Guardar</button>
+        <button (click)="cerrarModal(false)" type="button" class="btn btn-outline-danger" ><i class="feather icon-slash"></i>Cerrar</button>
+    </div>
+</form>

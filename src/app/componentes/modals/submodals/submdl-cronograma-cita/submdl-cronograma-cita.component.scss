@@ -1,0 +1,188 @@
+:host{
+  height: 100%;
+  ::ng-deep .zonas{
+    .card,
+    .scard{
+      box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    }
+  }
+}
+
+.list-group-item{
+  padding: 0.75rem 2.25rem !important;
+}
+
+
+/**
+  Row minutos
+**/
+.row-minutos{
+  .min{
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+    cursor: pointer;
+    //background-color: #f5f8fa;
+    > span{
+      position: relative;
+      -webkit-transition: all .1s ease-in-out;
+      -moz-transition: all .1s ease-in-out;
+      -ms-transition: all .1s ease-in-out;
+      -o-transition: all .1s ease-in-out;
+      transition: all .1s ease-in-out;
+      span{
+        color: #A1A5B7;
+        position: relative;
+      }
+    }
+    &.hover{
+      > span{
+        span{
+          color: #181C32 !important;
+        }
+        //background-color: #3F51B5;
+        //background-color: #C5CAE9;
+        //color: #fff;
+        &:before{
+          content: "";
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 100%;
+          height: 100%;
+          //background-color: #C5CAE9;
+          background-color: #B5B5C3;
+          //background-color: #F5F8FA;
+          display: block;
+        }
+      }
+      &.hoverStart{
+        > span:before{
+          border-top-left-radius: 50px;
+          border-bottom-left-radius: 50px;
+        }
+      }
+      &.hoverEnd{
+        > span:before{
+          border-top-right-radius: 50px;
+          border-bottom-right-radius: 50px;
+        }
+      }
+      &.hoverDanger{
+        > span{
+          span{
+            color: #fff !important;
+          }
+          &:before{
+            //background-color: #F1416C !important;
+            background-color: #ff6961 !important;
+          }
+        }
+      }
+    }
+    &.reserved{
+      > span{
+        //background-color: #3F51B5;
+        background-color: var(--color-indigo-light);
+        span{
+          color: var(--color-indigo);
+        }
+      }
+      &.reservedStart{
+        > span{
+          border-top-left-radius: 50px;
+          border-bottom-left-radius: 50px;
+        }
+      }
+      &.reservedEnd{
+        > span{
+          border-top-right-radius: 50px;
+          border-bottom-right-radius: 50px;
+        }
+      }
+    }
+    &.selected{
+      > span{
+        //background-color: red;
+        background-color: var(--color-indigo);
+        //background-color: #C5CAE9;
+        span{
+          color: #fff !important;
+        }
+      }
+      &.selectedStart{
+        > span{
+          border-top-left-radius: 50px;
+          border-bottom-left-radius: 50px;
+        }
+      }
+      &.selectedEnd{
+        > span{
+          border-top-right-radius: 50px;
+          border-bottom-right-radius: 50px;
+        }
+      }
+    }
+  }
+  .select{
+    background-color: #3F51B5;
+  }
+}
+
+
+/** showSubModal  **/
+#parentModal{
+  -webkit-transition: all .2s;
+  -moz-transition: all .2s;
+  -ms-transition: all .2s;
+  -o-transition: all .2s;
+  transition: all .2s;
+  //&.showSubModal{
+  //  padding-right: 400px;
+  //}
+}
+.subModal{
+  position: absolute;
+  width: 900px;
+  right: -900px;
+  max-width: 100%;
+  top: 0;
+  height: 100%;
+  -webkit-transition: all .2s;
+  -moz-transition: all .2s;
+  -ms-transition: all .2s;
+  -o-transition: all .2s;
+  transition: all .2s;
+  &.show{
+    right: 0px;
+  }
+}
+
+.i-b{
+  display: inline-block;
+}
+
+@media (max-width: 992px) {
+    .chat-container-360-mobile{
+      display: block; 
+      overflow-x: auto; 
+      white-space: nowrap;
+    }
+
+    .chat-360{
+      flex: 0 0 100% !important;
+      max-width: 100% !important;
+    }
+}
+
+.chat-360{
+  display: inline-block;
+  flex: 0 0 33.33333333%;
+  max-width: 33.33333333%;
+  padding-right: 5px;
+  padding-left: 5px;
+}

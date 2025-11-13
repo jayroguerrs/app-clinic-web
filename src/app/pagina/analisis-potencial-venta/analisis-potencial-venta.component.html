@@ -1,0 +1,89 @@
+<div class="scard mb-4 mb-xl-10 popins">
+  <div class="card-header cursor-pointer" role="button">
+    <div class="card-title m-0">
+      <h3 class="fw-bold m-0">Analisis de Potencial de Venta</h3>
+    </div>
+  </div>
+
+  <div class="card-body">
+
+    <form [formGroup]="frmGroup" (ngSubmit)="onSubmit()">
+      <div class="form-row mb-3">
+
+        <div class="col-12 col-lg-3">
+          <label class="fw-semibold text-gray-800 required mb-0 ">Fecha Desde</label>
+            <div class="position-relative">
+              <fontawesome-svg class="position-absolute ps-13px pt-2 no-pointer-events" icon="calendar-day" type="light-alt" [width]="24" [height]="24"></fontawesome-svg>
+              <input
+              type="text"
+              mwlFlatpickr
+                [altInput]="true"
+              [convertModelValue]="true"
+              [altFormat]="'d/m/Y'"
+              dateFormat="Y-m-d"
+              class="form-control form-control-solid form-control-sm ps-48px"
+              placeholder="dd/mm/yyyy"
+              formControlName="fechaDesde"
+              readonly
+            />
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-3">
+          <label class="fw-semibold text-gray-800 required mb-0">Fecha Hasta</label>
+            <div class="position-relative">
+              <fontawesome-svg class="position-absolute ps-13px pt-2 no-pointer-events" icon="calendar-day" type="light-alt" [width]="24" [height]="24"></fontawesome-svg>
+              <input
+              type="text"
+              mwlFlatpickr
+              [altInput]="true"
+              [convertModelValue]="true"
+              [altFormat]="'d/m/Y'"
+              dateFormat="Y-m-d"
+              class="form-control form-control-solid form-control-sm ps-48px"
+              placeholder="dd/mm/yyyy"
+              formControlName="fechaHasta"
+              readonly
+            />
+            </div>
+
+        </div>
+
+        <div class="col-12 col-lg-3">
+        <div> <label class="required fw-semibold text-gray-800 mb-0">Sede</label>
+          <select formControlName="idSede"  class="form-select form-select-sm form-select-solid">
+            <option [value]="0">Todos</option>Flatpickr
+            <option *ngFor="let s of sedes" [value]="s.id">{{ s.nombre }}</option>
+          </select></div>
+
+        </div>
+
+        <div class="col-12 col-lg-3">
+          <label class="required fw-semibold text-gray-800 mb-0">Servicio</label>
+          <select formControlName="idServicio"  class="form-select form-select-sm form-select-solid">
+            <option [value]="0">Todos</option>
+            <option *ngFor="let s of servicios" [value]="s.id">{{ s.nombre }}</option>
+          </select>
+          <!--            <div *ngIf="submittedAjustes && fAjuste.idGenero.errors" class="invalid-feedback d-block">-->
+          <!--              <div *ngIf="fAjuste.idGenero.errors.required">Seleccione el género del cliente</div>-->
+          <!--            </div>-->
+        </div>
+
+      </div>
+
+      <div>
+        <button type="submit" matRipple class="sbtn btn btn-primary" >
+          <span class="d-inline-flex align-middle" *ngIf="!ldCollection">
+            <fontawesome-svg class="mr-2" icon="file-excel" type="light" [width]="24" [height]="24"></fontawesome-svg>
+            Generar Reporte
+          </span>
+          <span *ngIf="ldCollection" class="d-flex align-items-center">
+            <fontawesome-svg icon="loader" type="duotone" [width]="20" [height]="20" class="spinner"></fontawesome-svg>
+            <span class="ml-2">Cargando</span>
+          </span>
+        </button>
+      </div>
+    </form>
+  </div>
+
+</div>

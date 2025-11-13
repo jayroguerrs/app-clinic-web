@@ -1,0 +1,14 @@
+<app-card class="h-100" [options]="false" [customHeader]="false"  [collapse]="true" [excel]="true" (excelCallback)="exportarExcel()" cardTitle="Top 10 Zonas menos agendadas">
+  <mat-progress-bar mode="indeterminate" id="progress" *ngIf="loading"></mat-progress-bar>
+
+  <div class="">
+    <!--<p class="text-center">{{ TitleChart }}</p>-->
+    <div class="table-container">
+      <div class="border rounded p-2">
+        <table datatable [dtOptions]="dtResponsiveOptions" class="table table-sm table-hover display compact"></table>
+      </div>
+    </div>
+
+    <div id="chartBottomGeneral" class="border rounded mt-2"></div>
+  </div>
+</app-card>

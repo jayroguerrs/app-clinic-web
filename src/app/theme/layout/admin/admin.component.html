@@ -1,0 +1,47 @@
+<ng-template #modalActualizarDatosUser let-modal let-close="close">
+  <app-mdl-actualizar-datos-user
+  [modal]="mdlActualizarDatosUser"
+  [actualizarDatos]="true">
+  </app-mdl-actualizar-datos-user>
+</ng-template>
+
+<app-navigation class="pcoded-navbar"
+  [ngClass]="{'navbar-collapsed' : navCollapsed, 'theme-horizontal': this.dattaConfig['layout'] === 'horizontal', 'mob-open' : navCollapsedMob}"
+  (onNavCollapse)="this.navCollapsed = !this.navCollapsed;"
+  (onNavCollapsedMob)="navMobClick()">
+</app-navigation>
+
+<app-nav-bar class="navbar pcoded-header navbar-expand-lg navbar-light" (onNavCollapsedMob)="navMobClick()">
+</app-nav-bar>
+
+<!-- TODO: CHANGE BACKGROUND -->
+<div class="pcoded-main-container"
+  [ngStyle]="{  'background-repeat': 'no-repeat',
+                'background-attachment': 'fixed',
+                'background-image': 'url(assets/images/bg-images/bg_clinic.jpg)',
+                'background-size': 'cover'
+              }">
+  <!-- 'background-position': 'right 45px bottom 20px', -->
+
+  <div class="pcoded-wrapper">
+
+    <app-nav-bar-top *ngIf="showNavBarTop"></app-nav-bar-top>
+
+    <div class="pcoded-content">
+      <div class="pcoded-inner-content">
+        <!-- <app-breadcrumb></app-breadcrumb> -->
+        <div class="main-body">
+          <div class="page-wrapper">
+            
+            <router-outlet></router-outlet>
+<!-- 
+            <div *ngIf="!usuarioActual.datosActualizados" style="border: 2px solid #994442 ;box-shadow: 0 4px 8px rgba(153, 68, 66, 0.5); position: fixed; bottom: 10px; right: 50px; z-index: 999; margin: 0; font-size: 18px; border-radius: 12px;" class="palpitar alert alert-danger">
+              <i style="font-size: 28px;" class="mdi mdi-alert"></i> Actualiza tus datos! <button style="margin-left: 1rem; margin-bottom: 0; padding: 6px 20px;" (click)="actualizarDatosUser(modalActualizarDatosUser)" type="button" class="btn btn-primary">Aquí</button>
+            </div> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- <app-configuration></app-configuration> -->

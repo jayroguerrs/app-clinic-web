@@ -1,0 +1,242 @@
+﻿<!-- SPINNER -->
+<ngx-spinner
+  [template]="rutaImageSpinner">
+  <p style="color: white" > Cargando... </p>
+</ngx-spinner>
+
+
+<!-- GRILLA -->
+<div class="row">
+
+  <div class="col-12 mb-3 sticky-header" stickyClass="header--sticky">
+    <app-card [options]="false" [customHeader]="false" cardTitle="REPORTE DE CITAS" cardTitle2="Genera un reporte de citas filtrado por sede, tipo de cita, estado, servicio">
+
+      <form [formGroup]="formGroup">
+        <div class="form-row">
+          <!-- Fecha desde -->
+          <div class="col-12 col-lg-3 mb-3">
+            <div class="form-floating form-start-icon">
+              <input 
+                id="fechaDesde" 
+                type="date" 
+                placeholder=" " 
+                class="form-control" 
+                formControlName="fechaDesde"  
+                [ngClass]="{ 'is-invalid': submitted && f.fechaDesde.errors }"
+                [max]="maxDate">
+              <label for="fechaDesde">Fecha desde</label>
+              <span class="icon"><span class="dicon calendar m-auto"></span></span>
+            </div>
+          </div>
+          <!-- Fecha desde -->
+          <div class="col-12 col-lg-3 mb-3">
+            <div class="form-floating form-start-icon">
+              <input 
+                id="fechaHasta" 
+                type="date" 
+                placeholder=" " 
+                class="form-control" 
+                formControlName="fechaHasta" 
+                [ngClass]="{ 'is-invalid': submitted && f.fechaHasta.errors }"
+                [max]="maxDate">
+              <label for="fechaHasta">Fecha hasta</label>
+              <span class="icon"><span class="dicon calendar m-auto"></span></span>
+            </div>
+          </div>
+          <!-- Sede -->
+          <div class="col-12 col-lg-3 mb-3">
+            <div class="form-floating form-start-icon">
+              <select class="custom-select" id="idSede" formControlName="idSede" >
+                <option value="0">{{ loadingSede ? 'Cargando...' : 'Todos' }}</option>
+                <option *ngFor="let sede of collectionSede" [value]="sede.id">{{ sede.nombre }}</option>
+              </select>
+              <label for="idSede">Sede</label>
+              <span class="icon">
+                <span class="dicon sede m-auto"></span>
+              </span>
+            </div>
+          </div>
+
+          <!-- Servicio -->
+          <div class="col-12 col-lg-3 mb-3">
+            <div class="form-floating form-start-icon">
+              <select class="custom-select" id="idServicio" formControlName="idServicio" >
+                <option [value]="0">Todos</option>
+                <option *ngFor="let s of servicios" [value]="s.id">{{ s.nombre }}</option>
+              </select>
+              <label for="idServicio">Servicio</label>
+              <span class="icon">
+                <span class="dicon machine m-auto"></span>
+              </span>
+            </div>
+          </div>
+
+          <!-- Contiene zona -->
+          <div class="mb-2 col-12 col-lg-4">
+            <app-autocomplete-select
+              [options]="dataZonas"
+              [config]="{
+                label: 'Contiene Zona',
+                placeholder: 'Seleccione una zona',
+                appearance: 'outline',
+                prefixIcon: 'account-check-outline',
+                searchable: true,
+                clearable: true
+              }"
+              formControlName="idZona"
+              (selectionChange)="onZonaSelected($event)">
+            </app-autocomplete-select>
+          </div>
+
+          <!-- Tipo Cita -->
+          <div class="col-12 col-lg-3 mb-3">
+            <div class="form-floating form-start-icon">
+              <select class="custom-select" id="idTipoCita" formControlName="idTipoCita" >
+                <option [value]="0">Todos</option>
+                <option *ngFor="let tp of tiposCita" [value]="tp.idTipoCita">{{ tp.nombre }}</option>
+              </select>
+              <label for="idTipoCita">Tipo Cita</label>
+              <span class="icon">
+                <span class="dicon calendar-question m-auto"></span>
+              </span>
+            </div>
+          </div>
+
+          <!-- Estado Cita -->
+          <div class="col-12 col-lg-3 mb-3">
+            <div class="form-floating form-start-icon">
+              <select class="custom-select" id="idEstado" formControlName="idEstado" >
+                <option [value]="0">Todos</option>
+                <option *ngFor="let es of estados" [value]="es.id">{{ es.descripcion }}</option>
+              </select>
+              <label for="idEstado">Estado</label>
+              <span class="icon">
+                <span class="dicon alert-circle m-auto"></span>
+              </span>
+            </div>
+          </div>
+
+          <div style="display: flex; align-items: center; margin-left: 1rem;">
+            <input type="checkbox" class="form-control me-5px" id="notaDestacado" style="width: auto !important;" (change)="onCheckboxChangeNuevoCliente($event)" >
+            <label for="notaDestacado" style="margin-bottom: 0 !important; font-size: 16px !important;">Nuevo Cliente</label>
+          </div>
+
+          <div style="display: flex; align-items: center; margin-left: 1rem;">
+            <input type="checkbox" class="form-control me-5px" id="notaDestacado" style="width: auto !important;" (change)="onCheckboxChangeUnirCitas($event)" >
+            <label for="notaDestacado" style="margin-bottom: 0 !important; font-size: 16px !important;">Unir Citas</label>
+          </div>
+
+
+        </div>
+      </form>
+
+      <!-- RESUMEN DE CITAS -->
+      <div *ngIf="this.accTot || this.accAgeR" class="position-relative d-flex mb-2">
+        <button matRipple class="d-inline-flex text-dark border rounded-pill px-3 py-1 mx-auto z-index-2 cursor-pointer shadow-sm position-relative bg-white" (click)="toggle()"> <span class="mr-2">Ver total</span><fontawesome-svg icon="chevron-down" type="regular" [width]="20" [height]="20" [class.fa-rotate-180]="!collapsed"></fontawesome-svg></button>
+        <span class="bg-light h-2px w-100 position-absolute top-0 bottom-0 m-auto left-0"></span>
+      </div>
+
+      <div *ngIf="this.accTot || this.accAgeR" class="form-row collapsible overflow-hidden pt-2" id="resumenes" [@collapse]="collapsed">
+        <div class="mb-2 col-6 col-xs-6 col-sm-4 col-md-3">
+          <ng-container [ngSwitch]="loading">
+            <div *ngSwitchCase="false" class="label text-white tag registrado"><span>Registrada</span><span class="ml-auto">{{ totalCitasEstado(CitaEstado.REGISTRADA) }}</span></div>
+            <div *ngSwitchCase="true" class="sk block rounded h-30px"></div>
+          </ng-container>
+        </div>
+        <div class="mb-2 col-6 col-xs-6 col-sm-4 col-md-3">
+          <ng-container [ngSwitch]="loading">
+            <div *ngSwitchCase="false" class="label text-white tag pendiente" ><span>Pendiente</span><span class="ml-auto">{{ totalCitasEstado(CitaEstado.PENDIENTE) }}</span></div>
+            <div *ngSwitchCase="true" class="sk block rounded h-30px"></div>
+          </ng-container>
+        </div>
+        <div class="mb-2 col-6 col-xs-6 col-sm-4 col-md-3">
+          <ng-container [ngSwitch]="loading">
+            <div *ngSwitchCase="false" class="label text-white tag confirmada" ><span>Confirmada</span><span class="ml-auto">{{ totalCitasEstado(CitaEstado.CONFIRMADA) }}</span></div>
+            <div *ngSwitchCase="true" class="sk block rounded h-30px"></div>
+          </ng-container>
+        </div>
+        <div class="mb-2 col-6 col-xs-6 col-sm-4 col-md-3">
+          <ng-container [ngSwitch]="loading">
+            <div *ngSwitchCase="false" class="label text-white tag asistenciaConfirmada" ><span>Asistencia Confirmada</span><span class="ml-auto">{{ totalCitasEstado(CitaEstado.ASISTENCIACONFIRMADA) }}</span></div>
+            <div *ngSwitchCase="true" class="sk block rounded h-30px"></div>
+          </ng-container>
+        </div>
+        <div class="mb-2 col-6 col-xs-6 col-sm-4 col-md-3">
+          <ng-container [ngSwitch]="loading">
+            <div *ngSwitchCase="false" class="label text-white tag reprogramada" ><span>Reprogramada</span><span class="ml-auto">{{ totalCitasEstado(CitaEstado.REPROGRAMADA) }}</span></div>
+            <div *ngSwitchCase="true" class="sk block rounded h-30px"></div>
+          </ng-container>
+        </div>
+        <div class="mb-2 col-6 col-xs-6 col-sm-4 col-md-3">
+          <ng-container [ngSwitch]="loading">
+            <div *ngSwitchCase="false" class="label text-white tag atendida" ><span>Atendida</span><span class="ml-auto">{{ totalCitasEstado(CitaEstado.ATENDIDA) }}</span></div>
+            <div *ngSwitchCase="true" class="sk block rounded h-30px"></div>
+          </ng-container>
+        </div>
+        <div class="mb-2 col-6 col-xs-6 col-sm-4 col-md-3">
+          <ng-container [ngSwitch]="loading">
+            <div *ngSwitchCase="false" class="label text-white tag cancelada" ><span>Cancelada</span><span class="ml-auto">{{ totalCitasEstado(CitaEstado.CANCELADA) }}</span></div>
+            <div *ngSwitchCase="true" class="sk block rounded h-30px"></div>
+          </ng-container>
+        </div>
+        <div class="mb-2 col-6 col-xs-6 col-sm-4 col-md-3">
+          <ng-container [ngSwitch]="loading">
+            <div *ngSwitchCase="false" class="label text-white tag anulada" ><span>Anulada</span><span class="ml-auto">{{ totalCitasEstado(CitaEstado.ANULADA) }}</span></div>
+            <div *ngSwitchCase="true" class="sk block rounded h-30px"></div>
+          </ng-container>
+        </div>
+        <div class="mb-2 col-6 col-xs-6 col-sm-4 col-md-3">
+          <ng-container [ngSwitch]="loading">
+            <div *ngSwitchCase="false" class="label text-white tag generado" ><span>Generado por Sistema</span><span class="ml-auto">{{ totalCitasEstado(CitaEstado.GENERADOPORSISTEMA) }}</span></div>
+            <div *ngSwitchCase="true" class="sk block rounded h-30px"></div>
+          </ng-container>
+        </div>
+        <div class="mb-2 col-6 col-xs-6 col-sm-4 col-md-3">
+          <ng-container [ngSwitch]="loading">
+            <div *ngSwitchCase="false" class="label text-white tag nollamar" ><span>No Llamar</span><span class="ml-auto">{{ totalCitasEstado(CitaEstado.NOLLAMAR) }}</span></div>
+            <div *ngSwitchCase="true" class="sk block rounded h-30px"></div>
+          </ng-container>
+        </div>
+        <div class="mb-2 col-6 col-xs-6 col-sm-4 col-md-3">
+          <ng-container [ngSwitch]="loading">
+            <div *ngSwitchCase="false" class="label text-white tag noasistio" ><span>No Asistio</span><span class="ml-auto">{{ totalCitasEstado(CitaEstado.NOASISTIO) }}</span></div>
+            <div *ngSwitchCase="true" class="sk block rounded h-30px"></div>
+          </ng-container>
+        </div>
+        <div class="mb-2 col-6 col-xs-6 col-sm-4 col-md-3">
+          <ng-container [ngSwitch]="loading">
+            <div *ngSwitchCase="false" class="label text-white tag total" ><span>TOTAL</span><span class="ml-auto">{{ totalCitas }}</span></div>
+            <div *ngSwitchCase="true" class="sk block rounded h-30px"></div>
+          </ng-container>
+        </div>
+      </div>
+
+    </app-card>
+  </div>
+
+  <div class="col-12">
+    <app-card [options]="false" [customHeader]="false" cardTitle="CITAS" >
+      <tbl-cita-reporte #tabla [unirCitas]="unirCitas" [clienteNuevo]="clienteNuevo" [fechaInicio]="f.fechaDesde.value" [fechaFin]="f.fechaHasta.value" [idSede]="f.idSede.value" [idZona]="f.idZona.value" [idServicio]="f.idServicio.value" [idEstado]="f.idEstado.value" [idTipoCita]="f.idTipoCita.value" ></tbl-cita-reporte>
+    </app-card>
+  </div>
+
+</div>
+
+
+<!-- BOTONERA ESCRITORIO -->
+<ul class="botonera-escritorio">
+  <li>
+    <button [disabled]="loading" type="button" class="btn btn-primary btn-icon"   [placement]="'bottom'" ngbTooltip="Buscar" (click)= "obtenerReporte()"><i class="mdi mdi-magnify"></i></button>
+    <button *ngIf="this.accTot || this.accAge" type="button" class="btn btn-secondary btn-icon" [disabled]="!hasValues"   [placement]="'bottom'" ngbTooltip="Exportar" (click)= "exportar()"><i class="mdi mdi-file-excel-outline"></i></button>
+  </li>
+</ul>
+
+<!-- BOTONERA MOVIL -->
+<app-float-button>
+  <button [disabled]="loading" class="child" mat-fab color="primary"  matTooltip="Buscar" matTooltipPosition="left" (click)="obtenerReporte()">
+    <mat-icon>search</mat-icon>
+  </button>
+  <button *ngIf="[tipoPerfil.ADMINISTRADOR, tipoPerfil.SA, tipoPerfil.SISTEMAS].includes(usuario.idperfil)" class="child" mat-fab color="primary" [disabled]="!collectionData.length"  matTooltip="Exportar" matTooltipPosition="left" (click)="exportar()">
+    <mat-icon>file_download</mat-icon>
+  </button>
+</app-float-button>

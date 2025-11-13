@@ -1,0 +1,46 @@
+﻿
+<form [formGroup]="frmGroup" (ngSubmit)="onSubmit()" class="popins">
+  <div class="scard bg-transparent popins">
+        <div class="modal-header card-header bg-gradient">
+            <h5 class="card-title text-white f-w-500 m-0">{{ data ? 'Editar' : 'Nueva' }} Plantilla</h5>
+            <button type="button" class="btn sbtn btn-sm btn-icon btn-active-color-primary h-auto w-auto p-0" (click)="cerrarModal(false)">
+              <span class="svg-icon svg-icon-1 text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor"></rect>
+                  <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor"></rect>
+                </svg>
+              </span>
+            </button>
+        </div>
+        <div class="card-body bg-white p-5">
+              <div class="form-group">
+                  <label for="nombre" class="fw-semibold text-gray-800 mb-0">Nombre</label>
+                  <input type="text" maxlength="200" class="form-control form-control-solid dz-uppercase" id="nombre" placeholder="Ingresar el nombre de la plantilla" formControlName="nombre" [ngClass]="{ 'is-invalid bg-color-light-danger': submitted && f.nombre.errors }" >
+                  <div *ngIf="submitted && f.nombre.errors" class="invalid-feedback d-block">
+                    <div *ngIf="f.nombre.errors.required">Ingrese nombre de la plantilla</div>
+                  </div>
+              </div>
+              <div class="form-group">
+                <label class="fw-semibold text-gray-800 mb-0">Plantilla</label>
+                <textarea #plantilla class="form-control form-control-solid" placeholder="Ingresa la plantilla aquí" formControlName="plantilla" maxlength="1000" rows="15" [ngClass]="{ 'is-invalid bg-color-light-danger': submitted && f.plantilla.errors }"></textarea>
+                <span class="small text-right d-block">{{plantilla.value.length}}/1000</span>
+                <div *ngIf="submitted && f.plantilla.errors" class="invalid-feedback d-block">
+                  <div *ngIf="f.plantilla.errors.required">Ingrese el contenido de la plantilla</div>
+                </div>
+              </div>
+              <div class="form-group mb-0">
+                  <label class="fw-semibold text-gray-800 mb-0">Estado</label>
+                  <select class="form-select form-select-solid" id="idEstado" formControlName="idEstado">
+                    <option *ngFor="let est of estados" [value]="est.id">{{ est.value }}</option>
+                  </select>
+              </div>
+        </div>
+        <div class="modal-footer bg-white py-3">
+            <div class="form-row float-right">
+              <button matRipple [disabled]="loading" type="reset" class="btn sbtn btn-light mr-2" >Cancelar</button>
+              <button matRipple type="submit" class="btn sbtn btn-primary shadow btn-shadow-primary" >Guardar</button>
+            </div>
+        </div>
+
+    </div>
+</form>

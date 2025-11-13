@@ -1,0 +1,38 @@
+<!-- SPINNER -->
+<ngx-spinner
+  [template]="rutaImageSpinner">
+  <p style="color: white" > Cargando... </p>
+</ngx-spinner>
+
+
+<div class="row">
+  <div class="col-sm-12">
+    <app-card cardTitle="MODULO PLANTILLAS" [options]="false" [hidBlock]="true">
+    </app-card>
+  </div>
+</div>
+
+<div class="form-row">
+  <div *ngFor="let p of plantillas" class="col-12 col-md-6">
+
+    <div class="scard mb-3 popins cursor-pointer hover-shadow shadow-light" placement="top" ngbTooltip="Copiar Plantilla" (click)="copiarPlantilla(p)">
+      <div class="card-header">
+        <div class="card-title m-0 w-100">
+          <h3 class="f-w-500 m-0 text-gray-800">{{ p.nombre }}</h3>
+          <div class="ml-auto">
+            <fontawesome-svg icon="copy" type="light" [width]="24" [height]="24"></fontawesome-svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- BOTONERA ESCRITORIO -->
+<ul class="botonera-escritorio">
+  <li>
+    <button type="button" class="btn btn-primary btn-icon" [placement]="'bottom'" ngbTooltip="Listar" (click)= "onReload()"><i class="mdi mdi-sync"></i></button>
+  </li>
+</ul>

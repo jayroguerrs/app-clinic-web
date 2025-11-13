@@ -1,0 +1,30 @@
+<form [formGroup]="frmCitaComisionDetalle">
+    <div class="modal-content">
+
+        <div class="modal-header card-header">
+            <h5 class="modal-title">Historial</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="cerrarModal()"><span aria-hidden="true">&times;</span></button>
+        </div>
+
+        <div class="modal-body card-body">
+          <h3 class="text-center">{{operador}}</h3>
+          <h5 class="text-center">Fecha desde {{ fechaInicio | date: 'dd-MM-yyyy' }} hasta {{ fechaTermino | date: 'dd-MM-yyyy' }}</h5>
+          <button class="btn btn-sm btn-info mx-auto d-block" (click)="exportarExcel()"><i class="fa fa-file-excel"></i> Excel</button>
+            <div class="card-body">
+                <div class="card">
+                    <div class="card-body">
+                        <div *ngIf="loading">
+                          <div class="sk block mb-3"></div>
+                          <div class="sk block mb-3"></div>
+                          <div class="sk block mb-3"></div>
+                          <div class="sk block"></div>
+                        </div>
+                        <div [class.d-none]="loading" class="table table-sm-responsive">
+                          <table datatable #tableDetalle [dtOptions]="dtOptionsTableDetalle" class="table table-sm table-hover table- display compact table-sm"></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+ </div>
+</form>

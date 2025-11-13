@@ -1,0 +1,375 @@
+.utm-form {
+  .form-group {
+    margin-bottom: 1rem;
+
+    label {
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+
+    small {
+      display: block;
+      margin-top: 0.25rem;
+    }
+  }
+
+  .form-control, .form-select {
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    border: 1px solid #ced4da;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+
+    &:focus {
+      border-color: #80bdff;
+      outline: 0;
+      box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+  }
+  
+  .select-container {
+    position: relative;
+    
+    .custom-select {
+      appearance: none !important;
+      -webkit-appearance: none !important;
+      -moz-appearance: none !important;
+      cursor: pointer;
+      padding-right: 2.5rem;
+      background-color: #fff;
+      background-image: none !important; /* Elimina la flecha predeterminada en Chrome */
+      
+      /* Para IE y Edge */
+      &::-ms-expand {
+        display: none;
+      }
+      
+      /* Para Firefox */
+      text-indent: 1px;
+      text-overflow: '';
+      
+      /* Para Safari */
+      background: transparent !important;
+      
+      &:disabled {
+        background-color: #f8f9fa;
+        cursor: not-allowed;
+        color: #6c757d;
+      }
+    }
+    
+    .select-icon {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: #495057;
+      
+      .fa-lock {
+        color: #adb5bd;
+      }
+    }
+    
+    .loading-indicator {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: #6c7580;
+      z-index: 2;
+    }
+  }
+  
+  .source-icons {
+    display: flex;
+    margin-top: 0.5rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    
+    .source-badge {
+      display: inline-flex;
+      align-items: center;
+      background-color: #f7f9fc;
+      border: 1px solid #eaedf2;
+      border-radius: 6px;
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #495057;
+      transition: all 0.2s ease;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      
+      &:hover {
+        background-color: #f0f3f8;
+        transform: translateY(-1px);
+        box-shadow: 0 3px 5px rgba(0, 0, 0, 0.08);
+      }
+      
+      &:before {
+        content: '';
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: #6c7580;
+        margin-right: 8px;
+      }
+      
+      i {
+        display: none; /* Ocultamos los iconos para mantener el estilo neutro */
+      }
+    }
+  }
+  
+  /* Estilos específicos para diferenciar cada source con colores de punto */
+  .source-badge {
+    &.source-facebook:before {
+      background-color: #3b5998;
+    }
+    
+    &.source-instagram:before {
+      background-color: #c13584;
+    }
+    
+    &.source-tiktok:before {
+      background-color: #000000;
+    }
+    
+    &.source-youtube:before {
+      background-color: #ff0000;
+    }
+    
+    &.source-twitter:before {
+      background-color: #1da1f2;
+    }
+    
+    &.source-email:before {
+      background-color: #607d8b;
+    }
+    
+    &.source-google:before {
+      background-color: #4285f4;
+    }
+    
+    &.source-whatsapp:before {
+      background-color: #25d366;
+    }
+  }
+
+  .campaign-preview {
+    margin-top: 0.5rem;
+    
+    .campaign-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background-color: #eef5ff;
+      border-left: 3px solid #0d6efd;
+      padding: 0.4rem 0.8rem;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #0d6efd;
+      
+      i {
+        color: #0d6efd;
+      }
+    }
+  }
+
+  .input-group {
+    .form-control {
+      border-right: none;
+      &:focus {
+        border-color: #ced4da;
+        box-shadow: none;
+      }
+    }
+  }
+
+  .btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    
+    .fa {
+      margin-right: 5px;
+    }
+
+    &.btn-success {
+      background-color: #28a745;
+      border-color: #28a745;
+    }
+  }
+}
+
+.card {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  border: none;
+  margin-bottom: 2rem;
+
+  .card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #edf2f9;
+    padding: 1rem 1.5rem;
+  }
+
+  .card-body {
+    padding: 1.5rem;
+  }
+}
+
+.alert-info {
+  background-color: #e1f5fe;
+  border-color: #b3e5fc;
+  color: #0277bd;
+
+  hr {
+    border-top-color: #b3e5fc;
+  }
+
+  ul {
+    padding-left: 1.5rem;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .col-md-4, .col-md-6 {
+    margin-bottom: 1rem;
+  }
+}
+
+/* Animaciones para los elementos */
+.source-badge, 
+.campaign-tag,
+.select-container .custom-select:focus + .select-icon {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mejora el hover de los selects */
+.select-container:hover .custom-select:not(:disabled) {
+  border-color: #80bdff;
+}
+
+.select-container:hover .select-icon {
+  color: #0d6efd;
+}
+
+/* Estilo para cuando el formulario es válido */
+.form-control.ng-valid.ng-touched, 
+.form-select.ng-valid.ng-touched {
+  border-color: #28a745;
+}
+
+.form-control.ng-invalid.ng-touched, 
+.form-select.ng-invalid.ng-touched {
+  border-color: #dc3545;
+}
+
+/* Elimina la flecha nativa del select en navegadores específicos */
+select::-ms-expand {
+  display: none;
+}
+
+/* Soluciones específicas para diferentes navegadores */
+select {
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+}
+
+/* Estilos para el mensaje de advertencia de URL base */
+.url-warning-container {
+  .alert-warning {
+    background-color: #fff3cd;
+    border-left: 4px solid #ffc107;
+    border-radius: 4px;
+    color: #856404;
+    padding: 0.75rem 1.25rem;
+    transition: all 0.3s ease;
+    
+    i.fa-exclamation-triangle {
+      color: #ffc107;
+      font-size: 1.2rem;
+      margin-right: 10px;
+    }
+    
+    strong {
+      font-weight: 600;
+    }
+  }
+  
+  /* Animación de entrada para la alerta */
+  animation: slideInDown 0.4s ease-in-out;
+}
+
+/* Animación para la alerta de advertencia */
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Estilos para el botón de reseteo */
+.btn-reset {
+  border: 1px solid #ced4da;
+  color: #6c757d;
+  font-size: 0.9rem;
+  padding: 0.4rem 0.8rem;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background-color: #f8f9fa;
+    border-color: #adb5bd;
+    color: #495057;
+  }
+  
+  &:active {
+    background-color: #e9ecef;
+  }
+  
+  .fa-refresh {
+    transition: transform 0.4s ease;
+  }
+  
+  &:hover .fa-refresh {
+    transform: rotate(180deg);
+  }
+}
+
+/* Animación para reseteo del formulario */
+@keyframes resetPulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.form-reset-animation {
+  animation: resetPulse 0.5s ease;
+}

@@ -1,0 +1,75 @@
+<div class="scard mb-4 mb-xl-10 popins">
+  <div class="card-header">
+    <div class="card-title m-0">
+      <h3 class="fw-bold m-0">Buscar Comprobantes Electrónicos</h3>
+    </div>
+  </div>
+
+  <div class="card-body">
+
+    <form [formGroup]="formGroup" (ngSubmit)="evtOnSubmit()">
+
+      <div class="form-row depilform">
+        <div class="mb-2 col-12 col-md-6 col-lg-3">
+          <label for="fechaDesde" class="form-label mb-0 text-secondary f-w-500">Fecha Desde</label>
+          <ng2-flatpickr id="fechaDesde" placeholder="DD/MM/YYYY" [config]="flatOptions" formControlName="fechaDesde" readonly></ng2-flatpickr>
+          <!--          <input id="fechaDesde" type="date" class="form-control form-indigo form-control-sm bg-light-indigo" formControlName="fechaDesde">-->
+        </div>
+
+        <div class="mb-2 col-12 col-md-6 col-lg-3">
+          <label for="fechaHasta" class="form-label mb-0 text-secondary f-w-500">Fecha Hasta</label>
+          <ng2-flatpickr id="fechaHasta" placeholder="DD/MM/YYYY" [config]="flatOptions" formControlName="fechaHasta"></ng2-flatpickr>
+        </div>
+
+        <div class="mb-2 col-12 col-md-6 col-lg-3">
+          <label for="idTipoComprobante" class="form-label mb-0 text-secondary f-w-500">Tipo Comprobante</label>
+          <select id="idTipoComprobante" class="form-indigo form-select form-indigo form-select-sm" formControlName="idTipoComprobante">
+            <option [value]="0">-- Todos --</option>
+            <option *ngFor="let tc of tiposComprobante" [value]="tc.id">{{ tc.descripcion }}</option>
+          </select>
+        </div>
+
+        <div class="mb-2 col-12 col-md-6 col-lg-3">
+          <label for="idSede" class="form-label mb-0 text-secondary f-w-500">Sede</label>
+          <select id="idSede" class="form-indigo form-select form-indigo form-select-sm" formControlName="idSede">
+            <option [value]="0">-- Todos --</option>
+            <option *ngFor="let s of sedes" [value]="s.id">{{ s.nombre }}</option>
+          </select>
+        </div>
+
+        <div class="col-12">
+          <button [disabled]="formGroup.invalid || ldValidando" matRipple type="submit" class="btn btn-sm btn-indigo rounded-md">Buscar</button>
+        </div>
+      </div>
+
+    </form>
+
+  </div>
+</div>
+
+
+
+<div class="scard mb-4 mb-xl-10 popins" [class.overflow-hidden]="loading">
+  <div class="card-header">
+    <div class="card-title m-0">
+      <h3 class="fw-bold m-0">Listado de comprobantes</h3>
+    </div>
+  </div>
+
+  <div class="card-body p-0 position-relative">
+    <loader-circle *ngIf="loading"></loader-circle>
+    <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+
+    <div class="overflow-auto px-3 pt-3 d-flex">
+      <button [disabled]="ldValidando"  matRipple class="btn btn-light rounded-md m-0 f-w-500 d-flex align-items-center py-2 px-3 " (click)="evtImprimir()"><i class="fa-light fa-file-spreadsheet fs-22px"></i> <span class="small fs-14px">Exportar</span></button>
+      <button [disabled]="!collection.length || ldValidando" matRipple class="ml-2 btn btn-light rounded-md m-0 f-w-500 d-flex align-items-center py-2 px-3" (click)="evtValidar()"><i class="fa-regular fa-shield-check fs-22px"></i> <span class="small fs-14px">{{ ldValidando ? 'Validando' : 'Validar' }}</span> <i *ngIf="ldValidando" class="fa-regular fa-loader fa-spin"></i></button>
+      <button *ngIf="selected?.idEstadoSunat === 29" matRipple class="ml-2 btn btn-light rounded-md m-0 f-w-500 d-flex align-items-center py-2 px-3" (click)="evtVerMotivo()"><i class="fa-regular fa-eye fs-22px"></i> <span class="small fs-14px">Ver Motivo Anulación</span></button>
+    </div>
+
+    <div class="mt-3">
+      <table datatable [dtOptions]="dtResponsiveOptions" class="border-box border-collapse table table-sm table-hover table-caja table-bordered compact w-100"></table>
+    </div>
+
+
+  </div>
+</div>

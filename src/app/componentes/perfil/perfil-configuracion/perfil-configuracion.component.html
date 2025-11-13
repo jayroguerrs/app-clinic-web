@@ -1,0 +1,70 @@
+<!-- SPINNER -->
+<ngx-spinner 
+    [template]="rutaImageSpinner">
+    <p style="color: white" > Cargando... </p>
+</ngx-spinner>
+
+<form [formGroup]="frmPerfilConfiguracion">
+    <div class="modal-content">
+        <div class="modal-header card-header">
+            <h5 class="modal-title">Perfil</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="cerrarModal()"><span aria-hidden="true">&times;</span></button>
+        </div>
+
+            <div class="modal-body card-body">
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <div class="input-group input-group-sm">
+                            <div class="input-group-prepend"><span class="input-group-text" for="perfilNombre">Perfil </span></div>
+                            <input type="text" class="form-control dz-uppercase" formControlName="perfilNombre"/>
+                        </div>
+                    </div>
+                </div>
+
+                <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-pills">
+                    
+                    <li [ngbNavItem]="1" id="pill-1">
+                        <a (click)="guardarObjeto(1)" ngbNavLink>Menus</a>
+                        <ng-template ngbNavContent>
+                            <div class="col-sm-12">
+                                <div class="form-row" id="cardMenu">
+                                    <app-perfil-configuracion-menu 
+                                        *ngFor="let menu of maestroMenu"
+                                        [menu]="menu">
+                                    </app-perfil-configuracion-menu>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </li>
+
+                    <li [ngbNavItem]="2" id="pill-2">
+                        <a (click)="guardarObjeto(2)" ngbNavLink>Dashboard</a>
+                        <ng-template ngbNavContent>
+                            <div class="row" >
+                                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 col-xl-3" *ngFor="let dashboardElemento of maestroDashboardElementos">
+                                    <div class="form-group">
+                                        <div class="checkbox d-inline">
+                                            <input type="checkbox" name="elementosDB" 
+                                                    [attr.idPerfilDetalle]="0"
+                                                    [checked]="dashboardElemento.seleccionado"
+                                                    [id]="dashboardElemento.id" [attr.tipoElemento]="2">
+                                            <label [for]="dashboardElemento.id" class="cr">{{ dashboardElemento.nombre }}</label>
+                                        </div>
+                                        </div>
+                                </div>
+                            </div>
+                        </ng-template>  
+                    </li>
+
+                </ul>
+                <div [ngbNavOutlet]="nav" class="mt-2"></div>
+            </div>
+            
+            <div class="modal-footer card-footer">
+                <div class="form-row float-right">
+                    <button type="button" class="btn btn-outline-primary" (click)="perfilGrabar()"><i class="feather icon-save"></i>Guardar</button>
+                    <button type="button"  class="btn btn-outline-danger" (click)="cerrarModal()"><i class="feather icon-slash"></i>Cancelar</button>
+                </div>
+            </div>
+    </div> 
+</form>

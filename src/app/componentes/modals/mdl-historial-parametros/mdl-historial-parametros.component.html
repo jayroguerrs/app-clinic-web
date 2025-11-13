@@ -1,0 +1,35 @@
+<form>
+
+    <div class="modal-header card-header">
+        <h5 class="modal-title">HISTORIAL DE TRATAMIENTO</h5>
+        <button (click)="cerrarModal(false)" type="button" class="close" data-dismiss="modal" aria-label="Close"
+          ><span aria-hidden="true">&times;</span></button>
+    </div>
+
+    <div class="modal-body card-body overflow-y-auto" style="max-height: 300px;">
+
+        <ng-container *ngIf="listHistorialParametros.length === 0" >
+          <div class="text-center">
+            <i class="feather icon-info text-secondary" style="font-size: 24px;"></i>
+            <p class="text-secondary mt-2">No se encontraron parámetros en esta zona.</p>
+          </div>
+        </ng-container>
+        
+        <div *ngFor="let parametro of listHistorialParametros" class="border rounded legend p-3 mb-3 p-cont">
+          <div class="form-row flex-nowrap" >
+            <div (click)="abrirMdlFotosListado(parametro.sesion)" class="contenedor-img">
+              <i style="font-size: 24px;" class="feather icon-image"></i>
+            </div>
+
+            <div class="ms-con">
+              <h5 style="font-size: 14px;" class="mb-0 fw-bold">SESIÓN {{ parametro.sesion }} <span style="font-size: 12px;color: #888;font-weight: 500;margin-left: 0.2rem;">{{ '-' + parametro.maquina + '-' }}</span></h5>
+              <p style="font-size: 13px; margin-top: 0.3rem" class="mb-0">{{ parametro.parametro }}</p>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <div class="modal-footer card-footer">
+        <button (click)="cerrarModal(false)" type="button" class="btn btn-outline-danger" ><i class="feather icon-slash"></i>Cerrar</button>
+    </div>
+</form>

@@ -1,0 +1,57 @@
+#customers {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#customers td, #customers th {
+  border: 1px solid #ddd;
+  padding: 0;
+}
+
+#customers tr:nth-child(even){background-color: #f2f2f2;}
+
+#customers tr:hover {background-color: #ddd;}
+
+#customers th {
+  padding-top: 0;
+  padding-bottom: 0;
+  text-align: left;
+  background-color: #05aaf6;
+  color: white;
+}
+
+.radio {
+  padding: 0;
+}
+
+.radio.radio-fill input[type=radio] + .cr:after {
+  width: 18px;
+  height: 18px;
+  top: 5px;
+  left: 2px;
+}
+.radio input[type=radio] + .cr {
+  margin-top: 3px;
+}
+
+
+//MOSTRAR EL SWEET ALERT
+::ng-deep.swal2-container {
+  z-index: 100000;
+}
+
+
+
+
+@media (max-width: 992px) {
+    .es-mobile-c{
+      display: none;
+    }
+}
+
+@media (min-width: 993px) {
+  .es-desktop-c {
+    display: none !important;
+  }
+}

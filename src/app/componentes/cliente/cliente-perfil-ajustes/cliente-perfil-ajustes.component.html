@@ -1,0 +1,298 @@
+<div class="scard mb-4 mb-xl-10 popins">
+  <div class="card-header cursor-pointer" role="button">
+    <div class="card-title m-0">
+      <h3 class="fw-bold m-0">Datos personales</h3>
+    </div>
+  </div>
+  <form [formGroup]="frmAjustes" (ngSubmit)="onSubmitAjustes()">
+      <div class="card-body px-4">
+        <div class="row mb-4">
+          <label class="col-lg-4 col-form-label required fw-semibold text-gray-800">Nombre completo</label>
+          <div class="col-lg-8">
+            <div class="form-row">
+              <div class="col-lg-6 fv-row fv-plugins-icon-container">
+                <input disabled type="text" formControlName="nombres" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="Nombres" [ngClass]="{ 'bg-color-light-danger': submittedAjustes && fAjuste.nombres.errors }">
+                <div *ngIf="submittedAjustes && fAjuste.nombres.errors" class="invalid-feedback d-block">
+                  <div *ngIf="fAjuste.nombres.errors.required">Ingrese los nombres del cliente</div>
+                </div>
+              </div>
+              <div class="col-lg-6 fv-row fv-plugins-icon-container">
+                <input type="text" formControlName="apellidos" class="form-control form-control-solid" placeholder="Apellidos" [ngClass]="{ 'is-invalid bg-color-light-danger': submittedAjustes && fAjuste.apellidos.errors }">
+                <div *ngIf="submittedAjustes && fAjuste.apellidos.errors" class="invalid-feedback d-block">
+                  <div *ngIf="fAjuste.apellidos.errors.required">Ingrese los apellidos del cliente</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mb-4">
+          <label class="col-lg-4 col-form-label required fw-semibold text-gray-800">Género</label>
+          <div class="col-lg-8">
+              <select formControlName="idGenero"  class="form-select form-select-solid">
+                <option value="">--Seleccionar--</option>
+                <option *ngFor="let gen of generos" [value]="gen.id">{{ gen.nombre }}</option>
+              </select>
+              <div *ngIf="submittedAjustes && fAjuste.idGenero.errors" class="invalid-feedback d-block">
+                <div *ngIf="fAjuste.idGenero.errors.required">Seleccione el género del cliente</div>
+              </div>
+          </div>
+        </div>
+
+        <div class="row mb-4">
+          <label class="col-lg-4 col-form-label fw-semibold text-gray-800 required">Telefono 1</label>
+          <div class="col-lg-8">
+            <div class="d-flex">
+              <div class="w-180px mr-2">
+                <select 
+                  disabled
+                  formControlName="paisTelefono1" class="form-select form-select-solid w-100">
+                  <option *ngFor="let pais of paises" [value]="pais.id">{{ pais.pais + ' (' + pais.id + ')'}}</option>
+                </select>
+              </div>
+              <div class="w-100">
+                <input 
+                  disabled
+                  formControlName="telefono1" type="tel" class="form-control form-control-solid" placeholder="Telefono 1" [ngClass]="{ 'is-invalid bg-color-light-danger': submittedAjustes && fAjuste.telefono1.errors }">
+                <div *ngIf="submittedAjustes && fAjuste.telefono1.errors" class="invalid-feedback d-block">
+                  <div *ngIf="fAjuste.telefono1.errors.required">Ingrese un teléfono de contacto</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mb-4">
+          <label class="col-lg-4 col-form-label fw-semibold text-gray-800">Telefono 2</label>
+          <div class="col-lg-8">
+            <div class="d-flex">
+              <select formControlName="paisTelefono2" class="form-select form-select-solid w-180px mr-2">
+                <option *ngFor="let pais of paises" [value]="pais.id">{{ pais.pais + ' (' + pais.id + ')'}}</option>
+              </select>
+              <input type="tel" class="form-control form-control-solid" placeholder="Telefono 2">
+            </div>
+          </div>
+        </div>
+
+        <div class="row mb-4">
+          <label class="col-lg-4 col-form-label fw-semibold text-gray-800">Seudonimo</label>
+          <div class="col-lg-8">
+            <input type="text" formControlName="seudonimo" class="form-control form-control-solid" placeholder="Ingrese un seudonimo para el cliente">
+          </div>
+        </div>
+
+        <div class="row mb-4">
+          <label class="col-lg-4 col-form-label fw-semibold text-gray-800">Correo Electrónico</label>
+          <div class="col-lg-8">
+            <input type="email" maxlength="100" formControlName="correo" class="form-control form-control-solid" placeholder="Ingrese el correo electrónico del cliente" [ngClass]="{ 'is-invalid bg-color-light-danger': submittedAjustes && fAjuste.correo.errors }">
+            <div *ngIf="submittedAjustes && fAjuste.correo.errors" class="invalid-feedback d-block">
+              <div *ngIf="fAjuste.correo.hasError('maxLength')">El correo pasa los 100 caracteres</div>
+              <div *ngIf="fAjuste.correo.hasError('email')">Ingrese un correo con el formato correcto</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mb-4">
+          <label class="col-lg-4 col-form-label required fw-semibold text-gray-800">Fecha Nacimiento</label>
+          <div class="col-lg-8">
+            <div class="d-flex">
+              <input #fechaNacimiento type="date" formControlName="fechaNacimiento" class="form-control form-control-solid mr-2">
+              <input type="text" formControlName="edad" class="form-control form-control-solid w-100px text-center" readonly>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mb-4">
+          <label class="col-lg-4 col-form-label required fw-semibold text-gray-800">Documento Identidad</label>
+          <div class="col-lg-8">
+            <div class="d-flex">
+              <select 
+                disabled
+                formControlName="idTipoDocumentoIdentidad" style=" max-height:2.75rem"  #selectTipodocumento class="form-select form-select-solid w-180px mr-2">
+                <option value="">--Seleccionar--</option>
+                <option *ngFor="let tipo of tiposDocumentoIdentidad" [value]="tipo.id">{{ tipo.descripcion }}</option>
+              </select>
+              <div class="input-group mb-3">
+                <input 
+                  readonly
+                  type="text" 
+                  formControlName="documentoIdentidad" 
+                  class="form-control form-control-solid" 
+                  placeholder="Ingresar el número del documento de identidad del cliente" 
+                  title="N° de documento de identidad del cliente"
+                  [disabled]="true"/>  
+                <button 
+                  class="btn btn-outline-secondary" 
+                  type="button" 
+                  id="button-addon1"  
+                  (click)="buscarDNI()"
+                  [disabled]="true">
+                  <span class="mdi mdi-home-search-outline"></span>
+                </button>
+              </div>
+              <div
+                *ngIf="bnotfoundDNI "
+                class="invalid-feedback d-block">
+                No se encontró el número de DNI. Ingrese un DNI correcto.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mb-4">
+          <label class="col-lg-4 col-form-label required fw-semibold text-gray-800">Medio de contacto</label>
+          <div class="col-lg-8">
+            <div class="d-flex flex-column">
+              <select #idMedioContacto formControlName="idMedioContacto" class="form-select form-select-solid">
+                <option [value]="0">--Seleccionar--</option>
+                <option *ngFor="let medio of mediosDeContacto" [value]="medio.id">{{ medio.nombre }}</option>
+              </select>
+              <input *ngIf="idMedioContacto.value === '5'" type="text" formControlName="otroMedioContacto" class="form-control form-control-solid mt-2" placeholder="Escriba el medio de contacto" [ngClass]="{ 'is-invalid bg-color-light-danger': submittedAjustes && fAjuste.otroMedioContacto.errors }">
+              <div *ngIf="submittedAjustes && fAjuste.otroMedioContacto.errors" class="invalid-feedback d-block">
+                <div *ngIf="fAjuste.otroMedioContacto.errors.required">Ingrese un medio de contacto</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mb-4">
+          <label class="col-lg-4 col-form-label fw-semibold text-gray-800">Dirección</label>
+          <div class="col-lg-8">
+              <input type="hidden" formControlName="idUbicacion" class="form-control form-control-solid">
+              <input type="hidden" formControlName="direccion" class="form-control form-control-solid">
+              <input type="text" formControlName="direccionCompleta" class="form-control form-control-solid" placeholder="Ingrese la diección del cliente" (click)="onShowAddress()">
+          </div>
+        </div>
+        <div class="row mb-4">
+          <label class="col-lg-4 col-form-label fw-semibold text-gray-800">Ruc - Razón Social</label>
+          <div class="col-lg-2">
+              
+              <div class="input-group mb-3">
+                
+                <input type="text" class="form-control form-control-solid" id="ruc" placeholder="Ruc"    (keydown.enter)="$event.preventDefault();" (keyup.enter)="buscarRuc();" formControlName="ruc" maxlength="11">
+                <button class="btn btn-outline-secondary" type="button" id="button-addon1"  (click)="buscarRuc()" >
+                  <span class="mdi mdi-home-search-outline"></span>
+
+                </button>
+              
+              </div>
+              <div *ngIf="fAjuste.ruc.errors" class="invalid-feedback d-block">
+                  El ruc debe tener 11 digitos
+              </div>
+
+          </div>
+          <div class="col-lg-6">
+            <input type="text" formControlName="razonSocial" class="form-control form-control-solid" placeholder="Razón Social" disabled>
+            <div *ngIf="bnotfoundRUC" class="invalid-feedback d-block">
+                No se encontró la razón social. Ingrese un nuevo Ruc válido.
+            </div>
+            </div>
+        </div>
+
+      </div>
+      <div class="card-footer d-flex justify-content-end py-6 px-9">
+        <button matRipple type="button" class="sbtn btn btn-light btn-active-light-primary mr-2" (click)="restoreFrmAjustes()">Revertir</button>
+        <button matRipple type="submit" class="sbtn btn btn-primary" >Guardar cambios</button>
+      </div>
+  </form>
+</div>
+
+<div class="scard mb-0 mb-xl-10 popins">
+  <div class="card-header">
+    <div class="card-title m-0">
+      <h3 class="fw-bold m-0">Metodo de inicio de sesión</h3>
+    </div>
+  </div>
+  <div class="card-body p-4">
+    <ng-container *ngIf="!clienteAcceso.registrado">
+      <div class="notice d-flex bg-light-warning rounded border-warning border border-dashed p-4">
+        <span class="svg-icon svg-icon-2tx svg-icon-warning mr-3">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"></rect>
+            <rect x="11" y="14" width="7" height="2" rx="1" transform="rotate(-90 11 14)" fill="currentColor"></rect>
+            <rect x="11" y="17" width="2" height="2" rx="1" transform="rotate(-90 11 17)" fill="currentColor"></rect>
+          </svg>
+        </span>
+        <div class="d-flex flex-stack flex-grow-1 flex-wrap flex-md-nowrap">
+          <div class="mb-3 mb-md-0 fw-semibold">
+            <h4 class="text-gray-900 fw-bold">Sin registrar</h4>
+            <div class="fs-6 text-gray-700 pe-7">El cliente no tiene credenciales registradas.</div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="clienteAcceso.registrado">
+      <div *ngIf="!changeEmail" class="d-flex flex-wrap align-items-center">
+        <div>
+          <div class="fs-6 fw-bold mb-1 text-dark">Correo Electrónico</div>
+          <div class="fw-semibold text-gray-600">{{ clienteAcceso.correo }}</div>
+        </div>
+        <div class="ml-auto">
+          <button matRipple class="sbtn btn btn-light btn-active-light-primary" (click)="toggleChangeEmail()">Editar</button>
+        </div>
+      </div>
+
+      <div *ngIf="changeEmail">
+        <form [formGroup]="frmGroupUpdateEmail" (ngSubmit)="onSubmitUpdateEmail()" >
+          <div class="row">
+            <div class="col-12 col-md-6 mb-3">
+              <label class="required fw-semibold text-gray-800">Correo Electrónico</label>
+              <input type="text" class="form-control form-control-solid" formControlName="correo" [ngClass]="{ 'is-invalid bg-color-light-danger': submittedChangeEmail && fUpdateStatus.correo.errors }">
+              <div *ngIf="submittedChangeEmail && fUpdateStatus.correo.errors" class="invalid-feedback d-block">
+                <div *ngIf="fUpdateStatus.correo.hasError('required')">Ingrese un correo electrónico</div>
+                <div *ngIf="fUpdateStatus.correo.hasError('email')">Ingrese un formato correcto</div>
+              </div>
+            </div>
+            <div class="col-12">
+              <button matRipple type="button" class="sbtn btn btn-light btn-active-light-primary mr-2" (click)="toggleChangeEmail()">Cancelar</button>
+              <button type="submit" matRipple class="sbtn btn btn-primary" >Actualizar Correo</button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="separator separator-dashed my-4"></div>
+
+      <div *ngIf="!changePassword" class="d-flex flex-wrap align-items-center mb-10">
+        <div>
+          <div class="fs-6 fw-bold mb-1 text-dark">Password</div>
+          <div class="fw-semibold text-gray-600">{{ showPassword ? clienteAcceso.clave : '************' }}</div>
+        </div>
+        <div class="ml-auto">
+          <button matRipple class="sbtn btn btn-light btn-active-light-primary mr-2" (click)="toggleShowPassword()">{{ showPassword ? 'Ocultar' : 'Ver' }}</button>
+          <button matRipple class="sbtn btn btn-light btn-active-light-primary" (click)="toggleChangePassword()">Editar</button>
+        </div>
+      </div>
+
+      <div *ngIf="changePassword">
+        <form [formGroup]="frmGroupUpdatePassword" (ngSubmit)="onSubmitUpdatePassword()" >
+          <div class="row">
+            <div class="col-12 col-md-6 mb-3">
+              <label class="required fw-semibold text-gray-800">Nueva Contraseña</label>
+              <input type="password" class="form-control form-control-solid" formControlName="clave" [ngClass]="{ 'is-invalid bg-color-light-danger': submittedChangePassword && fUpdatePassword.clave.errors }">
+              <div *ngIf="submittedChangePassword && fUpdatePassword.clave.errors" class="invalid-feedback d-block">
+                <div *ngIf="fUpdatePassword.clave.hasError('required')">Ingrese la nueva contraseña</div>
+              </div>
+            </div>
+            <div class="col-12 col-md-6 mb-3">
+              <label class="required fw-semibold text-gray-800">Repetir Nueva Contraseña</label>
+              <input type="password" class="form-control form-control-solid" formControlName="claveRepetir" [ngClass]="{ 'is-invalid bg-color-light-danger': submittedChangePassword && fUpdatePassword.claveRepetir.errors }">
+              <div *ngIf="submittedChangePassword && fUpdatePassword.claveRepetir.errors" class="invalid-feedback d-block">
+                <div *ngIf="fUpdatePassword.claveRepetir.hasError('required')">Vuelva a escribir la nueva contraseña</div>
+                <div *ngIf="fUpdatePassword.claveRepetir.hasError('mustMatch')">La contraseña debe ser igual a la nueva</div>
+              </div>
+            </div>
+            <div class="col-12">
+              <button matRipple type="button" class="sbtn btn btn-light btn-active-light-primary mr-2" (click)="toggleChangePassword()">Cancelar</button>
+              <button type="submit" matRipple class="sbtn btn btn-primary" >Actualizar contraseña</button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+    </ng-container>
+
+  </div>
+</div>
+
+

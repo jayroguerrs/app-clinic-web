@@ -1,0 +1,66 @@
+<div class="col-sm-12" style="padding: 0 !important;">
+    <app-card [options]="false" [customHeader]="true" [hidHeader]="true" >
+      <div class="contenedor-secciones">
+        <section class="w-100">
+          <h1 class="titulos" style="padding-left: 20px; padding-top: 16px;">Buscar Cliente (Celular / Id)<br/>Registrar Nuevo Cliente /Buscar Preferente</h1>
+      
+          <div class="contenedor-filtros contenedor-busqueda-nombre-cita" style="padding: 0px 24px 8px 24px !important;">
+            <div class="contenedor-filtros-izquierda" style="width: 100%; padding-top: 20px;">
+      
+              <mat-form-field appearance="outline" style="margin-right: 0.5rem;width: 100% !important;">
+                <mat-label>Celular</mat-label>
+                <input (keypress)="buscarSiEsCliente($event)" [(ngModel)]="numeroCliente" name="numeroCliente"  matInput placeholder="999 999 999" >
+              </mat-form-field>
+      
+            </div>
+            <div style="display: flex; align-items: center; padding: 0 20px 0 0;">
+    
+                  
+              <button *ngIf="!isSmallScreen" style="margin-left: 0.8rem;" ngbTooltip="Eliminar los filtros." (click)="limpiarFiltroBusqueda()" type="button" class="btn btn-light">Limpiar</button>
+              <button *ngIf="isSmallScreen" ngbTooltip="Reiniciar usuario." style="margin-left: 0.8rem; padding-left: 0.2rem !important; padding-right: 0.1rem !important;" (click)="limpiarFiltroBusqueda()" type="button" class="btn btn-light"><i class="mdi mdi-reload" style="display: flex;margin-left: 0.5rem; font-size: 1.3rem;"></i></button>
+              
+              <button *ngIf="!isSmallScreen" (click)="buscarSiEsCliente('boton')" type="button" class="btn btn-primary">Buscar</button>
+              <button *ngIf="isSmallScreen" (click)="buscarSiEsCliente('boton')" type="button" class="btn btn-primary" style="padding-left: 0.2rem !important; padding-right: 0.1rem !important;"><i class="mdi mdi-magnify" style="display: flex;margin-left: 0.5rem; font-size: 1.3rem;"></i></button>
+    
+              <button *ngIf="isSmallScreen" (click)="mostrarScannerClienteF()" ngbTooltip="Escanear QR." type="button" class="btn btn-primary" style="padding-left: 0.2rem !important; padding-right: 0.1rem !important; background-color: black !important; border:1px solid black !important;"><i class="mdi mdi-qrcode" style="display: flex;margin-left: 0.5rem; font-size: 1.3rem;"></i></button>
+            </div>
+          </div>
+        </section>
+        
+        <div style="padding: 0 20px; margin-bottom: 16px;">
+          <zxing-scanner *ngIf="mostrarScannerCliente" [facingMode]="'environment'" (scanSuccess)="onCodeResultCliente($event)"></zxing-scanner>
+        </div>
+
+        <section class="w-100">
+          <h1 class="titulos" style="padding-left: 20px; padding-top: 16px;">Buscar Cita (Id)<br/>&nbsp;</h1>
+      
+          <div class="contenedor-filtros contenedor-busqueda-nombre-cita" style="padding: 0px 24px 8px 24px !important;">
+            <div class="contenedor-filtros-izquierda" style="width: 100%; padding-top: 20px;">
+      
+              <mat-form-field appearance="outline" style="margin-right: 0.5rem; width: 100% !important;">
+                <mat-label>Id Cita</mat-label>
+                <input (keypress)="buscarCita($event)" [(ngModel)]="idCita" name="idCita"  matInput placeholder="123456" >
+              </mat-form-field>
+      
+            </div>
+            <div style="display: flex; align-items: center; padding: 0 20px 0 0;">
+    
+                  
+              <button *ngIf="!isSmallScreen" style="margin-left: 0.8rem;" ngbTooltip="Eliminar los filtros." (click)="limpiarFiltroBusquedaIdCita()" type="button" class="btn btn-light">Limpiar</button>
+              <button *ngIf="isSmallScreen" ngbTooltip="Reiniciar usuario." style="margin-left: 0.8rem; padding-left: 0.2rem !important; padding-right: 0.1rem !important;" (click)="limpiarFiltroBusquedaIdCita()" type="button" class="btn btn-light"><i class="mdi mdi-reload" style="display: flex;margin-left: 0.5rem; font-size: 1.3rem;"></i></button>
+              
+              <button *ngIf="!isSmallScreen" (click)="buscarCitaPorIdCita()" type="button" class="btn btn-primary">Buscar</button>
+              <button *ngIf="isSmallScreen" (click)="buscarCitaPorIdCita()" type="button" class="btn btn-primary" style="padding-left: 0.2rem !important; padding-right: 0.1rem !important;"><i class="mdi mdi-magnify" style="display: flex;margin-left: 0.5rem; font-size: 1.3rem;"></i></button>
+    
+              <button *ngIf="isSmallScreen" (click)="mostrarScannerCitaF()" ngbTooltip="Escanear QR." type="button" class="btn btn-primary" style="padding-left: 0.2rem !important; padding-right: 0.1rem !important; background-color: black !important; border:1px solid black !important;"><i class="mdi mdi-qrcode" style="display: flex;margin-left: 0.5rem; font-size: 1.3rem;"></i></button>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <div style="padding: 0 20px; margin-bottom: 16px;">
+        <zxing-scanner *ngIf="mostrarScannerCita" [facingMode]="'environment'" (scanSuccess)="onCodeResultCita($event)"></zxing-scanner>
+      </div>
+    </app-card>
+</div>

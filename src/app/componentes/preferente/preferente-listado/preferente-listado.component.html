@@ -1,0 +1,331 @@
+<!-- MODAL PREFERENTE DATOS -->
+<ng-template #modPrefDatos let-modal let-close="close">
+    <app-preferente-datos
+        [idPerfil]="idPerfil"
+        [listaMaestra]="listaMaestra"
+        [id]="idPreferente"
+        [modal]="modalPreferenteDatosRef"
+        (eventPreferenteListar)="prefListar()" >
+    </app-preferente-datos>
+</ng-template>
+
+<!-- MODAL PREFERENTE-ASIGNAR -->
+<ng-template #modPrefAsig let-modal let-close="close">
+    <app-preferente-asignar
+        [listaTeleoperadorConfirmado]="listaTeleoperadorConfirmado"
+        [id]="idPreferente"
+        [listaMaestraTeleoperador]="listaMaestra.teleoperadores"
+        [modal]="modalPreferenteAsignarRef">
+    </app-preferente-asignar>
+</ng-template>
+
+<!-- MODAL PREFERENTE-ATENDER -->
+<ng-template #modPrefAten let-modal let-close="close">
+    <app-preferente-atencion
+        [idPreferente]="idPreferente"
+        [preferente]="preferenteSelected"
+        [modal]="modalPreferenteAtencionRef">
+    </app-preferente-atencion>
+</ng-template>
+
+<!-- MODAL PREFERENTE-ASIGNAR LISTADO-->
+<ng-template  #modalAsignacionPreferente let-modal let-close="close">
+  <app-preferente-asignar-operador
+    [idUsuarioReasignacion]="0"
+    [modal]="modalAsignacionRef"
+    [nombreReasignado] = "''">
+  </app-preferente-asignar-operador>
+</ng-template>
+
+
+<ngx-spinner
+    [template]="rutaImageSpinner">
+    <p style="color: white" > Cargando... </p>
+</ngx-spinner>
+
+<div id="hidden-btn" style="visibility: hidden"></div>
+
+<div class="row">
+  <!-- FILTRO -->
+  <div class="col-sm-12" *ngIf="mostrarFiltro">
+    <app-card [options]="false" cardTitle="PREFERENTES" [customHeader]="false">
+      <form  [formGroup]="frmFiltroGrilla">
+
+        <div class="form-row">
+
+          <div class="form-group col-md-auto">
+            <div class="form-floating form-icon" >
+              <i class="feather icon-calendar" [placement]="'bottom'" ngbTooltip="Fecha desde"></i>
+              <input type="date" class="form-control" id="filterDesde" formControlName="filterDesde" placeholder=" " >
+              <label for="filterDesde">Desde</label>
+            </div>
+          </div>
+
+          <div class="form-group col-md-auto">
+            <div class="form-floating form-icon" >
+              <i class="feather icon-calendar" [placement]="'bottom'" ngbTooltip="Fecha hasta"></i>
+              <input type="date" class="form-control" id="filterHasta" formControlName="filterHasta" placeholder=" ">
+              <label for="filterHasta">Hasta</label>
+            </div>
+          </div>
+                 
+          <div class="form-group col-md-auto">
+            <div class="form-floating form-icon">
+              <i class="feather icon-alert-circle" [placement]="'bottom'" ngbTooltip="Estado"></i>
+              <select class="form-select" id="filterEstado" formControlName="filterEstado" >
+                <option value='' selected>Todos</option>
+                <option *ngFor="let estado of listaMaestra.estado" [value]="estado.id">{{ estado.descripcion }}</option>
+              </select>
+              <label for="filterEstado">Estado</label>
+            </div>
+          </div>
+
+          <div class="form-group col-md-auto depilform" *ngIf="idPerfil !== tipoPerfil.OPERADOR && idPerfil !== tipoPerfil.ESPECIALISTA">
+
+            <ng-select #selectPreferente id="idPerfiles" class="w-100 min-w-300px max-w-200px ng-select-custom"  [items]="listaMaestra.teleoperadores" bindLabel="nombre" bindValue="idUsuario" formControlName="filterTeleoperador" [multiple]="false" [searchable]="true" placeholder="--Seleccionar Teleoperadora--">
+
+              <ng-template ng-label-tmp let-item="item">
+                <div class="d-flex flex-column">
+                  <div>{{ item.nombre }}</div>
+                  <div class="fs-10px fw-semibold text-muted">{{item.usuario}} ({{item.sede}})</div>
+                </div>
+              </ng-template>
+
+              <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                <div class="d-flex flex-column">
+                  <div>{{ item.nombre }}</div>
+                  <div class="fs-10px fw-semibold text-muted">{{item.usuario}} ({{item.sede}})</div>
+                </div>
+              </ng-template>
+
+            </ng-select>
+
+
+<!--            <div class="form-floating form-icon">-->
+<!--              <i class="feather icon-alert-circle" [placement]="'bottom'" ngbTooltip="Teleoperadora"></i>-->
+<!--              <select class="form-select" id="filterTeleoperador" formControlName="filterTeleoperador" >-->
+<!--                <option value=''>Todos</option>-->
+<!--                <option *ngFor="let teleoperador of listaMaestra.teleoperadores" [value]="teleoperador.idUsuario">{{ teleoperador.nombre }}</option>-->
+<!--              </select>-->
+<!--              <label for="filterTeleoperador">Teleoperadora</label>-->
+<!--            </div>-->
+          </div>
+
+          <div class="form-group col-md-auto" *ngIf="idPerfil !== tipoPerfil.OPERADOR && idPerfil !== tipoPerfil.ESPECIALISTA">
+            <div class="form-floating form-icon">
+              <i class="feather icon-share-2" [placement]="'bottom'" ngbTooltip="Contacto"></i>
+              <select class="form-select" id="filterMedioContacto" formControlName="filterMedioContacto" >
+                <option value='' selected>Todos</option>
+                <option *ngFor="let medioContacto of listaMaestra.mediosContactos" [value]="medioContacto.id">{{ medioContacto.nombre }}</option>
+              </select>
+              <label for="filterMedioContacto">Contacto</label>
+            </div>
+          </div>
+
+
+          <div class="form-group col-md-auto">
+            <div class="form-floating form-icon">
+              <i class="feather icon-alert-circle" [placement]="'bottom'" ngbTooltip="Estado Atención"></i>
+              <select class="form-select" id="filterEstadoAtencion" formControlName="filterEstadoAtencion" >
+                <option value='' selected>Todos</option>
+                <option *ngFor="let estado of listaMaestra.estadoAtencion" [value]="estado.id">{{ estado.descripcion }}</option>
+              </select>
+              <label for="filterEstadoAtencion">Estado Atención</label>
+            </div>
+          </div>
+
+          <div *ngIf="[tipoPerfil.SA, tipoPerfil.SISTEMAS, tipoPerfil.SUPERVISOR, tipoPerfil.MARKETING, tipoPerfil.ADMINISTRADOR, tipoPerfil.SUPERVISORVENTAS, tipoPerfil.COMMUNITYMANAGER].includes(usuarioActual.idperfil)" class="form-group col-md-auto">
+            <div class="form-floating form-icon">
+              <i class="feather icon-alert-circle" [placement]="'bottom'" ngbTooltip="Es Cliente?"></i>
+              <select class="form-select" id="esCliente" formControlName="esCliente" >
+                <option [value]='2' selected>Todos</option>
+                <option [value]='1' selected>Si</option>
+                <option [value]='0' selected>No</option>
+              </select>
+              <label for="filterEstadoAtencion">Es Cliente?</label>
+            </div>
+          </div>
+
+        </div>
+      </form>
+    </app-card>
+  </div>
+
+  <!-- GRILLA -->
+  <div class="col-sm-12">
+    <app-card [options]="false" [customHeader]="true" [hidHeader]="true">
+
+      <div class="table table-sm-responsive">
+        <table #tablaPreferente datatable [dtOptions]="optionsDtPreferentes"
+              class="table table-sm table-sm table-hover table-preferente display compact"></table>
+      </div>
+    </app-card>
+  </div>
+
+  <div class="col-sm-12">
+    <app-preferente-mobile-listado></app-preferente-mobile-listado>
+  </div>
+
+</div>
+
+<!-- BOTONERA ESCRITORIO -->
+<!-- <ul class="botonera-escritorio" *ngIf="idPerfil !== tipoPerfil.OPERADOR && idPerfil !== tipoPerfil.ESPECIALISTA">
+    <li>
+      <button *ngIf="mostrarFiltro"     id="btnBuscar1"   type="button" class="btn btn-primary btn-icon"  [placement]="'bottom'" ngbTooltip="Listar"  (click)="prefListar()">             <i class="mdi mdi-sync"></i></button>
+        <button *ngIf="selected" type="button" class="btn btn-primary btn-icon"  [placement]="'bottom'" ngbTooltip="Historial"  (click)="evtShowHistory()">             <i class="mdi mdi-history"></i></button>
+        <button *ngIf="mostrarFiltro"     id="btnNuevo1"    type="button" class="btn btn-primary btn-icon"  [placement]="'bottom'" ngbTooltip="Nuevo"   (click)="prefNuevo(modPrefDatos)">  <i class="mdi mdi-plus-circle-outline"></i></button>
+        <button *ngIf="mostrarFiltro && selected"     id="btnEditar1"   type="button" class="btn btn-warning btn-icon"[placement]="'bottom'" ngbTooltip="Editar"  (click)="prefEditar(modPrefDatos)"> <i class="mdi mdi-square-edit-outline"></i></button>
+        <button *ngIf="mostrarFiltro && selected"     id="btnAsignar1"  type="button" class="btn btn-secondary btn-icon"[placement]="'bottom'" ngbTooltip="Asignar" (click)="prefAsig(modPrefAsig)">    <i class="mdi mdi-account-check-outline"></i></button>
+        <button *ngIf="idPerfil == tipoPerfil.MARKETING || idPerfil == tipoPerfil.ADMINISTRADOR || idPerfil == tipoPerfil.SISTEMAS || idPerfil == tipoPerfil.SUPERVISORVENTAS" type="button" class="btn btn-secondary btn-icon"[placement]="'bottom'" ngbTooltip="Asignar lista" (click)="irAsignacion(modalAsignacionPreferente, false)"><i class="mdi mdi-playlist-check"></i></button>
+        <button *ngIf="mostrarBtnAtender && selected" id="btnAtender1"  type="button" class="btn btn-primary btn-icon"  [placement]="'bottom'" ngbTooltip="Atender" (click)="prefAtendido(modPrefAten)"><i class="fa fa-hand-paper"></i></button>
+        <button type="button" class="btn btn-primary btn-icon"  [placement]="'bottom'" ngbTooltip="Buscar Preferente"  (click)="evtBuscarPreferente(modPrefDatos)">             <i class="mdi mdi-account-search-outline"></i></button>
+        <button *ngIf="idPerfil == tipoPerfil.MARKETING || idPerfil == tipoPerfil.ADMINISTRADOR || idPerfil == tipoPerfil.SISTEMAS" type="button" class="btn btn-primary btn-icon"  [placement]="'bottom'" ngbTooltip="Importar"   (click)="file.click()">
+        <input class="d-none" type="file" #file (change)="prefImportarExcel($event)" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"><i class="mdi mdi-tray-arrow-up"></i></button>
+        <button *ngIf="mostrarFiltro" id='export-excel1'type="button" class="btn btn-primary btn-icon"  [placement]="'bottom'" ngbTooltip="Excel" (click)="exportarTabla()"> <i class="mdi mdi-file-excel-outline"></i></button>
+        <button *ngIf="mostrarFiltro" id='export-excel2'type="button" class="btn btn-primary btn-icon"  [placement]="'bottom'" ngbTooltip="Exportar Ventas" (click)="exportClientData()"> <i class="mdi mdi-file-excel-box-outline"></i></button>
+    </li>
+</ul> -->
+
+<ul class="botonera-escritorio" *ngIf="idPerfil !== tipoPerfil.OPERADOR && idPerfil !== tipoPerfil.ESPECIALISTA">
+  <li>
+    <button *ngIf="mostrarFiltro"     id="btnBuscar1"   type="button" class="btn btn-primary btn-icon"  [placement]="'bottom'" ngbTooltip="Listar"  (click)="prefListar()">             <i class="mdi mdi-sync"></i></button>
+      <button *ngIf="selected" type="button" class="btn btn-primary btn-icon"  [placement]="'bottom'" ngbTooltip="Historial"  (click)="evtShowHistory()">             <i class="mdi mdi-history"></i></button>
+      <button *ngIf="mostrarFiltro && (this.accTot || this.accCrud || this.accCreate)" id="btnNuevo1"    type="button" class="btn btn-primary btn-icon"  [placement]="'bottom'" ngbTooltip="Nuevo"   (click)="prefNuevo(modPrefDatos)">  <i class="mdi mdi-plus-circle-outline"></i></button>
+      <button *ngIf="mostrarFiltro && selected && (this.accTot || this.accCrud || this.accUpdate)" id="btnEditar1"   type="button" class="btn btn-warning btn-icon"[placement]="'bottom'" ngbTooltip="Editar"  (click)="prefEditar(modPrefDatos)"> <i class="mdi mdi-square-edit-outline"></i></button>
+      <button *ngIf="this.accTot || this.accLstI && mostrarFiltro && selected" id="btnAsignar1"  type="button" class="btn btn-secondary btn-icon"[placement]="'bottom'" ngbTooltip="Asignar" (click)="prefAsig(modPrefAsig)">    <i class="mdi mdi-account-check-outline"></i></button>
+      <button *ngIf="this.accTot || this.accLstG" type="button" class="btn btn-secondary btn-icon"[placement]="'bottom'" ngbTooltip="Asignar lista" (click)="irAsignacion(modalAsignacionPreferente, false)"><i class="mdi mdi-playlist-check"></i></button>
+      <button *ngIf="mostrarBtnAtender && selected" id="btnAtender1"  type="button" class="btn btn-primary btn-icon"  [placement]="'bottom'" ngbTooltip="Atender" (click)="prefAtendido(modPrefAten)"><i class="fa fa-hand-paper"></i></button>
+      <button type="button" class="btn btn-primary btn-icon"  [placement]="'bottom'" ngbTooltip="Buscar Preferente"  (click)="evtBuscarPreferente(modPrefDatos)">             <i class="mdi mdi-account-search-outline"></i></button>   
+      <button *ngIf="this.accTot || this.accImp && (idPerfil == tipoPerfil.MARKETING || idPerfil == tipoPerfil.ADMINISTRADOR || idPerfil == tipoPerfil.SISTEMAS)" type="button" class="btn btn-primary btn-icon"  [placement]="'bottom'" ngbTooltip="Importar"   (click)="file.click()">
+        <input  class="d-none" type="file" #file (change)="prefImportarExcel($event)" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"><i class="mdi mdi-tray-arrow-up"></i>
+      </button>      
+      <button *ngIf="this.accTot || this.accExc" id='export-excel1'type="button" class="btn btn-primary btn-icon"  [placement]="'bottom'" ngbTooltip="Excel Reporte Preferente" (click)="exportarTabla()"> <i class="mdi mdi-file-excel-outline"></i></button>
+      <button *ngIf="this.accTot || this.accExp" id='export-excel2'type="button" class="btn btn-primary btn-icon"  [placement]="'bottom'" ngbTooltip="Exportar Ventas" (click)="exportClientData()"> <i class="mdi mdi-file-excel-box-outline"></i></button>
+  </li>
+</ul>
+
+
+<ul class="botonera-escritorio" *ngIf="idPerfil === tipoPerfil.OPERADOR || idPerfil === tipoPerfil.ESPECIALISTA">
+  <li>
+    <button *ngIf="this.accTot || this.accExc" id='export-excel1' type="button" class="btn btn-primary btn-icon"
+      [placement]="'bottom'" ngbTooltip="Excel Reporte Preferente" (click)="exportarTabla()"> <i
+        class="mdi mdi-file-excel-outline"></i></button>
+    <button *ngIf="this.accTot || this.accExp" id='export-excel2' type="button" class="btn btn-primary btn-icon"
+      [placement]="'bottom'" ngbTooltip="Exportar Ventas" (click)="exportClientData()"> <i
+        class="mdi mdi-file-excel-box-outline"></i></button>
+
+    <button *ngIf="selected" id="btnViewAppoint" type="button" class="btn btn-primary btn-icon align-items-center justify-content-center" [placement]="'bottom'"
+      ngbTooltip="Marcar cómo visto" (click)="onViewAppointment()"><mat-icon>check_circle</mat-icon></button>
+
+    <button *ngIf="mostrarFiltro" id="btnBuscar1" type="button" class="btn btn-primary btn-icon" [placement]="'bottom'"
+      ngbTooltip="Listar" (click)="prefListar()"> <i class="mdi mdi-sync"></i></button>
+    <!--    <button *ngIf="mostrarFiltro"     id='export-excel1'type="button" class="btn btn-primary btn-icon"  [placement]="'bottom'" ngbTooltip="Excel">                                      <i class="mdi mdi-file-excel-outline"></i></button>-->
+    <button *ngIf="mostrarBtnAtender && selected" id="btnAtender1" type="button" class="btn btn-primary btn-icon"
+      [placement]="'bottom'" ngbTooltip="Atender" (click)="prefAtendido(modPrefAten)"><i
+        class="fa fa-hand-paper"></i></button>
+  </li>
+</ul>
+
+<!-- Menu Movil -->
+<div class="float-menu">
+  <button mat-fab color="primary" class="bg-primary" (click)="verOpciones()">
+    <mat-icon>settings</mat-icon>
+  </button>
+</div>
+
+
+<ng-template let-bottomSheetRef="bottomSheetRef" #menuMovil  *ngIf="idPerfil !== tipoPerfil.OPERADOR && idPerfil !== tipoPerfil.ESPECIALISTA">
+  <div class="_content" >
+    <div class="_header">
+      <div class="px-4 pt-4 text-center">
+        <span class="d-inline-block topline"></span>
+        <p class="text-center text-white _title lead">Opciones</p>
+      </div>
+      <mat-divider class=""></mat-divider>
+    </div>
+
+    <mat-nav-list class="pt-0">
+
+      <div *ngIf="mostrarFiltro">
+        <a mat-list-item (click)= "prefListar();cerrarOpciones();">
+          <i class="mat-list-icon mdi mdi-sync"></i>
+          <span class=" opt-title">Buscar</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+
+      <div *ngIf="mostrarFiltro">
+        <a mat-list-item (click)="prefNuevo(modPrefDatos);cerrarOpciones();">
+          <i class="mat-list-icon mdi mdi-plus-circle-outline"></i>
+          <span class=" opt-title">Nuevo preferente</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+
+      <div *ngIf="mostrarFiltro && selected">
+        <a mat-list-item (click)="prefEditar(modPrefDatos);cerrarOpciones();">
+          <i class="mat-list-icon mdi mdi-square-edit-outline"></i>
+          <span class=" opt-title">Editar preferente</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+
+      <div *ngIf="mostrarFiltro && selected">
+        <a mat-list-item (click)="prefAsig(modPrefAsig);cerrarOpciones();">
+          <i class="mat-list-icon mdi mdi mdi-account-check-outline"></i>
+          <span class=" opt-title">Asignar</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+
+      <div *ngIf="mostrarBtnAtender && selected">
+        <a mat-list-item (click)="prefAtendido(modPrefAten);cerrarOpciones();">
+          <i class="mat-list-icon fa fa-hand-paper"></i>
+          <span class=" opt-title">Atender</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+
+      <div>
+        <a mat-list-item (click)="exportarTabla();cerrarOpciones();">
+          <i class="mat-list-icon mdi mdi-file-excel-outline"></i>
+          <span class=" opt-title">Exportar excel</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+
+    </mat-nav-list>
+  </div>
+</ng-template>
+<ng-template let-bottomSheetRef="bottomSheetRef" #menuMovil *ngIf="idPerfil === tipoPerfil.OPERADOR || idPerfil === tipoPerfil.ESPECIALISTA">
+  <div class="_content" >
+    <div class="_header">
+      <div class="px-4 pt-4 text-center">
+        <span class="d-inline-block topline"></span>
+        <p class="text-center text-white _title lead">Opciones</p>
+      </div>
+      <mat-divider class=""></mat-divider>
+    </div>
+
+    <mat-nav-list class="pt-0">
+
+      <div *ngIf="mostrarFiltro">
+        <a mat-list-item (click)= "prefListar();cerrarOpciones();">
+          <i class="mat-list-icon mdi mdi-sync"></i>
+          <span class=" opt-title">Buscar</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+
+      <div *ngIf="mostrarBtnAtender && selected">
+        <a mat-list-item (click)="prefAtendido(modPrefAten);cerrarOpciones();">
+          <i class="mat-list-icon fa fa-hand-paper"></i>
+          <span class=" opt-title">Atender</span>
+        </a>
+        <mat-divider></mat-divider>
+      </div>
+
+    </mat-nav-list>
+  </div>
+</ng-template>
+

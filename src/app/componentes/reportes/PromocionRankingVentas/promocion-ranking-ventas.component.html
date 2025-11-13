@@ -1,0 +1,119 @@
+
+
+<div class="row">
+  <div class="col-12 mb-3 sticky-header" stickyClass="header--sticky">
+
+    <app-card [options]="false" [customHeader]="false" cardTitle="REPORTE DE PROMOCIONES RANKING" cardTitle2="Consulta y genera reporte de venta según la sede, promoción, el rango de fecha de las citas con respecto a las promociones realizadas.">
+
+
+      <form [formGroup]="formGroup">
+        <div class="form-row">
+
+          <!-- Sede -->
+          <div class="col-12 col-lg-3 mb-3">
+            <div class="form-floating form-start-icon">
+              <select class="custom-select" id="idSede" formControlName="idSede" (change)="obtenerReporte()">
+                <option [value]="0">{{ loadingSede ? 'Cargando...' : 'Todos' }}</option>
+                <option *ngFor="let sede of collectionSede" [value]="sede.id">{{ sede.nombre }}</option>
+              </select>
+              <label for="idSede">Sede</label>
+              <span class="icon">
+                <span class="dicon sede m-auto"></span>
+              </span>
+            </div>
+          </div>
+          <!-- Promoción -->
+          <div class="col-12 col-lg-3 mb-3">
+            <div class="form-floating form-start-icon">
+              <select class="custom-select" id="idPromocion" formControlName="idPromocion" (change)="obtenerReporte()">
+                <option [value]="0">{{ loadingSede ? 'Cargando...' : 'Todos' }}</option>
+                <option *ngFor="let promo of collectionPromocion" [value]="promo.id">{{ promo.nombre }}</option>
+              </select>
+              <label for="idPromocion">Promoción</label>
+              <span class="icon">
+                <span class="dicon sede m-auto"></span>
+              </span>
+            </div>
+          </div>
+          <!-- Fecha desde -->
+          <div class="col-12 col-sm-6 col-lg-3 mb-3">
+            <div class="form-floating form-start-icon">
+              <input id="fdesde" type="date" placeholder=" " class="form-control" formControlName="fdesde" (change)="obtenerReporte()" [ngClass]="{ 'is-invalid': submitted && f.fdesde.errors }">
+              <label for="fdesde">Fecha desde</label>
+              <span class="icon"><span class="dicon calendar m-auto"></span></span>
+            </div>
+          </div>
+          <!-- Fecha hasta -->
+          <div class="col-12 col-sm-6 col-lg-3 mb-3">
+            <div class="form-floating form-start-icon">
+              <input id="fhasta" type="date" placeholder=" " class="form-control" formControlName="fhasta" (change)="obtenerReporte()" [ngClass]="{ 'is-invalid': submitted && f.fhasta.errors }">
+              <label for="fhasta">Fecha hasta</label>
+              <span class="icon"><span class="dicon calendar m-auto"></span></span>
+            </div>
+          </div>
+
+        </div>
+      </form>
+
+    </app-card>
+  </div>
+
+  <div class="col-12 col-lg-12">
+
+    <app-promocion-agendados-rango #ventasRango [TitleChart]="''" [FechaInicio]="f.fdesde.value" [FechaFin]="f.fhasta.value" [IdSede]="f.idSede.value" [Promociones]="collectionPromocion" [IdPromocion]="f.idPromocion.value"></app-promocion-agendados-rango>
+
+    <app-promocion-ventas-rango #ventasRango [TitleChart]="''" [FechaInicio]="f.fdesde.value" [FechaFin]="f.fhasta.value" [IdSede]="f.idSede.value" [Promociones]="collectionPromocion" [IdPromocion]="f.idPromocion.value"></app-promocion-ventas-rango>
+  </div>
+
+  <div class="col-12 col-lg-4">
+      <app-promocion-top10-zonas #promocionTop10Zonas [TitleChart]="''" [FechaInicio]="f.fdesde.value" [FechaFin]="f.fhasta.value" [IdSede]="f.idSede.value" [Promociones]="collectionPromocion" [IdPromocion]="f.idPromocion.value"></app-promocion-top10-zonas>
+  </div>
+
+  <div class="col-12 col-lg-4">
+      <app-promocion-bottom10-zonas #promocionBottom10Zonas [TitleChart]="''" [FechaInicio]="f.fdesde.value" [FechaFin]="f.fhasta.value" [IdSede]="f.idSede.value" [Promociones]="collectionPromocion" [IdPromocion]="f.idPromocion.value"></app-promocion-bottom10-zonas>
+  </div>
+
+  <div class="col-12 col-lg-4">
+    <app-promocion-zonas-ranking #promocionZonasRanking [TitleChart]="''" [FechaInicio]="f.fdesde.value" [FechaFin]="f.fhasta.value" [IdSede]="f.idSede.value" [Promociones]="collectionPromocion" [IdPromocion]="f.idPromocion.value"></app-promocion-zonas-ranking>
+  </div>
+
+  <div class="col-12 col-lg-12">
+    <app-promocion-ventas-rango #ventasRango [TitleChart]="''" [FechaInicio]="f.fdesde.value" [FechaFin]="f.fhasta.value" [IdSede]="f.idSede.value" [Promociones]="collectionPromocion" [IdPromocion]="f.idPromocion.value"></app-promocion-ventas-rango>
+  </div>
+
+  <div class="col-12 col-lg-12">
+    <app-promocion-atendidos-rango #ventasRango [TitleChart]="''" [FechaInicio]="f.fdesde.value" [FechaFin]="f.fhasta.value" [IdSede]="f.idSede.value" [Promociones]="collectionPromocion" [IdPromocion]="f.idPromocion.value"></app-promocion-atendidos-rango>
+  </div>
+
+</div>
+
+<!-- SPINNER -->
+<ngx-spinner
+  [template]="rutaImageSpinner">
+  <p style="color: white" > Cargando... </p>
+</ngx-spinner>
+
+
+
+
+
+
+
+
+<!-- BOTONERA ESCRITORIO -->
+<ul class="botonera-escritorio">
+  <li>
+    <button type="button" class="btn btn-primary btn-icon"   [placement]="'bottom'" ngbTooltip="Buscar" (click)= "reload(ventasRango,promocionTop10Zonas,promocionBottom10Zonas,promocionZonasRanking)"><i class="mdi mdi-magnify"></i></button>
+    <!--<button type="button" class="btn btn-secondary btn-icon" [disabled]="!collectionCitas.length"   [placement]="'bottom'" ngbTooltip="Exportar" (click)= "exportarExcel()"><i class="mdi mdi-file-excel-outline"></i></button>-->
+  </li>
+</ul>
+
+<!-- BOTONERA MOVIL -->
+<app-float-button>
+  <button class="child" mat-fab color="primary"  matTooltip="Buscar" matTooltipPosition="left" (click)="reload(ventasRango,promocionTop10Zonas,promocionBottom10Zonas,promocionZonasRanking)">
+    <i class="mdi mdi-search-web"></i>
+  </button>
+  <!--<button class="child" mat-fab color="primary" [disabled]="!collectionCitas.length"  matTooltip="Exportar" matTooltipPosition="left" (click)="exportarExcel()">
+    <mat-icon>file_download</mat-icon>
+  </button>-->
+</app-float-button>

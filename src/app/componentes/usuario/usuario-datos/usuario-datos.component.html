@@ -1,0 +1,118 @@
+﻿<form [formGroup]="frmUsuarioDatos">
+    <div class="modal-content">
+        <div class="modal-header card-header">
+            <h5 class="modal-title">{{ idUsuario ? 'Editar' : 'Nuevo' }} Usuario</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="cerrarModal()"><span aria-hidden="true">&times;</span></button>
+        </div>
+        <div class="modal-body card-body">
+            <div class="form-row">
+                <div class="col-sm-12 col-md-4 col-lg-3 mb-3 mb-md-0">
+                    <div class="picture-container min-h-100 h-100" [class.imgNulled]="!f.foto.value">
+                      <div class="picture sizePictureAnuncio min-h-100" >
+                        <img [src]="rutaImagenAnuncio" class="picture-src">
+                        <input disabled type="file" #ImageAnuncio accept="image/*" formControlName="foto">
+                          <!-- (change)="mostrarFotoAnuncio($event.target.files)" -->
+                      </div>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-8 col.lg-9">
+                    <div class="form-row">
+                        <div class="form-group col-md-12 col-lg-6">
+                            <div class="form-floating">
+                              <input type="text" class="form-control dz-uppercase" id="usuNombres" placeholder=" " formControlName="usuNombres" [ngClass]="{ 'is-invalid': submitted && f.usuNombres.errors }">
+                              <label for="usuNombres">Nombre <span class="text-danger">*</span></label>
+                            </div>
+                            <div *ngIf="submitted && f.usuNombres.errors" class="invalid-feedback d-block">
+                              <div *ngIf="f.usuNombres.errors.required">Ingresar nombre de usuario</div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-12 col-lg-6">
+                            <div class="form-floating">
+                              <input type="text" class="form-control dz-uppercase" id="usuUsuario" placeholder=" " formControlName="usuUsuario" [ngClass]="{ 'is-invalid': submitted && f.usuUsuario.errors }">
+                              <label for="usuUsuario">Usuario <span class="text-danger">*</span></label>
+                            </div>
+                            <div *ngIf="submitted && f.usuUsuario.errors" class="invalid-feedback d-block">
+                              <div *ngIf="f.usuUsuario.errors.required">Ingresar usuario</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="idUsuario == 0" class="form-row">
+                        <div class="form-group col-md-12 col-lg-6">
+
+                            <div class="form-floating">
+                              <input type="password" class="form-control dz-uppercase" id="usuClave" placeholder=" " formControlName="usuClave" [ngClass]="{ 'is-invalid': submitted && f.usuClave.errors }">
+                              <label for="usuClave">Contraseña <span class="text-danger">*</span></label>
+                            </div>
+                            <div *ngIf="submitted && f.usuClave.errors" class="invalid-feedback d-block">
+                              <div *ngIf="f.usuClave.errors.required">Ingresar contraseña</div>
+                            </div>
+
+                        </div>
+                        <div class="form-group col-md-12 col-lg-6">
+
+                            <div class="form-floating">
+                              <input type="password" class="form-control dz-uppercase" id="usuConfirmaClave" placeholder=" " formControlName="usuConfirmaClave" [ngClass]="{ 'is-invalid': submitted && f.usuConfirmaClave.errors }">
+                              <label for="usuConfirmaClave">Repetir Contraseña <span class="text-danger">*</span></label>
+                            </div>
+                            <div *ngIf="submitted && f.usuConfirmaClave.errors" class="invalid-feedback d-block">
+                              <div *ngIf="f.usuConfirmaClave.errors.required">Volver ingresar contraseña</div>
+                              <div *ngIf="f.usuConfirmaClave.errors.mustMatch">La contraseña no coindice</div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-12 col-lg-6">
+
+                          <div class="form-floating">
+                            <select class="custom-select" id="usuIdPerfil" formControlName="usuIdPerfil" [ngClass]="{ 'is-invalid': submitted && f.usuIdPerfil.errors }">
+                              <option selected value=''>...Seleccionar...</option>
+                              <option *ngFor="let perfil of maestroPerfiles" [value]="perfil.idPerfil">{{ perfil.nombre }}</option>
+                            </select>
+                            <label for="usuIdPerfil">Perfil <span class="text-danger">*</span></label>
+                            <div *ngIf="submitted && f.usuIdPerfil.errors" class="invalid-feedback d-block">
+                              <div *ngIf="f.usuIdPerfil.errors.required">Seleccionar perfil</div>
+                            </div>
+                          </div>
+
+                        </div>
+                        <div class="form-group col-md-12 col-lg-6">
+
+                            <div class="form-floating">
+                              <select class="custom-select" id="usuIdSede" formControlName="usuIdSede" [ngClass]="{ 'is-invalid': submitted && f.usuIdSede.errors }">
+                                <option selected value=''>...Seleccionar...</option>
+                                <option *ngFor="let sede of maestroSedes" [value]="sede.idSede">{{ sede.nombre }}</option>
+                              </select>
+                              <label for="usuIdSede">Sede <span class="text-danger">*</span></label>
+                              <div *ngIf="submitted && f.usuIdSede.errors" class="invalid-feedback d-block">
+                                <div *ngIf="f.usuIdSede.errors.required">Seleccionar sede</div>
+                              </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-12 col-lg-6">
+
+                            <div class="form-floating">
+                              <select class="custom-select" id="usuIdEstado" formControlName="usuIdEstado" [ngClass]="{ 'is-invalid': submitted && f.usuIdEstado.errors }">
+                                <option value=1>ACTIVO</option>
+                                <option value=2>INACTIVO</option>
+                              </select>
+                              <label for="usuIdEstado">Estado </label>
+                              <div *ngIf="submitted && f.usuIdEstado.errors" class="invalid-feedback d-block">
+                                <div *ngIf="f.usuIdEstado.errors.required">Seleccionar estado</div>
+                              </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer card-footer">
+            <div class="form-row float-right">
+                <button type="button" class="btn btn-outline-primary" (click)="usuarioGrabar()"><i class="feather icon-save"></i>Guardar</button>
+                <button type="button"  class="btn btn-outline-danger" (click)="cerrarModal()"><i class="feather icon-slash"></i>Cancelar</button>
+            </div>
+        </div>
+    </div>
+</form>

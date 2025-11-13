@@ -1,0 +1,319 @@
+﻿<ng-template #modalUbigeo let-modal let-close="close">
+  <app-preferente-ubigeo
+    [listaMaestraDepartamentos] = "maestroDepartamento"
+    [direccionDetalle] = "direccionDetalle"
+    [modal] = "modalUbigeoRef"
+    (direccion)="setDireccion($event)">
+  </app-preferente-ubigeo>
+</ng-template>
+
+<!--<ngx-spinner
+  [template]="rutaImageSpinner">
+  <p style="color: white" > Cargando... </p>
+</ngx-spinner>-->
+
+<form [formGroup]="frmClienteDatos" (ngSubmit)="clienteGrabar()">
+  <div class="modal-content">
+    <div class="modal-header card-header">
+      <h5 class="modal-title">{{ accion }} Cliente</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="cerrarModal()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+
+    <div class="modal-body card-body">
+
+      <div class="form-row">
+        <div class="form-group col-md-3">
+
+          <div class="picture-container h-100">
+            <div class="picture sizePictureCliente h-100 w-100" [class.imgNulled]="!f.foto.value">
+              <img [src]="rutaImagenCliente" class="picture-src">
+              <!-- (change)="mostrarFotoCliente($event.target.files)" -->
+              <input disabled type="file" #ImageAnuncio accept="image/*" formControlName="foto">
+            </div>
+          </div>
+
+        </div>
+        <div class="form-group col-md-9">
+
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="cliNombres" placeholder=" " formControlName="cliNombres" [ngClass]="{ 'is-invalid': submitted && f.cliNombres.errors }">
+                <label for="cliNombres">Nombres <span class="text-danger">*</span></label>
+              </div>
+              <div *ngIf="submitted && f.cliNombres.errors" class="invalid-feedback d-block">
+                <div *ngIf="f.cliNombres.errors.required">Ingrese nombres del cliente</div>
+              </div>
+            </div>
+            <div class="form-group col-md-6">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="cliApellidos" placeholder=" " formControlName="cliApellidos" [ngClass]="{ 'is-invalid': submitted && f.cliApellidos.errors }">
+                <label for="cliApellidos">Apellidos <span class="text-danger">*</span></label>
+              </div>
+              <div *ngIf="submitted && f.cliApellidos.errors" class="invalid-feedback d-block">
+                <div *ngIf="f.cliApellidos.errors.required">Ingrese apellidos del cliente</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <div class="form-floating">
+                <select class="custom-select" id="cliIdGenero" formControlName="cliIdGenero" [ngClass]="{ 'is-invalid': submitted && f.cliIdGenero.errors }">
+                  <option selected="" value=''>...Seleccionar...</option>
+                  <option *ngFor="let genero of maestroGenero" [value]="genero.id">{{ genero.descripcion }}</option>
+                </select>
+                <label for="cliIdGenero">Género <span class="text-danger">*</span></label>
+              </div>
+              <div *ngIf="submitted && f.cliIdGenero.errors" class="invalid-feedback d-block">
+                <div *ngIf="f.cliIdGenero.errors.required">Seleccionar genero del cliente</div>
+              </div>
+            </div>
+            <div class="form-group col-md-6">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="cliSeudonimo" placeholder=" " formControlName="cliSeudonimo">
+                <label for="cliSeudonimo">Seudónimo</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <div class="input-group mb-3">
+                <!-- <div class="form-floating" style="width: auto;"> -->
+                  <input type="text" class="form-control" id="cliRuc" placeholder="Ruc"   (keydown.enter)="$event.preventDefault();" (keyup.enter)="buscarRuc();" formControlName="cliRuc" maxlength="11">
+                  <!-- <label for="cliRuc">Ruc</label> -->
+                <!-- </div> -->
+                <!-- (keydown)="$event.keyCode == 13 ? $event.preventDefault() : null" -->
+                
+                <button class="btn btn-outline-secondary" type="button" id="button-addon1"  (click)="buscarRuc()">
+                  <span class="mdi mdi-home-search-outline"></span>
+
+                </button>
+                <!-- <label for="cliRuc">RUC</label> -->
+                <!-- <div class="">
+                  
+                 
+                </div> -->
+              </div>
+              <div *ngIf=" f.cliRuc.errors" class="invalid-feedback d-block">
+                <!-- <div *ngIf="f.cliRuc.errors"> -->
+                  El ruc debe tener 11 digitos
+                <!-- </div> -->
+                <!-- <div *ngIf="f.cliRuc.errors.maxlength">El ruc debe tener 11 digitos</div> -->
+              </div>
+
+
+             
+            </div>
+            <div class="form-group col-md-6">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="cliRazonSocial" placeholder=" " disabled formControlName="cliRazonSocial">
+                <label for="cliRazonSocial">Razón Social</label>
+              </div>
+              <div *ngIf="bnotfoundRUC" class="invalid-feedback d-block">
+                <!-- <div *ngIf="f.cliRuc.errors"> -->
+                  No se encontró la razón social. Ingrese un nuevo Ruc válido.
+                <!-- </div> -->
+                <!-- <div *ngIf="f.cliRuc.errors.maxlength">El ruc debe tener 11 digitos</div> -->
+              </div>
+  
+            </div>
+            
+        
+          </div>
+
+        </div>
+
+      </div>
+
+      <hr>
+
+
+      <div class="form-row">
+        <div class="form-group col-sm-12 col-md-12 col-lg-6">
+          <div class="form-floating">
+            <input type="email" class="form-control" id="cliCorreo" placeholder=" " formControlName="cliCorreo" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$" [ngClass]="{ 'is-invalid': submitted && f.cliCorreo.errors }">
+            <label for="cliCorreo">Correo Electrónico</label>
+          </div>
+          <div  *ngIf="submitted  && f.cliCorreo.errors">
+            <small *ngIf="f.cliCorreo.errors.pattern" class="text-danger">Correo inválido!</small>
+          </div>
+        </div>
+
+        <div class="form-group col-sm-8 col-md-8 col-lg-4">
+          <div class="form-floating">
+            <input type="date" class="form-control" id="cliFechaNacimiento" placeholder=" " formControlName="cliFechaNacimiento" (change)="calculaEdad()">
+            <label for="cliFechaNacimiento">Nacimiento</label>
+          </div>
+        </div>
+
+        <div class="form-group col-sm-4 col-md-4 col-lg-2">
+          <div class="form-floating">
+            <input type="text" class="form-control" id="cliEdad" formControlName="cliEdad" placeholder=" "  readonly>
+            <label for="cliEdad">Edad</label>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- DOCUMENTO -->
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <div class="form-floating">
+            <select class="form-select" #selectTipoDocumento id="cliIdDocumentoIdentidadTipo" formControlName="cliIdDocumentoIdentidadTipo" (change)="validarFormatoDocumento($event)">
+              <option select value="0">...Seleccionar...</option>
+              <option *ngFor="let tipoDocumento of maestroTipoDocumento" [value]="tipoDocumento.id">{{ tipoDocumento.descripcion }}</option>
+            </select>
+            <label for="cliIdGenero">Tipo de documento</label>
+          </div>
+        </div>
+
+        <div class="form-group col-md-6">
+
+
+          <!-- input-groupCustom -->
+<div class="input-group mb-3">
+  <input type="text" (keydown.enter)="$event.preventDefault();" (keyup.enter)="buscarDNI();" 
+  class="form-control"
+  id="cliDocumento"
+  formControlName="cliDocumento"
+  placeholder="Documento"
+  [disabled]="selectTipoDocumento.value === '0'">
+<!-- <label for="cliDocumento">Documento</label> -->
+<button class="btn btn-outline-secondary" type="button" id="button-addon1"  (click)="buscarDNI()"   [disabled]="selectTipoDocumento.value != '1'">
+<span class="mdi mdi-home-search-outline"></span>
+
+</button>
+</div>
+          <!-- <div class="form-floating"> -->
+            <!-- ( ) || -->
+          <!-- </div> -->
+          <!--  -->
+          <div
+          *ngIf="f.cliDocumento.errors && submitted"
+          class="invalid-feedback d-block">
+          <div *ngIf="f.cliDocumento.errors.required">Ingrese número de documento</div>
+          <!-- No se encontró el número de DNI. Ingrese un DNI correcto. -->
+          
+        </div>
+        <div
+        *ngIf="bnotfoundDNI "
+        class="invalid-feedback d-block">
+        <!-- <div *ngIf="f.cliDocumento.errors.required">Ingrese número de documento</div> -->
+        <!-- No se encontró el número de DNI. Ingrese un DNI correcto. -->
+        No se encontró el número de DNI. Ingrese un DNI correcto.
+      </div>
+        </div>
+       
+      </div>
+     
+      <!-- CELULAR 1 -->
+      <div class="form-row">
+        <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+          <div class="form-floating" [ngClass]="{ 'is-invalid': submitted && f.cliCelular1.errors }">
+            <div class="input-group mb-0">
+              <select class="form-select pais" #cliPaisCelular1 id="cliPaisCelular1" formControlName="cliPaisCelular1">
+                <option *ngFor="let pais of paises" [value]="pais.id" [selected]="pais.selected">{{ pais.pais}} - ({{ pais.id }})</option>
+              </select>
+              <input type="text" class="form-control dz-uppercase text" formControlName="cliCelular1" id="cliCelular1" appCellMask [pais]="f.cliPaisCelular1.value" [ngClass]="{ 'is-invalid': submitted && f.cliCelular1.errors }">
+            </div>
+            <label for="cliCelular1">Celular 1 <span class="text-danger">*</span></label>
+          </div>
+          <div *ngIf="submitted && f.cliCelular1.errors" class="invalid-feedback d-block">
+            <div *ngIf="f.cliCelular1.errors.required">Ingresar número de celular</div>
+          </div>
+        </div>
+
+        <!-- CELULAR 2 -->
+        <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+          <div class="form-floating">
+            <div class="input-group mb-0">
+              <select class="form-select pais" #cliPaisCelular2 id="cliPaisCelular2" formControlName="cliPaisCelular2">
+                <option *ngFor="let pais of paises" [value]="pais.id" [selected]="pais.selected">{{ pais.pais}} - ({{ pais.id }})</option>
+              </select>
+              <input type="text" class="form-control dz-uppercase text" id="cliCelular2" formControlName="cliCelular2" appCellMask [pais]="f.cliPaisCelular2.value"/>
+            </div>
+            <label for="cliCelular2">Celular 2</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <div class="form-floating">
+            <select class="form-select" #selectTipoDocumento id="cliMedioContacto" formControlName="cliMedioContacto" (change)="change_OtroMedioContacto()">
+              <option selected value="0">...Seleccionar...</option>
+              <option *ngFor="let medio of maestroMedioContacto" [value]="medio.id" >{{ medio.nombre }}</option>
+            </select>
+            <label for="cliMedioContacto">Medio de contacto</label>
+          </div>
+        </div>
+
+        <div class="form-group col-md-6" *ngIf="mostrarOtroMedioContacto">
+          <div class="form-floating">
+            <input type="text" class="form-control" id="otroMedioContacto" formControlName="otroMedioContacto" placeholder=" " >
+            <label for="otroMedioContacto">Otro medio de contacto</label>
+          </div>
+        </div>
+
+        <div class="form-group col-md-6">
+          <div class="form-floating form-start-icon">
+            <select class="custom-select" id="idEspecialista" formControlName="idEspecialista">
+              <option *ngFor="let usuario of dataUsuarios" [value]="usuario.id">{{usuario.text}}</option>
+            </select>
+            <label for="idEspecialista">Especialista</label>
+            <span class="icon"><i class="mdi mdi-account-question-outline"></i></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <div class="form-floating">
+            <input type="text" class="form-control" id="cliPublicidad" formControlName="cliPublicidad" placeholder=" " >
+            <label for="cliPublicidad">Publicidad</label>
+          </div>
+        </div>
+
+        <div class="form-group col-md-12 col-lg-6">
+          <div class="form-floating">
+            <select class="form-select" #selectTipoDocumento id="cliIdEstado" formControlName="cliIdEstado">
+              <option value="1">ACTIVO</option>
+              <option value="2">INACTIVO</option>
+            </select>
+            <label for="cliIdEstado">Estado</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-12">
+          <div class="form-floating">
+            <input dz-uppercase type="text" class="form-control map" id="preDireccion" formControlName="preDireccion" placeholder=" "  (click)="abrirModalUbigeo(modalUbigeo)">
+            <label for="preDireccion">Dirección</label>
+          </div>
+        </div>
+      </div>
+
+      
+      <div class="form-row">
+        <div class="form-group col mb-0">
+          <div class="form-floating">
+            <input type="text" class="form-control" id="cliHistoriaCli" placeholder=" " formControlName="cliHistoriaCli">
+            <label for="cliHistoriaCli">Historia Clinica</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer card-footer">
+      <div class="form-row float-right">
+        <button type="submit" class="btn btn-outline-primary" ><i class="feather icon-save"></i>Guardar</button>
+        <button type="reset" class="btn btn-outline-danger" (click)="cerrarModal()"><i class="feather icon-slash"></i>Cancelar</button>
+      </div>
+    </div>
+  </div>
+</form>
