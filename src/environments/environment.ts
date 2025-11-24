@@ -1,7 +1,8 @@
 export const environment = {
   production: false,
   qa: false,
-  apiHexagonal: 'https://backend-hexa.greenstone-56931235.brazilsouth.azurecontainerapps.io',
+  test: false,
+  apiHexagonal: 'https://backend-hexagonal-clinic.yellowsky-afc43aad.westus.azurecontainerapps.io',
   apiUrl: 'https://localhost:44361',
   frontEndUrl: 'https://127.0.0.1:4200',
   //apiUrl: 'https://cnt-back-csharp.greenstone-56931235.brazilsouth.azurecontainerapps.io', //AZURE

@@ -1,11 +1,11 @@
 export const environment = {
   production: false,
   qa: false,
-  apiHexagonal: 'https://backend-hexa.greenstone-56931235.brazilsouth.azurecontainerapps.io',
-  apiUrl: 'https://localhost:44361',
-  frontEndUrl: 'http://localhost:3002',
-  //apiUrl: 'https://cnt-back-csharp.greenstone-56931235.brazilsouth.azurecontainerapps.io', //AZURE
-  //frontEndUrl: 'https://qa.depilzone.com.pe:5037',
+  test : true,
+  //apiHexagonal: 'https://backend-hexa.greenstone-56931235.brazilsouth.azurecontainerapps.io',
+  apiHexagonal: 'https://backend-hexagonal-clinic.yellowsky-afc43aad.westus.azurecontainerapps.io',
+  apiUrl: 'https://test-clinic-services.depilzone.com.pe',
+  frontEndUrl: 'https://test-clinic.depilzone.com.pe',
   proxySignalR: '/apiSignal',
   imagenEntorno: '../../../../assets/images/bg-images/bg-logo_qa.png',
   apiWeb: 'https://api.depilzone.com.pe/web.php',

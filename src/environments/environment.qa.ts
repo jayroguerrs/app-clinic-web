@@ -1,6 +1,7 @@
 export const environment = {
   production: false,
   qa: true,
+  test: true,
   apiUrl: 'http://qa.sistemaclinic.com:8080', // AZURE - SheronX PROD
   //apiUrl: 'https://back-sheronx.agreeablerock-452a0002.eastus.azurecontainerapps.io', // AZURE - SheronX PROD
   //apiUrl: 'https://qa.depilzone.com.pe:5036', // WinServer QA

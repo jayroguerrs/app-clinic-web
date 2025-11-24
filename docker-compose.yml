@@ -13,6 +13,16 @@ version: "3.8"
 
 
 services:
+  clinic-test:
+    image: ${ACR_LOGIN_SERVER:-clialphav.azurecr.io}/clinic:${IMAGE_TAG:-latest}-test
+    build:
+      context: .
+      dockerfile: dockerfile
+      args:
+        BUILD_CONFIG: test
+    ports:
+      - "3001:80"  # local test: http://localhost:3002
+
   clinic-qa:
     image: ${ACR_LOGIN_SERVER:-clialphav.azurecr.io}/clinic:${IMAGE_TAG:-latest}-qa
     build:
