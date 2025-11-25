@@ -169,6 +169,7 @@ export class PreferenteDatosComponent implements OnInit {
       utmId : [''],
       utmTerm : [''],
       codAtencion : [''],
+      preIdMedioRecontacto: [''],
     });
 
     this.frmPreferenteDatos.get('preIdTeleoperadorAsignado').valueChanges.subscribe((val) => {
@@ -189,6 +190,17 @@ export class PreferenteDatosComponent implements OnInit {
     this.frmPreferenteDatos.get('preZonasCorporal').disable();
     this.frmPreferenteDatos.get('preObservacion').disable();
     this.frmPreferenteDatos.get('preDireccion').disable();
+    
+    // Deshabilitar campos de medio de contacto si existe id (modo edición)
+    if (this.id) {
+      this.frmPreferenteDatos.get('preIdMedioContacto').disable();
+      // Habilitar recontacto cuando medio de contacto esté deshabilitado
+      this.frmPreferenteDatos.get('preIdMedioRecontacto').enable();
+    } else {
+      // Deshabilitar recontacto cuando medio de contacto esté habilitado
+      this.frmPreferenteDatos.get('preIdMedioRecontacto').disable();
+    }
+    
     if (this.usuarioActual.idperfil === TipoPerfil.OPERADOR){
       this.frmPreferenteDatos.get('preNombres').disable();
       this.frmPreferenteDatos.get('preApellidos').disable();
@@ -318,6 +330,8 @@ export class PreferenteDatosComponent implements OnInit {
           preRedFacebook: datosPreferente.usuFacebook,
           preRedInstagram: datosPreferente.usuInstagram,
           preIdMedioContacto: datosPreferente.idMedioContacto,
+          preIdMedioRecontacto: datosPreferente.idMedioRecontacto,
+
           preIdMedioContactoCierre: !datosPreferente.idMedioContactoCierre ? 39 : datosPreferente.idMedioContactoCierre,
           prePromocion: datosPreferente.promocion,
           preIdTeleoperadorAsignado: datosPreferente.idTeleoperador == null ? null : datosPreferente.idTeleoperador,
@@ -434,6 +448,9 @@ export class PreferenteDatosComponent implements OnInit {
       idComentario,
       idEstado,
       idMedioContacto: parseInt(this.frmPreferenteDatos.controls.preIdMedioContacto.value, 10),
+
+      idMedioRecontacto: parseInt(this.frmPreferenteDatos.controls.preIdMedioRecontacto.value, 10),
+
       idMedioContactoCierre: !this.frmPreferenteDatos.controls.preIdMedioContactoCierre.value ? 39 : parseInt(this.frmPreferenteDatos.controls.preIdMedioContactoCierre.value, 10),
       otroMedioContacto: '',
       usuarioRegistra: this.usuarioActual.nombre,

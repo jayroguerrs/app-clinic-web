@@ -61,7 +61,7 @@
         </div>
 
         <div class="border rounded legend p-3 mb-3">
-          <label class="text-uppercase font-weight-bold">Datos de contacto</label>
+          <label class="text-uppercase font-weight-bold">Datos de contacto22222</label>
           <div class="form-row">
             <div class="col-md-6 mb-3">
               <div class="form-floating " >
@@ -122,6 +122,15 @@
               </div>
             </div>
 
+            <div *ngIf="id" class="col-md-6 mb-3">
+              <div class="form-floating">
+                <select class="form-select" id="preIdMedioRecontacto" formControlName="preIdMedioRecontacto" >
+                  <option select value=''>...Seleccionar...</option>
+                  <option *ngFor="let medioContacto of listaMaestra.mediosContactos" [value]="medioContacto.id">{{ medioContacto.nombre }}</option>
+                </select>
+                <label for="preIdMedioRecontacto">Medio de Recontacto</label>
+              </div>
+            </div>
 
             <div class="mb-3 col-md-6">
               <div class="form-floating " >

@@ -572,6 +572,8 @@ export class PreferenteListadoComponent implements OnInit, OnDestroy, AfterViewI
         { title: 'CORREO', width: '5%', data: 'email' },
         { title: 'CONTACTO', width: '5%', data: 'medioContacto' },
         { title: 'CONTACTO CIERRE', width: '5%', data: 'medioContactoCierre' },
+        { title: 'RECONTACTO', width: '5%', data: 'medioRecontacto' },
+
         { title: 'DISTRITO', width: '5%', data: 'distrito' },
         {
           title: 'OBSERVACION', width: '5%', data: 'observacion', render: (data: string[]) => {
