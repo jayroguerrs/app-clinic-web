@@ -22,6 +22,8 @@ export class Usuario {
     public privilegio?: number;
     public aprobado?: number;
     public idSupervisor?: number;
+
+    public claveGenerica?: boolean;
 }
 
 

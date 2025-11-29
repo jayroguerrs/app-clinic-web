@@ -18,4 +18,6 @@ export interface User {
   privilegio?: number;
   aprobado?: number;
   idSupervisor?: number;
+
+  claveGenerica?: boolean;
 }

@@ -55,7 +55,10 @@
     <button *ngIf="this.accTot || this.accCrud || this.accCreate" type="button" class="btn btn-primary btn-icon" [placement]="'bottom'" ngbTooltip="Nuevo" (click)= "usuarioNuevo(modalusuarioDatos)"><i class="mdi mdi-plus-circle-outline"></i></button>
     <button *ngIf="selected && (this.accTot || this.accCrud || this.accUpdate)" type="button" class="btn btn-warning btn-icon" [placement]="'bottom'" ngbTooltip="Editar" (click)= "usuarioEditar(modalusuarioDatos)"><i class="mdi mdi-square-edit-outline"></i></button>
     <button *ngIf="selected && (usuarioService.UsuarioActual.idperfil === tipoPerfil.SISTEMAS || usuarioService.UsuarioActual.idperfil === tipoPerfil.SA)" type="button" class="btn btn-secondary btn-icon" [placement]="'bottom'" ngbTooltip="Ver Contraseña" (click)= "verClave()"><i class="mdi mdi-shield-key-outline"></i></button>
-    <button *ngIf="selected && (usuarioService.UsuarioActual.idperfil === tipoPerfil.SISTEMAS || usuarioService.UsuarioActual.idperfil === tipoPerfil.SA)" type="button" class="btn btn-warning btn-icon" [placement]="'bottom'" ngbTooltip="Cambiar Contraseña" (click)= "cambiarClave()"><i class="mdi mdi-key-change"></i></button>
+    <button *ngIf="selected && (usuarioService.UsuarioActual.idperfil === tipoPerfil.SISTEMAS || usuarioService.UsuarioActual.idperfil === tipoPerfil.SA)" type="button" class="btn btn-warning btn-icon" [placement]="'bottom'" ngbTooltip="Cambiar Contraseña" (click)= "cambiarClave()"><i class="mdi mdi-key-change"></i></button>  
+    
+    <button *ngIf="selected && (usuarioService.UsuarioActual.idperfil === tipoPerfil.SISTEMAS || usuarioService.UsuarioActual.idperfil === tipoPerfil.SA)" type="button" class="btn btn-warning btn-icon" [placement]="'bottom'" ngbTooltip="Generar clave generica" (click)= "generarClaveGenrica()"><i class="mdi mdi-key-plus"></i></button>
+    
     <button *ngIf="(usuarioService.UsuarioActual.idperfil === tipoPerfil.SISTEMAS || usuarioService.UsuarioActual.idperfil === tipoPerfil.SA) && this.accTot || this.accExc" type="button" class="btn btn-secondary btn-icon" [placement]="'bottom'" ngbTooltip="Excel" (click)="exportarTabla()"><i class="mdi mdi-file-excel-outline"></i></button>
   </li>
 </ul>

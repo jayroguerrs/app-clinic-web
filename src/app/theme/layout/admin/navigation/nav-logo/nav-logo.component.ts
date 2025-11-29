@@ -8,6 +8,7 @@ import { Subscription } from 'rxjs';
 import { UtilsService } from '../../../../../shared/services/funciones/utils.service';
 import { AccountService } from '../../../../../shared/services/account.service';
 import { PermisosService } from '../../../../../shared/services/permisos.service';
+import { MdlCambiarClaveComponent } from '../../../../../componentes/modals/mdl-cambiar-clave/mdl-cambiar-clave.component';
 
 @Component({
   selector: 'app-nav-logo',
@@ -24,8 +25,11 @@ export class NavLogoComponent implements OnInit, AfterViewInit {
   mdlActualizarDatosUser: NgbModalRef;
   mdlConfirmarSupervisor: NgbModalRef;
 
+  mdlCambiarClave: NgbModalRef;
+
   @ViewChild('modalConfirmarSupervisor') modalConfirmarSupervisor!: NgbModalRef;
   @ViewChild('solicitudEnviadaModal') modalSolicitudEnviadaModal!: NgbModalRef;
+
 
   
   usuarioActual: Usuario;
@@ -60,19 +64,27 @@ export class NavLogoComponent implements OnInit, AfterViewInit {
     .subscribe((data: IGetPrivilegio) => {
       this.estadoAprobacionUsuarioActual = data.estadoAprobacion ? data.estadoAprobacion : 0;
 
+      console.log("entrooooooooooooo_==================================", this.usuarioActual.claveGenerica)
+      
       if(!this.permisosService.tienePrivilegio(data.privilegio) && this.usuarioActual.datosActualizados === true && (data.estadoAprobacion === 3 || data.estadoAprobacion === 0) && !this.usuarioActual.idSupervisor){
         this.abrirModalConfirmarSupervisor(this.modalConfirmarSupervisor);
+        return;
       }
       
       if(this.usuarioActual.idSupervisor && this.usuarioActual.idSupervisor > 0 && this.estadoAprobacionUsuarioActual === 3 && this.usuarioActual.datosActualizados === true){
         console.log("Mostrando modal de solicitud enviada por estado de aprobacion 3");  
         this.mostrarModalSolicitudEnviada(this.modalSolicitudEnviadaModal);
+        return;
       }
       if(this.usuarioActual.idSupervisor && this.usuarioActual.idSupervisor > 0 && this.estadoAprobacionUsuarioActual === 0 && this.usuarioActual.datosActualizados === true){
         console.log("Mostrando modal de solicitud enviada por estado de aprobacion 3");  
         this.mostrarModalSolicitudEnviada(this.modalSolicitudEnviadaModal);
+        return;
       }
-
+      if(this.usuarioActual.claveGenerica){
+        this.abrirModalCambiarClave();
+        return;
+      }
     });
 
   }
@@ -95,6 +107,18 @@ export class NavLogoComponent implements OnInit, AfterViewInit {
 
   abrirModalConfirmarSupervisor(modal: any): void{
     this.mdlConfirmarSupervisor = this.utilsService.abrirModal(modal, 'md');
+  }
+
+  abrirModalCambiarClave(): void{
+    this.mdlCambiarClave = this.modalService.open(MdlCambiarClaveComponent, {
+      size: 'lg', 
+      backdrop: "static", 
+      windowClass: 'modal-cambiar-clave', 
+      keyboard: false, 
+      centered: true,
+      animation: true
+    });
+    this.mdlCambiarClave.componentInstance.Usuario = this.usuarioActual;
   }
 
   private mdlSolicitudEnviada: NgbModalRef | undefined;

@@ -54,6 +54,7 @@ export class Preferente{
     idComentario: number;
     comentario: string;
     idMedioContacto: number;
+    idMedioRecontacto: number | null;
     idMedioContactoCierre: number | null;    
     idEstado: number;
     idEstadoAtencion: number;

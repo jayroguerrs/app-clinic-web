@@ -328,7 +328,7 @@ export class UsuarioSupervisadosComponent implements OnInit, AfterViewInit {
 
   cambiarEstadoUsuario(idUsuario: number, isActive: boolean) {
     const nuevoEstado = isActive ? 1 : 0;
-    
+
     Swal.fire({
       title: '¿Estás seguro?',
       text: `¿Deseas ${isActive ? 'activar' : 'desactivar'} este usuario?`,

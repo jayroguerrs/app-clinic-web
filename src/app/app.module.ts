@@ -66,6 +66,7 @@ import { MdlActualizarDatosUserModule } from './componentes/modals/mdl-actualiza
 import { DatosActualizadosInterceptor } from './shared/interceptors/datos-actualizados.interceptor';
 import { MdlConfirmarSupervisorModule } from './componentes/modals/mdl-confirmar-supervisor/mdl-confirmar-supervisor.module';
 import { MdlEstadoSolicitudSupervisorComponent } from './componentes/modals/mdl-estado-solicitud-supervisor/mdl-estado-solicitud-supervisor.component';
+import { MdlCambiarClaveModule } from './componentes/modals/mdl-cambiar-clave/mdl-cambiar-clave.module';
 
 registerLocaleData(es);
 
@@ -121,7 +122,9 @@ registerLocaleData(es);
     NgSelectModule,
     MdlTipoDePagoModule,
     MdlActualizarDatosUserModule,
-    MdlConfirmarSupervisorModule
+    MdlConfirmarSupervisorModule,
+
+    MdlCambiarClaveModule
   ],
   exports: [
   ],

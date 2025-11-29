@@ -111,7 +111,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
                         const data = this.datosUsuario.result.data;
 
                         data.menu[0].children = this.modificarNuevoMenu(data.menu[0].children, data.idPerfil);
-
+                    
                         const users = {
                             idUsuario: data.idUsuario,
                             nombre: data.nombre,
@@ -128,7 +128,9 @@ export class LoginComponent implements OnInit, AfterViewInit {
                             datosActualizados: data.datosActualizados,
                             privilegio: data.privilegio,
                             aprobado: data.aprobado,
-                            idSupervisor: data.idSupervisor
+                            idSupervisor: data.idSupervisor,
+
+                            claveGenerica: data.claveGenerica
                         };
 
                         const usuario : User = {
@@ -150,7 +152,9 @@ export class LoginComponent implements OnInit, AfterViewInit {
                             datosActualizados: data.datosActualizados,
                             privilegio: data.privilegio,
                             aprobado: data.aprobado,
-                            idSupervisor: data.idSupervisor
+                            idSupervisor: data.idSupervisor,
+
+                            claveGenerica: data.claveGenerica
                         };
 
                         localStorage.setItem('usersKey', JSON.stringify(users));

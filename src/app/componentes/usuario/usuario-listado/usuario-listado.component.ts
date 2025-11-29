@@ -187,6 +187,9 @@ export class UsuarioListadoComponent implements OnInit, OnDestroy, AfterViewInit
         { title: 'SEDE', data: 'sede', width: "5%" , bSortable: true, className: 'align-middle'},
         { title: 'USU. REG', data: 'usuarioRegistra', width: "5%", bSortable: true, className: 'align-middle' },
         { title: 'FECH. REG', width: "5%", data: 'fechaRegistra', className: 'align-middle'  },
+
+        { title: 'CLAVE', width: "5%", data: 'claveGenrica', bSortable: true, className: 'align-middle',
+          render: (data: boolean) => { return data ? '<span class="badge badge-warning text-dark px-2 py-1" style="font-size: 0.70rem;">GENÉRICA</span>' : '<span class="badge badge-info text-white px-2 py-1" style="font-size: 0.70rem;">PERSONALIZADA</span>'; } },
       ],
       serverSide: false,
       processing: false,
@@ -293,5 +296,33 @@ export class UsuarioListadoComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
 
+  generarClaveGenrica(): void {
+    if (this.usuarioSelected) {
+      Swal.fire({
+        title: 'Generar Clave Genérica',
+        text: `¿Está seguro de generar una clave genérica para el usuario ${this.usuarioSelected.nombre}?`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, generar',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+
+          this.usuarioService.generarClaveGenerica(this.usuarioSelected.idUsuario).subscribe(
+            response => {
+              if (response.message === 'Clave genérica actualizada correctamente.') {
+                Swal.fire('Éxito', 'La clave genérica ha sido generada correctamente.', 'success');
+              }
+              else {
+                Swal.fire('Error', 'No se pudo generar la clave genérica.', 'error');
+              }
+              this.usuarioListar();
+            });
+        }
+      });
+    } else {
+      Swal.fire('Error', 'Debe seleccionar un usuario primero', 'warning');
+    }
+  }
 }
 

@@ -102,6 +102,7 @@ export class UsuarioService {
         return this.http.put(`${environment.apiUrl}/api/usuario/cambiarClave`, model, {headers: this.headers});
     }
 
+
     get UsuarioActual(): Usuario{
         const userKey = JSON.parse( localStorage.getItem('usersKey'));
         let usuario: any;
@@ -126,6 +127,7 @@ export class UsuarioService {
             usuario.idSupervisor = userKey.idSupervisor;
             usuario.aprobado = userKey.aprobado;
             usuario.privilegio = userKey.privilegio;
+            usuario.claveGenerica = userKey.claveGenerica;
         }
         return usuario;
     }
@@ -179,8 +181,29 @@ export class UsuarioService {
     return this.http.put<any>(`${environment.apiUrl}/api/usuario/actualizarDatos`, model)
   }
 
+  generarClaveGenerica(idUsuario: number): Observable<any>{
+    return this.http.put<any>(`${environment.apiUrl}/api/usuario/generarClaveGenerica/${idUsuario}`, {})
+  }
+
   CambiarClave(idUsuario: number, clave: string): Observable<boolean | ErrorSistema> {
     return this.http.put<any>(`${environment.apiUrl}/api/usuario/cambiar-clave`, {claveNueva: clave, idUsuario: idUsuario}, {headers: this.headers}).pipe(
+      map((res) => {
+        if(res.status === 200){
+          return true;
+        }else{
+          const noti = new ErrorSistema();
+          noti.message = res.message;
+          noti.message = res.status;
+        }
+      }),
+      catchError(err => {
+        return throwError(err.message, err.code);
+      })
+    );
+  }
+
+  cambiarClaveGenerica(idUsuario: number, clave: string): Observable<boolean | ErrorSistema> {
+    return this.http.put<any>(`${environment.apiUrl}/api/usuario/cambiar-clave-generica`, {claveNueva: clave, idUsuario: idUsuario}, {headers: this.headers}).pipe(
       map((res) => {
         if(res.status === 200){
           return true;

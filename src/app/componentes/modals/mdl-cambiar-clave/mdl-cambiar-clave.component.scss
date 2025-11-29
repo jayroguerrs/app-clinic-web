@@ -1,29 +1,273 @@
-input[type="radio"]{
-  width: 1.35rem;
-  height: 1.35rem;
-  vertical-align: top;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
-  appearance: none;
-  print-color-adjust: exact;
-  border-radius: 50%;
-  border: 0;
-  background-color: #EFF2F5;
-  margin: 0;
-  float: none;
-  flex-shrink: 0;
-  &:checked{
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='2' fill='%23ffffff'/%3e%3c/svg%3e");
-    background-color: #3F51B1 !important;
+// Estilos para el modal centrado
+::ng-deep .modal-cambiar-clave {
+  .modal-dialog {
+    margin: 3rem auto;
+    max-width: 600px;
   }
 }
-.item{
-  &.selected,
-  &:hover{
-    background-color: #F5F8FA;
-    span{
-      color: #3F51B1 !important;
+
+// Estilos mejorados del modal
+.modal-header {
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+  border-bottom: none;
+  border-radius: 0.5rem 0.5rem 0 0 !important;
+  box-shadow: 0 2px 10px rgba(0,123,255,0.1);
+  
+  .modal-title {
+    font-weight: 600;
+    font-size: 1.25rem;
+  }
+  
+  .close {
+    opacity: 0.8;
+    font-size: 1.5rem;
+    
+    &:hover {
+      opacity: 1;
     }
+  }
+}
+
+.modal-body {
+  background-color: #fafbfc;
+}
+
+.modal-footer {
+  background-color: #f8f9fa;
+  border-top: 1px solid #e9ecef;
+  border-radius: 0 0 0.5rem 0.5rem !important;
+  padding: 1.25rem;
+}
+
+// Alert mejorado
+.alert-info {
+  background-color: #e3f2fd;
+  border: 1px solid #bbdefb;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+// Labels compactos
+.form-label {
+  font-size: 0.9rem;
+  color: #495057;
+  margin-bottom: 0.4rem;
+  font-weight: 500;
+}
+
+// Input groups compactos
+.input-group {
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  border: 1px solid #dee2e6;
+  background-color: #fff;
+  transition: all 0.2s ease;
+  
+  &:focus-within {
+    border-color: #007bff;
+    box-shadow: 0 2px 10px rgba(0,123,255,0.2);
+  }
+  
+  .form-control-lg {
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    line-height: 1.4;
+    border: none;
+    background-color: transparent;
+    
+    &::placeholder {
+      color: #adb5bd;
+      font-style: normal;
+    }
+    
+    &:focus {
+      box-shadow: none;
+      background-color: transparent;
+    }
+    
+    &.is-invalid {
+      border-color: #dc3545;
+      background-color: #fff5f5;
+    }
+  }
+  
+  .btn-lg {
+    padding: 0.75rem 1rem;
+    border: none;
+    background-color: #f8f9fa;
+    color: #6c757d;
+    font-size: 1rem;
+    min-width: 50px;
+    
+    &:hover {
+      background-color: #e9ecef;
+      color: #495057;
+    }
+    
+    &:focus {
+      box-shadow: none;
+    }
+  }
+}
+
+// Requisitos de contraseña compactos
+.password-requirements {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border: 1px solid #dee2e6;
+  border-radius: 0.5rem;
+  padding: 1.25rem;
+  margin-top: 1rem;
+  
+  h6 {
+    color: #495057;
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+    font-size: 1rem;
+  }
+
+  .requirements-list {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 0;
+    
+    li {
+      margin-bottom: 0.5rem;
+      padding: 0.25rem 0;
+      
+      small {
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        color: #6c757d;
+        line-height: 1.4;
+        
+        i {
+          width: 18px;
+          margin-right: 0.75rem;
+          font-size: 0.9rem;
+        }
+      }
+      
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
+// Medidor de fortaleza mejorado
+.password-strength {
+  margin-top: 0.75rem;
+  
+  .strength-meter {
+    width: 100%;
+    height: 8px;
+    background-color: #e9ecef;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+    
+    .strength-meter-fill {
+      height: 100%;
+      transition: width 0.4s ease, background-color 0.4s ease;
+      border-radius: 4px;
+      
+      &.weak {
+        width: 33%;
+        background: linear-gradient(90deg, #dc3545, #e74c3c);
+      }
+      
+      &.medium {
+        width: 66%;
+        background: linear-gradient(90deg, #ffc107, #f39c12);
+      }
+      
+      &.strong {
+        width: 100%;
+        background: linear-gradient(90deg, #28a745, #27ae60);
+      }
+    }
+  }
+  
+  small {
+    font-weight: 500;
+    font-size: 0.875rem;
+  }
+}
+
+// Botones mejorados
+.btn {
+  border-radius: 0.5rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  
+  &:disabled {
+    opacity: 0.6;
+  }
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+  border: none;
+  
+  &:hover:not(:disabled) {
+    background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,123,255,0.3);
+  }
+}
+
+.btn-outline-secondary {
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+}
+
+// Espaciado compacto para los grupos de inputs
+.mb-4 {
+  margin-bottom: 1.25rem !important;
+}
+
+// Modal más compacto
+.modal-dialog {
+  .modal-content {
+    .modal-body {
+      padding: 1.5rem;
+    }
+  }
+}
+
+// Alertas de validación en tiempo real
+.alert {
+  border: none;
+  border-radius: 0.4rem;
+  font-size: 0.875rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  
+  &.alert-warning {
+    background-color: #fff3cd;
+    border-left: 3px solid #ffc107;
+    color: #856404;
+    
+    i {
+      color: #ffc107 !important;
+    }
+  }
+  
+  &.alert-success {
+    background-color: #d4edda;
+    border-left: 3px solid #28a745;
+    color: #155724;
+    
+    i {
+      color: #28a745 !important;
+    }
+  }
+  
+  small {
+    font-weight: 500;
   }
 }

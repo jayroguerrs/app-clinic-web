@@ -15,7 +15,6 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatListModule} from "@angular/material/list";
 import {MatBottomSheetModule} from "@angular/material/bottom-sheet";
 import {MdlVerClaveModule} from "../modals/mdl-ver-clave/mdl-ver-clave.module";
-import {MdlCambiarClaveModule} from "../modals/mdl-cambiar-clave/mdl-cambiar-clave.module";
 
 @NgModule({
   declarations: [],
@@ -35,8 +34,7 @@ import {MdlCambiarClaveModule} from "../modals/mdl-cambiar-clave/mdl-cambiar-cla
 
     MatListModule,
     MatBottomSheetModule,
-    MdlVerClaveModule,
-    MdlCambiarClaveModule
+    MdlVerClaveModule
   ],
   providers: [SelectOptionService]
 })

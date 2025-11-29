@@ -16,7 +16,6 @@ import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatListModule} from "@angular/material/list";
 import {MatBottomSheetModule} from "@angular/material/bottom-sheet";
 import {MdlVerClaveModule} from "../modals/mdl-ver-clave/mdl-ver-clave.module";
-import {MdlCambiarClaveModule} from "../modals/mdl-cambiar-clave/mdl-cambiar-clave.module";
 import { UsuarioSupervisadosComponent } from './usuario-supervisados/usuario-supervisados.component';
 
 @NgModule({
@@ -33,8 +32,7 @@ import { UsuarioSupervisadosComponent } from './usuario-supervisados/usuario-sup
 
         MatListModule,
         MatBottomSheetModule,
-        MdlVerClaveModule,
-        MdlCambiarClaveModule
+        MdlVerClaveModule
     ],
     declarations: [
         UsuarioListadoComponent,
